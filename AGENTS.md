@@ -8,7 +8,7 @@
 
 ## 實作與驗證
 
-- Node.js 22 以上，原生 ES modules；`npm run dev` 啟動 127.0.0.1:18089。
+- Node.js 22 以上，原生 ES modules；`npm run dev` 啟動 127.0.0.1:18090。
 - `npm test`驗證邏輯；修改後先 `npm run build` 重產離線雜湊與靜態檔，再 `npm run check` 檢查語法／完整內容／素材／雜湊。app文字統一LF，原KanjiVG bytes不改。
 - 進度在IndexedDB，`?qa=1`使用隔離QA庫並略過SW，`?qa=1&offlineQa=1`啟用離線驗收；真實個人資料不可作測試。正式庫仍沿用第一版名字，schema2升級不可清空既有資料。
 - 素材與授權見 `docs/material-sources.md`，功能／裝置驗證見 `docs/v1-validation.md`。
