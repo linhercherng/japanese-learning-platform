@@ -2,9 +2,13 @@
 
 繁體中文、手機優先的日語學習平台，從五十音到生活日語，再循序練習 N5、N4、N3。每課先理解、聽讀，收起提示回想，最後寫自己的句子。
 
-**第二版本機學習程式 v0.2.0，2026-10-13。** 已依使用者確認的畫面與「規劃完直接執行」指示實作。私人 GitHub 保存程式；尚無公開部署或雲端同步。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
+**第二版公開試用程式 v0.2.0，2026-10-13。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
 
 ## 開始使用
+
+直接開啟 **[日和線上學習平台](https://linhercherng.github.io/japanese-learning-platform/)**，不需安裝 Node.js 或登入 GitHub。公開試用教材與合成語音尚待獨立教師審校。
+
+學習進度與作品仍只存於目前瀏覽器，沒有雲端同步。從本機版搬到線上版，請先在本機「我的」匯出 JSON 備份，再於線上版同頁選擇「合併匯入備份」。新網址不會自動取得舊網址的進度。
 
 已安裝 Node.js 22 以上時，執行 `npm run dev`，開啟 [本機日和](http://127.0.0.1:18090/)。Windows 可雙擊 `start-hiyori.cmd`，不需安裝 npm 執行依賴。到「課程」選程度，「練習」回想到期項目，「我的」保存備份與離線包。
 
@@ -55,4 +59,6 @@ npm run check
 - [來源與授權](docs/material-sources.md)、[N5審查](docs/n5-content-review.md)、[N4審查](docs/n4-content-review.md)、[生活審查](docs/life-v2-supplement-review.md)
 - [第一版驗證](docs/v1-validation.md)、[原樣稿](prototype/README.md)
 
-後續需獨立教師逐課文字／審音、真實iOS／Android觸控與麥克風驗收，以及另行設定帳號與供應商的雲端同步／公開部署。這些不由本機或單一桌面瀏覽器測試推論已完成。
+`main` 更新時，GitHub Actions 先執行測試、建置、完整內容與素材檢查，再將 `dist/` 部署到 GitHub Pages；PR 只檢查、不發布。部署設定、線上驗收與回退方法見 [公開部署紀錄](docs/pages-deployment.md)。
+
+後續需獨立教師逐課文字／審音、真實iOS／Android觸控與麥克風驗收，以及另行設定帳號與供應商的雲端同步。這些不由單一桌面瀏覽器測試推論已完成。

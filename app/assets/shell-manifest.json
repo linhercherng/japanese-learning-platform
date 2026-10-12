@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "3728e6aa5204aeb968c32d21943d6c12700314d75bb4084944f2f7af102af5b4",
+  "fingerprint": "8787b01fbe06410e4114eea428c6cafce547ed0eb9c25998f10dfa9156a32132",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-v2.json",
@@ -91,7 +91,7 @@
     "core/quiz.mjs": "cb59f0ef0a22b6905bfd2aaeb1b87f0ebb7ed045fe13cf9ae3fcc9d6242129af",
     "core/storage.mjs": "73330fafcf8e526b67a0d4c17bea903f22b9cd2da58c39e80dddbcded201917c",
     "core/study.mjs": "6c9bcef4ee6f468f6e06a517dc99b2b3672249dbeaaa71987f39a82a66e363ec",
-    "index.html": "77b85d217f72e39aacc20682b57aeea9de5dc8a195f7bafbd17ecfee864f969c",
+    "index.html": "e028cf7b9b4c7bf9bb861807c39fc17d6b104ee0b5d3ff4783a3ec3a19a14586",
     "main.mjs": "a4e2f889738309b329c14ea58515d31086058af96c21d0df0034538a57156b0d",
     "manifest.webmanifest": "665f46ac36c2b46959260fe9ef71e33b7bcef4bed924d37e771e1c4114025cfb",
     "styles.css": "35999e6bc87d5bd23b9b14c1c04213defa212657cfd239d5bde49f105d02e45e",
