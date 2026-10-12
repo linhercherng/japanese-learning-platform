@@ -1,4 +1,4 @@
-import {initialState,validateState} from './learning.mjs';
+import {initialState,validateState,upgradeState} from './learning.mjs';
 // Resolve writes on transaction completion, not request success.
 // https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
 export async function openStore(name='hiyori-learning-v1'){
@@ -11,7 +11,7 @@ export async function openStore(name='hiyori-learning-v1'){
   request.onsuccess=()=>{const db=request.result;db.onversionchange=()=>db.close();resolve(db);};
  });
 }
-export async function readState(db){return new Promise((resolve,reject)=>{const t=db.transaction('state','readonly');const r=t.objectStore('state').get('learning');r.onsuccess=()=>{try{resolve(r.result?validateState(r.result):initialState());}catch{reject(new Error('既有資料格式不正確，請先匯出或恢復備份'));}};r.onerror=()=>reject(r.error);});}
+export async function readState(db){return new Promise((resolve,reject)=>{const t=db.transaction('state','readonly');const r=t.objectStore('state').get('learning');r.onsuccess=()=>{try{resolve(r.result?upgradeState(r.result):initialState());}catch{reject(new Error('既有資料格式不正確，請先匯出或恢復備份'));}};r.onerror=()=>reject(r.error);});}
 export async function writeState(db,state,expectedRevision){
  validateState(state);
  return new Promise((resolve,reject)=>{
