@@ -1,4 +1,10 @@
-# 第一版教材與素材紀錄
+# 教材與素材紀錄
+
+## 第二版增量（2026-10-13）
+
+現版保留第一版資料，擴充為90分級主課、60情境與12生活起步，使用詞中讀音索引避免同字異音共用。Haruka音訊9,540份全部ffmpeg解碼成功，460份KanjiVG原始SVG固定相同commit、原bytes與SHA-256；含312不同漢字。完整5包皆缺檔0，容量與驗收見 `v2-validation.md`。
+
+重製第二版：`node scripts/v2-materials-prepare.mjs`，再執行 `pwsh -File scripts/v2-audio-local.ps1`／`pwsh -File scripts/materials-strokes.ps1`，最後 `npm run build` 與 `npm run check`。本機語音使用單一序列SpeechSynthesizer；不並行呼叫Haruka原生引擎。MP3只是可解碼與播放驗證，教師審音尚未完成。以下第一版紀錄保留作來源歷史。
 
 查核日期：2026-10-12。版本：自編教材 v0.1，本機驗收用途。
 

@@ -11,6 +11,7 @@ private-artifacts/
 # Future application build and local tooling
 node_modules/
 temp/
+work/
 dist/
 build/
 coverage/

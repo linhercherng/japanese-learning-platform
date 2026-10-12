@@ -4,13 +4,13 @@
 
 ## 當前階段
 
-使用者已確認第一版手機樣稿，並授權直接開發。`app/` 是 v0.1 本機學習程式，已保存進度、草稿及作品；`prototype/` 保留原樣稿及記憶體互動。完整 N5～N3、雲端同步、真人教材與公開部署尚未交付，不能由本機驗證推論完成。
+使用者已確認畫面、授權開發，並要求第二版規劃完直接執行。`app/` 是v0.2本機平台，含90分級主課、60情境、12生活起步、6模擬卷與PWA。`prototype/`及第一版歷史保留。獨立教師審校、雲端同步、真人教材、實機與公開部署尚未驗收，不能由本機驗證推論完成。第二版當前設計見 `docs/plans/2026-10-12-learning-v2-design.md`，實際範圍及證據見 `docs/v2-validation.md`。
 
 ## 實作與驗證
 
 - Node.js 22 以上，原生 ES modules；`npm run dev` 啟動 127.0.0.1:18089。
-- `npm test` 驗證純邏輯，`npm run check` 檢查語法／資料／素材，`npm run build` 匯出靜態檔。
-- 進度在 IndexedDB，`?qa=1` 使用隔離的 QA 資料庫；真實個人資料不可作測試。
+- `npm test`驗證邏輯；修改後先 `npm run build` 重產離線雜湊與靜態檔，再 `npm run check` 檢查語法／完整內容／素材／雜湊。app文字統一LF，原KanjiVG bytes不改。
+- 進度在IndexedDB，`?qa=1`使用隔離QA庫並略過SW，`?qa=1&offlineQa=1`啟用離線驗收；真實個人資料不可作測試。正式庫仍沿用第一版名字，schema2升級不可清空既有資料。
 - 素材與授權見 `docs/material-sources.md`，功能／裝置驗證見 `docs/v1-validation.md`。
 - 使用者文字須經 textContent 或 HTML 編碼；備份先驗證，再明示合併，不覆蓋。
 - 儲存交易失敗顯示未保存，保留可匯出的待存資料；不得默默重設資料庫。
