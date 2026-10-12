@@ -20,7 +20,7 @@
 
 ## 邏輯與獨立複查
 
-`npm test` 49／49、`npm run build`與`npm run check` exit0。測試涵蓋跨日間隔、提示、不重複事件、遷移與備份合併、練習續作、明示填空變體、詞塊、模擬絕對期限／逾時／續考、交易內最新答案、同場與跨考區備份衝突、離線取消／缺檔／HTML偽音訊、版本快取與Range206／416。
+`npm test` 50／50、`npm run build`與`npm run check` exit0。測試涵蓋跨日間隔、提示、不重複事件、遷移與備份合併、練習續作、明示填空變體、詞塊、模擬絕對期限／逾時／續考、交易內最新答案、同場與跨考區備份衝突、離線取消／缺檔／HTML偽音訊、版本快取與Range206／416。
 
 不同模型唯讀複查發現並修正：逾時交區延長時間、舊快照覆蓋首答、刷新重設提示、分級與詞卡到期題無法練、備份續作被丟棄、HTML被誤當音訊、回想上限無整理入口、同場試卷分歧、下載未確認就整理、過期shell雜湊。最終複查未見確證阻擋交付項目。
 
@@ -50,3 +50,5 @@
 分科時限依[JLPT官方科目](https://www.jlpt.jp/e/guideline/testsections.html)：N5 20／40／30、N4 25／55／35、N3 30／70／40分鐘。尺度分數與無作文／會話參照[官方FAQ](https://www.jlpt.jp/e/faq/)及[結果說明](https://www.jlpt.jp/sp/e/guideline/results.html)。未複製官方試題或聲音。
 
 快取依[MDN Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers)、[Cache.addAll](https://developer.mozilla.org/en-US/docs/Web/API/Cache/addAll)，加上逐檔SHA-256與完成marker。語音使用[Microsoft SpeechSynthesizer.SelectVoice](https://learn.microsoft.com/en-us/dotnet/api/system.speech.synthesis.speechsynthesizer.selectvoice?view=net-10.0-pp)。
+
+交付包另以Git archive解壓後重跑驗證，修正漏打包檢查指令與favicon SVG的Windows／Git換行差異；應用SVG統一LF，原KanjiVG與二進位bytes保留。新增回歸測試覆蓋此差異。

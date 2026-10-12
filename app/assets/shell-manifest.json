@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "f9a213096b4319431c1ddc1ccada4d7ea0c9e74df74ed40f6dfd05971017c1fc",
+  "fingerprint": "3728e6aa5204aeb968c32d21943d6c12700314d75bb4084944f2f7af102af5b4",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-v2.json",
@@ -60,7 +60,7 @@
     "assets/audio-records-v2.json": "83282170098238d1d4bbe17fd05d7275e9accac57af409e6e8dc43c00d2ae376",
     "assets/audio-texts.json": "b5db21294a7416fc9a49c8c12475347a981aa36ef3e97de07b0e6fd9a7834bb1",
     "assets/audio.json": "182d8f3c1f3dfc3e21e3c5e35dccca44b394c8b67433b7884b382e7fd115ee60",
-    "assets/favicon.svg": "cb334af90aa82ea34ec3eb00e0a5480e448d27f26dd7818df0442f77fcffbf2d",
+    "assets/favicon.svg": "6b9461d86c4c8e11857e8f657b69ba0fb8eb9d011ce60eea338daf527475b9ea",
     "assets/icons/icon-192.png": "c6cdf4c9981f6f51f21d98a3f0f16cd76092fc4b0b7e6eb9a3d0521e70e34089",
     "assets/icons/icon-512.png": "d9de31c8af8e4faf8f99bb8c8d3ac41b26ef43998b9ed9b1d9cd39fd63086be2",
     "assets/offline-manifest.json": "b331feeaa12163c1067dd2bfefe517eea8f5aa9162b717f952c5cab339dea5c1",
@@ -109,5 +109,5 @@
     "v2.css": "c8b58f3ed2c35c467f7a17a1d8641e533bd949d2587913867a343ab5cd2d5977",
     "v2.mjs": "25e027abdafb39d26a8f9b2f1be236431b8d27c64751867ef587d38363e91092"
   },
-  "bytes": 6114438
+  "bytes": 6114437
 }
