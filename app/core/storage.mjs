@@ -1,9 +1,10 @@
 import {initialState,validateState} from './learning.mjs';
 // Resolve writes on transaction completion, not request success.
 // https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
-export async function openStore(){
+export async function openStore(name='hiyori-learning-v1'){
+ if(!['hiyori-learning-v1','hiyori-learning-qa'].includes(name))throw new Error('未知的資料區');
  return new Promise((resolve,reject)=>{
-  const request=indexedDB.open('hiyori-learning-v1',1);
+  const request=indexedDB.open(name,1);
   request.onupgradeneeded=()=>{request.result.createObjectStore('state');};
   request.onerror=()=>reject(new Error('瀏覽器無法開啟本機儲存'));
   request.onblocked=()=>reject(new Error('請關閉其他舊版本分頁後再試'));

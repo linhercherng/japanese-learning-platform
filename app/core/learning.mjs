@@ -13,7 +13,7 @@ function applyReview(reviews,a){
  const previous=reviews[key]||{item:a.item,dimension:a.dimension,correct:0,total:0,independent:0,step:0,due:a.time,lastAdvance:null,history:[]};
  const r={...previous,total:previous.total+1,correct:previous.correct+(a.correct?1:0),independent:previous.independent+(a.correct&&!a.hinted?1:0),history:[...previous.history,{correct:a.correct,hinted:a.hinted,time:a.time}].slice(-10)};
  const success=a.correct&&!a.hinted;
- if(!success){r.step=0;r.due=a.time;}
+ if(!success){r.step=0;r.due=a.time;r.lastAdvance=null;}
  else if(previous.lastAdvance!==day(a.time)){
   r.step=Math.min(previous.lastAdvance?previous.step+1:0,intervals.length-1);
   r.lastAdvance=day(a.time);r.due=new Date(Date.parse(a.time)+intervals[r.step]*86400000).toISOString();
@@ -74,6 +74,7 @@ export function parseBackup(text){
 export function mergeStates(current,incoming){
  validateState(current);validateState(incoming);
  const next=structuredClone(current);const map=new Map(current.attempts.map(a=>[a.id,a]));
+ if(current.revision===0&&!current.attempts.length&&!current.artifacts.length&&!Object.keys(current.completed).length&&!Object.keys(current.drafts).length){next.settings=structuredClone(incoming.settings);next.lastLesson=incoming.lastLesson;}
  for(const a of incoming.attempts){if(map.has(a.id))requireValue(JSON.stringify(map.get(a.id))===JSON.stringify(a),'同一作答 ID 的內容衝突');else map.set(a.id,a);}
  next.attempts=[...map.values()].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id));
  next.reviews={};next.attempts.forEach(a=>applyReview(next.reviews,a));

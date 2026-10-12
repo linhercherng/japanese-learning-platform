@@ -33,3 +33,13 @@ test('兩份進度合併由事件重建能力，不把計數直接相加',()=>{
 test('未完成與非法項目的作答不能進入正式紀錄',()=>{
  assert.throws(()=>answer(initialState(),{dimension:'unknown'}));assert.throws(()=>answer(initialState(),{time:'bad date'}));assert.throws(()=>answer(initialState(),{item:'<script>'}));
 });
+test('答錯後當日恢復正確，從一天間隔重新開始',()=>{
+ const first=answer(initialState());const wrong=answer(first,{id:'a2',correct:false,time:'2026-10-13T12:00:00.000Z'});
+ const recovered=answer(wrong,{id:'a3',time:'2026-10-13T12:01:00.000Z'});
+ assert.equal(recovered.reviews['h-3042:recognition'].step,0);assert.equal(recovered.reviews['h-3042:recognition'].due,'2026-10-14T12:01:00.000Z');
+});
+test('空白裝置恢復備份的設定與續課位置，有既有資料時維持本機設定',()=>{
+ const incoming=answer(initialState());incoming.settings.dailyMinutes=30;incoming.settings.roman=false;incoming.lastLesson='L07';
+ const blank=mergeStates(initialState(),incoming);assert.equal(blank.settings.dailyMinutes,30);assert.equal(blank.settings.roman,false);assert.equal(blank.lastLesson,'L07');
+ const current=answer(initialState(),{id:'different'});assert.equal(mergeStates(current,incoming).settings.dailyMinutes,15);
+});
