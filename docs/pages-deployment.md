@@ -20,11 +20,11 @@
 - [x] 檢查目前與歷史追蹤檔案沒有憑證、備份、個人作品或錄音。
 - [x] 本機測試、建置與完整素材／內容校驗通過。
 - [x] 子路徑下的SW安裝、離線導覽、音檔Range和跨專案隔離回歸通過。
-- [ ] 儲存庫公開、完整版合併到 main、Pages 來源為 workflow。
-- [ ] GitHub Actions build/deploy 成功，取得正式部署URL。
-- [ ] 未登入公開URL與代表性CSS、JS、MP3、SVG、PWA素材回應正常。
-- [ ] 實際瀏覽器首頁、生活情境、五十音、筆順、課程、音檔播放與保存／刷新正常。
-- [ ] 手機尺寸沒有橫向溢出；正常來源SW安裝成功。
+- [x] 儲存庫公開、完整版合併到 main、Pages 來源為 workflow。
+- [x] GitHub Actions build/deploy 成功，取得正式部署URL。
+- [x] 未登入公開URL與代表性CSS、JS、MP3、SVG、PWA素材回應正常。
+- [x] 實際瀏覽器首頁、生活情境、五十音、筆順、課程、音檔播放與保存／刷新正常。
+- [x] 手機尺寸沒有橫向溢出；正常來源SW安裝成功。
 
 ## 資料與回退
 
@@ -32,8 +32,20 @@
 
 部署失敗時不發佈未完成的build。需回退時在main建立revert提交並重新通過相同流程；不用改寫Git歷史。SW保留等待更新機制，既有分頁維持同版資源；在「我的」啟用已就緒更新，或關閉所有網站分頁再打開。回退不刪除IndexedDB學習資料。
 
-實際部署run、commit與驗收結果待完成後補入。真實iOS／Android觸控、安裝與麥克風仍需實機驗收。
+首次正式部署已完成並驗證，詳見下節。真實iOS／Android觸控、安裝與麥克風仍需實機驗收。
 
 ## 發布前檢查
 
 51／51測試（含Pages子路徑SW回歸）、build/check通過；npm audit零漏洞。Git全部已追蹤歷史的已知憑證格式掃描與敏感檔名檢查無匹配；未提交個人備份／錄音。部署修改已複查：只上傳dist、僅main可部署、PR無Pages寫入權限、官方Action固定SHA、不增加執行依賴，不清除學習資料。
+
+## 正式發布驗收結果
+
+- PR #3 已合併，首發main commit：`d107a7fb2a18ebc907915aab21193306e5b2659e`。儲存庫 `isPrivate=false`，Pages `public=true`、`build_type=workflow`、HTTPS開啟。
+- [正式部署run 38319598490](https://github.com/linhercherng/japanese-learning-platform/actions/runs/38319598490)：build／deploy皆success；Linux Node22完整51項測試、build/check/audit通過。PR與分支檢查亦成功，部署步驟依設計略過。
+- 未附認證的HTTPS共63個請求，全部200。52份shell資源SHA-256全數符合發布索引和本機審查版本；每個音檔包抽一份MP3校驗相符、MIME正確；JavaScript MIME可執行，原始SVG與PWA manifest可取得。
+- 正式桌面瀏覽器載入首頁、完整課程、飲食生活分類、N5／N4／N3模擬列表；五十音播放回報「正在播放日語合成語音」，筆順動畫顯示第1筆／共3筆，手寫畫布正常載入。
+- 正常來源「我的」顯示文字／筆順已準備離線使用，證實SW已完成初次安裝；並未在此次線上驗收下載全部五種音檔包。包完整性仍由已有素材與離線回歸證據支持。
+- 隔離QA庫每日時間改成30分鐘後刷新仍保留，未修改正常來源個人進度。正式390px頁面、QA 320px課程列表皆無橫向溢出，瀏覽器console無error／warn。QA分頁已關閉。
+- 正式網站分頁保留供使用者使用。HTTP驗收JSON與手機截圖另存交付outputs；沒有把QA資料提交到公開儲存庫。
+
+本次證明GitHub Pages端點、部署與代表性桌面瀏覽器行為。真實iOS／Android、觸控筆、麥克風、背景回收、全部離線包線上下載與跨裝置同步未因此宣稱已驗收。
