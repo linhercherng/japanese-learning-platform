@@ -37,3 +37,7 @@ test('相同進行中模擬備份合併保留兩邊首答，分歧首答明示�
  incoming.activeExam=answerExam(local.activeExam,form,'ex-0',1,at(1));assert.equal(mergeStates(local,incoming).activeExam.answers['ex-0'].value,1);
  local.activeExam=answerExam(local.activeExam,form,'ex-0',0,at(2));assert.throws(()=>mergeStates(local,incoming),/答案.*衝突/);
 });
+test('合併不同考區分支不得補進交區後的首答',()=>{
+ const local=initialState(),incoming=initialState();const started=startExam(form,{id:'same',time:at(0)});
+ local.activeExam=advanceExam(started,form,at(5),{submit:true});incoming.activeExam=answerExam(started,form,'ex-0',1,at(10));assert.throws(()=>mergeStates(local,incoming),/跨考區/);
+});

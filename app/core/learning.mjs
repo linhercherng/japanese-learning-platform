@@ -123,6 +123,7 @@ export function mergeStates(current,incoming){
   for(const key of ['formId','mode','startedAt','sectionSeconds','questionIds'])requireValue(JSON.stringify(local[key])===JSON.stringify(other[key]),'同一模擬的設定衝突，未匯入');
   if(local.sectionIndex===other.sectionIndex)requireValue(local.sectionStartedAt===other.sectionStartedAt&&local.sectionEndsAt===other.sectionEndsAt,'同一模擬的期限衝突，未匯入');
   const selected=structuredClone(local.sectionIndex>=other.sectionIndex?local:other),answers={...local.answers};
+  if(local.sectionIndex!==other.sectionIndex){const earlier=local.sectionIndex<other.sectionIndex?local:other;for(const [qid,a] of Object.entries(earlier.answers))requireValue(JSON.stringify(selected.answers[qid])===JSON.stringify(a),'模擬已跨考區，兩份首答紀錄不同，未匯入');}
   for(const [qid,a] of Object.entries(other.answers)){if(answers[qid])requireValue(JSON.stringify(answers[qid])===JSON.stringify(a),'模擬答案 ID 衝突，未匯入');else answers[qid]=a;}
   selected.answers=answers;next.activeExam=selected;
  }

@@ -1,5 +1,8 @@
 # Preserve original licensed SVG bytes so the recorded SHA-256 stays verifiable.
+app/** text eol=lf
+scripts/*.mjs text eol=lf
 app/assets/kanjivg/*.svg -text
 app/assets/audio/*.mp3 -text
+app/assets/icons/*.png -text
 docs/review-images/*.jpg -text
 start-hiyori.cmd text eol=crlf

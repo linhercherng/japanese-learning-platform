@@ -20,4 +20,4 @@ http.createServer((req,res)=>{
   if(range){const start=Number(range[1]),end=Math.min(range[2]?Number(range[2]):size-1,size-1);if(start>end||start>=size){res.writeHead(416,{'Content-Range':`bytes */${size}`});res.end();return;}res.writeHead(206,{'Content-Range':`bytes ${start}-${end}/${size}`,'Content-Length':end-start+1});if(req.method==='HEAD')res.end();else fs.createReadStream(target,{start,end}).pipe(res);}
   else{res.writeHead(200,{'Content-Length':size});if(req.method==='HEAD')res.end();else fs.createReadStream(target).pipe(res);}
  }catch{res.writeHead(404,{'Content-Type':'text/plain; charset=utf-8'});res.end('找不到檔案');}
-}).listen(port,'127.0.0.1',()=>console.log(`日和第一版：http://127.0.0.1:${port}/`));
+}).listen(port,'127.0.0.1',()=>console.log(`日和第二版：http://127.0.0.1:${port}/`));

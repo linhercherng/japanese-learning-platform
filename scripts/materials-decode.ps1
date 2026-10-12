@@ -1,13 +1,12 @@
-$ErrorActionPreference = 'Stop'
-$taskRoot = Split-Path $PSScriptRoot -Parent
-$taskFfmpeg = (Get-Command ffmpeg -ErrorAction Stop).Source
-$taskMapping = Get-Content -Raw (Join-Path $taskRoot 'app/assets/audio.json') | ConvertFrom-Json
-$taskPaths = @($taskMapping.PSObject.Properties.Value)
-$taskResults = $taskPaths | ForEach-Object -Parallel {
- $taskPath = Join-Path (Join-Path $using:taskRoot 'app') $_
- $taskErrors = & $using:taskFfmpeg -hide_banner -v error -i $taskPath -f null NUL 2>&1
- [pscustomobject]@{path=$_;ok=($LASTEXITCODE -eq 0);errors=($taskErrors -join ' ')}
-} -ThrottleLimit 4
-$taskFailures = @($taskResults | Where-Object {!$_.ok})
-if ($taskFailures.Count) {$taskFailures | Format-List; throw 'Audio decoder verification failed.'}
-Write-Output ('Decoded all ' + $taskResults.Count + ' MP3 files successfully.')
+$ErrorActionPreference='Stop'
+$taskRoot=Split-Path $PSScriptRoot -Parent
+$taskIndex=Get-Content -LiteralPath (Join-Path $taskRoot 'app/assets/audio.json') -Raw | ConvertFrom-Json -AsHashtable
+$taskFiles=@($taskIndex.Values | Select-Object -Unique | ForEach-Object { Join-Path $taskRoot ('app/'+$_) })
+$taskFfmpeg=(Get-Command ffmpeg -ErrorAction Stop).Source
+$taskResults=@($taskFiles | ForEach-Object -Parallel {
+ $taskFile=$_
+ & $using:taskFfmpeg -hide_banner -loglevel error -i $taskFile -f null - 2>$null
+ if($LASTEXITCODE -ne 0){$taskFile}
+} -ThrottleLimit 6)
+if($taskResults.Count){$taskResults | Write-Output;throw 'MP3 decoding failed'}
+Write-Output ('Decoded all '+$taskFiles.Count+' unique MP3 files successfully.')

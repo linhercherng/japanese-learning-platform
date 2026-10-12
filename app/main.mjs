@@ -1,5 +1,6 @@
 import {kana,kanaLessons,kanaPhonology} from './content/kana.mjs';
-import {lifeLessons} from './content/life.mjs';
+import {lifeLessons,knownItems,knownLessons,allWritingItems} from './content/catalog.mjs';
+import {createV2} from './v2.mjs';
 import {initialState,recordAnswer,dueReviews,completeLesson,saveArtifact,parseBackup,exportBackup,mergeStates} from './core/learning.mjs';
 import {makeKanaQuiz} from './core/quiz.mjs';
 import {openStore,readState,writeState} from './core/storage.mjs';
@@ -18,7 +19,8 @@ history.scrollRestoration='manual';
 function toast(message){const el=document.querySelector('#toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),4000);}
 const mediaIndex={};
 const media=createMedia(mediaIndex,toast);
-function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,due:dueReviews(state)};}
+const v2=createV2({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,due:dueReviews(state),...v2.contextExtras()};}
 function update(fn){
  pendingWrites++;status.textContent='保存中…';
  const operation=queue.then(async()=>{
@@ -37,15 +39,18 @@ function route(){const [name='home',param]=location.hash.slice(1).split('/');ret
 function render(focus=true){
  canvas?.dispose();canvas=null;animationSequence++;document.getAnimations().forEach(a=>a.cancel());
  const {name,param}=route(),ctx=context();
+ v2.onRoute(name,param);
  if(name==='lesson'&&session.activeLesson!==param){session.activeLesson=param;session.lessonTab='對話';}
  const views={home:()=>homeView(ctx),kana:()=>kanaView(ctx),unit:()=>unitView(ctx,param),stroke:()=>strokeView(ctx,param),write:()=>writingView(ctx,param||kana[0].id),life:()=>lifeView(ctx),lesson:()=>lifeLessonView(ctx,param),review:()=>reviewView(ctx),profile:()=>profileView(ctx),quiz:quizView,exam:()=>`${heading('一步一步，走向 N3。','完整檢定課程與模擬試卷會在後續版本加入。')}<section class="self-check"><h2>現在先把基礎練穩</h2><p>這一版可練完整五十音、音韻與六個生活任務。這些課程與進度不是 JLPT 合格證明。</p>${primary('練習五十音','kana')}</section>`};
+ for(const [view,renderer] of Object.entries(v2.views))views[view]=()=>renderer(param);
+ views.life=()=>v2.views.level('L');views.lesson=()=>v2.views.study(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
  document.body.classList.toggle('large-text',state.settings.fontSize===17);document.body.classList.toggle('extra-large-text',state.settings.fontSize===19);
- const active=['unit','stroke','kana'].includes(name)?'kana':name==='write'||name==='quiz'||name==='review'?'review':name==='lesson'||name==='life'?'kana':name;
- document.querySelector('#bottom-nav').innerHTML=[['home','home','今日'],['kana','book','課程'],['review','pen','練習'],['exam','exam','檢定'],['profile','user','我的']].map(([r,i,t])=>`<a href="#${r}" class="${active===r?'active':''}" ${active===r?'aria-current="page"':''}>${icon(i)}<span>${t}</span></a>`).join('');
+ const active=['courses','level','topics','study','unit','stroke','kana','lesson','life','library'].includes(name)?'courses':['write','quiz','review','practice','practice-hub'].includes(name)?'practice-hub':['exam','exam-session','exam-result'].includes(name)?'exam':name;
+ document.querySelector('#bottom-nav').innerHTML=[['home','home','今日'],['courses','book','課程'],['practice-hub','pen','練習'],['exam','exam','檢定'],['profile','user','我的']].map(([r,i,t])=>`<a href="#${r}" class="${active===r?'active':''}" ${active===r?'aria-current="page"':''}>${icon(i)}<span>${t}</span></a>`).join('');
  document.querySelectorAll('[data-review]').forEach(a=>{a.classList.toggle('active',a.dataset.review===name);});
  if(name==='write'){
-  const item=kana.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
+  const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
@@ -76,15 +81,9 @@ async function submitQuiz(choice){
  if(feedback)feedback.innerHTML=`<div class="feedback ${correct?'':'error'}">${correct?'想對了！':'再記住這個差異。'} ${e(q.explanation)}</div>`;if(nextButton)nextButton.disabled=false;
 }
 async function nextQuestion(){const q=session.quiz;if(!q?.answered)return;q.index++;q.answered=false;q.hinted=false;if(q.index>=q.questions.length&&q.lesson){const lesson=kanaLessons.find(l=>l.id===q.lesson);const allItems=lesson.items.every(item=>['recognition','listening'].every(d=>state.attempts.some(a=>a.item===item&&a.dimension===d)));const allPhonology=phonologyQuestions(q.lesson).every(p=>state.attempts.some(a=>a.item===p.item));if(allItems&&allPhonology)await update(s=>completeLesson(s,q.lesson,now()));}render(false);window.scrollTo(0,0);}
-function startReview(){
- const due=dueReviews(state);const first=due[0];if(!first){toast('今天沒有到期項目。');return;}
- if(first.dimension==='writing'){const k=kana.find(k=>k.id===first.item);if(k)location.hash=`write/${k.id}`;else{session.lessonTab='自己寫';session.activeLesson=first.item;location.hash=`lesson/${first.item}`;}return;}
- const questions=due.flatMap(r=>{
-  const k=kana.find(k=>k.id===r.item);if(k)return makeKanaQuiz([k],kana).filter(q=>q.dimension===r.dimension);
-  const match=r.item.match(/^(L\d\d)-q(\d+)$/);if(match){const q=lifeLessons.find(l=>l.id===match[1])?.quiz[Number(match[2])];return q?[{item:r.item,dimension:'language',prompt:q.prompt,options:q.options.map((label,i)=>({label,value:String(i)})),correct:q.correct,explanation:q.explanation}]:[];}
-  const phon=r.item.match(/^(K\d\d)-p(\d+)$/);return phon?phonologyQuestions(phon[1]).filter(q=>q.item===r.item):[];
- }).slice(0,Math.max(5,state.settings.dailyMinutes));
- session.quiz={lesson:null,questions,index:0,results:[],answered:false,hinted:false,started:id()};location.hash='quiz';
+async function startReview(){
+ const due=dueReviews(state);if(!due.length){toast('今天沒有到期項目。');return;}
+ await v2.startReview(due);
 }
 async function saveWriting(itemId){
  const points=canvas?.points()||[],independent=document.querySelector('#writing-recall').checked,order=document.querySelector('#writing-order').checked;
@@ -113,9 +112,9 @@ async function saveLife(lessonId){
 }
 function exportFile(){const blob=new Blob([exportBackup(context().state)],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`hiyori-backup-${new Date().toISOString().slice(0,10)}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('備份已匯出，包含進度、草稿與作品。');}
 function validateCatalog(s){
- const known=new Set([...kana.map(k=>k.id),...lifeLessons.map(l=>l.id),...lifeLessons.flatMap(l=>l.quiz.map((_,i)=>`${l.id}-q${i}`)),...kanaPhonology.flatMap(p=>p.questions.map((_,i)=>`${p.lessonId}-p${i}`))]);
- const lessons=new Set([...kanaLessons.map(l=>l.id),...lifeLessons.map(l=>l.id)]);
+ const known=knownItems,lessons=knownLessons;
  if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!known.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
+ v2.validateCatalog(s);
 }
 async function importFile(file){
  if(!file)return;if(file.size>12*1024*1024){toast('備份超過 12 MB，未匯入。');return;}
