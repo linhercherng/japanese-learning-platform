@@ -4,7 +4,7 @@ $taskAssets = Join-Path $taskRoot 'app/assets'
 $taskSvg = Join-Path $taskAssets 'kanjivg'
 New-Item -ItemType Directory -Path $taskSvg -Force | Out-Null
 $taskCodes = Get-Content -Raw (Join-Path $taskAssets 'stroke-codes.json') | ConvertFrom-Json
-$taskCommit = (Invoke-RestMethod 'https://api.github.com/repos/KanjiVG/kanjivg/commits/master').sha
+$taskCommit = '70a0b7ae0c18ceb5cb358274b029cce0234a43bc'
 $taskResults = $taskCodes | ForEach-Object -Parallel {
  $taskCode = $_
  $taskFile = Join-Path $using:taskSvg ($taskCode + '.svg')

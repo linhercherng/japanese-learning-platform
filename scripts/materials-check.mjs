@@ -1,10 +1,17 @@
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {readFile,stat} from 'node:fs/promises';
 import {kana,kanaLessons,kanaPhonology} from '../app/content/kana.mjs';
 import {lifeLessons} from '../app/content/life.mjs';
 const load=async name=>JSON.parse((await readFile(new URL(`../app/assets/${name}`,import.meta.url),'utf8')).replace(/^\uFEFF/,''));
 const strokes=await load('strokes.json');
 const audio=await load('audio.json');
+const sourceManifest=await load('stroke-manifest.json');
+assert.equal(sourceManifest.length,148);
+for(const source of sourceManifest){
+ const original=await readFile(new URL(`../app/assets/kanjivg/${source.code}.svg`,import.meta.url));
+ assert.equal(createHash('sha256').update(original).digest('hex').toUpperCase(),source.sha256,`Original SVG hash mismatch ${source.code}`);
+}
 assert.equal(kana.filter(k=>k.group==='basic').length,92);
 assert.equal(new Set(kana.map(k=>k.id)).size,kana.length);
 assert.equal(kanaLessons.length,18);
