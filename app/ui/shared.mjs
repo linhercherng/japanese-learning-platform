@@ -6,5 +6,7 @@ export const back=(text,route)=>`<a class="page-back" href="#${route}">${icon('b
 export const note=text=>`<div class="memory-note">${icon('spark')}<span>${escapeHtml(text)}</span></div>`;
 export const heading=(title,description)=>`<div class="page-heading"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p></div>`;
 export const audioButton=text=>`<button class="sound-button" data-audio="${escapeHtml(text)}">${icon('sound')}聽發音</button>`;
+export const wordAudioKey=word=>`${word.jp}［${word.reading}］`;
+export const wordAudioButton=word=>audioButton(wordAudioKey(word));
 export const dateLabel=time=>new Date(time).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
 export function strokeSvg(paths=[],guide=false){return `<svg class="stroke-svg" viewBox="0 0 109 109" role="img" aria-label="筆順示範">${paths.map((entry,i)=>{const d=typeof entry==='string'?entry:entry.d,transform=typeof entry==='string'?'':entry.transform;return `<g ${transform?`transform="${escapeHtml(transform)}"`:''}><path data-stroke="${i}" d="${escapeHtml(d)}"/>${guide?'':`<text x="${Number(d.match(/M([\d.]+)/)?.[1]||10)-7}" y="${Number(d.match(/M[\d.]+,([\d.]+)/)?.[1]||10)-2}">${i+1}</text>`}</g>`;}).join('')}</svg>`;}
