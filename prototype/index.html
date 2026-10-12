@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f5ee">
+  <meta name="description" content="日語學習平台手機畫面樣稿：每天一點，慢慢記住。">
+  <title>日和｜日語學習手機樣稿</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到學習內容</a>
+  <div class="workspace">
+    <aside class="review-rail" aria-label="樣稿畫面導覽">
+      <a class="brand" href="#home"><span class="brand-seal" lang="ja">あ</span><span>日和<small>HIYORI · 日語學習</small></span></a>
+      <p class="rail-intro">每天一點，<br>慢慢記住。</p>
+      <nav class="review-links">
+        <a href="#home" data-review="home">01 <span>今日首頁</span></a>
+        <a href="#kana" data-review="kana">02 <span>五十音</span></a>
+        <a href="#stroke" data-review="stroke">03 <span>認識與筆順</span></a>
+        <a href="#writing" data-review="writing">04 <span>手寫練習</span></a>
+        <a href="#life" data-review="life">05 <span>生活課程</span></a>
+        <a href="#lesson" data-review="lesson">06 <span>點餐單課</span></a>
+      </nav>
+      <div class="rail-note"><span class="eyebrow">DESIGN PREVIEW / 01</span><p>手機畫面樣稿<br>操作可體驗，資料不保存。</p></div>
+    </aside>
+    <div class="app-shell">
+      <div class="preview-bar"><span class="preview-dot"></span>手機畫面樣稿<span>進度為示範</span></div>
+      <header class="app-header"><a href="#home" class="mini-brand"><span class="brand-mark" lang="ja">日</span>日和<span>日語學習</span></a><button class="icon-button" id="preview-info" aria-label="查看樣稿說明"></button></header>
+      <main id="main" tabindex="-1"></main>
+      <nav class="bottom-nav" aria-label="主要導覽" id="bottom-nav"></nav>
+    </div>
+    <aside class="design-notes">
+      <span class="eyebrow">LEARN A LITTLE, REMEMBER MORE</span>
+      <h2>學得輕鬆，<br>記得紮實。</h2>
+      <div class="note-item"><span>01</span><div><h3>少一點，更專心</h3><p>每次五個字、一個生活任務。<br>一屏一個主要操作。</p></div></div>
+      <div class="note-item"><span>02</span><div><h3>看過，也要想起來</h3><p>先看與描寫，再收起提示。<br>把回想安排進學習流程。</p></div></div>
+      <div class="note-item"><span>03</span><div><h3>放進生活，才有連結</h3><p>從一個字到一個詞，<br>再到真的用得到的一句話。</p></div></div>
+      <p class="notes-footer">暖白紙感 · 清楚層次 · 單手操作<br>設計提案，等待你的使用回饋。</p>
+    </aside>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="info-dialog"><div class="dialog-content"><span class="eyebrow">PREVIEW ONLY</span><h2>先一起確認學習體驗</h2><p>這是手機畫面樣稿。你可以切換畫面、試描寫、收起提示及點選示範練習。</p><p>進度與複習數字是示範資料；字跡只留在這次開啟的畫面中，重新整理即清除。沒有帳號、雲端、錄音、正式評分或學習紀錄。</p><p>播放按鈕只示範操作狀態，目前沒有音檔。筆順以「あ」作示例。</p><button class="primary" id="close-dialog">了解，開始看樣稿</button></div></dialog>
+  <script src="preview.js"></script>
+</body>
+</html>

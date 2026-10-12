@@ -1,0 +1,13 @@
+{
+  "name": "hiyori-japanese-learning",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check.mjs && node scripts/v2-check.mjs && node scripts/materials-check.mjs",
+    "build": "node scripts/build.mjs"
+  }
+}
