@@ -35,7 +35,7 @@ export function advanceExam(session,form,time,{submit=false,abandon=false}={}){
  validateExamSession(session);requireValue(validTime(time)&&session.formId===form.id);
  if(session.status!=='active')return session;
  if(abandon)return {...session,status:'abandoned',finishedAt:time};
- let next={...session};let manual=submit;
+ let next={...session};let manual=submit&&remainingSeconds(session,time)>0;
  while(next.status==='active'&&(manual||remainingSeconds(next,time)===0)){
   const ended=manual?time:next.sectionEndsAt;manual=false;next.sectionIndex++;
   if(next.sectionIndex===3){next.status='completed';next.finishedAt=ended;break;}

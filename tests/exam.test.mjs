@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {startExam,answerExam,advanceExam,remainingSeconds,examReport} from '../app/core/exam.mjs';
+import {transitionExamState} from '../app/core/exam-progress.mjs';
+import {initialState,mergeStates} from '../app/core/learning.mjs';
 const form={id:'N5-A',level:'N5',sections:['vocabulary','grammar-reading','listening'].map((id,i)=>({id,title:id,minutes:1,questions:[{id:`ex-${i}`,kind:'choice',dimension:i===2?'listening':'grammar',prompt:'question',options:['wrong','correct'],correct:1,explanation:'because'}]}))};
 const at=s=>new Date(Date.UTC(2026,9,12,8,0,s)).toISOString();
 test('續考倒數沿用原期限，重新讀取不增加時間',()=>{
@@ -20,4 +22,18 @@ test('全部逾時交卷以原時間結束，未答不算正確',()=>{
 });
 test('縮時模式明確標记且不改原試卷',()=>{
  const exam=startExam(form,{id:'session',mode:'short',time:at(0)});assert.equal(exam.mode,'short');assert.equal(exam.sectionSeconds[0],300);assert.equal(form.sections[0].minutes,1);
+});
+test('背景區已逾時才手動交區，不給下一區額外時間',()=>{
+ const exam=startExam(form,{id:'session',time:at(0)});const next=advanceExam(exam,form,at(125),{submit:true});assert.equal(next.sectionIndex,2);assert.equal(remainingSeconds(next,at(125)),55);
+});
+test('交區在交易內用最新答案，不能被舊畫面快照覆寫',()=>{
+ const initial=initialState();initial.activeExam=startExam(form,{id:'session',time:at(0)});
+ const latest={...initial,activeExam:answerExam(initial.activeExam,form,'ex-0',1,at(2))};
+ const next=transitionExamState(latest,form,at(3),{sessionId:'session',sectionIndex:0,submit:true});assert.equal(next.activeExam.answers['ex-0'].value,1);assert.equal(next.activeExam.sectionIndex,1);
+ const staleClick=transitionExamState(next,form,at(4),{sessionId:'session',sectionIndex:0,submit:true});assert.equal(staleClick.activeExam.sectionIndex,1);
+});
+test('相同進行中模擬備份合併保留兩邊首答，分歧首答明示拒絕',()=>{
+ const local=initialState(),incoming=initialState();local.activeExam=startExam(form,{id:'same',time:at(0)});
+ incoming.activeExam=answerExam(local.activeExam,form,'ex-0',1,at(1));assert.equal(mergeStates(local,incoming).activeExam.answers['ex-0'].value,1);
+ local.activeExam=answerExam(local.activeExam,form,'ex-0',0,at(2));assert.throws(()=>mergeStates(local,incoming),/答案.*衝突/);
 });

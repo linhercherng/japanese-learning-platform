@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {initialState,upgradeState,recordAnswer,exportBackup,parseBackup,mergeStates} from '../app/core/learning.mjs';
-import {gradeQuestion,createPractice,answerPractice} from '../app/core/study.mjs';
+import {initialState,upgradeState,recordAnswer,exportBackup,parseBackup,mergeStates,organizeCompletedPractice} from '../app/core/learning.mjs';
+import {gradeQuestion,createPractice,answerPractice,hintPractice} from '../app/core/study.mjs';
 const time='2026-10-12T08:00:00.000Z';
 const legacy=()=>({schema:1,settings:{dailyMinutes:30,roman:false,ruby:true,fontSize:17},attempts:[{id:'old-answer',item:'h-3042',dimension:'recognition',correct:true,hinted:false,time}],reviews:{},completed:{K01:time},artifacts:[{id:'old-work',item:'L07',kind:'text',text:'お茶を一つお願いします。',points:[],time}],drafts:{'text:L07':{text:'コーヒー',points:[],time}},lastLesson:'L07',revision:4});
 test('第一版資料升級保留作品、草稿、設定及穩定作答ID',()=>{
@@ -31,4 +31,18 @@ test('同題首次提交後不能改選刷對，提示使用紀錄保留',()=>{
 });
 test('備份拒絕非法第二版欄位，不能以收藏陣列污染物件',()=>{
  const s=initialState();s.bookmarks=['__proto__'];assert.throws(()=>parseBackup(JSON.stringify({format:'hiyori-backup',version:2,state:s})));s.bookmarks=['safe'];s.examAttempts=[{id:'invalid',status:'completed'}];assert.throws(()=>exportBackup(s));
+});
+test('看提示後刷新與備份還原，仍不能計為無提示成功',()=>{
+ const s=initialState();s.practice=hintPractice(createPractice({id:'p',unitId:'N5-01',questionIds:['q1'],time}),'q1',time);
+ const restored=parseBackup(exportBackup(s));const answered=answerPractice(restored.practice,{id:'q1',kind:'choice',options:['a','b'],correct:1},1,{time});assert.equal(answered.answers.q1.hinted,true);
+});
+test('本機已完成練習時恢復可續練者，两個不同續練都保留',()=>{
+ const current=initialState(),incoming=initialState(),q={id:'q1',kind:'choice',options:['a'],correct:0};
+ current.practice=answerPractice(createPractice({id:'done',unitId:'N5-01',questionIds:['q1'],time}),q,0,{time});current.practice.index=1;
+ incoming.practice=createPractice({id:'resume',unitId:'N5-02',questionIds:['q2'],time});const merged=mergeStates(current,incoming);assert.equal(merged.practice.id,'resume');assert.ok(merged.practiceHistory.some(p=>p.id==='done'));
+ const another=initialState();another.practice=createPractice({id:'another',unitId:'N5-03',questionIds:['q3'],time});const all=mergeStates(merged,another);assert.equal(all.practice.id,'resume');assert.ok(all.practiceHistory.some(p=>p.id==='another'));
+});
+test('整理完成輪次保留首次作答與未完成續作，匯出的備份可恢復結果',()=>{
+ const s=initialState();s.practice=createPractice({id:'continue',unitId:'N5-01',questionIds:['q1'],time});const done=answerPractice(createPractice({id:'done',unitId:'N5-01',questionIds:['q1'],time}),{id:'q1',kind:'choice',options:['a'],correct:0},0,{time});done.index=1;s.practiceHistory=[done];
+ const backup=exportBackup(s),organized=organizeCompletedPractice(s);assert.equal(organized.practice.id,'continue');assert.equal(organized.practiceHistory.length,0);assert.deepEqual(organized.attempts,s.attempts);assert.equal(mergeStates(organized,parseBackup(backup)).practiceHistory[0].id,'done');
 });

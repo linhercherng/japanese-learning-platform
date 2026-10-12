@@ -8,9 +8,10 @@ const validTime = value => typeof value === 'string' && /^\d{4}-\d\d-\d\dT/.test
 const day = time => new Date(time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
 const plain = value => value && typeof value === 'object' && !Array.isArray(value);
 const requireValue = (condition,message='備份格式不正確') => {if(!condition)throw new Error(message);};
-export function initialState(){return {schema:2,settings:{dailyMinutes:15,roman:true,ruby:true,fontSize:15},attempts:[],reviews:{},completed:{},artifacts:[],drafts:{},lastLesson:'K01',revision:0,bookmarks:[],practice:null,activeExam:null,examAttempts:[]};}
+export function initialState(){return {schema:2,settings:{dailyMinutes:15,roman:true,ruby:true,fontSize:15},attempts:[],reviews:{},completed:{},artifacts:[],drafts:{},lastLesson:'K01',revision:0,bookmarks:[],practice:null,practiceHistory:[],activeExam:null,examAttempts:[]};}
 export function upgradeState(state){
  validateState(state);const next=state.schema===1?{...structuredClone(state),schema:2,bookmarks:[],practice:null,activeExam:null,examAttempts:[]}:structuredClone(state);
+ next.practiceHistory??=[];for(const p of [next.practice,...next.practiceHistory].filter(Boolean))p.hints??=[];
  next.reviews={};next.attempts.sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).forEach(a=>applyReview(next.reviews,a));return validateState(next);
 }
 function validateAttempt(a){requireValue(plain(a)&&safeId(a.id)&&safeId(a.item)&&dimensions.includes(a.dimension)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&validTime(a.time),'作答資料不正確');}
@@ -31,6 +32,11 @@ export function recordAnswer(state,attempt){
  if(state.attempts.some(a=>a.id===attempt.id))return state;
  requireValue(state.attempts.length<20000,'作答紀錄已達上限，請先匯出備份');
  const next=structuredClone(state);next.attempts.push({...attempt});applyReview(next.reviews,attempt);next.revision++;
+ return next;
+}
+export function recordAnswers(state,attempts){
+ const next=structuredClone(state),ids=new Set(next.attempts.map(a=>a.id));
+ for(const attempt of attempts){validateAttempt(attempt);if(ids.has(attempt.id))continue;requireValue(next.attempts.length<20000,'作答紀錄已達上限，請先匯出備份');ids.add(attempt.id);next.attempts.push({...attempt});applyReview(next.reviews,attempt);next.revision++;}
  return next;
 }
 export function dueReviews(state,now=new Date().toISOString()){
@@ -54,7 +60,7 @@ export function saveArtifact(state,artifact){validateArtifact(artifact);requireV
 export function validateState(s){
  requireValue(plain(s)&&[1,2].includes(s.schema),'不支援此資料版本');
  const expected=['schema','settings','attempts','reviews','completed','artifacts','drafts','lastLesson','revision',...(s.schema===2?['bookmarks','practice','activeExam','examAttempts']:[])];
- requireValue(Object.keys(s).every(k=>expected.includes(k))&&expected.every(k=>Object.hasOwn(s,k)));
+ requireValue(Object.keys(s).every(k=>expected.includes(k)||(s.schema===2&&k==='practiceHistory'))&&expected.every(k=>Object.hasOwn(s,k)));
  requireValue(plain(s.settings)&&[5,15,30].includes(s.settings.dailyMinutes)&&typeof s.settings.roman==='boolean'&&typeof s.settings.ruby==='boolean'&&[15,17,19].includes(s.settings.fontSize));
  requireValue(Array.isArray(s.attempts)&&s.attempts.length<=20000&&Array.isArray(s.artifacts)&&s.artifacts.length<=500);
  const ids=new Set();for(const a of s.attempts){validateAttempt(a);requireValue(!ids.has(a.id),'備份含重複作答');ids.add(a.id);}
@@ -71,6 +77,8 @@ export function validateState(s){
  if(s.schema===2){
   requireValue(Array.isArray(s.bookmarks)&&s.bookmarks.length<=10000&&s.bookmarks.every(safeId)&&new Set(s.bookmarks).size===s.bookmarks.length);
   validatePractice(s.practice);validateExamSession(s.activeExam);
+  requireValue(s.practiceHistory===undefined||(Array.isArray(s.practiceHistory)&&s.practiceHistory.length<=100&&new Set(s.practiceHistory.map(p=>p.id)).size===s.practiceHistory.length));
+  (s.practiceHistory||[]).forEach(p=>{requireValue(p!==null&&p.id!==s.practice?.id);validatePractice(p);});
   requireValue(Array.isArray(s.examAttempts)&&s.examAttempts.length<=100&&new Set(s.examAttempts.map(x=>x.id)).size===s.examAttempts.length);
   s.examAttempts.forEach(exam=>{validateExamSession(exam);requireValue(exam.status!=='active');});
  }
@@ -99,8 +107,31 @@ export function mergeStates(current,incoming){
  const exams=new Map(next.examAttempts.map(a=>[a.id,a]));
  for(const exam of incoming.examAttempts){if(exams.has(exam.id))requireValue(JSON.stringify(exams.get(exam.id))===JSON.stringify(exam),'模擬紀錄 ID 衝突');else exams.set(exam.id,exam);}
  next.examAttempts=[...exams.values()];
- if(!next.practice&&incoming.practice)next.practice=structuredClone(incoming.practice);
+ const practices=new Map();
+ for(const p of [next.practice,...next.practiceHistory,incoming.practice,...incoming.practiceHistory].filter(Boolean)){
+  const prior=practices.get(p.id);if(!prior){practices.set(p.id,structuredClone(p));continue;}
+  requireValue(prior.unitId===p.unitId&&JSON.stringify(prior.questionIds)===JSON.stringify(p.questionIds),'練習 ID 衝突');
+  for(const [qid,a] of Object.entries(p.answers)){if(prior.answers[qid])requireValue(JSON.stringify(prior.answers[qid])===JSON.stringify(a),'練習答案衝突');else prior.answers[qid]=a;}
+  prior.hints=[...new Set([...prior.hints,...p.hints])];prior.index=Math.max(prior.index,p.index);prior.updatedAt=prior.updatedAt>p.updatedAt?prior.updatedAt:p.updatedAt;
+ }
+ const active=p=>p&&p.index<p.questionIds.length;
+ const preferred=active(next.practice)?next.practice:active(incoming.practice)?incoming.practice:next.practice||incoming.practice;
+ next.practice=preferred?practices.get(preferred.id):null;next.practiceHistory=[...practices.values()].filter(p=>p.id!==next.practice?.id);
+ if(next.activeExam&&incoming.activeExam&&next.activeExam.id!==incoming.activeExam.id)throw new Error('兩份備份有不同進行中模擬，請先完成本機模擬再匯入。');
+ if(next.activeExam&&incoming.activeExam){
+  const local=next.activeExam,other=incoming.activeExam;
+  for(const key of ['formId','mode','startedAt','sectionSeconds','questionIds'])requireValue(JSON.stringify(local[key])===JSON.stringify(other[key]),'同一模擬的設定衝突，未匯入');
+  if(local.sectionIndex===other.sectionIndex)requireValue(local.sectionStartedAt===other.sectionStartedAt&&local.sectionEndsAt===other.sectionEndsAt,'同一模擬的期限衝突，未匯入');
+  const selected=structuredClone(local.sectionIndex>=other.sectionIndex?local:other),answers={...local.answers};
+  for(const [qid,a] of Object.entries(other.answers)){if(answers[qid])requireValue(JSON.stringify(answers[qid])===JSON.stringify(a),'模擬答案 ID 衝突，未匯入');else answers[qid]=a;}
+  selected.answers=answers;next.activeExam=selected;
+ }
  if(!next.activeExam&&incoming.activeExam&&!next.examAttempts.some(a=>a.id===incoming.activeExam.id))next.activeExam=structuredClone(incoming.activeExam);
+ const terminal=next.examAttempts.find(a=>a.id===next.activeExam?.id);
+ if(terminal){for(const [qid,a] of Object.entries(next.activeExam.answers))requireValue(JSON.stringify(terminal.answers[qid])===JSON.stringify(a),'完成與續考答案衝突，未匯入');next.activeExam=null;}
  if(JSON.stringify({...next,revision:0})!==JSON.stringify({...current,revision:0}))next.revision=Math.max(current.revision,incoming.revision)+1;
  return validateState(next);
+}
+export function organizeCompletedPractice(state){
+ return {...state,practice:state.practice?.index>=state.practice?.questionIds.length?null:state.practice,practiceHistory:state.practiceHistory.filter(p=>p.index<p.questionIds.length),revision:state.revision+1};
 }
