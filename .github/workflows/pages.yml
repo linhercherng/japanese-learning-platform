@@ -2,7 +2,7 @@ name: Verify and deploy GitHub Pages
 
 on:
   push:
-    branches: [main, feature/learning-v2]
+    branches: [main, feature/learning-v2, feature/learning-v3]
   pull_request:
     branches: [main]
   workflow_dispatch:

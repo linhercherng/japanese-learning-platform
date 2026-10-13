@@ -8,7 +8,7 @@ const titles={K:'假名與聲音',L:'生活起步',N5:'N5 基礎完整教材',N4
 const hash=body=>createHash('sha256').update(body).digest('hex');
 const serialize=value=>JSON.stringify(value,null,2)+'\n';
 /** Build against a frozen local audio index; safe to rerun after more audio is generated. */
-export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],kanaPhonology=[],allUnits=[],words=[],kanjiItems=[],forms=[]}){
+export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],kanaPhonology=[],allUnits=[],words=[],kanjiItems=[],forms=[],v3Questions=[],deepLessons=[]}){
  const texts=new Map(ids.map(id=>[id,new Set()])),optional=new Map(ids.map(id=>[id,new Set()]));
  function add(level,text,required=true){if(text&&texts.has(level))(required?texts:optional).get(level).add(text);}
  function word(level,w){add(level,w.jp);add(level,wordAudioKey(w));add(level,w.example);}
@@ -25,6 +25,8 @@ export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],k
  for(const w of words)for(const level of w.levels||[w.level])word(level,w);
  for(const k of kanjiItems)for(const level of k.levels||[])for(const w of k.words||[])word(level,w);
  for(const form of forms)for(const section of form.sections||[])for(const q of section.questions||[])add(form.level,q.transcript);
+ for(const q of v3Questions)add(q.level,q.transcript);
+ for(const u of deepLessons)for(const x of u.listening)add(u.level,x.jp);
  const fileInfo=new Map(),used=new Set();
  for(const path of [...new Set(Object.values(audioIndex))]){
   if(!/^assets\/audio\/[A-Za-z0-9_-]+\.mp3$/.test(path))throw new Error(`音訊路徑不正確：${path}`);

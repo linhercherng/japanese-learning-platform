@@ -1,6 +1,7 @@
 import {kana,kanaLessons,kanaPhonology} from './content/kana.mjs';
 import {lifeLessons,knownItems,knownLessons,allWritingItems} from './content/catalog.mjs';
 import {createV2} from './v2.mjs';
+import {createV3} from './v3.mjs';
 import {initialState,recordAnswer,dueReviews,completeLesson,saveArtifact,parseBackup,exportBackup,mergeStates} from './core/learning.mjs';
 import {makeKanaQuiz} from './core/quiz.mjs';
 import {openStore,readState,writeState} from './core/storage.mjs';
@@ -20,7 +21,8 @@ function toast(message){const el=document.querySelector('#toast');el.textContent
 const mediaIndex={};
 const media=createMedia(mediaIndex,toast);
 const v2=createV2({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
-function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,due:dueReviews(state),...v2.contextExtras()};}
+const v3=createV3({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,audioIndex,due:dueReviews(state),...v2.contextExtras()};}
 function update(fn){
  pendingWrites++;status.textContent='保存中…';
  const operation=queue.then(async()=>{
@@ -40,13 +42,15 @@ function render(focus=true){
  canvas?.dispose();canvas=null;animationSequence++;document.getAnimations().forEach(a=>a.cancel());
  const {name,param}=route(),ctx=context();
  v2.onRoute(name,param);
+ v3.onRoute(name,param);
  if(name==='lesson'&&session.activeLesson!==param){session.activeLesson=param;session.lessonTab='對話';}
  const views={home:()=>homeView(ctx),kana:()=>kanaView(ctx),unit:()=>unitView(ctx,param),stroke:()=>strokeView(ctx,param),write:()=>writingView(ctx,param||kana[0].id),life:()=>lifeView(ctx),lesson:()=>lifeLessonView(ctx,param),review:()=>reviewView(ctx),profile:()=>profileView(ctx),quiz:quizView,exam:()=>`${heading('一步一步，走向 N3。','完整檢定課程與模擬試卷會在後續版本加入。')}<section class="self-check"><h2>現在先把基礎練穩</h2><p>這一版可練完整五十音、音韻與六個生活任務。這些課程與進度不是 JLPT 合格證明。</p>${primary('練習五十音','kana')}</section>`};
  for(const [view,renderer] of Object.entries(v2.views))views[view]=()=>renderer(param);
  views.life=()=>v2.views.level('L');views.lesson=()=>v2.views.study(param);
+ for(const [view,renderer] of Object.entries(v3.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
  document.body.classList.toggle('large-text',state.settings.fontSize===17);document.body.classList.toggle('extra-large-text',state.settings.fontSize===19);
- const active=['courses','level','topics','study','unit','stroke','kana','lesson','life','library'].includes(name)?'courses':['write','quiz','review','practice','practice-hub'].includes(name)?'practice-hub':['exam','exam-session','exam-result'].includes(name)?'exam':name;
+ const active=['courses','level','topics','study','unit','stroke','kana','lesson','life','library','deep'].includes(name)?'courses':['write','quiz','review','practice','practice-hub','v3-practice','weaknesses','confusion'].includes(name)?'practice-hub':['exam','exam-session','exam-result'].includes(name)?'exam':['weekly','revise'].includes(name)?'profile':name==='daily'?'home':name;
  document.querySelector('#bottom-nav').innerHTML=[['home','home','今日'],['courses','book','課程'],['practice-hub','pen','練習'],['exam','exam','檢定'],['profile','user','我的']].map(([r,i,t])=>`<a href="#${r}" class="${active===r?'active':''}" ${active===r?'aria-current="page"':''}>${icon(i)}<span>${t}</span></a>`).join('');
  document.querySelectorAll('[data-review]').forEach(a=>{a.classList.toggle('active',a.dataset.review===name);});
  if(name==='write'){
@@ -112,9 +116,10 @@ async function saveLife(lessonId){
 }
 function exportFile(){const blob=new Blob([exportBackup(context().state)],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`hiyori-backup-${new Date().toISOString().slice(0,10)}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('備份已匯出，包含進度、草稿與作品。');}
 function validateCatalog(s){
- const known=knownItems,lessons=knownLessons;
- if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!known.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
+ const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
+ if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!draftIds.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
  v2.validateCatalog(s);
+ v3.validateCatalog(s);
 }
 async function importFile(file){
  if(!file)return;if(file.size>12*1024*1024){toast('備份超過 12 MB，未匯入。');return;}
@@ -131,6 +136,7 @@ async function animateStrokes(step){
 }
 document.addEventListener('click',event=>{
  if(event.target.closest('[data-skip-focus]')){event.preventDefault();main.focus();return;}
+ if(event.target.closest('[data-recall-write]'))session.guide=false;
  const button=event.target.closest('button');if(!button)return;const d=button.dataset;
  const locks=d.saveWriting||d.saveLife||d.action==='confirm-import';if(locks)button.disabled=true;
  const task=async()=>{
@@ -147,7 +153,7 @@ document.addEventListener('click',event=>{
   if(d.saveWriting)await saveWriting(d.saveWriting);
   if(d.strokeStep!==undefined)await animateStrokes(Number(d.strokeStep));
   if(d.mode){session.guide=d.mode==='trace';const board=document.querySelector('#writing-board');board.classList.toggle('no-guide',!session.guide);board.classList.remove('compare');document.querySelectorAll('[data-mode]').forEach(b=>{const active=(b.dataset.mode==='trace')===session.guide;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});}
-  if(d.deleteArtifact){await update(s=>({...s,artifacts:s.artifacts.filter(a=>a.id!==d.deleteArtifact)}));toast('作品已移除。其他進度保留，可由先前備份恢復。');render(false);}
+  if(d.deleteArtifact){await update(s=>{if(Object.values(s.v3.artifactParents).includes(d.deleteArtifact))throw new Error('這份原稿還有修改稿，請先移除修改稿再整理原稿。');const next={...s,artifacts:s.artifacts.filter(a=>a.id!==d.deleteArtifact),v3:{...s.v3,artifactParents:{...s.v3.artifactParents}}};delete next.v3.artifactParents[d.deleteArtifact];delete next.drafts[`text:${d.deleteArtifact}`];return next;});toast('作品已移除。其他進度保留，可由先前備份恢復。');render(false);}
   const actions={undo:()=>canvas?.undo(),clear:()=>canvas?.clear(),compare:()=>{const board=document.querySelector('#writing-board');board.classList.toggle('compare');board.classList.toggle('no-guide',!board.classList.contains('compare')&&!session.guide);},'animate-strokes':()=>animateStrokes(),'start-review':startReview,'quiz-next':nextQuestion,'quiz-hint':()=>{if(!session.quiz?.answered){session.quiz.hinted=true;const q=session.quiz.questions[session.quiz.index];toast(q.explanation);}},'export-backup':exportFile,'import-backup':()=>document.querySelector('#backup-file').click(),'cancel-import':()=>{pendingImport=null;document.querySelector('#import-dialog').close();},'confirm-import':async()=>{if(!pendingImport)return;await update(s=>mergeStates(s,pendingImport));session.latestDrafts={};pendingImport=null;document.querySelector('#import-dialog').close();toast('備份已合併，既有紀錄保留。');render(false);},record:()=>media.toggleRecord(document.querySelector('#recording-playback'),button)};
   if(actions[d.action])await actions[d.action]();
  };
