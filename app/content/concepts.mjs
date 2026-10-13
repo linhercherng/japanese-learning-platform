@@ -83,7 +83,7 @@ const priorQuestionIds={
  'c-n5-request':['N5-17-c','N5-17-o','N5-17-g2'],
  'c-n5-counter':['N5-21-c','N5-21-o','N5-21-g2'],
  'c-n4-nai':['N4-02-G1','N4-02-G2','N4-02-O1'],
- 'c-n4-teiru':['N4-12-G1','N4-12-G2'],
+ 'c-n4-teiru':['N4-12-G1'],
  'c-n4-nagara':['N4-14-G1','N4-14-G2','N4-14-O1'],
  'c-n4-deadline':['N4-26-G1'],
  'c-n3-hazu':['N3-07-q3','N3-07-q4','N3-07-q6'],

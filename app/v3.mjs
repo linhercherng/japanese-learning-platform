@@ -14,7 +14,7 @@ import {v3HomeView,dailyView,practiceV3View,weaknessesView,confusionView,deepVie
 export function createV3({getState,getContext,update,toast,render,now,id,cacheDraft}){
  const state=()=>getState(),ctx=()=>getContext();
  const local=()=>ctx().session.v3ui??=( {order:[],deepIndex:0} );
- const resolve=(qid,dimension)=>catalog.resolveLearningQuestion?.(qid,dimension)||v3Questions.find(q=>q.id===qid)||catalog.resolveQuestion(qid);
+ const resolve=(qid,dimension)=>catalog.resolveLearningQuestion(qid,dimension);
  const units=[...catalog.allUnits,...kanaLessons.map(u=>({...u,level:'K'}))];
  const route=()=>location.hash.slice(1).split('/');
  const refresh=hash=>{if(location.hash===hash)render(false);};

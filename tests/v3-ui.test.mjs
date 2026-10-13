@@ -9,9 +9,17 @@ import {v3Questions} from '../app/content/practice-v3.mjs';
 import {kana,kanaLessons} from '../app/content/kana.mjs';
 import {allUnits} from '../app/content/catalog.mjs';
 import {createV3} from '../app/v3.mjs';
+import {readFileSync} from 'node:fs';
 const time='2026-10-13T00:00:00.000Z';
 const resolve=id=>v3Questions.find(q=>q.id===id);
 const context=state=>({state,session:{},kana,kanaLessons,allUnits,strokes:{}});
+test('Five minute new content is taught before recall, and daily writing requires self checks',()=>{
+ const raw=initialState();raw.settings.dailyMinutes=5;
+ const p=makeDailyPlan(raw,{concepts,questions:v3Questions,units:[...allUnits,...kanaLessons.map(k=>({...k,level:'K'}))],resolveQuestion:resolve,time,id:'five'});
+ let state=startDailyStep(storeDailyPlan(raw,p),'five','recall',time);const ctx=context(state);ctx.audioIndex=JSON.parse(readFileSync(new URL('../app/assets/audio.json',import.meta.url),'utf8'));
+ const html=dailyView(ctx,'five');assert(html.includes(concepts[0].explanation));assert(!html.includes('data-audio="あめ／アイス"'));assert(html.includes('data-audio="あめ"'));
+ state.v3.dailyPlans[0].steps.forEach(s=>{if(s.kind!=='write')s.completedAt=time;else s.startedAt=time;});assert.match(dailyView({...ctx,state},'five'),/data-v3-check/);
+});
 function planState(){const state=initialState(),plan=makeDailyPlan(state,{concepts,questions:v3Questions,units:[...allUnits,...kanaLessons.map(k=>({...k,level:'K'}))],resolveQuestion:resolve,time,id:'daily-one'});return storeDailyPlan(state,plan);}
 test('Home resumes a stable existing plan and completed day needs explicit extra action',()=>{
  const state=planState();assert.match(v3HomeView(context(state),time),/href="#daily\/daily-one"/);assert.doesNotMatch(v3HomeView(context(state),time),/data-v3-action="create-plan"/);

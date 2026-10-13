@@ -14,6 +14,9 @@ import {forms as n4Forms} from './n4-exams.mjs';
 import {forms as n3Forms} from './n3-exams.mjs';
 import {words as n4Lexicon} from './n4-lexicon.mjs';
 import {words as n3Lexicon} from './n3-lexicon.mjs';
+import {v3Questions} from './practice-v3.mjs';
+export {v3Questions} from './practice-v3.mjs';
+export {deepLessons} from './deep-lessons.mjs';
 export const topics=[['greetings','招呼與自介'],['family','家庭與人際'],['schedule','時間與行程'],['food','飲食與餐廳'],['shopping','購物與付款'],['transport','交通與問路'],['travel','住宿與旅遊'],['weather','天氣與季節'],['health','身體與就醫'],['help','緊急與求助'],['routine','日常作息'],['school','學校與學習'],['work','工作與職場'],['hobbies','興趣與休閒'],['sport','運動與活動'],['home','租屋與居家'],['mail','郵局與寄送'],['public','銀行與公共服務'],['technology','手機與網路'],['culture','文化與交流']];
 export const levels=['N5','N4','N3'];
 export const lifeLessons=[...originalLife,...additionalLifeLessons].sort((a,b)=>a.id.localeCompare(b.id));
@@ -41,11 +44,12 @@ export const allWritingItems=[...kana,...kanjiItems];
 export function unitQuestions(unit){return [...unit.questions,...(unit.reading?.questions||[]).map(q=>({...q,passage:q.passage||unit.reading.jp}))];}
 export function completionKey(unit){return unit.level==='L'?`${unit.id}:v2`:unit.id;}
 export function isComplete(state,unit){return Boolean(state.completed[completionKey(unit)]);}
-export const knownItems=new Set([...kana.map(k=>k.id),...allUnits.map(u=>u.id),...questionById.keys(),...lifeLessons.flatMap(l=>l.quiz.map((_,i)=>`${l.id}-q${i}`)),...kanaPhonology.flatMap(p=>p.questions.map((_,i)=>`${p.lessonId}-p${i}`))]);
+export const knownItems=new Set([...kana.map(k=>k.id),...kanaLessons.map(l=>l.id),...allUnits.map(u=>u.id),...questionById.keys(),...lifeLessons.flatMap(l=>l.quiz.map((_,i)=>`${l.id}-q${i}`)),...kanaPhonology.flatMap(p=>p.questions.map((_,i)=>`${p.lessonId}-p${i}`))]);
 export const knownLessons=new Set([...kanaLessons.map(l=>l.id),...allUnits.flatMap(u=>[u.id,completionKey(u)])]);
 for(const word of words){knownItems.add(word.id);knownItems.add(`${word.id}-read`);knownItems.add(`${word.id}-meaning`);}
 for(const k of kanjiItems)knownItems.add(k.id);
 for(const form of forms)for(const section of form.sections)for(const q of section.questions){knownItems.add(q.id);questionById.set(q.id,q);}
+for(const q of v3Questions){knownItems.add(q.id);questionById.set(q.id,q);}
 export function stableId(prefix,text){let a=2166136261,b=5381;for(const char of text){const n=char.codePointAt(0);a=Math.imul(a^n,16777619);b=Math.imul(b,33)^n;}return `${prefix}-${(a>>>0).toString(16).padStart(8,'0')}${(b>>>0).toString(16).padStart(8,'0')}`;}
 export function wordQuestion(id){
  const word=words.find(w=>id===`${w.id}-read`||id===`${w.id}-meaning`);if(!word)return null;
@@ -62,6 +66,16 @@ for(const target of kana)for(const dimension of ['recognition','listening']){
 }
 for(const unit of kanaPhonology)unit.questions.forEach((q,i)=>{const id=`${unit.lessonId}-p${i}`;legacyReviewQuestions.set(id,{id,kind:'choice',dimension:'language',prompt:q.prompt,options:q.choices,correct:q.choices.indexOf(q.answer),explanation:q.explanation});});
 export function resolveQuestion(id){return questionById.get(id)||legacyReviewQuestions.get(id)||wordQuestion(id);}
+const examQuestionIds=new Set(forms.flatMap(f=>f.sections.flatMap(s=>s.questions.map(q=>q.id))));
+// This old item has two plausible answers; retain its history, omit it from V3 evidence and routes.
+const unreliableQuestionIds=new Set(['N4-12-G2']);
+export function resolveLearningQuestion(id,dimension){
+ if(examQuestionIds.has(id)||unreliableQuestionIds.has(id))return null;
+ const q=resolveQuestion(id)||legacyReviewQuestions.get(`rv-${id}-${dimension}`);
+ if(q){const word=words.find(w=>id===`${w.id}-read`||id===`${w.id}-meaning`);return {...q,level:q.level||word?.levels[0]||'K'};}
+ if(dimension==='writing'){const item=allWritingItems.find(k=>k.id===id),unit=unitById.get(id);if(item||unit||kanaLessons.some(l=>l.id===id))return {id,dimension,level:unit?.level||item?.levels?.[0]||'K'};}
+ return null;
+}
 export function reviewQuestions(reviews,limit=15){
  const seen=new Set();return reviews.flatMap(r=>{const q=resolveQuestion(r.item)||legacyReviewQuestions.get(`rv-${r.item}-${r.dimension}`);if(!q||seen.has(q.id))return [];seen.add(q.id);return [q];}).slice(0,limit);
 }

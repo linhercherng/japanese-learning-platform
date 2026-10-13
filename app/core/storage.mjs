@@ -11,7 +11,11 @@ export async function openStore(name='hiyori-learning-v1'){
   request.onsuccess=()=>{const db=request.result;db.onversionchange=()=>db.close();resolve(db);};
  });
 }
-export async function readState(db){return new Promise((resolve,reject)=>{const t=db.transaction('state','readonly');const r=t.objectStore('state').get('learning');r.onsuccess=()=>{try{resolve(r.result?upgradeState(r.result):initialState());}catch{reject(new Error('既有資料格式不正確，請先匯出或恢復備份'));}};r.onerror=()=>reject(r.error);});}
+export async function readState(db){return new Promise((resolve,reject)=>{
+ const t=db.transaction('state','readwrite'),store=t.objectStore('state'),r=store.get('learning');let state,error;
+ r.onsuccess=()=>{try{state=r.result?upgradeState(r.result):initialState();if(r.result&&r.result.schema<state.schema)store.put(state,'learning');}catch{error=new Error('既有資料格式不正確，請先匯出或恢復備份');t.abort();}};
+ t.oncomplete=()=>resolve(state);t.onabort=()=>reject(error||new Error('資料升級未完成，原進度保留。請重新整理或恢復備份。'));t.onerror=()=>reject(new Error('瀏覽器無法讀取或升級本機儲存'));
+});}
 export async function writeState(db,state,expectedRevision){
  validateState(state);
  return new Promise((resolve,reject)=>{

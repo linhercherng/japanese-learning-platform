@@ -6,12 +6,12 @@ const time='2026-10-12T08:00:00.000Z';
 const legacy=()=>({schema:1,settings:{dailyMinutes:30,roman:false,ruby:true,fontSize:17},attempts:[{id:'old-answer',item:'h-3042',dimension:'recognition',correct:true,hinted:false,time}],reviews:{},completed:{K01:time},artifacts:[{id:'old-work',item:'L07',kind:'text',text:'お茶を一つお願いします。',points:[],time}],drafts:{'text:L07':{text:'コーヒー',points:[],time}},lastLesson:'L07',revision:4});
 test('第一版資料升級保留作品、草稿、設定及穩定作答ID',()=>{
  const before=legacy(),next=upgradeState(before);
- assert.equal(next.schema,2);assert.deepEqual(next.artifacts,before.artifacts);assert.deepEqual(next.drafts,before.drafts);assert.deepEqual(next.settings,before.settings);assert.equal(next.attempts[0].id,'old-answer');assert.equal(next.reviews['h-3042:recognition'].total,1);assert.equal(before.schema,1);
+ assert.equal(next.schema,3);assert.deepEqual(next.artifacts,before.artifacts);assert.deepEqual(next.drafts,before.drafts);assert.deepEqual(next.settings,before.settings);assert.equal(next.attempts[0].id,'old-answer');assert.equal(next.reviews['h-3042:recognition'].total,1);assert.equal(before.schema,1);
 });
 test('第一版備份可匯入第二版，新增能力及收藏可往返',()=>{
  const v1=JSON.stringify({format:'hiyori-backup',version:1,state:legacy()});let next=parseBackup(v1);
  next=recordAnswer(next,{id:'new-answer',item:'N5-01-q1',dimension:'grammar',correct:false,hinted:false,time});next.bookmarks=['word-n5-001'];
- const exported=JSON.parse(exportBackup(next));assert.equal(exported.version,2);
+ const exported=JSON.parse(exportBackup(next));assert.equal(exported.version,3);
  assert.deepEqual(parseBackup(JSON.stringify(exported)).bookmarks,next.bookmarks);assert.equal(parseBackup(JSON.stringify(exported)).attempts.length,2);
 });
 test('合併第二版收藏去重且保留本機進行中練習',()=>{
@@ -30,7 +30,7 @@ test('同題首次提交後不能改選刷對，提示使用紀錄保留',()=>{
  const first=answerPractice(p,q,0,{time,hinted:true});const second=answerPractice(first,q,1,{time});assert.equal(second.answers.q1.correct,false);assert.equal(second.answers.q1.hinted,true);assert.equal(Object.keys(second.answers).length,1);
 });
 test('備份拒絕非法第二版欄位，不能以收藏陣列污染物件',()=>{
- const s=initialState();s.bookmarks=['__proto__'];assert.throws(()=>parseBackup(JSON.stringify({format:'hiyori-backup',version:2,state:s})));s.bookmarks=['safe'];s.examAttempts=[{id:'invalid',status:'completed'}];assert.throws(()=>exportBackup(s));
+ const s=initialState();s.bookmarks=['__proto__'];assert.throws(()=>parseBackup(JSON.stringify({format:'hiyori-backup',version:3,state:s})));s.bookmarks=['safe'];s.examAttempts=[{id:'invalid',status:'completed'}];assert.throws(()=>exportBackup(s));
 });
 test('看提示後刷新與備份還原，仍不能計為無提示成功',()=>{
  const s=initialState();s.practice=hintPractice(createPractice({id:'p',unitId:'N5-01',questionIds:['q1'],time}),'q1',time);
