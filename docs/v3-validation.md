@@ -29,4 +29,10 @@
 
 ## 公開部署
 
-以main的GitHub Actions發布；正式URL與部署證據將於成功後補記。
+PR [#4](https://github.com/linhercherng/japanese-learning-platform/pull/4)已合併至main，整合commit為93c8344f8cca7a7611ad5929e79bb50de8462c7a。GitHub Actions [38392302028](https://github.com/linhercherng/japanese-learning-platform/actions/runs/38392302028) build／deploy成功。
+
+正式網址：[日和第三版](https://linhercherng.github.io/japanese-learning-platform/)。2026-10-13 19:46台北時間匿名HTTPS核對：首頁第三版標記、62份shell檔案SHA-256、JS MIME及3個代表性MP3通過；shell fingerprint ec152e2b7b3d967423c2042906097870d35b240f9c7baab9e93c87bf425d1356。
+
+正式來源實際瀏覽器首頁、手機版、離線已就緒與新路由正常，warn/error為空。既有第二版SW會保持原分頁完整版本；關閉本站分頁後再開啟，已確認會切換第三版，無須清除瀏覽器資料。
+
+回退可重新部署既有V2 commit06ad0e5，但V2不能讀schema3；應優先回退介面並保留新版核心，或先匯出V3備份再進行資料相容性修復，不得刪除進度庫。

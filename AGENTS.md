@@ -6,13 +6,13 @@
 
 2026-10-13 使用者已明示「直接公開，讓github上可以直接使用」，授權公開儲存庫、合併完整版到main並部署GitHub Pages。公開試用版仍明示教材與合成語音未經獨立教師審校；不可宣稱為正式審定或官方教材。公開端點的實際驗收另見 `docs/pages-deployment.md`，舊驗收文件保留為當時狀態。
 
-使用者已確認畫面、授權開發，並要求第二版規劃完直接執行。`app/` 是v0.2本機平台，含90分級主課、60情境、12生活起步、6模擬卷與PWA。`prototype/`及第一版歷史保留。獨立教師審校、雲端同步、真人教材、實機與公開部署尚未驗收，不能由本機驗證推論完成。第二版當前設計見 `docs/plans/2026-10-12-learning-v2-design.md`，實際範圍及證據見 `docs/v2-validation.md`。
+使用者已確認畫面、授權開發，並要求第二版規劃完直接執行。2026-10-13使用者已授權第三版實作並更新GitHub。`app/` 是v0.3公開試用平台，含90分級主課、60情境、12生活起步、6模擬卷與PWA。`prototype/`及第一版歷史保留。獨立教師審校、雲端同步、真人教材與實機尚未驗收，不能由本機驗證推論完成。第三版設計及驗證見`docs/plans/2026-10-13-learning-v3-design.md`與`docs/v3-validation.md`；V3.1/V3.2仍為後續。第二版當前設計見 `docs/plans/2026-10-12-learning-v2-design.md`，實際範圍及證據見 `docs/v2-validation.md`。
 
 ## 實作與驗證
 
 - Node.js 22 以上，原生 ES modules；`npm run dev` 啟動 127.0.0.1:18090。
 - `npm test`驗證邏輯；修改後先 `npm run build` 重產離線雜湊與靜態檔，再 `npm run check` 檢查語法／完整內容／素材／雜湊。app文字統一LF，原KanjiVG bytes不改。
-- 進度在IndexedDB，`?qa=1`使用隔離QA庫並略過SW，`?qa=1&offlineQa=1`啟用離線驗收；真實個人資料不可作測試。正式庫仍沿用第一版名字，schema2升級不可清空既有資料。
+- 進度在IndexedDB，`?qa=1`使用隔離QA庫並略過SW，`?qa=1&offlineQa=1`啟用離線驗收；真實個人資料不可作測試。正式庫仍沿用第一版名字，schema3升級不可清空V1/V2既有資料。
 - 素材與授權見 `docs/material-sources.md`，功能／裝置驗證見 `docs/v1-validation.md`。
 - 使用者文字須經 textContent 或 HTML 編碼；備份先驗證，再明示合併，不覆蓋。
 - 儲存交易失敗顯示未保存，保留可匯出的待存資料；不得默默重設資料庫。
