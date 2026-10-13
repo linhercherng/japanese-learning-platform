@@ -1,11 +1,40 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {initialState,parseBackup,exportBackup,mergeStates} from '../app/core/learning.mjs';
+import {initialState,parseBackup,exportBackup,mergeStates,recordAnswer} from '../app/core/learning.mjs';
 import {beginV3Session,answerV3Session,nextV3Question,hintV3Question,saveTextRevision,adjustDailyPlan,saveDeepWriting} from '../app/core/v3-learning.mjs';
 import {makeDailyPlan} from '../app/core/daily-plan.mjs';
+import {v3Questions} from '../app/content/practice-v3.mjs';
+import {concepts} from '../app/content/concepts.mjs';
+import {deepLessons} from '../app/content/deep-lessons.mjs';
+import {confusionPairs} from '../app/content/confusions.mjs';
+import {allUnits} from '../app/content/catalog.mjs';
+import {kanaLessons} from '../app/content/kana.mjs';
 const time='2026-10-13T01:00:00.000Z';
 const qs=[0,1,2,3].map(i=>({id:`q${i}`,conceptId:'c1',dimension:'recognition',kind:'choice',options:['a','b'],correct:0,explanation:'選a'}));
 const begin=()=>beginV3Session(initialState(),['q0','q1','q2'],{id:'session1',source:'concept',reference:'c1',time});
 const submit=(s,index,value=0)=>answerV3Session(s,{sessionId:'session1',question:qs[index],value,eventId:`event${index}`,time,variants:qs});
+
+for(const source of ['daily','lesson','confusion'])test(`${source} 真實題庫無未曝光變式時延後訂正，不重問原題`,()=>{
+ let state=initialState(),reference,questionIds,planId=null,stepId=null;
+ if(source==='daily'){
+  state.settings.dailyMinutes=30;
+  for(const [i,q] of v3Questions.filter(q=>q.conceptId==='c-k-shi-tsu').entries())state=recordAnswer(state,{id:`prior-${i}`,item:q.id,dimension:q.dimension,correct:false,hinted:false,time:'2026-10-12T01:00:00.000Z'});
+  const plan=makeDailyPlan(state,{concepts,questions:v3Questions,units:[...allUnits,...kanaLessons.map(k=>({...k,level:'K'}))],resolveQuestion:id=>v3Questions.find(q=>q.id===id),time,id:'real-plan'});
+  state.v3.dailyPlans.push(plan);const step=plan.steps.find(s=>s.kind==='practice');
+  reference=planId=plan.id;stepId=step.id;questionIds=step.questionIds;
+ }else if(source==='lesson'){const lesson=deepLessons.find(l=>l.id==='K18');reference=lesson.id;questionIds=lesson.questionIds;}
+ else{const pair=confusionPairs.find(p=>p.id==='shi-tsu');reference=pair.id;questionIds=v3Questions.filter(q=>q.conceptId===pair.conceptId).map(q=>q.id);}
+ const question=v3Questions.find(q=>q.id===questionIds[0]);assert(questionIds.length>=3);
+ assert.equal(v3Questions.filter(q=>q.conceptId===question.conceptId&&q.dimension===question.dimension&&!questionIds.includes(q.id)).length,0);
+ const base=beginV3Session(state,questionIds,{id:'real-session',source,reference,time,planId,stepId}),snapshot=structuredClone(base);
+ for(const hinted of [false,true]){
+  const pending=hinted?hintV3Question(base,'real-session',time):base;
+  const next=answerV3Session(pending,{sessionId:'real-session',question,value:hinted?question.correct:(question.correct+1)%question.options.length,eventId:'real-answer',time,variants:v3Questions});
+  assert.deepEqual(next.v3.sessions[0].queue,base.v3.sessions[0].queue);
+  assert.deepEqual(next.v3.sessions[0].deferred,[question.id]);
+  assert.equal(next.attempts.length,base.attempts.length+1);assert.equal(next.attempts.at(-1).hinted,hinted);assert.equal(next.attempts.at(-1).correct,hinted);
+  assert.deepEqual(parseBackup(exportBackup(next)),next);assert.deepEqual(base,snapshot);
+ }
+});
 test('首答訂正至少隔兩題，訂正不寫入首次作答與跨日排程',()=>{
  let s=submit(begin(),0,1);assert.equal(s.attempts.length,1);assert.equal(s.attempts[0].correct,false);assert.equal(s.v3.sessions[0].queue[3].repeat,true);
  s=nextV3Question(s,'session1',time);s=submit(s,1);s=nextV3Question(s,'session1',time);s=submit(s,2);s=nextV3Question(s,'session1',time);s=submit(s,3);s=nextV3Question(s,'session1',time);
