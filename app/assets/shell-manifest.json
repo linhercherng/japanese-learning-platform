@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "ec152e2b7b3d967423c2042906097870d35b240f9c7baab9e93c87bf425d1356",
+  "fingerprint": "f76c9780c3b9f8863b1b108cf88991ae80c8a10a151ef58975f803daab83fe6f",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-v2.json",
@@ -106,8 +106,8 @@
     "core/quiz.mjs": "cb59f0ef0a22b6905bfd2aaeb1b87f0ebb7ed045fe13cf9ae3fcc9d6242129af",
     "core/storage.mjs": "f42811a3a8edd4341e5cda37cdd4562e03e2c7b9ce483c7758ae62e48fdf14ec",
     "core/study.mjs": "6c9bcef4ee6f468f6e06a517dc99b2b3672249dbeaaa71987f39a82a66e363ec",
-    "core/v3-learning.mjs": "76d3eaf062bfd1dc48309f87291b5ee5fd47223b08aad887761de89d998cb24a",
-    "core/v3-state.mjs": "806c2e222c029ba022b50ff23c739023c4a3f2f9a4222bdfe834ea4d1e905668",
+    "core/v3-learning.mjs": "4012396b564e9a929401d5876e6f5d55e5068ff17c2834b4bcac7159b556cf23",
+    "core/v3-state.mjs": "7c23f268c8661bcfeae2c04ada5655c614f52249eb308d44da4ef278ef625394",
     "index.html": "68ef8ff3f7d8b77cdd56af85187ba25b7915d6ecfdb99b4c5882b3d2115daa1b",
     "main.mjs": "8378a823dd578e9c000841b7b63cbee44652f96f50c47e76a935e878cccbf21d",
     "manifest.webmanifest": "665f46ac36c2b46959260fe9ef71e33b7bcef4bed924d37e771e1c4114025cfb",
@@ -122,12 +122,12 @@
     "ui/profile.mjs": "67f8672de833be63b056b0464e300162b0f14a6c8d819067689961e94af753f1",
     "ui/shared.mjs": "d791eb8eea9ccc75d6a46f62c890907c0f01087016a954808b0582c299d44c03",
     "ui/study.mjs": "9e3b3592e6c596f5718af25e7b85c1dc8a14f0ab109404f05d5bb4d78ff51ac7",
-    "ui/v3.mjs": "5c3c2097cc6863554ef0f12123694a243f76f9993685f6e04237966194a9f940",
+    "ui/v3.mjs": "5131154e0c2dc1f82235274284b3690f58213edb1287f479356e3d38ab61872e",
     "ui/writing.mjs": "572656ab2538a50f7c8087ebe560b7a64a571bc7eeaea276b8d4f8b27f25f33c",
     "v2.css": "c8b58f3ed2c35c467f7a17a1d8641e533bd949d2587913867a343ab5cd2d5977",
     "v2.mjs": "25e027abdafb39d26a8f9b2f1be236431b8d27c64751867ef587d38363e91092",
     "v3.css": "a851af202c4946a837cdb78da4cbcd0779c5b560c7e2283a2e96dec19897ca5b",
     "v3.mjs": "51c69fc709915f2cbb80feb3d641c2cb666250eaa1b59f53a92d62e1d6f6182c"
   },
-  "bytes": 6274491
+  "bytes": 6274877
 }

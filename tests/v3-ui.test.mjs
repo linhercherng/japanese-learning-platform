@@ -40,6 +40,30 @@ test('Completion separates same-day correction from cross-day success and report
  const q=v3Questions[0];let state=beginV3Session(initialState(),[q.id],{id:'session-one',source:'concept',reference:`${q.conceptId}:${q.dimension}`,time});state=answerV3Session(state,{sessionId:'session-one',question:q,value:(q.correct+1)%q.options.length,eventId:'answer-one',time,variants:v3Questions});state=nextV3Question(state,'session-one',time);
  const html=practiceV3View(context(state),'session-one',resolve);assert.match(html,/無提示首答正確/);assert.match(html,/不足兩題間隔/);assert.match(html,/不算跨日成功/);assert.doesNotMatch(html,/data-v3-action="next"/);
 });
+test('Exhausted confusion variants explain deferral without claiming the session was too short',()=>{
+ const qs=v3Questions.filter(q=>q.conceptId==='c-k-shi-tsu');
+ let state=beginV3Session(initialState(),qs.map(q=>q.id),{id:'exhausted',source:'confusion',reference:'shi-tsu',time});
+ while(!state.v3.sessions[0].completedAt){
+  const s=state.v3.sessions[0],i=s.cursor,q=resolve(s.queue[i].questionId);
+  state=answerV3Session(state,{sessionId:'exhausted',question:q,value:i===0?(q.correct+1)%q.options.length:q.kind==='cloze'?q.accepted[0]:q.correct,eventId:`exhausted-${i}`,time,variants:v3Questions});
+  state=nextV3Question(state,'exhausted',time);
+ }
+ const html=practiceV3View(context(state),'exhausted',resolve);
+ assert.match(html,/沒有可用的新變式題/);assert.doesNotMatch(html,/這輪較短/);
+ assert.match(html,/不算跨日成功/);assert.match(html,/0 次當天訂正/);
+});
+test('Existing schema 3 original-question corrections retain honest labels and immutable first answers',()=>{
+ const qs=v3Questions.filter(q=>q.conceptId==='c-k-shi-tsu');
+ let state=beginV3Session(initialState(),qs.map(q=>q.id),{id:'legacy-repeat',source:'confusion',reference:'shi-tsu',time});
+ for(const [i,q] of qs.entries()){
+  state=answerV3Session(state,{sessionId:'legacy-repeat',question:q,value:i===0?(q.correct+1)%q.options.length:q.kind==='cloze'?q.accepted[0]:q.correct,eventId:`legacy-${i}`,time,variants:v3Questions});
+  if(i===0){state.v3.sessions[0].queue=[...qs.map(q=>({questionId:q.id,repeat:false,sourceId:null})),{questionId:q.id,repeat:true,sourceId:q.id}];state.v3.sessions[0].deferred=[];}
+  state=nextV3Question(state,'legacy-repeat',time);
+ }
+ const html=practiceV3View(context(state),'legacy-repeat',resolve);
+ assert.match(html,/原題訂正/);assert.doesNotMatch(html,/換題訂正/);assert.match(html,/第一次答案仍保留/);
+ assert.equal(state.v3.sessions[0].answers[qs[0].id].correct,false);
+});
 test('Empty weekly and weakness pages use honest denominators and meaningful entry routes',()=>{
  const ctx=context(initialState());assert.match(weeklyView(ctx,time),/還沒有可比較的跨日紀錄/);assert.match(weeklyView(ctx,time),/分母是/);assert.match(weaknessesView(ctx),/還沒有獨立練習紀錄/);
 });
