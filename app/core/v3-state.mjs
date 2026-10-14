@@ -56,6 +56,7 @@ function mergeSession(a,b){
   requireValue(Object.keys(other.answers).every(id=>richer.answers[id])&&JSON.stringify(projection)===JSON.stringify(other.queue),'第三版重練分支衝突，未匯入');
  }
  for(const [answered,pending] of [[a,b],[b,a]])for(const [id,value] of Object.entries(answered.answers))if(!pending.answers[id]&&pending.hints.includes(id))requireValue(value.hinted,'第三版提示與首次答案分支衝突，未匯入');
+ for(const [answered,pending] of [[a,b],[b,a]])for(const [key,value] of Object.entries(answered.corrections))if(!pending.corrections[key]&&pending.hints.includes(answered.queue[key].questionId))requireValue(value.hinted,'第三版提示與訂正答案分支衝突，未匯入');
  const next=structuredClone(richer);next.answers={...a.answers,...b.answers};
  for(const [key,value] of Object.entries(other.corrections)){if(next.corrections[key])requireValue(JSON.stringify(value)===JSON.stringify(next.corrections[key]),'第三版訂正答案衝突，未匯入');else{requireValue(JSON.stringify(next.queue[key])===JSON.stringify(other.queue[key]),'第三版訂正題目衝突，未匯入');next.corrections[key]=value;}}
  next.hints=[...new Set([...a.hints,...b.hints])];next.deferred=[...new Set([...a.deferred,...b.deferred])];

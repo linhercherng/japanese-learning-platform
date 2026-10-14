@@ -50,7 +50,8 @@ export function answerV3Session(state,{sessionId,question,value,eventId,time,var
   next=recordAnswer(next,{id:eventId,item:question.reviewItem||question.id,dimension:question.dimension,correct:a.correct,hinted:a.hinted,time});s=next.v3.sessions.find(s=>s.id===sessionId);
   if(!a.correct||a.hinted){
    const following=s.queue.length-s.cursor-1;
-   if(following>=2){const variant=variants.find(q=>q.conceptId&&q.conceptId===question.conceptId&&q.dimension===question.dimension&&!s.queue.some(entry=>entry.questionId===q.id));s.queue.splice(s.cursor+3,0,{questionId:variant?.id||question.id,repeat:true,sourceId:question.id});}
+   const variant=variants.find(q=>q.conceptId&&q.conceptId===question.conceptId&&q.dimension===question.dimension&&!s.queue.some(entry=>entry.questionId===q.id));
+   if(following>=2&&variant)s.queue.splice(s.cursor+3,0,{questionId:variant.id,repeat:true,sourceId:question.id});
    else s.deferred.push(question.id);
   }
  }s.updatedAt=time;return changed(next);
