@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "72afc8842e06c73bbcb0049156e18dc1cebc9b9e3fa14b86c886ab7eb7096575",
+  "fingerprint": "2b4cd05f147be1fe1bc2da99658650929728734f82d333013a06e301f771ccff",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-v2.json",
@@ -119,7 +119,7 @@
     "styles.css": "35999e6bc87d5bd23b9b14c1c04213defa212657cfd239d5bde49f105d02e45e",
     "ui/courses.mjs": "c18f1484390e54a112d11cf18eee026a3fc53a4437b5ea50f5f61a02579de947",
     "ui/exam.mjs": "f1bfda886e5c041a9d1e6c81a2e50eff2a0b75b6c4cfa56555e6e6cd497f97d8",
-    "ui/kana-memory.mjs": "b42bdc67919e1b84949f0e7e59acf0e20971c0df32af03db0e77824d3bd7ede6",
+    "ui/kana-memory.mjs": "66a0fdb6761497f5af641c430db4b219ccd6e76989b139950cc75b4e91dc5c38",
     "ui/kana.mjs": "70bdc776c3ad34a3995d2131e7da331194b1b6b9ab73531cb96f20ab9daab4a6",
     "ui/library.mjs": "611189601e6ce599b684d589a78201c7659817017afd73b8264353b65f61c61c",
     "ui/life.mjs": "3b93e0c6ceec964daccb4636f0ac5e621760405cafcc563b407586f5dd7a2f00",
@@ -135,5 +135,5 @@
     "v3.css": "e7e411e752790d90c118ab33a75dd177bf3a0b1b0aca82581904adebb3aa67fe",
     "v3.mjs": "9b36ea3e2fd9afb83825c067f1adedb58ef5a4531eb4c32436e0443783de6748"
   },
-  "bytes": 6296400
+  "bytes": 6296583
 }
