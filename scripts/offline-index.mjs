@@ -3,12 +3,12 @@ import{resolve,join,relative}from'node:path';
 import{fileURLToPath}from'node:url';
 import{createHash}from'node:crypto';
 import{wordAudioKey}from'../app/ui/shared.mjs';
-const ids=['K','L','N5','N4','N3'];
-const titles={K:'假名與聲音',L:'生活起步',N5:'N5 基礎完整教材',N4:'N4 進階完整教材',N3:'N3 中級完整教材'};
+const ids=['K','L','N5','N4','N3','N2'];
+const titles={K:'假名與聲音',L:'生活起步',N5:'N5 基礎完整教材',N4:'N4 進階完整教材',N3:'N3 中級完整教材',N2:'N2 中高級試用教材'};
 const hash=body=>createHash('sha256').update(body).digest('hex');
 const serialize=value=>JSON.stringify(value,null,2)+'\n';
 /** Build against a frozen local audio index; safe to rerun after more audio is generated. */
-export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],kanaPhonology=[],allUnits=[],words=[],kanjiItems=[],forms=[],v3Questions=[],deepLessons=[]}){
+export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],kanaPhonology=[],allUnits=[],words=[],kanjiItems=[],forms=[],v3Questions=[],deepLessons=[],concepts=[]}){
  const texts=new Map(ids.map(id=>[id,new Set()])),optional=new Map(ids.map(id=>[id,new Set()]));
  function add(level,text,required=true){if(text&&texts.has(level))(required?texts:optional).get(level).add(text);}
  function word(level,w){add(level,w.jp);add(level,wordAudioKey(w));add(level,w.example);}
@@ -25,6 +25,7 @@ export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],k
  for(const w of words)for(const level of w.levels||[w.level])word(level,w);
  for(const k of kanjiItems)for(const level of k.levels||[])for(const w of k.words||[])word(level,w);
  for(const form of forms)for(const section of form.sections||[])for(const q of section.questions||[])add(form.level,q.transcript);
+ for(const c of concepts)for(const text of c.example.jp.split('／'))add(c.level,text);
  for(const q of v3Questions)add(q.level,q.transcript);
  for(const u of deepLessons)for(const x of u.listening)add(u.level,x.jp);
  const fileInfo=new Map(),used=new Set();
@@ -56,7 +57,8 @@ export async function writeManifests(){
  const appDir=fileURLToPath(new URL('../app/',import.meta.url));
  const[{kana,kanaLessons,kanaPhonology},catalog]=await Promise.all([import('../app/content/kana.mjs'),import('../app/content/catalog.mjs')]);
  const audioIndex=JSON.parse((await readFile(join(appDir,'assets/audio.json'),'utf8')).replace(/^\uFEFF/,''));
- const{offline,shell}=await buildManifests({appDir,audioIndex,kana,kanaLessons,kanaPhonology,...catalog});
+ const {concepts}=await import('../app/content/concepts.mjs');
+ const{offline,shell}=await buildManifests({appDir,audioIndex,kana,kanaLessons,kanaPhonology,concepts,...catalog});
  await writeFile(join(appDir,'assets/offline-manifest.json'),serialize(offline));
  await writeFile(join(appDir,'assets/shell-manifest.json'),serialize(shell));
  const workerPath=join(appDir,'service-worker.js'),source=await readFile(workerPath,'utf8');

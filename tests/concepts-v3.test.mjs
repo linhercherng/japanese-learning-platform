@@ -12,10 +12,10 @@ const audio=JSON.parse(readFileSync(new URL('../app/assets/audio.json',import.me
 const unitIds=new Set([...allUnits,...kanaLessons].map(u=>u.id));
 const itemIds=new Set([...kana,...grammarItems].map(i=>i.id).concat([...questionById.keys()]));
 
-test('V3 concepts cover kana and three levels with usable teaching and existing references',()=>{
- assert.equal(concepts.length,30);
- assert.deepEqual(Object.fromEntries(['K','N5','N4','N3'].map(l=>[l,concepts.filter(c=>c.level===l).length])),{K:8,N5:14,N4:4,N3:4});
- assert.equal(conceptById.size,30);
+test('V3 concepts cover kana and four levels with usable teaching and existing references',()=>{
+ assert.equal(concepts.length,38);
+ assert.deepEqual(Object.fromEntries(['K','N5','N4','N3','N2'].map(l=>[l,concepts.filter(c=>c.level===l).length])),{K:8,N5:14,N4:4,N3:4,N2:8});
+ assert.equal(conceptById.size,38);
  for(const c of concepts){
   assert.match(c.id,/^c-[a-z0-9-]+$/);
   assert.ok(c.unitIds.length&&c.unitIds.every(id=>unitIds.has(id)),`${c.id} lesson reference`);

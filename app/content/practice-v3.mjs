@@ -1,4 +1,5 @@
 // 原創概念練習；不同情境用於重新提取記憶，不加入模擬檢定成績。
+import {n2Recall} from './n2-recall.mjs';
 const base=(conceptId,suffix,unitId,dimension)=>({id:`v3q-${conceptId.slice(2)}-${suffix}`,conceptId,unitId,level:conceptId.split('-')[1].toUpperCase(),dimension});
 const choice=(c,s,u,d,p,options,correct,explanation,optionReasons,transcript)=>({...base(c,s,u,d),kind:transcript?'listen':'choice',prompt:p,options,correct,explanation,optionReasons,...(transcript?{transcript}:{})});
 const cloze=(c,s,u,d,p,accepted,explanation)=>({...base(c,s,u,d),kind:'cloze',prompt:p,accepted,explanation});
@@ -114,6 +115,7 @@ export const v3Questions=[
  choice('c-n5-ni-time','scene-transport','S-N5-transport','listening','先聽車站工作人員的時間回答：應把出發時刻記為哪一個？',['上午十點','下午十點','上午九點'],0,'午前十時是上午十點，午前與午後不能漏聽；十時也不同於九時。',['午前加十時清楚表示上午十點。','午後才是下午，音檔說午前。','九時是九點，與音檔的十時不同。'],'午前十時です。'),
  cloze('c-n5-request','scene-transport','S-N5-transport','language','請給兩張到京都的車票：「京都までの切符を二枚＿＿。」請填表示索取物品的請求句尾。',['ください','下さい'],'切符是名詞物品，を二枚ください提出票種與數量；不是請對方搭車，無需乗って。'),
 ];
+v3Questions.push(...n2Recall);
 export const v3QuestionById=new Map(v3Questions.map(q=>[q.id,q]));
 export function questionsForConcept(id,dimension){
  return v3Questions.filter(q=>q.conceptId===id&&(dimension===undefined||q.dimension===dimension));

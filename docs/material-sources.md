@@ -43,3 +43,9 @@
 ## 審校與發布界線
 
 這批素材可供私人 GitHub 專案與本機功能驗收。依 AGENTS.md，獨立教師文字與音訊審校、版本紀錄完成前，不能以正式審定教材公開發布或承諾發音完全正確。這項限制不阻止既已授權的第一版本機功能開發。
+
+## 2026-10-14 N2 素材增補
+
+以上第一版記錄保留為歷史。現有10,717個本機Haruka日語音檔索引，新增N2課程／情境／模擬／每日概念與回想音檔，既有音檔路徑不重寫。concept.example與回想逐字稿納入生成及離線必要音檔，N2包缺檔數0才可標完整。SVG共508份，仍固定KanjiVG commit 70a0b7ae0c18ceb5cb358274b029cce0234a43bc、保留原bytes與CC BY-SA 3.0署名。新增解碼、瀏覽器播放及發布證據見[n2-validation.md](n2-validation.md)。
+
+本批為使用者已授權公開的原創試用教材；程式與內容一致性審查不替代獨立日語教師逐課審校／聽音，不能標為官方或正式審定教材。規則來源為[JLPT科目表](https://www.jlpt.jp/guideline/testsections.html)及[能力目標](https://www.jlpt.jp/about/levelsummary.html)，未複製官方題文／音訊。

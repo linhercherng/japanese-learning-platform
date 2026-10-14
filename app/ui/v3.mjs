@@ -8,10 +8,11 @@ import {v3Questions} from '../content/practice-v3.mjs';
 import {conceptProgress,weeklyReport} from '../core/daily-plan.mjs';
 import {studyDay} from '../core/v3-state.mjs';
 
-export const goalLabels={K:'五十音',L:'生活日語',N5:'N5 基礎',N4:'N4 進階',N3:'N3 中級'};
+export const goalLabels={K:'五十音',L:'生活日語',N5:'N5 基礎',N4:'N4 進階',N3:'N3 中級',N2:'N2 中高級'};
 const abilityLabels={recognition:'字形辨認',grammar:'理解文法',listening:'聽辨',language:'自行運用',reading:'閱讀',vocabulary:'詞彙',kanji:'漢字'};
 const button=(label,action,attrs='',kind='primary')=>`<button class="${kind}" data-v3-action="${action}" ${attrs}>${e(label)}</button>`;
-const deepLink=id=>`<a class="text-button" href="#deep/${e(id)}">進入六步深化課程</a>`;
+const learningRoute=id=>deepLessons.some(u=>u.id===id)?'deep/'+id:id?'study/'+id:'courses';
+const deepLink=id=>`<a class="text-button" href="#${e(learningRoute(id))}">${deepLessons.some(u=>u.id===id)?'進入六步深化課程':'進入本課教材'}</a>`;
 const absent=(title,route='home')=>`${heading(title,'原本的學習紀錄仍在，請從目錄選擇活動。')}${primary('回到學習',''+route)}`;
 const routine=['先回想','理解一小步','換個情境練','寫自己的話'];
 export function todayPlan(state,time){return [...state.v3.dailyPlans].reverse().find(p=>p.day===studyDay(time)&&p.goal===state.v3.goal)||null;}
@@ -45,7 +46,7 @@ export function practiceV3View(ctx,sessionId,resolveQuestion){
 }
 export function weaknessesView(ctx){
  const progress=conceptProgress(ctx.state,concepts,v3Questions),observed=progress.filter(p=>p.total),weak=observed.filter(p=>p.weak);
- return `${back('今日學習','home')}${heading('把不穩的地方，練清楚。','同一重點的理解、聽辨與運用各別記錄。')}${note('不會只因多做題就判定熟練。這裡顯示首次作答、提示與跨日紀錄；自由書寫另留作品。')}<h2>${weak.length?'優先回想':'已練過的重點'}</h2>${(weak.length?weak:observed).map(p=>`<section class="v3-section"><span class="tag">${e(p.level)} · ${e(abilityLabels[p.dimension]||p.dimension)}</span><h3>${e(p.title)}</h3><p>${e(p.label)}</p><p>無提示首答 ${p.independent} / ${p.total} 次 · 練過 ${p.days} 天 · 全日首答皆無提示正確 ${p.goodDays} 天</p>${button('用不同問法再想一次','concept-practice',`data-v3-concept="${e(p.conceptId)}" data-v3-dimension="${e(p.dimension)}"`,'secondary')}</section>`).join('')||'<p class="filter-empty">還沒有獨立練習紀錄。先做今天的小安排，再看哪個重點需要幫忙。</p>'}<details><summary>查看還沒練過的概念</summary>${concepts.filter(c=>!observed.some(p=>p.conceptId===c.id)).map(c=>`<a class="v3-line" href="#deep/${e(c.unitIds.find(id=>deepLessons.some(u=>u.id===id))||'')}"><strong>${e(c.title)}</strong><span>${e(c.level)}</span></a>`).join('')}</details>`;
+ return `${back('今日學習','home')}${heading('把不穩的地方，練清楚。','同一重點的理解、聽辨與運用各別記錄。')}${note('不會只因多做題就判定熟練。這裡顯示首次作答、提示與跨日紀錄；自由書寫另留作品。')}<h2>${weak.length?'優先回想':'已練過的重點'}</h2>${(weak.length?weak:observed).map(p=>`<section class="v3-section"><span class="tag">${e(p.level)} · ${e(abilityLabels[p.dimension]||p.dimension)}</span><h3>${e(p.title)}</h3><p>${e(p.label)}</p><p>無提示首答 ${p.independent} / ${p.total} 次 · 練過 ${p.days} 天 · 全日首答皆無提示正確 ${p.goodDays} 天</p>${button('用不同問法再想一次','concept-practice',`data-v3-concept="${e(p.conceptId)}" data-v3-dimension="${e(p.dimension)}"`,'secondary')}</section>`).join('')||'<p class="filter-empty">還沒有獨立練習紀錄。先做今天的小安排，再看哪個重點需要幫忙。</p>'}<details><summary>查看還沒練過的概念</summary>${concepts.filter(c=>!observed.some(p=>p.conceptId===c.id)).map(c=>`<a class="v3-line" href="#${e(learningRoute(c.unitIds.find(id=>deepLessons.some(u=>u.id===id))||c.unitIds[0]))}"><strong>${e(c.title)}</strong><span>${e(c.level)}</span></a>`).join('')}</details>`;
 }
 export function confusionView(ctx,pairId){
  const pair=confusionPairs.find(p=>p.id===pairId);if(!pair)return `${back('今日學習','home')}${heading('相似字，一次比較一組。','先看一處差異，再聽音，最後遮住默寫。')}${confusionPairs.map(p=>`<a class="v3-line" href="#confusion/${p.id}"><strong>${e(p.title)}</strong><span>比較 → 回想</span></a>`).join('')}`;

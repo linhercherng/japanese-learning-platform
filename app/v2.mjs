@@ -1,7 +1,7 @@
 import {allUnits,units,scenarios,lifeLessons,unitById,unitQuestions,completionKey,words,forms,allWritingItems,resolveQuestion,reviewQuestions,practicePool,grammarItems,kanjiItems} from './content/catalog.mjs';
 import {createPractice,answerPractice,hintPractice,presentationOrder} from './core/study.mjs';
 import {recordAnswer,saveArtifact,exportBackup,organizeCompletedPractice} from './core/learning.mjs';
-import {startExam,answerExam,remainingSeconds} from './core/exam.mjs';
+import {startExam,answerExam,remainingSeconds,validateExamForm} from './core/exam.mjs';
 import {transitionExamState} from './core/exam-progress.mjs';
 import {coursesView,levelView,topicsView,practiceHubView} from './ui/courses.mjs';
 import {studyView,practiceView} from './ui/study.mjs';
@@ -106,7 +106,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
    const bookmarks=new Set([...words,...kanjiItems,...grammarItems].map(x=>x.id));
    if(s.bookmarks.some(id=>!bookmarks.has(id)))throw new Error('備份包含未知收藏項目');
    for(const p of [s.practice,...(s.practiceHistory||[])].filter(Boolean)){if(!unitById.has(p.unitId)&&!['library-words','review-set','skill-set'].includes(p.unitId))throw new Error('備份包含未知練習課程');if(p.questionIds.some(id=>!resolveQuestion(id)))throw new Error('備份包含未知練習題目');}
-   for(const exam of [s.activeExam,...s.examAttempts].filter(Boolean)){const form=forms.find(f=>f.id===exam.formId);if(!form||exam.questionIds.some((ids,i)=>JSON.stringify(ids)!==JSON.stringify(form.sections[i].questions.slice(0,exam.mode==='short'?[5,10,5][i]:undefined).map(q=>q.id)))||exam.sectionSeconds.some((seconds,i)=>seconds!==(exam.mode==='short'?300:form.sections[i].minutes*60)))throw new Error('備份包含未知或不完整試卷題目');}
+   for(const exam of [s.activeExam,...s.examAttempts].filter(Boolean))validateExamForm(exam,forms.find(f=>f.id===exam.formId));
   },
   dispose(){offline.dispose();clearInterval(tick);document.removeEventListener('click',handleClick);document.removeEventListener('input',handleInput);document.removeEventListener('change',handleChange);document.removeEventListener('submit',handleSubmit);}
  };
