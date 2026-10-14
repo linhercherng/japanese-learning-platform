@@ -3,9 +3,50 @@ import {kana} from '../app/content/kana.mjs';
 import {kanaMemory,memoryFor} from '../app/content/kana-memory.mjs';
 import {kanaDrills,selectKanaDrills,validKanaReference} from '../app/content/kana-drills.mjs';
 import {gradeQuestion} from '../app/core/study.mjs';
-import {initialState,exportBackup,parseBackup} from '../app/core/learning.mjs';
+import {createHash} from 'node:crypto';
+import {initialState,exportBackup,parseBackup,mergeStates} from '../app/core/learning.mjs';
 import {beginV3Session,answerV3Session,hintV3Question,nextV3Question} from '../app/core/v3-learning.mjs';
 const time='2026-10-13T12:00:00.000Z';
+const scriptPairs=[['h-3092','k-30f2','を','ヲ'],['h-304a','k-30aa','お','オ']];
+for(const [hiraId,kataId,hira,kata] of scriptPairs)test(`${hira} ↔ ${kata} uses matching glyphs even when readings coincide`,()=>{
+ assert.equal(memoryFor(hiraId).partnerId,kataId);assert.equal(memoryFor(kataId).partnerId,hiraId);
+ assert.match(memoryFor(hiraId).recall,new RegExp(`再和${kata}配對`));assert.match(memoryFor(kataId).recall,new RegExp(`再和${hira}配對`));
+ for(const [id,expected] of [[hiraId,kata],[kataId,hira]]){
+  const q=kanaDrills.find(q=>q.id===`km-${id}-pair`);
+  assert.equal(q.options[q.correct],expected);assert.equal(q.options.filter(g=>g===expected).length,1);
+  assert(gradeQuestion(q,q.options.indexOf(expected)));
+ }
+});
+test('All 92 basic kana script partners are reciprocal and match the Unicode glyph correspondence',()=>{
+ for(const k of kana.filter(k=>k.group==='basic')){
+  const expected=String.fromCodePoint(k.glyph.codePointAt(0)+(k.script==='hira'?0x60:-0x60)),partner=kana.find(p=>p.id===memoryFor(k.id).partnerId);
+  assert.equal(partner.glyph,expected,k.glyph);assert.equal(partner.script,k.script==='hira'?'kata':'hira');
+  assert.equal(memoryFor(partner.id).partnerId,k.id,k.glyph);
+ }
+});
+test('Basic pairing options contain exactly one correct glyph, with unique opposite-script choices',()=>{
+ for(const k of kana.filter(k=>k.group==='basic')){
+  const q=kanaDrills.find(q=>q.id===`km-${k.id}-pair`),expected=String.fromCodePoint(k.glyph.codePointAt(0)+(k.script==='hira'?0x60:-0x60));
+  assert.equal(q.options[q.correct],expected,q.id);assert.equal(q.options.filter(g=>g===expected).length,1,q.id);
+  assert.equal(new Set(q.options).size,q.options.length,q.id);
+  for(const [i,g] of q.options.entries()){assert.equal(kana.find(p=>p.glyph===g).script,k.script==='hira'?'kata':'hira',q.id);assert.equal(gradeQuestion(q,i),g===expected,q.id);}
+ }
+});
+test('Pair correction preserves every drill ID and restores old answers, hints, drafts and reviews without regrading',()=>{
+ assert.equal(createHash('sha256').update(JSON.stringify(kanaDrills.map(q=>q.id))).digest('hex'),'3aac4a8eb64417014fb7e9b2c14a01a811c27d8fd315a765f9a472876beb1adb');
+ let s=initialState();s.completed.K06=time;s.artifacts.push({id:'legacy-work',item:'L07',kind:'text',text:'みずをのむ。',points:[],time});
+ for(const [script,id,oldGlyph] of [['hira','h-3092','オ'],['kata','k-30f2','お']]){
+  const q=kanaDrills.find(q=>q.id===`km-${id}-pair`),sid=`legacy-${script}`;
+  s=beginV3Session(s,[q.id],{id:sid,source:'kana',reference:`${script}:pair:wa`,time});s=hintV3Question(s,sid,time);
+  const oldQuestion={...q,options:[oldGlyph,...(script==='hira'?['ア','イ','ウ']:['あ','い','う'])],correct:0};
+  s=answerV3Session(s,{sessionId:sid,question:oldQuestion,value:0,eventId:`legacy-answer-${script}`,time});
+  s.drafts[`text:${sid}`]={text:'合成草稿',points:[],time};
+ }
+ const before=structuredClone(s),restored=parseBackup(exportBackup(s));
+ assert.deepEqual(restored,before);assert.deepEqual(mergeStates(s,restored),s);
+ for(const session of restored.v3.sessions){assert(validKanaReference(session.reference,session.questionIds));assert.equal(session.answers[session.questionIds[0]].value,0);assert.equal(session.answers[session.questionIds[0]].hinted,true);assert.equal(session.answers[session.questionIds[0]].correct,true);}
+ assert.deepEqual(s,before);assert.deepEqual(restored.reviews,before.reviews);
+});
 test('92 basic kana have distinct original shape tips, paired scripts and meaningful recall prompts',()=>{
  const basicMemory=kanaMemory.filter(m=>m.group==='basic');assert.equal(basicMemory.length,92);assert.equal(new Set(basicMemory.map(c=>c.id)).size,92);assert.equal(new Set(basicMemory.map(c=>c.tip)).size,92);
  for(const k of kana.filter(k=>k.group==='basic')){const m=memoryFor(k.id);assert(m.tip.length>12);assert(m.anchor.length);assert(m.recall.length);assert.equal(kana.find(c=>c.id===m.partnerId).reading,k.reading);}
