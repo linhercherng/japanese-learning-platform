@@ -60,7 +60,7 @@ export const kanaRows=[
 const toHira=g=>Array.from(g,c=>c>='ァ'&&c<='ヶ'?String.fromCodePoint(c.codePointAt(0)-0x60):c).join('');
 const toKata=g=>Array.from(g,c=>c>='ぁ'&&c<='ゖ'?String.fromCodePoint(c.codePointAt(0)+0x60):c).join('');
 const basicMemory=kana.filter(k=>k.group==='basic').map(k=>{
- const hira=k.script==='hira'?k.glyph:toHira(k.glyph),entry=notes.find(n=>n[0]===hira),partner=kana.find(p=>p.group==='basic'&&p.script!==k.script&&p.reading===k.reading);
+ const hira=k.script==='hira'?k.glyph:toHira(k.glyph),entry=notes.find(n=>n[0]===hira),partner=kana.find(p=>p.group==='basic'&&p.script!==k.script&&toHira(p.glyph)===hira);
  return {id:k.id,group:'basic',row:kanaRows.find(r=>r.group==='basic'&&r.glyphs.includes(hira)).id,tip:entry[k.script==='hira'?1:2],anchor:`${k.word}（${k.wordReading}）・${k.meaning}`,recall:`先聽「${k.word}」，遮住範字寫出「${k.glyph}」，再和${partner.glyph}配對。`,partnerId:partner.id};
 });
 const voicedCues=`が|把か右邊獨立小筆和右上兩點分開看，連到がっこう的開頭。
