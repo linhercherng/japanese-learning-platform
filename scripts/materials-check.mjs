@@ -4,9 +4,18 @@ import {readFile,stat} from 'node:fs/promises';
 import {kana,kanaLessons,kanaPhonology} from '../app/content/kana.mjs';
 import {lifeLessons,allUnits,kanjiItems,forms,words} from '../app/content/catalog.mjs';
 import {wordAudioKey} from '../app/ui/shared.mjs';
+import {kanaMemory,memoryFor} from '../app/content/kana-memory.mjs';
+import {kanaDrills} from '../app/content/kana-drills.mjs';
 const load=async name=>JSON.parse((await readFile(new URL(`../app/assets/${name}`,import.meta.url),'utf8')).replace(/^\uFEFF/,''));
 const strokes=await load('strokes.json');
 const audio=await load('audio.json');
+const packs=await load('offline-manifest.json'),kanaPack=packs.packs.find(p=>p.id==='K');
+assert.equal(kanaMemory.length,kana.length);assert.equal(kanaDrills.length,740);
+for(const q of kanaDrills){
+ assert.ok(memoryFor(q.reviewItem),`Missing memory tip ${q.id}`);
+ if(q.kind==='cloze')assert.ok(q.prompt.includes('＿＿'),`No blank in ${q.id}`);
+ for(const text of [q.transcript,q.audio].filter(Boolean))assert.ok(kanaPack.files.includes(audio[text]),`Missing kana pack audio ${q.id}: ${text}`);
+}
 const sourceManifest=await load('stroke-manifest.json');
 assert.ok(sourceManifest.length>=148);
 for(const source of sourceManifest){

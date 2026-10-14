@@ -7,12 +7,12 @@ import {initialState,exportBackup,parseBackup} from '../app/core/learning.mjs';
 import {beginV3Session,answerV3Session,hintV3Question,nextV3Question} from '../app/core/v3-learning.mjs';
 const time='2026-10-13T12:00:00.000Z';
 test('92 basic kana have distinct original shape tips, paired scripts and meaningful recall prompts',()=>{
- assert.equal(kanaMemory.length,92);assert.equal(new Set(kanaMemory.map(c=>c.id)).size,92);assert.equal(new Set(kanaMemory.map(c=>c.tip)).size,92);
+ const basicMemory=kanaMemory.filter(m=>m.group==='basic');assert.equal(basicMemory.length,92);assert.equal(new Set(basicMemory.map(c=>c.id)).size,92);assert.equal(new Set(basicMemory.map(c=>c.tip)).size,92);
  for(const k of kana.filter(k=>k.group==='basic')){const m=memoryFor(k.id);assert(m.tip.length>12);assert(m.anchor.length);assert(m.recall.length);assert.equal(kana.find(c=>c.id===m.partnerId).reading,k.reading);}
 });
 test('Three drill modes cover all basic kana, choices are unambiguous and audio exists',()=>{
- assert.equal(kanaDrills.length,276);const audio=JSON.parse(readFileSync(new URL('../app/assets/audio.json',import.meta.url),'utf8'));assert.equal(new Set(kanaDrills.map(q=>q.id)).size,276);
- for(const q of kanaDrills){assert(kana.some(k=>k.id===q.reviewItem));assert(gradeQuestion(q,q.kind==='cloze'?q.accepted[0]:q.correct));if(q.kind==='listen'){assert(audio[q.transcript]);assert.equal(new Set(q.options.map(g=>{const k=kana.find(k=>k.glyph===g);return k.reading==='wo'?'o':k.reading;})).size,q.options.length);}if(q.kind==='cloze')assert(!gradeQuestion(q,'錯字'));}
+ const basicDrills=kanaDrills.filter(q=>memoryFor(q.reviewItem).group==='basic');assert.equal(basicDrills.length,276);const audio=JSON.parse(readFileSync(new URL('../app/assets/audio.json',import.meta.url),'utf8'));assert.equal(new Set(basicDrills.map(q=>q.id)).size,276);
+ for(const q of basicDrills){assert(kana.some(k=>k.id===q.reviewItem));assert(gradeQuestion(q,q.kind==='cloze'?q.accepted[0]:q.correct));if(q.kind==='listen'){assert(audio[q.transcript]);assert.equal(new Set(q.options.map(g=>{const k=kana.find(k=>k.glyph===g);return k.reading==='wo'?'o':k.reading;})).size,q.options.length);}if(q.kind==='cloze')assert(!gradeQuestion(q,'錯字'));}
 });
 test('Small random snapshots filter rows and modes, prioritize due mistakes and validate reference',()=>{
  const state=initialState(),qs=selectKanaDrills(state,{script:'hira',mode:'listen',row:'a',count:5,seed:'x',time});assert.equal(qs.length,5);assert(qs.every(q=>q.mode==='listen'&&q.row==='a'&&q.script==='hira'));assert.deepEqual(qs,selectKanaDrills(state,{script:'hira',mode:'listen',row:'a',count:5,seed:'x',time}));

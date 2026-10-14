@@ -113,7 +113,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  }
  function input(event){const el=event.target,key=el.dataset.v3Draft;if(!key)return;const draft={text:el.value,points:[],time:now()};cacheDraft(`text:${key}`,draft);update(s=>({...s,drafts:{...s.drafts,[`text:${key}`]:draft},revision:s.revision+1})).catch(()=>{});}
  function change(event){const el=event.target;
-  if(el.dataset.v3KanaSetting){const key=el.dataset.v3KanaSetting;if(['row','mode','count'].includes(key))kanaMemorySelection(ctx().session)[key]=key==='count'?Number(el.value):el.value;render(false);return;}
+  if(el.dataset.v3KanaSetting){const key=el.dataset.v3KanaSetting,choice=kanaMemorySelection(ctx().session);if(key==='group'){choice.group=el.value;choice.row={basic:'a',voiced:'ga',semivoiced:'pa',contracted:'kya'}[el.value];if(choice.group==='basic'&&choice.mode==='build')choice.mode='listen';}else if(['row','mode','count'].includes(key))choice[key]=key==='count'?Number(el.value):el.value;render(false);return;}
   if(el.dataset.v3Goal!==undefined){const goal=el.value,hash=location.hash;update(s=>setLearningGoal(s,goal)).then(()=>refresh(hash)).catch(error=>toast(error.message));}
   if(el.dataset.v3BackupConfirm!==undefined){local().backupConfirmed=el.checked;render(false);}
  }

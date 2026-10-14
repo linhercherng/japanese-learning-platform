@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "2b4cd05f147be1fe1bc2da99658650929728734f82d333013a06e301f771ccff",
+  "fingerprint": "85e9c288b6a81897a26c5c0eba4ea47508a7303990cffbb3f021f5d2bf789eb6",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-v2.json",
@@ -84,8 +84,8 @@
     "content/concepts.mjs": "62304e151e42b544459c1dc547cce4dfb89de79214988c329c2d764c21bf32e9",
     "content/confusions.mjs": "0af86c5d1a4a3167793eae0407e577e8976f12d057e325a5b5afdd47ec351fb9",
     "content/deep-lessons.mjs": "0e34001c017634098de731ce24a516aefba62a322eb4d890e7c241af8a77272f",
-    "content/kana-drills.mjs": "5562eb07acc8b0cf341d1d64912ace11a23ec3fab7bf3779e90fcb162a2007b1",
-    "content/kana-memory.mjs": "9a89acceb9d1519f758deeabf5ca2d5e45f8812842ebab38f79cb4f5e75f1ad8",
+    "content/kana-drills.mjs": "4a180627136736eb6bf0394cbbddf867469d28f717b51005eb05e6c88316c61c",
+    "content/kana-memory.mjs": "8790e04892ff766238bd1b3322c40013f772f1ee5dbd59c0cc79d117634ff537",
     "content/kana.mjs": "724964f5ac33f8761028d1391c61b0478497aa65bc61d8edbe09fe15ff404a8a",
     "content/life-expanded.mjs": "dbeb1d542ccf861ec0c90ef4b439b1ce5025f76c51a031e92c96e8b52e6fe526",
     "content/life-v2-supplement.mjs": "36c5b46e1d357156c7d8585a94fc244daaef0ba0948778c36e031c0246d8a8c6",
@@ -119,8 +119,8 @@
     "styles.css": "35999e6bc87d5bd23b9b14c1c04213defa212657cfd239d5bde49f105d02e45e",
     "ui/courses.mjs": "c18f1484390e54a112d11cf18eee026a3fc53a4437b5ea50f5f61a02579de947",
     "ui/exam.mjs": "f1bfda886e5c041a9d1e6c81a2e50eff2a0b75b6c4cfa56555e6e6cd497f97d8",
-    "ui/kana-memory.mjs": "66a0fdb6761497f5af641c430db4b219ccd6e76989b139950cc75b4e91dc5c38",
-    "ui/kana.mjs": "70bdc776c3ad34a3995d2131e7da331194b1b6b9ab73531cb96f20ab9daab4a6",
+    "ui/kana-memory.mjs": "ee7b31d6a7fb843b0c38de1fa5c920b05c3c3da223d018c5608078c57c2d2885",
+    "ui/kana.mjs": "36085020645df936ea1665b5d070f4cf19ff4372e72a4bda517358e6fea78e65",
     "ui/library.mjs": "611189601e6ce599b684d589a78201c7659817017afd73b8264353b65f61c61c",
     "ui/life.mjs": "3b93e0c6ceec964daccb4636f0ac5e621760405cafcc563b407586f5dd7a2f00",
     "ui/media.mjs": "3e44e1174376550bef0f5a26c61f80f7d1cff8f566c416d318d4db882f03d397",
@@ -132,8 +132,8 @@
     "ui/writing.mjs": "572656ab2538a50f7c8087ebe560b7a64a571bc7eeaea276b8d4f8b27f25f33c",
     "v2.css": "c8b58f3ed2c35c467f7a17a1d8641e533bd949d2587913867a343ab5cd2d5977",
     "v2.mjs": "25e027abdafb39d26a8f9b2f1be236431b8d27c64751867ef587d38363e91092",
-    "v3.css": "e7e411e752790d90c118ab33a75dd177bf3a0b1b0aca82581904adebb3aa67fe",
-    "v3.mjs": "9b36ea3e2fd9afb83825c067f1adedb58ef5a4531eb4c32436e0443783de6748"
+    "v3.css": "a4873ae0236b1a6fe527b670f91fe3c1b80c7707d57ab33e29af361ccb515d5f",
+    "v3.mjs": "386409195bd29a1d2a6af26b735ca8b46fcdc8b2b318fbb49cb41a32563d7f88"
   },
-  "bytes": 6296583
+  "bytes": 6307230
 }
