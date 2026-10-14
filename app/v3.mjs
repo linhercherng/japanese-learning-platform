@@ -4,6 +4,8 @@ import {concepts} from './content/concepts.mjs';
 import {v3Questions} from './content/practice-v3.mjs';
 import {deepLessons} from './content/deep-lessons.mjs';
 import {confusionPairs} from './content/confusions.mjs';
+import {kanaDrills,selectKanaDrills,validKanaReference} from './content/kana-drills.mjs';
+import {kanaMemoryView,kanaMemorySelection} from './ui/kana-memory.mjs';
 import {makeDailyPlan} from './core/daily-plan.mjs';
 import {setLearningGoal,storeDailyPlan,startDailyStep,completeDailyStep,adjustDailyPlan,beginV3Session,hintV3Question,answerV3Session,nextV3Question,markDeepStep,saveDailyWriting,saveTextRevision,saveDeepWriting,organizeV3} from './core/v3-learning.mjs';
 import {exportBackup} from './core/learning.mjs';
@@ -39,7 +41,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  function currentQuestion(){const [name,sid]=route(),s=state().v3.sessions.find(s=>s.id===sid);if(name!=='v3-practice'||!s||s.completedAt)return null;const entry=s.queue[s.cursor],q=resolve(entry?.questionId);return q?{sid,cursor:s.cursor,q}:null;}
  async function submit(value){
   const snapshot=currentQuestion();if(!snapshot)return;const {sid,cursor,q}=snapshot,hash=location.hash,time=now(),eventId=id();
-  await update(s=>{const current=s.v3.sessions.find(s=>s.id===sid);if(!current||current.completedAt||current.cursor!==cursor||current.queue[cursor].questionId!==q.id)throw new Error('題目已切換，請回答目前顯示的題目。');let next=answerV3Session(s,{sessionId:sid,question:q,value,eventId,time,variants:v3Questions});delete next.drafts[`text:${sid}`];return next;});
+  await update(s=>{const current=s.v3.sessions.find(s=>s.id===sid);if(!current||current.completedAt||current.cursor!==cursor||current.queue[cursor].questionId!==q.id)throw new Error('題目已切換，請回答目前顯示的題目。');let next=answerV3Session(s,{sessionId:sid,question:q,value,eventId,time,variants:q.mode?kanaDrills:v3Questions});delete next.drafts[`text:${sid}`];return next;});
   clearDraft(sid);refresh(hash);
  }
  async function nextQuestion(){
@@ -74,6 +76,8 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  async function action(name,d){
   const hash=location.hash;
   switch(name){
+   case 'kana-start':{const selection={...kanaMemorySelection(ctx().session)};return begin(selectKanaDrills(state(),{...selection,seed:id(),time:now()}),{source:'kana',reference:selection.script+':'+selection.mode+':'+selection.row});}
+   case 'kana-hide':kanaMemorySelection(ctx().session).hidden=!kanaMemorySelection(ctx().session).hidden;break;
    case 'create-plan':return createPlan();
    case 'extra-plan':return createPlan(true);
    case 'start-step':return startStep(d.v3Plan,d.v3Step);
@@ -97,6 +101,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  function click(event){
   const button=event.target.closest('button');if(!button)return;const d={...button.dataset};if(!Object.keys(d).some(k=>k.startsWith('v3')))return;
   const task=async()=>{
+   if(d.v3KanaScript){kanaMemorySelection(ctx().session).script=d.v3KanaScript;render(false);return;}
    if(d.v3Choice!==undefined)return submit(Number(d.v3Choice));
    if(d.v3Token!==undefined){const i=Number(d.v3Token);if(!local().order.includes(i))local().order.push(i);persistOrder();render(false);return;}
    if(d.v3RemoveToken!==undefined){local().order=local().order.filter((_,i)=>i!==Number(d.v3RemoveToken));persistOrder();render(false);return;}
@@ -108,17 +113,18 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  }
  function input(event){const el=event.target,key=el.dataset.v3Draft;if(!key)return;const draft={text:el.value,points:[],time:now()};cacheDraft(`text:${key}`,draft);update(s=>({...s,drafts:{...s.drafts,[`text:${key}`]:draft},revision:s.revision+1})).catch(()=>{});}
  function change(event){const el=event.target;
+  if(el.dataset.v3KanaSetting){const key=el.dataset.v3KanaSetting;if(['row','mode','count'].includes(key))kanaMemorySelection(ctx().session)[key]=key==='count'?Number(el.value):el.value;render(false);return;}
   if(el.dataset.v3Goal!==undefined){const goal=el.value,hash=location.hash;update(s=>setLearningGoal(s,goal)).then(()=>refresh(hash)).catch(error=>toast(error.message));}
   if(el.dataset.v3BackupConfirm!==undefined){local().backupConfirmed=el.checked;render(false);}
  }
  document.addEventListener('click',click);document.addEventListener('input',input);document.addEventListener('change',change);
  return {
-  views:{home:()=>v3HomeView(ctx(),now()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve),weaknesses:()=>weaknessesView(ctx()),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
+  views:{home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve),weaknesses:()=>weaknessesView(ctx()),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
   onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}},
   validateCatalog(s){
    const conceptIds=new Set(concepts.map(c=>c.id)),unitIds=new Set(units.map(u=>u.id)),deepIds=new Set(deepLessons.map(u=>u.id)),pairIds=new Set(confusionPairs.map(p=>p.id));
    for(const p of s.v3.dailyPlans){if(!unitIds.has(p.unitId)||p.conceptIds.some(cid=>!conceptIds.has(cid))||(p.newConceptIds||[]).some(cid=>!conceptIds.has(cid))||p.steps.some(step=>step.questionIds.some(qid=>!resolve(qid))))throw new Error('備份包含未知每日教材');}
-   for(const p of s.v3.sessions){if(p.queue.some(q=>!resolve(q.questionId)))throw new Error('備份包含未知第三版題目');if(p.source==='lesson'&&!deepIds.has(p.reference)||p.source==='confusion'&&!pairIds.has(p.reference)||p.source==='concept'&&!concepts.some(c=>c.dimensions.some(d=>p.reference===`${c.id}:${d}`)))throw new Error('備份包含未知第三版活動');}
+   for(const p of s.v3.sessions){if(p.source==='kana'&&!validKanaReference(p.reference,p.queue.map(q=>q.questionId)))throw new Error('備份包含不一致的假名加練');if(p.queue.some(q=>!resolve(q.questionId)))throw new Error('備份包含未知第三版題目');if(p.source==='lesson'&&!deepIds.has(p.reference)||p.source==='confusion'&&!pairIds.has(p.reference)||p.source==='concept'&&!concepts.some(c=>c.dimensions.some(d=>p.reference===`${c.id}:${d}`)))throw new Error('備份包含未知第三版活動');}
    if(Object.keys(s.v3.lessonSteps).some(uid=>!deepIds.has(uid)))throw new Error('備份包含未知深化課程');
   },
   dispose(){document.removeEventListener('click',click);document.removeEventListener('input',input);document.removeEventListener('change',change);}
