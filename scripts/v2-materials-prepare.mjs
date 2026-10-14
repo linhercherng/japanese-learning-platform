@@ -1,5 +1,6 @@
 import {readFile,writeFile} from 'node:fs/promises';
-import {allUnits,units,words,kanjiItems,forms,lifeLessons} from '../app/content/catalog.mjs';
+import {allUnits,units,words,kanjiItems,forms,lifeLessons,v3Questions,deepLessons} from '../app/content/catalog.mjs';
+import {concepts} from '../app/content/concepts.mjs';
 import {wordAudioKey} from '../app/ui/shared.mjs';
 import {kanaLessons} from '../app/content/kana.mjs';
 const assets=new URL('../app/assets/',import.meta.url);
@@ -18,6 +19,9 @@ for(const unit of allUnits){
 }
 for(const k of kanjiItems)for(const word of k.words){add(word.jp);add(wordAudioKey(word),word.reading);}
 for(const form of forms)for(const section of form.sections)for(const q of section.questions)if(q.transcript)add(q.transcript);
+for(const c of concepts)for(const text of c.example.jp.split('／'))add(text);
+for(const q of v3Questions)if(q.transcript)add(q.transcript);
+for(const unit of deepLessons)for(const item of unit.listening)add(item.jp);
 await writeFile(new URL('audio-records-v2.json',assets),JSON.stringify([...records.values()],null,2));
 const oldCodes=JSON.parse(await readFile(new URL('stroke-codes.json',assets),'utf8'));
 await writeFile(new URL('stroke-codes.json',assets),JSON.stringify([...new Set([...oldCodes,...kanjiItems.map(k=>k.strokeCode)])].sort(),null,2));

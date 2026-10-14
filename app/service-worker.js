@@ -1,5 +1,5 @@
 /* Local app shell and explicitly downloaded audio packs. No user-data or third-party cache. */
-const BUILD_ID = '98777394d9509bed82365077e8396a29f3ac2ff698404a026a8c782d5b506819';
+const BUILD_ID = '9ba9c4ac405089cb826913fa43c5ac4745d5aead9c9a0ee62f8999d4b6efeee1';
 const SHELL_PREFIX='hiyori-shell-',SHELL_NAME=SHELL_PREFIX+BUILD_ID;
 const BASE=new URL(self.registration.scope),MANIFEST=new URL('assets/shell-manifest.json',BASE).href;
 const PACK_MARKER=new URL('__hiyori_pack_info__',BASE).href;
@@ -31,7 +31,7 @@ async function rangeResponse(response,range){
 }
 async function cachedAudio(request){
  for(const name of(await caches.keys()).reverse()){
-  if(!/^hiyori-pack-(?:K|L|N[345])-/.test(name))continue;
+  if(!/^hiyori-pack-(?:K|L|N[2345])-/.test(name))continue;
   const cache=await caches.open(name);if(!await cache.match(PACK_MARKER))continue;
   const response=await cache.match(request.url);if(!response||response.status!==200||!/^audio\/(?:mpeg|mp3)(?:;|$)/i.test(response.headers.get('Content-Type')||''))continue;
   return request.headers.get('Range')?rangeResponse(response,request.headers.get('Range')):response;

@@ -1,12 +1,12 @@
 # 專案協作規則
 
-本專案是繁體中文日語學習平台，完整範圍從五十音、生活日語到 JLPT N5／N4／N3。主要規格為 `docs/product-specification.md`，課綱為 `docs/curriculum.md`。
+本專案是繁體中文日語學習平台，完整範圍從五十音、生活日語到 JLPT N5／N4／N3／N2。主要規格為 `docs/product-specification.md`，課綱為 `docs/curriculum.md`。
 
 ## 當前階段
 
 2026-10-13 使用者已明示「直接公開，讓github上可以直接使用」，授權公開儲存庫、合併完整版到main並部署GitHub Pages。公開試用版仍明示教材與合成語音未經獨立教師審校；不可宣稱為正式審定或官方教材。公開端點的實際驗收另見 `docs/pages-deployment.md`，舊驗收文件保留為當時狀態。
 
-使用者已確認畫面、授權開發，並要求第二版規劃完直接執行。2026-10-13使用者已授權第三版實作並更新GitHub。`app/` 是v0.3公開試用平台，含90分級主課、60情境、12生活起步、6模擬卷與PWA。`prototype/`及第一版歷史保留。獨立教師審校、雲端同步、真人教材與實機尚未驗收，不能由本機驗證推論完成。第三版設計及驗證見`docs/plans/2026-10-13-learning-v3-design.md`與`docs/v3-validation.md`；V3.1/V3.2仍為後續。第二版當前設計見 `docs/plans/2026-10-12-learning-v2-design.md`，實際範圍及證據見 `docs/v2-validation.md`。
+使用者已確認畫面、授權開發，並要求第二版規劃完直接執行。2026-10-13使用者已授權第三版實作並更新GitHub。2026-10-14使用者要求內容延伸到N2。`app/` 是v0.4公開試用平台，含114分級主課、80情境、12生活起步、8模擬卷與PWA。N2首批24課／543詞／48文法／71漢字，非官方完整必考清單；驗證見`docs/n2-validation.md`，網站豐富化規劃見`docs/website-v4-plan.md`，後續新畫面仍先確認樣稿。`prototype/`及第一版歷史保留。獨立教師審校、雲端同步、真人教材與實機尚未驗收，不能由本機驗證推論完成。第三版設計及驗證見`docs/plans/2026-10-13-learning-v3-design.md`與`docs/v3-validation.md`；V3.1/V3.2仍為後續。第二版當前設計見 `docs/plans/2026-10-12-learning-v2-design.md`，實際範圍及證據見 `docs/v2-validation.md`。
 
 ## 實作與驗證
 

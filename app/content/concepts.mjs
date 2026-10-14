@@ -1,4 +1,5 @@
-// 原創公開試用教材 v3.0；平台分級不代表 JLPT 官方清單，待獨立日語教師審校。
+// 原創公開試用教材；平台分級不代表 JLPT 官方清單，待獨立日語教師審校。
+import {n2Concepts} from './n2-recall.mjs';
 const concept=(id,title,level,unitIds,itemIds,explanation,jp,zh,memoryTip)=>({
  id,title,level,unitIds,itemIds,
  dimensions:level==='K'?['recognition','listening','language']:['grammar','listening','language'],
@@ -92,4 +93,5 @@ const priorQuestionIds={
  'c-n3-partial':['N3-35-q3','N3-35-q4','N3-35-q6'],
 };
 for(const c of concepts)c.itemIds.push(...(priorQuestionIds[c.id]||[]));
+concepts.push(...n2Concepts);
 export const conceptById=new Map(concepts.map(c=>[c.id,c]));

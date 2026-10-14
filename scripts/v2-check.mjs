@@ -3,8 +3,8 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {units,scenarios,allUnits,forms,words,kanjiItems,grammarItems,unitQuestions,resolveQuestion,levels} from '../app/content/catalog.mjs';
 const required=(text,label)=>assert.ok(typeof text==='string'&&text.trim(),label);
-assert.equal(units.length,90);assert.equal(scenarios.length,60);assert.equal(allUnits.length,162);assert.equal(forms.length,6);
-const expected={N5:24,N4:30,N3:36},wordTargets={N5:800,N4:1000,N3:1400},readTargets={N5:100,N4:180,N3:300};
+assert.equal(units.length,114);assert.equal(scenarios.length,80);assert.equal(allUnits.length,206);assert.equal(forms.length,8);
+const expected={N5:24,N4:30,N3:36,N2:24},wordTargets={N5:800,N4:1000,N3:1400,N2:500},readTargets={N5:100,N4:180,N3:300,N2:450};
 const ids=new Set();
 function question(q){
  assert.ok(!ids.has(q.id),`重複題目 ${q.id}`);ids.add(q.id);required(q.prompt,q.id);required(q.explanation,q.id);
@@ -24,7 +24,7 @@ for(const unit of allUnits){
  for(const g of unit.grammar){for(const key of ['pattern','meaning','formation','explanation','contrast','pitfall'])required(g[key],unit.id);assert.ok(g.examples.length>=2);g.examples.forEach(ex=>{required(ex.jp,unit.id);required(ex.zh,unit.id);});}
  unitQuestions(unit).forEach(question);
 }
-for(const form of forms){assert.equal(form.sections.length,3);assert.deepEqual(form.sections.map(s=>s.questions.length),[20,30,20]);assert.deepEqual(form.sections.map(s=>s.minutes),{N5:[20,40,30],N4:[25,55,35],N3:[30,70,40]}[form.level]);form.sections.forEach(s=>s.questions.forEach(question));}
+for(const form of forms){assert.equal(form.sections.length,form.level==='N2'?2:3);assert.deepEqual(form.sections.map(s=>s.questions.length),form.level==='N2'?[50,20]:[20,30,20]);assert.deepEqual(form.sections.map(s=>s.minutes),{N5:[20,40,30],N4:[25,55,35],N3:[30,70,40],N2:[105,50]}[form.level]);form.sections.forEach(s=>s.questions.forEach(question));}
 assert.equal(new Set(words.map(w=>`${w.jp}\n${w.reading}`)).size,words.length);
 const load=async path=>JSON.parse((await readFile(new URL(`../app/${path}`,import.meta.url),'utf8')).replace(/^\uFEFF/,''));
 const shell=await load('assets/shell-manifest.json'),offline=await load('assets/offline-manifest.json');

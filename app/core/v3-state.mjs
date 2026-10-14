@@ -1,5 +1,5 @@
 import {validAnswerValue} from './study.mjs';
-export const learningGoals=['K','L','N5','N4','N3'];
+export const learningGoals=['K','L','N5','N4','N3','N2'];
 export const studyDay=time=>new Date(time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
 export const initialV3=()=>({goal:'K',dailyPlans:[],sessions:[],lessonSteps:{},artifactParents:{}});
 const plain=x=>x&&typeof x==='object'&&!Array.isArray(x);

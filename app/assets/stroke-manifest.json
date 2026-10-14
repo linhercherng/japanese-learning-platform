@@ -1026,6 +1026,12 @@
     "sha256": "94FB76C3C423E1606B0C34BE1DDA50CCACE9671F490AF70FCDAB8F28922085E2"
   },
   {
+    "code": "04f01",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/04f01.svg",
+    "sha256": "2C2BFF3A445A47EDCEB1174080630593EC6FAEC2CFC712A1805BA7674B5692BE"
+  },
+  {
     "code": "04f11",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/04f11.svg",
@@ -1122,10 +1128,28 @@
     "sha256": "954C793EE8C01F5C6E375983E54897E0589C18049E7138DD1123BA62CBAF8BCF"
   },
   {
+    "code": "0505c",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0505c.svg",
+    "sha256": "92AD6D80ADDBCB994E32EF7C780112D11D98D5A91C4552A9DED2969074477DE6"
+  },
+  {
     "code": "05065",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05065.svg",
     "sha256": "BF742629E0702BEBF64D28E2C36B520DA8656672FFE0772A68DC55FE747A5DB6"
+  },
+  {
+    "code": "05099",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05099.svg",
+    "sha256": "73E212FEBCBD007282AC65C11AE000C5469BB770A250C20E46D7081489CCA339"
+  },
+  {
+    "code": "050ac",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/050ac.svg",
+    "sha256": "7B72548393DCBE0317A384CC949137CD5AEA3403802D8EF3436A353F06573170"
   },
   {
     "code": "0512a",
@@ -1170,6 +1194,18 @@
     "sha256": "ED25F8296125B2D214D839F42EA344F5AE20B0AA1F770AF2E57F625A22C5B4E1"
   },
   {
+    "code": "05171",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05171.svg",
+    "sha256": "A4C1EB05D6E0BFBED1FAA4892F7FED76F9DA7CC6224B54EFECFF66BD546E8B25"
+  },
+  {
+    "code": "05177",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05177.svg",
+    "sha256": "62542832CCF02322692724B24678BEE11B316D0850E8421F12B8F7CE3541918C"
+  },
+  {
     "code": "05186",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05186.svg",
@@ -1180,6 +1216,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05199.svg",
     "sha256": "9ECE6B94ED7B659A4FDA77C0DA5263EBDAF58D6CE4CEFB223ACA7292219F9E81"
+  },
+  {
+    "code": "051e6",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/051e6.svg",
+    "sha256": "72F4F7188ABD236997DE9939522EA50D9AFB5E3EB50E4EB6FAC1207AA877FB38"
   },
   {
     "code": "051fa",
@@ -1224,6 +1266,12 @@
     "sha256": "FD46F0F43CDE48DA711ACEBF0EC7184C3BED99907D9A38FD6EE958AA49963C55"
   },
   {
+    "code": "0523b",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0523b.svg",
+    "sha256": "8AFB60F73C5BCA1E345CDD2613DEE177C3CD1D4916CB044CF9A74F54D6F93E8E"
+  },
+  {
     "code": "05247",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05247.svg",
@@ -1254,6 +1302,12 @@
     "sha256": "E6EF4F4FE372885748525913659436F615189353B69F5D15B8EDEA7594C11FF6"
   },
   {
+    "code": "052a9",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/052a9.svg",
+    "sha256": "2EF27817D891E18D363C958F8B2F49F2053BA16E48CF6F1BF93432A329E7084A"
+  },
+  {
     "code": "052b9",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/052b9.svg",
@@ -1282,6 +1336,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05370.svg",
     "sha256": "92A325CBE9655447A86FC6BF0B49072BCBFCACC2313B40835C69934447A92F66"
+  },
+  {
+    "code": "05374",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05374.svg",
+    "sha256": "74959608380068E2B62A1BCDD97573944C2AF22EB12157E8AFE6D56489729B56"
   },
   {
     "code": "053c2",
@@ -1350,6 +1410,12 @@
     "sha256": "95574AC3CDFACBDE4ECA7627564EA855B6CD5FA4ACC87A4D6260AA7448372BF9"
   },
   {
+    "code": "0544a",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0544a.svg",
+    "sha256": "1C108D0F8046CCB3466C2848031AA0CF926DC3A345B5CE754CCA8C425D9AD287"
+  },
+  {
     "code": "05473",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05473.svg",
@@ -1378,6 +1444,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/056e0.svg",
     "sha256": "ECCDD6BE9128E87234904AA98D560167AFBC21ACB3D7356A91D9E206E3676DA3"
+  },
+  {
+    "code": "056e3",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/056e3.svg",
+    "sha256": "C670DFC62862808873FC9DB5D373F83E0210AB8D673FAAAAA75CF0E3E166C307"
   },
   {
     "code": "056f3",
@@ -1420,6 +1492,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05834.svg",
     "sha256": "A962B951A431E3090AA6A216B3FBEE41EB7E0E75B059256FF77B6E970C96AEA1"
+  },
+  {
+    "code": "05883",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05883.svg",
+    "sha256": "4C6B9F80A541D4411285FB01463A661588CB9C7BC5255A32096AB34A17DAA25C"
   },
   {
     "code": "05897",
@@ -1488,6 +1566,12 @@
     "sha256": "02136167C108ED7E455E2708E01CD0EA4B89F69235CC95AAC32BB0573CC0A509"
   },
   {
+    "code": "05b58",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05b58.svg",
+    "sha256": "062363049D9963D275C6A556C987201FB8D76FEE3E6CADE1B5DA3ACDD450C43A"
+  },
+  {
     "code": "05b66",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05b66.svg",
@@ -1530,6 +1614,12 @@
     "sha256": "7E65FB1FE26467ABB2D63C746365953EBFD378CA6FE95796988EF7A196FFF04E"
   },
   {
+    "code": "05bdf",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05bdf.svg",
+    "sha256": "3DE92274A66538252A9E28E5E65F1A52FBECC82D3CC279343D5138D057787FD6"
+  },
+  {
     "code": "05be7",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05be7.svg",
@@ -1554,6 +1644,12 @@
     "sha256": "16BEB75248B3E48A4B4F5C1CA273D6B23DA7558E60552AFF94DD8834C7BD3642"
   },
   {
+    "code": "05c0e",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05c0e.svg",
+    "sha256": "15692F4969CC9FF1810EA4C6F610561E1B58BFCABA40D8F35CD309F698B4C384"
+  },
+  {
     "code": "05c0f",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05c0f.svg",
@@ -1570,6 +1666,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05c4b.svg",
     "sha256": "5D92B151A2A1356ECD98877DB6AE713B9354FD78442368AA041C15ECC09A6D86"
+  },
+  {
+    "code": "05c55",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05c55.svg",
+    "sha256": "98540473813304D0E5BA8E513A87F4577E9BEA085C112FE3D4F71DE5F9BC0CE2"
   },
   {
     "code": "05c71",
@@ -1614,6 +1716,18 @@
     "sha256": "86DE6CCFD4C835A9840CFD5816CF4BA318266BCE0A064A24BB8B9D310909D6A1"
   },
   {
+    "code": "05eab",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05eab.svg",
+    "sha256": "A458FC21FA136D41DA0460B1D7B56FCA7726E1AB3B3726374FAC1FAACCFFB1C5"
+  },
+  {
+    "code": "05ef6",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05ef6.svg",
+    "sha256": "7BE1F701F3E4B2B2F41BB8D069F503C3BBB9066C5D765A66239165F91577F86A"
+  },
+  {
     "code": "05f15",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/05f15.svg",
@@ -1650,6 +1764,18 @@
     "sha256": "4D0A5E45D84952AAF2E40AADF9C0A1B8594B352B928296D9A40B30BDE3AF860F"
   },
   {
+    "code": "060c5",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/060c5.svg",
+    "sha256": "14879C0BBC38D983DD5ADD58BB81A75D93E42E80DF053EC8DE2B301BEB8E0CE3"
+  },
+  {
+    "code": "060f3",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/060f3.svg",
+    "sha256": "B0801D975D3BF9AE69CBCB0D6AD25A138E90D43AFE956ACF9953B184E206D46F"
+  },
+  {
     "code": "0610f",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0610f.svg",
@@ -1674,6 +1800,12 @@
     "sha256": "1CE985C47256D4DE0E763880EE5080DEA64B15B670E711C8F5D2DE58DFD62D32"
   },
   {
+    "code": "0623f",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0623f.svg",
+    "sha256": "A1E14801837EEAFB78DC2C3752F84568887CAFB64C4768396C74077D86CDDBE3"
+  },
+  {
     "code": "06240",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/06240.svg",
@@ -1690,6 +1822,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0627f.svg",
     "sha256": "6197E9B5739267504DEF8C0855E99684150306A4E99F4624A6BE0C2D8302C469"
+  },
+  {
+    "code": "06295",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/06295.svg",
+    "sha256": "85FBDF0679173AE95D4250D015231FE40614B20CA8EF4D5EC35439DD9E064164"
   },
   {
     "code": "06298",
@@ -1710,6 +1848,12 @@
     "sha256": "1B063AFB845262F7E5B36DFEC6CEDDF96A63F25DA5E5BFB1C9765685146DF520"
   },
   {
+    "code": "062c5",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/062c5.svg",
+    "sha256": "27C4EAFBB189371EB1BBCB97B08FC3AAD9F3D5BF7ECBD210F944368CB2F5FF2B"
+  },
+  {
     "code": "062dd",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/062dd.svg",
@@ -1720,6 +1864,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/06301.svg",
     "sha256": "5B603A2DF64D2749C7CC53AAD7323425F9786A1AFD0CFCD58152E64FB5123980"
+  },
+  {
+    "code": "063a1",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/063a1.svg",
+    "sha256": "D0FAC7E3D03166B5E554987695F0406BADE69A711B14ED00CCB4ED50E77135B9"
   },
   {
     "code": "063a7",
@@ -1830,6 +1980,12 @@
     "sha256": "E2B461DAD3B8C2A7BB1A5B9318E83D90F44D9F62D903D4A27E5992E6469773B1"
   },
   {
+    "code": "0660e",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0660e.svg",
+    "sha256": "E1E9AB7D4F47C182B4EFB1A1A8A61D93CF746F6059501D9BFAC7D341B184C2B1"
+  },
+  {
     "code": "0663c",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0663c.svg",
@@ -1926,10 +2082,28 @@
     "sha256": "769F73AF842551AE95C0D06D20640FDD49402BE642B45752ADAF122D750091D6"
   },
   {
+    "code": "067a0",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/067a0.svg",
+    "sha256": "88EB3392606793576C7E340FCF4477F36E57F585183E5E2A433E1F30B45EF8C2"
+  },
+  {
+    "code": "067fb",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/067fb.svg",
+    "sha256": "0BEEF9DF1A1D923829FA0E9BAD81B51D43A10465653B568A2F02344E93E075D2"
+  },
+  {
     "code": "06821",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/06821.svg",
     "sha256": "B3A22720CA44FE8389062BD550CF4A83B8CC6847948A44F5D7C63C1BBA86F4EA"
+  },
+  {
+    "code": "0691c",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0691c.svg",
+    "sha256": "17E73112473F35605C4C4E07ACD125C8D1FB63539730CA052F1623D24924BF45"
   },
   {
     "code": "0697d",
@@ -1984,6 +2158,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/06b74.svg",
     "sha256": "2BFA32438D7A1F355DCBFAEC2CAFBAB5CCB1DC9F704D720F4E6996C33C448DDA"
+  },
+  {
+    "code": "06b8a",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/06b8a.svg",
+    "sha256": "7614C335B2D576CCF651089D2500CEC64E99A352C48D1B0B49989D17A2543CFA"
   },
   {
     "code": "06bb5",
@@ -2064,6 +2244,18 @@
     "sha256": "6B213B8026FE053348D743F715D2E121C0419E3EEDF45AE89EBB6C28EB8A3214"
   },
   {
+    "code": "06e21",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/06e21.svg",
+    "sha256": "84A7D24F7CF533A26D69995D8DD4DC29EC026D9123DCCC66B5B21DB67B81D6F4"
+  },
+  {
+    "code": "06e2c",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/06e2c.svg",
+    "sha256": "80504B73ECE44C82492AD0B64FD25B59D7E33D846DF645A05CA7136E4EDF956C"
+  },
+  {
     "code": "0706b",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0706b.svg",
@@ -2080,6 +2272,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07121.svg",
     "sha256": "13F9CCFD656586FED102B1FB41586B105C54B373C68DD0B97496152D45D31924"
+  },
+  {
+    "code": "07167",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07167.svg",
+    "sha256": "DB62D619CCF8EC6A83AEED154EB81BD035A7627C9E562D9B1159342D6F9AF06F"
   },
   {
     "code": "071b1",
@@ -2256,6 +2454,12 @@
     "sha256": "8340EA8711A57002DB3DC3DD04D4D64BF3E7E93D9119C1D95565FBF38FB533C2"
   },
   {
+    "code": "07aef",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07aef.svg",
+    "sha256": "0E18A9424467EDEE80F0C13F85CA1595E5248A27C32AC6BEA7447C0BCB6646A3"
+  },
+  {
     "code": "07b52",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07b52.svg",
@@ -2268,10 +2472,22 @@
     "sha256": "A05CFE3BEE6B9FB89CA2952571A55C9DC8CD9912F2A4D99F1CCC5E4670BFAA55"
   },
   {
+    "code": "07c3f",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07c3f.svg",
+    "sha256": "2E9294418F7BC9935C21E605E7F720319B91461A18034C7BF2DC14482C5CD739"
+  },
+  {
     "code": "07d04",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07d04.svg",
     "sha256": "22D576F32997EF4288EE6454CC013A32116E362C7E9D4C7F426AC2BBFD04A70D"
+  },
+  {
+    "code": "07d0d",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07d0d.svg",
+    "sha256": "EF3F0855F9B31DEC5F7CEBF2025DE4B190D76D5D2B476EEDD88BF98C438FAFAF"
   },
   {
     "code": "07d44",
@@ -2284,6 +2500,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07d4c.svg",
     "sha256": "3074DBFE9ECD300610CB1D6AB8178F27D0372B43CE70992C8D40B96EE3F455E4"
+  },
+  {
+    "code": "07d99",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/07d99.svg",
+    "sha256": "28A53DFA13955250E9E40C2AB60D66CE2AEFF32A7E836BA012CCA7A74136F505"
   },
   {
     "code": "07d9a",
@@ -2320,6 +2542,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08003.svg",
     "sha256": "168AB450B5BCFB5B179E426458021789AD1E1B585B2A1BA82891C706D33E87CF"
+  },
+  {
+    "code": "0805e",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0805e.svg",
+    "sha256": "57845CEC420C337F86522E2B4A7284A5CD8C10796254F7F161D0A6453FC413DF"
   },
   {
     "code": "08077",
@@ -2388,10 +2616,22 @@
     "sha256": "C006BCAAF7B8D68318173D8C9B536E98F08213843CD5AEB54F5307C6C8F2A502"
   },
   {
+    "code": "08a2d",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08a2d.svg",
+    "sha256": "CA689FDA1EECAA20AC58FA5D9AA3A986C8677EBDCE99957B65519B81C5AB04E6"
+  },
+  {
     "code": "08a31",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08a31.svg",
     "sha256": "B612D87A4954DE6F7E2DE06FDF8DED195B9A0C3478E051A95D019F028E8896D9"
+  },
+  {
+    "code": "08a33",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08a33.svg",
+    "sha256": "EF93C33B33BAAFEBC47D3BBA5BEE767D8D34C5808797FE68C70668E19A845CDD"
   },
   {
     "code": "08a3a",
@@ -2454,6 +2694,18 @@
     "sha256": "A64414E334B181BDC5AA24432B9F9407B1E094432B762A5C2D27FBC7ED4001BB"
   },
   {
+    "code": "08b66",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08b66.svg",
+    "sha256": "76839629B14DBF384597937AA143CCE87033D6DC841ACB8AC85169F807D017B0"
+  },
+  {
+    "code": "08b77",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08b77.svg",
+    "sha256": "F03D2F6E146956C33806D55BC9F09EED93A5958A30F05589E9A3E43FD04258EE"
+  },
+  {
     "code": "08c61",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08c61.svg",
@@ -2514,6 +2766,12 @@
     "sha256": "5886226423A32FE2D9CE41DA6EE160F34B16AE62DC3F1CCACC01DE820335607C"
   },
   {
+    "code": "08def",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08def.svg",
+    "sha256": "1470A638FF41EF992542514A23396DC3C4A3DDDC261C615FD2AAB71B3BBC1C87"
+  },
+  {
     "code": "08eab",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/08eab.svg",
@@ -2562,6 +2820,12 @@
     "sha256": "35A793164043C5461B43AEB0C0A026B37B314B759E59D8449AE8B82F5C37EBFD"
   },
   {
+    "code": "09014",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/09014.svg",
+    "sha256": "B3EFCEEB2AB7BB06E84CC8E3CA8E77B8CD8666124B27EB187C2E50C21CDECA74"
+  },
+  {
     "code": "0901a",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0901a.svg",
@@ -2584,6 +2848,12 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/09045.svg",
     "sha256": "1CDD6A100F2415DE7E4B9311DB234529FD7774A1BF5F36CC509492484ACEBF04"
+  },
+  {
+    "code": "0904e",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/0904e.svg",
+    "sha256": "F17E1280FA8AFE3A21387677BFB3FA309484A4C23334D52EAEE18E161D951E54"
   },
   {
     "code": "09078",
@@ -2736,6 +3006,12 @@
     "sha256": "C5E6577E0776CC7343654D28F6822A96EA1724F37AA7E0078F9808C25A05DBF2"
   },
   {
+    "code": "09928",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/09928.svg",
+    "sha256": "BAC064AF3AED543D3CE70838E20FC3586DC56F781AB9D000D928FD40FB497EDD"
+  },
+  {
     "code": "099c5",
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/099c5.svg",
@@ -2758,5 +3034,17 @@
     "status": "ok",
     "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/09b5a.svg",
     "sha256": "0A7A54A98DF30902BBDA2E46DA145C9A55AA23FAF9B3227781F10FEC57BBF77A"
+  },
+  {
+    "code": "09bae",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/09bae.svg",
+    "sha256": "EE45361C0560332BCFE290CBFB8ACC95FD83E49BAE754790096E158A4174335B"
+  },
+  {
+    "code": "09ed9",
+    "status": "ok",
+    "url": "https://raw.githubusercontent.com/KanjiVG/kanjivg/70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/09ed9.svg",
+    "sha256": "6DB0567D6636BD225E317505B1C34B4381AA56ABE2E4A86F7EACF8618EF1551F"
   }
 ]

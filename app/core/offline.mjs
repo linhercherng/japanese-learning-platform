@@ -1,5 +1,5 @@
 const marker='__hiyori_pack_info__';
-function validPack(pack){if(!pack||!['K','L','N5','N4','N3'].includes(pack.id)||!/^[-a-zA-Z0-9]{3,64}$/.test(pack.fingerprint)||!Array.isArray(pack.files)||!pack.files.length||pack.files.length>20000||new Set(pack.files).size!==pack.files.length||pack.files.some(path=>!/^assets\/audio\/[A-Za-z0-9_-]+\.mp3$/.test(path)))throw new Error('離線包資料不正確');}
+function validPack(pack){if(!pack||!['K','L','N5','N4','N3','N2'].includes(pack.id)||!/^[-a-zA-Z0-9]{3,64}$/.test(pack.fingerprint)||!Array.isArray(pack.files)||!pack.files.length||pack.files.length>20000||new Set(pack.files).size!==pack.files.length||pack.files.some(path=>!/^assets\/audio\/[A-Za-z0-9_-]+\.mp3$/.test(path)))throw new Error('離線包資料不正確');}
 const baseName=pack=>`hiyori-pack-${pack.id}-`;
 const url=(path,origin)=>new URL(path,origin).href;
 async function verifiedAudio(response,expectedHash){

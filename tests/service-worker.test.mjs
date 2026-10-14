@@ -11,6 +11,12 @@ function cacheStorage(){const data=new Map();return{data,async keys(){return[...
 async function worker(fetcher,scope=origin){const handlers=new Map(),caches=cacheStorage();const source=await readFile(new URL('../app/service-worker.js',import.meta.url),'utf8');const buildId=source.match(/const BUILD_ID = '([a-f0-9]+)'/)?.[1];let claimed=false;const context={URL,Response,Headers,Request,Uint8Array,ArrayBuffer,Number,JSON,Promise,console,crypto:webcrypto,caches,fetch:fetcher,self:{registration:{scope},location:{origin:new URL(scope).origin},addEventListener(type,fn){handlers.set(type,fn);},clients:{async claim(){claimed=true;}},async skipWaiting(){}}};vm.runInNewContext(source,context);return{caches,handlers,buildId,get claimed(){return claimed;},async event(type,extra={}){let work;handlers.get(type)({...extra,waitUntil(p){work=p;},respondWith(p){work=p;}});return work?await work:undefined;}};}
 const audio=()=>new Response(Uint8Array.from([73,68,51,...new Array(1021).fill(7)]),{headers:{'Content-Type':'audio/mpeg'}});
 
+test('N2 completed audio pack supports offline playback and browser Range requests',async()=>{
+ const w=await worker(async()=>{throw new Error('offline');}),cache=await w.caches.open('hiyori-pack-N2-complete');
+ await cache.put(origin+'__hiyori_pack_info__',new Response('{}'));await cache.put(origin+'assets/audio/n2.mp3',audio());
+ for(const [headers,status,length] of [[{},200,1024],[{Range:'bytes=0-3'},206,4]]){const response=await w.event('fetch',{request:new Request(origin+'assets/audio/n2.mp3',{headers})});assert.equal(response.status,status);assert.equal((await response.arrayBuffer()).byteLength,length);}
+});
+
 test('GitHub Pages子路徑安裝、離線導覽和音檔Range正確，不攔截其他專案',async()=>{
  const base='https://linhercherng.github.io/japanese-learning-platform/';
  const bodies={'index.html':'<html>pages</html>','main.mjs':'export const pages=true;'},requests=[];

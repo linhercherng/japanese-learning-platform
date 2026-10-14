@@ -1,10 +1,11 @@
-param([int]$Limit=0)
+param([int]$Limit=0,[string]$RecordsFile='')
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path $PSScriptRoot -Parent
 $taskAssets=Join-Path $taskRoot 'app/assets'
 $taskAudio=Join-Path $taskAssets 'audio'
 $taskScratch=Join-Path $taskRoot 'temp/audio'
-$taskRecords=Get-Content -LiteralPath (Join-Path $taskAssets 'audio-records-v2.json') -Raw | ConvertFrom-Json
+$taskRecordsPath=if($RecordsFile){$RecordsFile}else{Join-Path $taskAssets 'audio-records-v2.json'}
+$taskRecords=Get-Content -LiteralPath $taskRecordsPath -Raw | ConvertFrom-Json
 if($Limit -gt 0){$taskRecords=@($taskRecords | Select-Object -First $Limit)}
 $taskFfmpeg=(Get-Command ffmpeg -ErrorAction Stop).Source
 New-Item -ItemType Directory -Force -Path $taskAudio,$taskScratch | Out-Null

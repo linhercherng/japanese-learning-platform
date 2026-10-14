@@ -14,19 +14,23 @@ import {forms as n4Forms} from './n4-exams.mjs';
 import {forms as n3Forms} from './n3-exams.mjs';
 import {words as n4Lexicon} from './n4-lexicon.mjs';
 import {words as n3Lexicon} from './n3-lexicon.mjs';
+import {units as n2Units} from './n2.mjs';
+import {scenarios as n2Scenes} from './n2-scenarios.mjs';
+import {forms as n2Forms} from './n2-exams.mjs';
+import {words as n2Lexicon} from './n2-lexicon.mjs';
 import {v3Questions} from './practice-v3.mjs';
 import {kanaDrills} from './kana-drills.mjs';
 export {v3Questions} from './practice-v3.mjs';
 export {deepLessons} from './deep-lessons.mjs';
 export const topics=[['greetings','招呼與自介'],['family','家庭與人際'],['schedule','時間與行程'],['food','飲食與餐廳'],['shopping','購物與付款'],['transport','交通與問路'],['travel','住宿與旅遊'],['weather','天氣與季節'],['health','身體與就醫'],['help','緊急與求助'],['routine','日常作息'],['school','學校與學習'],['work','工作與職場'],['hobbies','興趣與休閒'],['sport','運動與活動'],['home','租屋與居家'],['mail','郵局與寄送'],['public','銀行與公共服務'],['technology','手機與網路'],['culture','文化與交流']];
-export const levels=['N5','N4','N3'];
+export const levels=['N5','N4','N3','N2'];
 export const lifeLessons=[...originalLife,...additionalLifeLessons].sort((a,b)=>a.id.localeCompare(b.id));
-export const units=[...n5Units,...n4Units,...n3Units];
-export const scenarios=[...n5Scenes,...n4Scenes,...n3Scenes].map(scene=>({...scene,minutes:20,vocabulary:scene.words.map(w=>{const ex=scene.dialogue.find(d=>d.jp.includes(w.jp));return {...w,example:ex?.jp||w.jp,exampleZh:ex?.zh||w.zh};}),grammar:[],kanji:[],reading:null}));
-export const forms=[...n5Forms,...n4Forms,...n3Forms];
+export const units=[...n5Units,...n4Units,...n3Units,...n2Units];
+export const scenarios=[...n5Scenes,...n4Scenes,...n3Scenes,...n2Scenes].map(scene=>({...scene,minutes:20,vocabulary:scene.words.map(w=>{const ex=scene.dialogue.find(d=>d.jp.includes(w.jp));return {...w,example:ex?.jp||w.jp,exampleZh:ex?.zh||w.zh};}),grammar:[],kanji:[],reading:null}));
+export const forms=[...n5Forms,...n4Forms,...n3Forms,...n2Forms];
 const wordMap=new Map();
 for(const level of levels){
- const lexicon={N5:n5Lexicon,N4:n4Lexicon,N3:n3Lexicon}[level];
+ const lexicon={N5:n5Lexicon,N4:n4Lexicon,N3:n3Lexicon,N2:n2Lexicon}[level];
  const source=[...units.filter(u=>u.level===level).flatMap(u=>u.vocabulary),...scenarios.filter(s=>s.level===level).flatMap(s=>s.vocabulary),...lexicon.map(([jp,reading,zh])=>({jp,reading,zh}))];
  for(const word of source){const key=`${word.jp}\n${word.reading}`,old=wordMap.get(key);if(old){if(!old.levels.includes(level))old.levels.push(level);if(!old.example&&word.example){old.example=word.example;old.exampleZh=word.exampleZh;}}else wordMap.set(key,{...word,id:stableId('w',key),levels:[level]});}
 }
