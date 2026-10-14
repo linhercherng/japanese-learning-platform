@@ -11,7 +11,7 @@ const uniqueIds=items=>Array.isArray(items)&&items.every(safe)&&new Set(items).s
 function answer(a){shape(a,['value','correct','hinted','time']);requireValue(validAnswerValue(a.value)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&time(a.time));}
 export function validateSession(s){
  shape(s,['id','source','reference','questionIds','queue','cursor','answers','hints','corrections','deferred','createdAt','updatedAt','completedAt']);
- requireValue(safe(s.id)&&['daily','concept','lesson','confusion'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
  requireValue(Array.isArray(s.queue)&&s.queue.length<=120&&s.queue.length>=s.questionIds.length&&Number.isInteger(s.cursor)&&s.cursor>=0&&s.cursor<=s.queue.length);
  const original=[];
  for(const q of s.queue){shape(q,['questionId','repeat','sourceId']);requireValue(safe(q.questionId)&&typeof q.repeat==='boolean'&&(q.repeat?s.questionIds.includes(q.sourceId):q.sourceId===null));if(!q.repeat)original.push(q.questionId);}

@@ -1,0 +1,22 @@
+import {escapeHtml as e,heading,back,audioButton,primary,note,strokeSvg} from './shared.mjs';
+import {memoryFor,kanaRows} from '../content/kana-memory.mjs';
+import {kanaModes} from '../content/kana-drills.mjs';
+import {kanaPhonology} from '../content/kana.mjs';
+import {itemPaths} from './kana.mjs';
+export const kanaMemorySelection=session=>session.kanaMemory??={script:'hira',row:'a',mode:'listen',count:5,hidden:false};
+export function kanaMemoryView(ctx){
+ const choice=kanaMemorySelection(ctx.session),items=ctx.kana.filter(k=>k.group==='basic'&&k.script===choice.script&&(choice.row==='all'||memoryFor(k.id).row===choice.row));
+ const pending=ctx.state.v3.sessions.filter(s=>s.source==='kana'&&!s.completedAt),latest=ctx.state.v3.sessions.filter(s=>s.source==='kana'&&s.completedAt).slice(-1)[0];
+ const options=(values,current)=>values.map(([value,label])=>`<option value="${value}" ${current===value?'selected':''}>${e(label)}</option>`).join('');
+ return `${back('五十音字表','kana')}${heading('五十音，換個方法記。','看一處字形、聽一個詞，再遮住回想。每次只練一小行。')}${note('以下為原創字形聯想，不是字源或發音規則。聯想只幫忙找線索，讀音聽音檔，書寫照正式筆順。')}<div class="segmented">${[['hira','平假名'],['kata','片假名']].map(([id,title])=>`<button data-v3-kana-script="${id}" aria-pressed="${choice.script===id}" class="${choice.script===id?'active':''}">${title}</button>`).join('')}</div>
+ <section class="km-practice"><h2>今天，自己想起來一次。</h2><div class="km-settings"><label>選一行<select data-v3-kana-setting="row">${options([['all','基本46字混合'],...kanaRows.map(r=>[r.id,r.title])],choice.row)}</select></label><label>練習方式<select data-v3-kana-setting="mode">${options(kanaModes.map(m=>[m.id,m.title]),choice.mode)}</select></label><label>每輪份量<select data-v3-kana-setting="count">${options([5,10].map(n=>[n,`最多 ${n} 題`]),choice.count)}</select></label></div><p>${e(kanaModes.find(m=>m.id===choice.mode).description)}</p><button class="primary" data-v3-action="kana-start">開始這輪 ${Math.min(choice.count,items.length)} 題練習</button><p class="review-explainer">到期且不穩的字優先，再打亂尚未練過的字。首次答案與提示保存，重新整理可接續。</p>${pending.length?`<h3>接續尚未完成的練習</h3>${pending.slice(-5).reverse().map(s=>`<a class="v3-line" href="#v3-practice/${e(s.id)}"><strong>${s.reference.startsWith('hira:')?'平':'片'}假名 · ${e(kanaModes.find(m=>s.reference.split(':')[1]===m.id)?.title||'加練')}</strong><span>第 ${s.cursor+1} / ${s.queue.length} 題</span></a>`).join('')}`:''}${latest?`<a class="text-button" href="#v3-practice/${e(latest.id)}">查看最近一輪結果</a>`:''}</section>
+ <div class="section-title"><h2>${choice.hidden?'先聽，再從記憶寫':'這一行的記憶小訣竅'}</h2><button class="text-button" data-v3-action="kana-hide">${choice.hidden?'再看字形與訣竅':'遮住字形與訣竅'}</button></div><p class="review-explainer">${choice.hidden?'保留聲音線索；寫完再展開對照，別一邊看一邊當成默寫。':'先選一個你喜歡的聯想，用手沿筆順走一次；不必硬背每一條提示。'}</p>
+ <div class="km-notes">${items.map(k=>memoryCard(ctx,k,choice.hidden)).join('')}</div>
+ <section class="v3-section"><h2>每天一點，換方式回想</h2><ol><li>今天：看一行，聽詞音，描一次後遮住寫。</li><li>隔天：先不看提示，做聽音選字與平片配對。</li><li>後天：換成詞中補字；忘記的再看一條訣竅。</li></ol><p>這是練習建議；正式到期項目仍沿用既有複習安排。</p>${primary('看看到期複習','review')}</section>
+ <section class="v3-section"><h2>字記住了，再練聲音的差別</h2><p>濁點、小字與節奏會影響詞音。從一個重點開始。</p>${kanaPhonology.map(p=>`<a class="v3-line" href="#unit/${p.lessonId}"><strong>${e(p.concept)}</strong><span>理解＋小測</span></a>`).join('')}${primary('比較6組容易混淆的字','confusion')}</section>`;
+}
+function memoryCard(ctx,k,hidden){
+ const m=memoryFor(k.id),partner=ctx.kana.find(p=>p.id===m.partnerId);
+ const evidence=['recognition','listening','language'].map(d=>{const r=ctx.state.reviews[`${k.id}:${d}`],last=r?.history.at(-1);return r?`<small class="km-evidence">${{recognition:'認字',listening:'聽辨',language:'詞中運用'}[d]}：${last?.correct&&!last.hinted?'最近首答無提示正確':'需要再回想'}</small>`:'';}).join('');
+ return `<article class="km-note"><div class="km-note-head"><h3 class="km-glyph jp" lang="ja">${hidden?'？':e(k.glyph)}</h3><div>${!hidden?`<p>同音另一套字形：<span lang="ja">${e(partner.glyph)}</span>${ctx.state.settings.roman?` · ${e(k.reading)}`:''}</p>`:'<p>先聽聲音，回想這一字</p>'}${audioButton(k.glyph)}${audioButton(k.word)}</div></div>${!hidden?`<p>${e(m.tip)}</p><p class="jp" lang="ja">${e(m.anchor)}</p><div class="km-stroke">${strokeSvg(itemPaths(ctx,k))}</div>`:''}<div class="button-row"><a class="text-button" data-recall-write="true" href="#write/${k.id}">收起提示，手寫一次</a>${!hidden?primary('逐筆看示範',`stroke/${k.id}`):''}</div>${evidence}</article>`;
+}
