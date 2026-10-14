@@ -42,3 +42,7 @@ N2-A短練第一區15題、第二區5題；重整時間繼續，首答按鈕禁�
 最終本機檢查：npm test 144／144通過；npm run build、npm run check通過（70 shell檔與6級別包）；npm audit --omit=dev：0漏洞。SW新增N2完整／Range離線回應測試先失敗後通過；個人頁數量改由教材目錄計算。
 
 離線實際驗收：隔離QA下載1999個N2音檔，全部校驗後顯示完成；停止18102伺服器（HTTP連線失敗確認）後，重新載入N2-01並閱讀、播放對話，顯示正在播放且無console error；N2寫作草稿離線重整後保留。
+
+正式發布：PR [#9](https://github.com/linhercherng/japanese-learning-platform/pull/9)已合併，教材部署commit 00de1cc4544c92af5891c329af1a398a1f19fcb6。[GitHub Actions 38585083715](https://github.com/linhercherng/japanese-learning-platform/actions/runs/38585083715)的build與deploy均成功。
+
+2026-10-14T15:00:42Z正式HTTP驗證70／70 shell檔SHA-256、JavaScript MIME、SW BUILD_ID及5個代表音檔（含N2課文／模擬／概念）。fingerprint 9ba9c4ac405089cb826913fa43c5ac4745d5aead9c9a0ee62f8999d4b6efeee1。正常正式頁（非QA）在關閉代理建立的舊分頁、新SW接手後顯示24課，390px截圖保存於本機outputs/hiyori-n2-mobile.png。未清除個人進度。
