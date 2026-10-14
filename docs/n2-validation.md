@@ -40,3 +40,5 @@ N2-A短練第一區15題、第二區5題；重整時間繼續，首答按鈕禁�
 規則查核：2026-10-14，[JLPT科目／時間／題型](https://www.jlpt.jp/guideline/testsections.html)、[能力目標](https://www.jlpt.jp/about/levelsummary.html)。
 
 最終本機檢查：npm test 144／144通過；npm run build、npm run check通過（70 shell檔與6級別包）；npm audit --omit=dev：0漏洞。SW新增N2完整／Range離線回應測試先失敗後通過；個人頁數量改由教材目錄計算。
+
+離線實際驗收：隔離QA下載1999個N2音檔，全部校驗後顯示完成；停止18102伺服器（HTTP連線失敗確認）後，重新載入N2-01並閱讀、播放對話，顯示正在播放且無console error；N2寫作草稿離線重整後保留。
