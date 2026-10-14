@@ -46,11 +46,91 @@ const notes=`あ|把中間的小交叉想成雨傘柄，外面的曲線像傘面
 わ|左柱右邊有大圓弧，輪廓較圓；和れ外伸尾比較，用わに記wa。|ワ像只有上蓋與右側斜邊的開口輪廓；左上有短筆，用ワイン記wa。
 を|上方一橫、下方有轉折與大弧；連到動作句中的助詞を，常讀o，別只靠字表wo猜音。|ヲ像橫折輪廓裡多一橫；現代常用詞少見，先和を配對，助詞通常寫を。
 ん|先斜下，再彎上、彎下向右收，像一條波浪；連到ほん的最後一拍，不加a。|ン一小點配往右上走的長筆；和ソ往左下的方向比較，連到パン的最後一拍。`.split('\n').map(line=>line.split('|'));
-export const kanaRows=[['a','あいうえお','あ行'],['ka','かきくけこ','か行'],['sa','さしすせそ','さ行'],['ta','たちつてと','た行'],['na','なにぬねの','な行'],['ha','はひふへほ','は行'],['ma','まみむめも','ま行'],['ya','やゆよ','や行'],['ra','らりるれろ','ら行'],['wa','わをん','わ・を・ん']].map(([id,glyphs,title])=>({id,glyphs,title}));
-const toHira=g=>String.fromCodePoint(g.codePointAt(0)-0x60);
-export const kanaMemory=kana.filter(k=>k.group==='basic').map(k=>{
+export const kanaGroups=[
+ {id:'basic',title:'基本字',mixed:'all',summary:'一次3～5字，先找一處字形線索，再聽詞音、遮住寫。'},
+ {id:'voiced',title:'濁音',mixed:'voiced-all',summary:'原字形加右上兩點。先看清音／濁音，再聽詞例；じ／ぢ、ず／づ通常同音，要用詞的拼字記。'},
+ {id:'semivoiced',title:'半濁音',mixed:'semivoiced-all',summary:'は行加右上小圈。用は／ば／ぱ對照：沒標記、兩點、小圈，聲音跟著音檔練。'},
+ {id:'contracted',title:'拗音',mixed:'contracted-all',summary:'前字和小ゃ／ゅ／ょ像牽手走一拍；大や／ゆ／よ則分成兩拍。濁點、小圈仍留在前字右上。'}
+];
+export const kanaRows=[
+ ...[['a','あいうえお','あ行'],['ka','かきくけこ','か行'],['sa','さしすせそ','さ行'],['ta','たちつてと','た行'],['na','なにぬねの','な行'],['ha','はひふへほ','は行'],['ma','まみむめも','ま行'],['ya','やゆよ','や行'],['ra','らりるれろ','ら行'],['wa','わをん','わ・を・ん']].map(([id,glyphs,title])=>({id,glyphs,title,group:'basic'})),
+ ...[['ga','がぎぐげご','が行'],['za','ざじずぜぞ','ざ行'],['da','だぢづでど','だ行'],['ba','ばびぶべぼ','ば行'],['pa','ぱぴぷぺぽ','ぱ行']].map(([id,glyphs,title])=>({id,glyphs,title,group:id==='pa'?'semivoiced':'voiced'})),
+ ...[['kya','き'],['sha','し'],['cha','ち'],['nya','に'],['hya','ひ'],['mya','み'],['rya','り'],['gya','ぎ'],['ja','じ'],['bya','び'],['pya','ぴ']].map(([id,base])=>({id,glyphs:['ゃ','ゅ','ょ'].map(s=>base+s),title:['ゃ','ゅ','ょ'].map(s=>base+s).join('・'),group:'contracted'}))
+];
+const toHira=g=>Array.from(g,c=>c>='ァ'&&c<='ヶ'?String.fromCodePoint(c.codePointAt(0)-0x60):c).join('');
+const toKata=g=>Array.from(g,c=>c>='ぁ'&&c<='ゖ'?String.fromCodePoint(c.codePointAt(0)+0x60):c).join('');
+const basicMemory=kana.filter(k=>k.group==='basic').map(k=>{
  const hira=k.script==='hira'?k.glyph:toHira(k.glyph),entry=notes.find(n=>n[0]===hira),partner=kana.find(p=>p.group==='basic'&&p.script!==k.script&&p.reading===k.reading);
- return {id:k.id,row:kanaRows.find(r=>r.glyphs.includes(hira)).id,tip:entry[k.script==='hira'?1:2],anchor:`${k.word}（${k.wordReading}）・${k.meaning}`,recall:`先聽「${k.word}」，遮住範字寫出「${k.glyph}」，再和${partner.glyph}配對。`,partnerId:partner.id};
+ return {id:k.id,group:'basic',row:kanaRows.find(r=>r.group==='basic'&&r.glyphs.includes(hira)).id,tip:entry[k.script==='hira'?1:2],anchor:`${k.word}（${k.wordReading}）・${k.meaning}`,recall:`先聽「${k.word}」，遮住範字寫出「${k.glyph}」，再和${partner.glyph}配對。`,partnerId:partner.id};
 });
+const voicedCues=`が|把か右邊獨立小筆和右上兩點分開看，連到がっこう的開頭。
+ぎ|き本來的兩橫保留，濁點另外放右上，連到ぎんこう。
+ぐ|く的折角加兩點，別把濁點畫成折角的一部分，連到ぐあい。
+げ|け左筆與右柱保留，右上添兩點，連到げんき。
+ご|こ上下兩條彎線加兩點，別多畫一條橫線，連到ごはん。
+ざ|さ的一橫與下彎筆加兩點，和ぎ的兩橫比較，連到ざっし。
+じ|し的長彎鉤加兩點，連到じかん；通常與ぢ同音，拼字用詞例記。
+ず|す的小圈與長尾保留，兩點放右上，連到ずぼん；通常與づ同音。
+ぜ|せ的交會與底部保留，兩點在右上而非底部，連到ぜんぶ。
+ぞ|そ的轉折路線加兩點，字身不多出小圈，連到ぞう。
+だ|た左柱與右側兩筆加兩點，連到だいがく。
+ぢ|ち加兩點，保留下方彎圈；通常與じ同音，以はなぢ的鼻血詞形記。
+づ|つ的大弧加兩點；通常與ず同音，連到つづく的第二字，不憑聲音猜拼字。
+で|て的屋頂與彎牆加兩點，連到でんわ。
+ど|と本來的上方小筆保留，另加右上兩點，連到どこ。
+ば|は左筆、右側一橫與圈加兩點；和ぱ的小圈區別，連到ばしょ。
+び|ひ的大彎線右上添兩點；別換成小圈，連到びょういん的びょ。
+ぶ|ふ本來的分筆之外另有濁點，先辨字身再找右上兩點，連到ぶた。
+べ|へ的小山加兩點，不把山頂當濁點，連到べんきょう。
+ぼ|ほ右側兩橫與圈保留，加右上兩點，連到ぼうし。
+ぱ|は右上加小圈，像掛一個小環；和ば的兩點比較，連到ぱん。
+ぴ|ひ右上加小圈，原來的大彎不縮小，連到ぴあの。
+ぷ|ふ本來的散開筆畫保留，右上小圈要封好，連到ぷりん。
+ぺ|へ的小山右上掛小圈，別畫成濁點，連到ぺん。
+ぽ|ほ右側兩橫與圈之外再加右上小圈，連到ぽすと。`.split('\n').map(line=>line.split('|'));
+const contractedCues={
+ 'き':'先認き的兩橫與下彎，再把後面的小字當同行伙伴。',
+ 'し':'し的彎鉤連到小字，合讀時不另外讀一拍し。',
+ 'ち':'ち下方的彎圈保留，小字放在旁邊，別寫成大字。',
+ 'に':'に的右側兩橫先認清，再留位置給後面的小字。',
+ 'ひ':'ひ的大彎保持原大小，小字像小伙伴站在旁邊。',
+ 'み':'み的交會彎線先認清，小字不取代原來的右筆。',
+ 'り':'り的左右兩筆保留，把後面的小字縮小。',
+ 'ぎ':'先認ぎ＝き＋兩點，再接小字；濁點不是第二拍。',
+ 'じ':'先認じ＝し＋兩點，和後面小字合讀，不拆成じ與大字。',
+ 'び':'先認び＝ひ＋兩點，再接小字；不要把兩點換成小圈。',
+ 'ぴ':'先認ぴ＝ひ＋小圈，再接小字；小圈仍在前字右上。'
+};
+const smallCues={
+ 'ゃ':'小ゃ像縮小的や，注意交會和右上小筆；不要寫成大や。',
+ 'ゅ':'小ゅ像縮小的ゆ，記圈中穿線；不要寫成大ゆ。',
+ 'ょ':'小ょ像縮小的よ，記柱底小圈；不要寫成大よ。'
+};
+const katakanaWords=new Set(['ズボン','パン','ピアノ','プリン','ペン','ポスト','ミュージック']);
+export const kanaMemory=[...basicMemory,...kana.filter(k=>k.group!=='basic').map(k=>{
+ const hira=toHira(k.glyph),semi=hira.normalize('NFD').includes('\u309a'),group=k.group==='contracted'?'contracted':semi?'semivoiced':'voiced';
+ const row=kanaRows.find(r=>r.group===group&&r.glyphs.includes(hira)).id;
+ const partner=kana.find(p=>p.group===k.group&&p.script!==k.script&&toHira(p.glyph)===hira);
+ const practiceWord=k.script==='hira'?toHira(k.word):toKata(k.word);
+ const usualKatakana=toKata(k.word),isKatakanaWord=katakanaWords.has(usualKatakana);
+ const wordNote=isKatakanaWord?(k.script==='kata'?'這是常用片假名詞，字形練習後可直接記完整詞。':`此詞通常寫成「${usualKatakana}」，這裡轉寫成平假名練組字。`):k.script==='kata'?'此詞以片假名轉寫練字形；一般書寫請對照平假名或漢字，不把轉寫當外來語。':'用完整詞記拼字，先會認字，不必一次背完詞彙。';
+ const rare=/[ひびぴ]ゅ|にょ|びゃ/.test(hira)?' 此詞含擬聲或較少見用語，先作聲音與字形練習。':'';
+ const base=hira.normalize('NFD')[0],baseGlyph=k.script==='hira'?base:toKata(base),mark=semi?'小圈':'兩點';
+ let formula,tip;
+ if(k.group==='contracted'){
+  const [first,small]=Array.from(k.glyph),large=k.script==='hira'?toHira(small).replace('ゃ','や').replace('ゅ','ゆ').replace('ょ','よ'):toKata(toHira(small).replace('ゃ','や').replace('ゅ','ゆ').replace('ょ','よ'));
+  formula=`${first}＋小${small} → ${k.glyph}（一拍）；${first}${large}（兩拍）`;
+  const front=k.script==='hira'?contractedCues[hira[0]]:`先認${first}的片假名字形${hira[0].normalize('NFD').length>1?`與右上的${hira[0].normalize('NFD').includes('\u309a')?'小圈':'兩點'}`:''}，再接小字${small}，不把它寫成大${large}。`;
+  const smallTip=k.script==='hira'?smallCues[hira[1]]:`小${small}保留${large}的輪廓，但縮小放在前字旁邊。`;
+  tip=`${front}${smallTip} ${k.glyph}像兩字牽手走一拍，連到「${practiceWord}」中的${k.glyph}。`;
+ }else{
+  formula=`${baseGlyph}＋${mark} → ${k.glyph}`;
+  tip=k.script==='hira'?voicedCues.find(c=>c[0]===hira)[1]:`${basicMemory.find(m=>m.id===kana.find(p=>p.glyph===baseGlyph).id).tip} 再在右上加${mark}成${k.glyph}，字身保留原形；${['ジ','ヂ','ズ','ヅ'].includes(k.glyph)?'同音字要用詞的拼字記；':''}連到「${practiceWord}」。`;
+ }
+ return {id:k.id,group,row,tip,formula,practiceWord,wordNote:wordNote+rare,anchor:`${practiceWord}（${k.wordReading}）・${k.meaning}`,recall:`先聽「${k.word}」，遮住構成式寫出「${k.glyph}」，再和${partner.glyph}配對。`,partnerId:partner.id};
+})];
 const byId=new Map(kanaMemory.map(m=>[m.id,m]));
 export const memoryFor=id=>byId.get(id)||null;
+export const kanaRowMatches=(id,row)=>{
+ const m=memoryFor(id);return Boolean(m&&(row==='all'?m.group==='basic':kanaGroups.some(g=>g.mixed===row)?kanaGroups.find(g=>g.mixed===row).id===m.group:m.row===row));
+};

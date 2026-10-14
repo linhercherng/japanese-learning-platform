@@ -54,6 +54,6 @@ Files: `scripts/materials-check.mjs`, `README.md`, `docs/kana-advanced-validatio
 
 ## 執行紀錄
 
-- [ ] Task 1 教材與題庫
-- [ ] Task 2 手機入口與續作
+- [x] Task 1 教材與題庫
+- [x] Task 2 手機入口與續作
 - [ ] Task 3 審查、驗收與發布
