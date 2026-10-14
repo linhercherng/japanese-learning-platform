@@ -15,4 +15,8 @@
 
 ## 公開發布
 
-發布結果於成功後補記。
+已透過[PR#6](https://github.com/linhercherng/japanese-learning-platform/pull/6)整合至main，commit6610c004d478e96a75f66787776bf4017adea29c。[run38554934712](https://github.com/linhercherng/japanese-learning-platform/actions/runs/38554934712) build/deploy成功。
+
+2026-10-14 19:14台北時間匿名HTTPS確認65份shell的SHA-256、JS MIME、3個代表性音檔及SW build ID相符。fingerprint72afc8842e06c73bbcb0049156e18dc1cebc9b9e3fa14b86c886ab7eb7096575。
+
+入口：[五十音記憶加練](https://linhercherng.github.io/japanese-learning-platform/#kana-memory)。如旧離線分頁仍未顯示新入口，關閉本站分頁後再開；不需要清除學習資料。
