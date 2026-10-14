@@ -40,6 +40,8 @@
 
 ## 發布與限制
 
+2026-10-14 20:19（台北）完成正式端點核對：[PR #7](https://github.com/linhercherng/japanese-learning-platform/pull/7)已合併，發布commit `c7c47f4dfe618a7489516acc3473c7ef4d0bd872`；[Pages run 38562289969](https://github.com/linhercherng/japanese-learning-platform/actions/runs/38562289969) build及deploy成功。65個shell檔案的HTTP SHA-256皆與本機manifest一致，SW包含相同fingerprint `85e9c288b6a81897a26c5c0eba4ea47508a7303990cffbb3f021f5d2bf789eb6`。另核對が、ぱ、きゃ、ギュ、はなぢ、ミュージック共6個代表音檔的HTTP200、MIME與有效內容。
+
 正式使用入口：[記憶加練](https://linhercherng.github.io/japanese-learning-platform/#kana-memory)。GitHub Pages發布流程重新執行測試、建置、素材檢查及audit；部署結果應以Actions成功及正式端點檔案雜湊為證據，不能由上述本機結果推論。
 
 本批沒有修改資料schema、清空資料庫、加入帳號或上傳作品。分類混合以新reference命名，舊`all`仍只指基本46字。詞中補字與組字題沿用language能力紀錄，不把組字選擇正確當成手寫掌握；書寫保留自評。沒有未曝光新變式的錯題留待下次，不把立即重做算新證據。

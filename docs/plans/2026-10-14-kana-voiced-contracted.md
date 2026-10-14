@@ -56,4 +56,4 @@ Files: `scripts/materials-check.mjs`, `README.md`, `docs/kana-advanced-validatio
 
 - [x] Task 1 教材與題庫
 - [x] Task 2 手機入口與續作
-- [ ] Task 3 審查、驗收與發布
+- [x] Task 3 審查、驗收與發布（PR #7；Pages run 38562289969成功，65個公開shell雜湊及6個代表音檔核對通過）
