@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "85e9c288b6a81897a26c5c0eba4ea47508a7303990cffbb3f021f5d2bf789eb6",
+  "fingerprint": "98777394d9509bed82365077e8396a29f3ac2ff698404a026a8c782d5b506819",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-v2.json",
@@ -85,7 +85,7 @@
     "content/confusions.mjs": "0af86c5d1a4a3167793eae0407e577e8976f12d057e325a5b5afdd47ec351fb9",
     "content/deep-lessons.mjs": "0e34001c017634098de731ce24a516aefba62a322eb4d890e7c241af8a77272f",
     "content/kana-drills.mjs": "4a180627136736eb6bf0394cbbddf867469d28f717b51005eb05e6c88316c61c",
-    "content/kana-memory.mjs": "8790e04892ff766238bd1b3322c40013f772f1ee5dbd59c0cc79d117634ff537",
+    "content/kana-memory.mjs": "4726fe277561e1e7f619f7333d9e9a0d031c95850d1d0e97630c2cb774408abd",
     "content/kana.mjs": "724964f5ac33f8761028d1391c61b0478497aa65bc61d8edbe09fe15ff404a8a",
     "content/life-expanded.mjs": "dbeb1d542ccf861ec0c90ef4b439b1ce5025f76c51a031e92c96e8b52e6fe526",
     "content/life-v2-supplement.mjs": "36c5b46e1d357156c7d8585a94fc244daaef0ba0948778c36e031c0246d8a8c6",
@@ -135,5 +135,5 @@
     "v3.css": "a4873ae0236b1a6fe527b670f91fe3c1b80c7707d57ab33e29af361ccb515d5f",
     "v3.mjs": "386409195bd29a1d2a6af26b735ca8b46fcdc8b2b318fbb49cb41a32563d7f88"
   },
-  "bytes": 6307230
+  "bytes": 6307231
 }

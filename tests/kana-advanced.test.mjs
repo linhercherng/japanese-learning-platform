@@ -13,8 +13,10 @@ const time='2026-10-14T12:00:00.000Z';
 const audio=JSON.parse(readFileSync(new URL('../app/assets/audio.json',import.meta.url),'utf8'));
 const pack=JSON.parse(readFileSync(new URL('../app/assets/offline-manifest.json',import.meta.url),'utf8')).packs.find(p=>p.id==='K');
 
-test('Released basic question IDs, answer meanings and distractor ordering remain unchanged',()=>{
- const basic=kanaDrills.filter(q=>memoryFor(q.reviewItem).group==='basic');assert.equal(createHash('sha256').update(JSON.stringify(basic)).digest('hex'),'5b6441178410a733548f972072b97a313bfe021bc9c7530af39449b87628d39d');
+test('Released 274 unaffected basic questions retain their content and distractor ordering',()=>{
+ const corrected=new Set(['km-h-3092-pair','km-k-30f2-pair']);
+ const basic=kanaDrills.filter(q=>memoryFor(q.reviewItem).group==='basic'&&!corrected.has(q.id));assert.equal(basic.length,274);
+ assert.equal(createHash('sha256').update(JSON.stringify(basic)).digest('hex'),'5cd96d9ff7fee1f7f875a18b10f7b0b9c862836a8f53cc6d3ca701616d54a844');
 });
 
 test('All existing kana receive individual memory cards, 40 voiced, 10 semi-voiced and 66 contracted',()=>{

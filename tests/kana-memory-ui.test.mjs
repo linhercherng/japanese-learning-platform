@@ -1,6 +1,13 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {kanaMemoryView} from '../app/ui/kana-memory.mjs';import {initialState} from '../app/core/learning.mjs';import {kana} from '../app/content/kana.mjs';
 const ctx=()=>({state:initialState(),session:{},kana,strokes:{}});
+test('Basic memory cards keep を／ヲ distinct from お／オ in both script directions',()=>{
+ for(const [script,row,glyph,expected] of [['hira','wa','を','ヲ'],['kata','wa','ヲ','を'],['hira','a','お','オ'],['kata','a','オ','お']]){
+  const c=ctx();c.session.kanaMemory={script,group:'basic',row,mode:'pair',count:5,hidden:false};
+  const cards=kanaMemoryView(c).split('<article class="km-note '),card=cards.find(part=>part.includes(`class="km-glyph jp" lang="ja">${glyph}</h3>`));
+  assert(card,glyph);assert.match(card,new RegExp(`同音另一套字形：<span lang="ja">${expected}</span>`));
+ }
+});
 test('Memory workshop offers small three-mode drills, individual tips and resume without overwriting earlier sessions',()=>{
  const c=ctx(),html=kanaMemoryView(c);assert.match(html,/聽音選字/);assert.match(html,/平片假名配對/);assert.match(html,/詞中補字/);assert.match(html,/不是字源/);assert.match(html,/雨傘柄/);assert.match(html,/data-v3-action="kana-start"/);
  c.state.v3.sessions=[{id:'pending',source:'kana',completedAt:null,reference:'hira:listen:a',cursor:1,queue:[{},{}]}];assert(kanaMemoryView(c).includes('href="#v3-practice/pending"'));
