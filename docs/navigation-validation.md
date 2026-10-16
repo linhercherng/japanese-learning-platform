@@ -25,4 +25,11 @@
 
 ## 發布
 
-待本輪CI、合併及正式站確認後補上紀錄。
+- PR #11： https://github.com/linhercherng/japanese-learning-platform/pull/11
+- 合併commit：`f5da93765fa10d227de1b58709b684f5ae5349c3`。
+- Pages workflow 38897433942 成功： https://github.com/linhercherng/japanese-learning-platform/actions/runs/38897433942
+- 正式HTTP逐檔校驗75/75、JavaScript MIME、6個既有音檔抽樣與SW版本均通過。
+- shell fingerprint：`4deb5658d4ac6fc2bdd183aeb2c6c11ab4392d53efb29244dc74844ef24050dc`。
+
+- 正式瀏覽器390px：已確認目前位置、課程選單、閱讀分類往返與長課名換行；畫面保存為 `outputs/hiyori-navigation-mobile.png`（本機交付）。
+- 舊離線分頁需讓新shell完成下載後關閉重開；本輪已實測新版接手，不清除本機進度。
