@@ -31,3 +31,11 @@ K／生活／N5／N4／N3／N2包約1.9／6.8／35.4／59.3／82.5／62.7 MiB。
 離線及正式發布證據完成後補入。
 
 離線實際驗收：N5包3495檔全部校驗後顯示完成，停止18103伺服器並確認HTTP連線失敗；重新載入先前未開過的READ-N5-02，本文／線索可讀，新音檔顯示正在播放且console無錯誤。外站內容未下載。
+
+## 正式發布證據
+
+PR [#10](https://github.com/linhercherng/japanese-learning-platform/pull/10)已合併，教材部署commit e942460babcd5951dfb75b979108806c8a7e0b3a。[GitHub Actions 38894381418](https://github.com/linhercherng/japanese-learning-platform/actions/runs/38894381418)的build與deploy均成功。
+
+2026-10-16T11:33:29Z正式HTTP驗證74／74 shell檔SHA-256、JavaScript MIME、SW BUILD_ID及6個代表新音檔（含N5／N2閱讀、發音例句與敬語寫作）。fingerprint 9761bacb60080fccd4dd3cce767721a1c6ea16d943a5cbc4e72ef9d27a6b799c。
+
+正常正式頁#support顯示24知識單元＋8閱讀，五類入口可用；#support/resources顯示9站名稱與比較，console無錯誤。390px正式畫面保存於本機outputs/hiyori-learning-support-mobile.png；未用真實個人資料作答或清除進度。
