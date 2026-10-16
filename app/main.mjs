@@ -12,7 +12,10 @@ import {lifeView,lifeLessonView} from './ui/life.mjs';
 import {homeView,profileView} from './ui/profile.mjs';
 import {attachWriting} from './ui/writing.mjs';
 import {createMedia} from './ui/media.mjs';
-const main=document.querySelector('#main'),status=document.querySelector('#save-status');
+const main=document.querySelector('#main'),status=document.querySelector('#save-status'),locationContext=document.querySelector('#location-context');
+const updateLocationHeight=()=>locationContext.parentElement.style.setProperty('--location-height',`${locationContext.getBoundingClientRect().height}px`);
+if(typeof ResizeObserver==='function')new ResizeObserver(updateLocationHeight).observe(locationContext);
+else window.addEventListener('resize',updateLocationHeight);
 const qa=new URL(location.href).searchParams.get('qa')==='1';
 let state=initialState(),db=null,unsaved=null,strokes={},audioIndex={},canvas=null,queue=Promise.resolve(),pendingImport=null,animationSequence=0,toastTimer,pendingWrites=0;
 const session={script:'hira',group:'basic',selected:'h-3042',guide:true,lessonTab:'對話',quiz:null,lifeAnswers:{},latestDrafts:{}};
@@ -51,12 +54,13 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(v3.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
  const navigation=navigationContext(ctx,name,param);
- document.querySelector('#location-context').innerHTML=navigationView(navigation);
+ locationContext.innerHTML=navigationView(navigation);
  document.title=`日和｜${navigation.trail.at(-1).label}`;
  document.body.classList.toggle('large-text',state.settings.fontSize===17);document.body.classList.toggle('extra-large-text',state.settings.fontSize===19);
  const active=navigation.section;
  document.querySelector('#bottom-nav').innerHTML=[['home','home','今日'],['courses','book','課程'],['practice-hub','pen','練習'],['exam','exam','檢定'],['profile','user','我的']].map(([r,i,t])=>`<a href="#${r}" class="${active===r?'active':''}" ${active===r?'aria-current="page"':''}>${icon(i)}<span>${t}</span></a>`).join('');
  document.querySelectorAll('[data-review]').forEach(a=>{a.classList.toggle('active',a.dataset.review===navigation.rail);});
+ updateLocationHeight();
  if(name==='write'){
   const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});

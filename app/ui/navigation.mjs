@@ -60,6 +60,7 @@ export function navigationContext(ctx,name='home',param){
   case 'weekly':case 'revise':section='profile';trail=[home,profile,weekly];if(name==='revise')trail.push(item('作品修訂',route));break;
   default:section='home';trail=[home];
  }
+ if(['practice','v3-practice'].includes(name))trail=trail.map(c=>{const [source,id]=c.route.split('/');return id&&['study','deep','unit'].includes(source)?item(id,c.route):c;});
  const rail=trail.some(c=>c.route.startsWith('topics'))?'topics':name==='review'?'review':section==='courses'?'courses':section==='profile'?'profile':section==='home'?'home':null;
  return {trail,section,rail};
 }
