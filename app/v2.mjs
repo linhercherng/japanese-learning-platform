@@ -1,4 +1,4 @@
-import {allUnits,units,scenarios,lifeLessons,unitById,unitQuestions,completionKey,words,forms,allWritingItems,resolveQuestion,reviewQuestions,practicePool,grammarItems,kanjiItems} from './content/catalog.mjs';
+import {topics,allUnits,units,scenarios,lifeLessons,unitById,unitQuestions,completionKey,words,forms,allWritingItems,resolveQuestion,reviewQuestions,practicePool,grammarItems,kanjiItems} from './content/catalog.mjs';
 import {createPractice,answerPractice,hintPractice,presentationOrder} from './core/study.mjs';
 import {recordAnswer,saveArtifact,exportBackup,organizeCompletedPractice} from './core/learning.mjs';
 import {startExam,answerExam,remainingSeconds,validateExamForm} from './core/exam.mjs';
@@ -84,7 +84,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(d.practiceLevel!==undefined)session().practiceLevel=event.target.value;
   if(d.practiceDimension!==undefined)session().practiceDimension=event.target.value;
   if(d.practiceBackupConfirmed!==undefined){session().practiceBackupConfirmed=event.target.checked;render(false);}
-  if(d.studyTopic!==undefined){session().topic=event.target.value;render(false);}
+  if(d.studyTopic!==undefined){session().topic=event.target.value;location.hash=`topics/${session().topic}`;}
   if(d.libraryLevel!==undefined||d.libraryFavorites!==undefined){const next={query:'',level:'all',favorites:false,page:0,...session().library};if(d.libraryLevel!==undefined)next.level=event.target.value;if(d.libraryFavorites!==undefined)next.favorites=event.target.checked;next.page=0;session().library=next;render(false);}
   if(d.examWrong!==undefined){session().examWrongOnly=event.target.checked;render(false);}
  }
@@ -102,7 +102,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   },
   views:{support:param=>supportView(ctx(),param),courses:()=>coursesView(ctx()),level:param=>levelView(ctx(),param),topics:()=>topicsView(ctx()),study:param=>studyView(ctx(),param),practice:()=>practiceView({...ctx(),practiceQuestions:practiceQuestions()}),'practice-hub':()=>practiceHubView(ctx()),library:param=>libraryView(ctx(),param),exam:()=>examsView(ctx()),'exam-session':()=>examSessionView(ctx()),'exam-result':param=>examResultView(ctx(),param)},
   contextExtras:()=>({units,scenarios,allUnits,wordCount:words.length,kanjiCount:kanjiItems.length,grammarCount:grammarItems.length,forms,writingItems:allWritingItems,lifeLessons,offlineHtml:offline.view()}),
-  onRoute(name,param){if(name==='study'&&session().studyUnit!==param){session().studyUnit=param;session().studyTab='learn';}if(['practice','exam-session'].includes(name)&&session().lastV2Route!==`${name}/${param||''}`)session().order=[];session().lastV2Route=`${name}/${param||''}`;},
+  onRoute(name,param){if(name==='topics'&&topics.some(([id])=>id===param))session().topic=param;if(name==='study'&&session().studyUnit!==param){session().studyUnit=param;session().studyTab='learn';}if(['practice','exam-session'].includes(name)&&session().lastV2Route!==`${name}/${param||''}`)session().order=[];session().lastV2Route=`${name}/${param||''}`;},
   validateCatalog(s){
    const bookmarks=new Set([...words,...kanjiItems,...grammarItems].map(x=>x.id));
    if(s.bookmarks.some(id=>!bookmarks.has(id)))throw new Error('備份包含未知收藏項目');

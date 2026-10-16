@@ -1,3 +1,4 @@
+import {navigationContext,navigationView} from './ui/navigation.mjs';
 import {kana,kanaLessons,kanaPhonology} from './content/kana.mjs';
 import {lifeLessons,knownItems,knownLessons,allWritingItems} from './content/catalog.mjs';
 import {createV2} from './v2.mjs';
@@ -49,10 +50,13 @@ function render(focus=true){
  views.life=()=>v2.views.level('L');views.lesson=()=>v2.views.study(param);
  for(const [view,renderer] of Object.entries(v3.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
+ const navigation=navigationContext(ctx,name,param);
+ document.querySelector('#location-context').innerHTML=navigationView(navigation);
+ document.title=`日和｜${navigation.trail.at(-1).label}`;
  document.body.classList.toggle('large-text',state.settings.fontSize===17);document.body.classList.toggle('extra-large-text',state.settings.fontSize===19);
- const active=['courses','level','topics','study','unit','stroke','kana','kana-memory','lesson','life','library','deep'].includes(name)?'courses':['write','quiz','review','practice','practice-hub','v3-practice','weaknesses','confusion'].includes(name)?'practice-hub':['exam','exam-session','exam-result'].includes(name)?'exam':['weekly','revise'].includes(name)?'profile':name==='daily'?'home':name;
+ const active=navigation.section;
  document.querySelector('#bottom-nav').innerHTML=[['home','home','今日'],['courses','book','課程'],['practice-hub','pen','練習'],['exam','exam','檢定'],['profile','user','我的']].map(([r,i,t])=>`<a href="#${r}" class="${active===r?'active':''}" ${active===r?'aria-current="page"':''}>${icon(i)}<span>${t}</span></a>`).join('');
- document.querySelectorAll('[data-review]').forEach(a=>{a.classList.toggle('active',a.dataset.review===name);});
+ document.querySelectorAll('[data-review]').forEach(a=>{a.classList.toggle('active',a.dataset.review===navigation.rail);});
  if(name==='write'){
   const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
