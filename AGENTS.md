@@ -8,6 +8,8 @@
 
 使用者已確認畫面、授權開發，並要求第二版規劃完直接執行。2026-10-13使用者已授權第三版實作並更新GitHub。2026-10-14使用者要求內容延伸到N2。`app/` 是v0.4公開試用平台，含114分級主課、80情境、12生活起步、8模擬卷與PWA。N2首批24課／543詞／48文法／71漢字，非官方完整必考清單；驗證見`docs/n2-validation.md`，網站豐富化規劃見`docs/website-v4-plan.md`，後續新畫面仍先確認樣稿。`prototype/`及第一版歷史保留。獨立教師審校、雲端同步、真人教材與實機尚未驗收，不能由本機驗證推論完成。第三版設計及驗證見`docs/plans/2026-10-13-learning-v3-design.md`與`docs/v3-validation.md`；V3.1/V3.2仍為後續。第二版當前設計見 `docs/plans/2026-10-12-learning-v2-design.md`，實際範圍及證據見 `docs/v2-validation.md`。
 
+2026-10-16使用者明示比較日語學習網站並「直接補上」，授權本輪內容新增及既有介面整合，毋須再等待樣稿批准。v0.4.1新增24知識補給與8閱讀，於`allUnits`另列kind=support，主線`units`仍114課、情境80、模擬8卷；各站比較見`docs/learning-sites-comparison.md`，驗收見`docs/learning-support-validation.md`。原創試用與教師審校邊界延續，後續雲端／付費／真人素材不算本次完成。
+
 ## 實作與驗證
 
 - Node.js 22 以上，原生 ES modules；`npm run dev` 啟動 127.0.0.1:18090。

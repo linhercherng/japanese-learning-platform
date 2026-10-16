@@ -19,6 +19,8 @@ import {scenarios as n2Scenes} from './n2-scenarios.mjs';
 import {forms as n2Forms} from './n2-exams.mjs';
 import {words as n2Lexicon} from './n2-lexicon.mjs';
 import {v3Questions} from './practice-v3.mjs';
+import {supportLessons} from './learning-support.mjs';
+import {readingLessons} from './support-readings.mjs';
 import {kanaDrills} from './kana-drills.mjs';
 export {v3Questions} from './practice-v3.mjs';
 export {deepLessons} from './deep-lessons.mjs';
@@ -29,20 +31,22 @@ export const units=[...n5Units,...n4Units,...n3Units,...n2Units];
 export const scenarios=[...n5Scenes,...n4Scenes,...n3Scenes,...n2Scenes].map(scene=>({...scene,minutes:20,vocabulary:scene.words.map(w=>{const ex=scene.dialogue.find(d=>d.jp.includes(w.jp));return {...w,example:ex?.jp||w.jp,exampleZh:ex?.zh||w.zh};}),grammar:[],kanji:[],reading:null}));
 export const forms=[...n5Forms,...n4Forms,...n3Forms,...n2Forms];
 const wordMap=new Map();
+function includeWord(word,level){const key=`${word.jp}\n${word.reading}`,old=wordMap.get(key);if(old){if(!old.levels.includes(level))old.levels.push(level);if(!old.example&&word.example){old.example=word.example;old.exampleZh=word.exampleZh;}}else wordMap.set(key,{...word,id:stableId('w',key),levels:[level]});}
 for(const level of levels){
  const lexicon={N5:n5Lexicon,N4:n4Lexicon,N3:n3Lexicon,N2:n2Lexicon}[level];
  const source=[...units.filter(u=>u.level===level).flatMap(u=>u.vocabulary),...scenarios.filter(s=>s.level===level).flatMap(s=>s.vocabulary),...lexicon.map(([jp,reading,zh])=>({jp,reading,zh}))];
- for(const word of source){const key=`${word.jp}\n${word.reading}`,old=wordMap.get(key);if(old){if(!old.levels.includes(level))old.levels.push(level);if(!old.example&&word.example){old.example=word.example;old.exampleZh=word.exampleZh;}}else wordMap.set(key,{...word,id:stableId('w',key),levels:[level]});}
+ for(const word of source)includeWord(word,level);
 }
+for(const unit of [...supportLessons,...readingLessons])for(const word of unit.vocabulary)includeWord(word,unit.level);
 export const words=[...wordMap.values()];
 const kanjiMap=new Map();
 for(const unit of units)for(const k of unit.kanji){const old=kanjiMap.get(k.glyph);if(old){if(!old.levels.includes(unit.level))old.levels.push(unit.level);for(const word of k.words)if(!old.words.some(w=>w.jp===word.jp&&w.reading===word.reading))old.words.push(word);}else kanjiMap.set(k.glyph,{...k,id:`j-${k.glyph.codePointAt(0).toString(16)}`,levels:[unit.level],strokeCode:k.glyph.codePointAt(0).toString(16).padStart(5,'0'),script:'kanji',group:'kanji',hint:'先看筆順，從詞中的讀音理解這個字。',word:k.words[0].jp,reading:k.words[0].reading,wordReading:k.words[0].reading});}
 export const kanjiItems=[...kanjiMap.values()].map(k=>({...k,words:k.words.slice(0,6)}));
-export const grammarItems=units.flatMap(unit=>unit.grammar.map((g,i)=>({...g,id:`g-${unit.id}-${i}`,unitId:unit.id,level:unit.level})));
+export const grammarItems=[...units,...supportLessons.filter(u=>u.category==='grammar')].flatMap(unit=>unit.grammar.map((g,i)=>({...g,id:`g-${unit.id}-${i}`,unitId:unit.id,level:unit.level})));
 const lifeTopics=['greetings','greetings','shopping','schedule','home','family','food','shopping','transport','transport','travel','travel'];
 export const lifeUnits=lifeLessons.map((l,index)=>({id:l.id,level:'L',title:l.title,topic:lifeTopics[index],goal:l.goal,minutes:l.minutes,vocabulary:l.words.map(w=>{const ex=l.dialogue.find(d=>d.jp.includes(w.jp));return {...w,example:ex?.jp||w.jp,exampleZh:ex?.zh||w.zh};}),grammar:[{pattern:l.pattern.sample,meaning:l.goal,formation:`${l.pattern.prefix||'目標詞句'}＋${l.pattern.suffix||'完整招呼句'}`,explanation:l.hint,pitfall:'依本課情境與參考句檢查，不把所有單字任意放進句型。',contrast:l.quiz.map(q=>q.explanation).join(' '),examples:[{jp:l.sample,zh:'本課文字任務的參考；依任務資訊理解完整句子。'}]}],kanji:[],dialogue:l.dialogue,reading:{title:'再理解一次這段生活對話',jp:l.dialogue.map(d=>d.jp).join('\n'),zh:l.dialogue.map(d=>d.zh).join('\n'),questions:[]},questions:l.quiz.map((q,i)=>({id:`${l.id}-q${i}`,kind:'choice',dimension:'language',prompt:q.prompt,options:q.options,correct:q.correct,explanation:q.explanation})),writing:{prompt:l.writingPrompt,sample:l.sample,checklist:['有寫出任務要求的資訊','助詞與句型已對照本課參考','語氣適合這個生活場合']}}));
 for(const unit of lifeUnits){const extra=supplements[unit.id];unit.grammar=extra.grammar;unit.reading=extra.reading;unit.questions.push(...extra.additionalQuestions);unit.vocabulary.push(...extra.additionalVocabulary);unit.dialogue.push(...extra.additionalDialogue);}
-export const allUnits=[...lifeUnits,...units,...scenarios];
+export const allUnits=[...lifeUnits,...units,...scenarios,...supportLessons,...readingLessons];
 export const unitById=new Map(allUnits.map(u=>[u.id,u]));
 export const questionById=new Map(allUnits.flatMap(u=>unitQuestions(u).map(q=>[q.id,{...q,unitId:u.id,level:u.level}])));
 export const allWritingItems=[...kana,...kanjiItems];

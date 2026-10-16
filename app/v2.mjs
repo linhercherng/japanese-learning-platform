@@ -7,6 +7,7 @@ import {coursesView,levelView,topicsView,practiceHubView} from './ui/courses.mjs
 import {studyView,practiceView} from './ui/study.mjs';
 import {libraryView,libraryItems} from './ui/library.mjs';
 import {examsView,examSessionView,examResultView} from './ui/exam.mjs';
+import {supportView} from './ui/support.mjs';
 import {createOffline} from './ui/offline.mjs';
 export function createV2({getState,getContext,update,toast,render,now,id,cacheDraft}){
  let examTimerBusy=false;
@@ -99,7 +100,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
    const first=reviews[0];if(first?.dimension==='writing'){const item=allWritingItems.find(k=>k.id===first.item);if(item)location.hash=`write/${item.id}`;else if(unitById.has(first.item)){session().studyUnit=first.item;session().studyTab='write';location.hash=`study/${first.item}`;}return;}
    await beginPractice('review-set',reviewQuestions(reviews,Math.max(5,state().settings.dailyMinutes)));
   },
-  views:{courses:()=>coursesView(ctx()),level:param=>levelView(ctx(),param),topics:()=>topicsView(ctx()),study:param=>studyView(ctx(),param),practice:()=>practiceView({...ctx(),practiceQuestions:practiceQuestions()}),'practice-hub':()=>practiceHubView(ctx()),library:param=>libraryView(ctx(),param),exam:()=>examsView(ctx()),'exam-session':()=>examSessionView(ctx()),'exam-result':param=>examResultView(ctx(),param)},
+  views:{support:param=>supportView(ctx(),param),courses:()=>coursesView(ctx()),level:param=>levelView(ctx(),param),topics:()=>topicsView(ctx()),study:param=>studyView(ctx(),param),practice:()=>practiceView({...ctx(),practiceQuestions:practiceQuestions()}),'practice-hub':()=>practiceHubView(ctx()),library:param=>libraryView(ctx(),param),exam:()=>examsView(ctx()),'exam-session':()=>examSessionView(ctx()),'exam-result':param=>examResultView(ctx(),param)},
   contextExtras:()=>({units,scenarios,allUnits,wordCount:words.length,kanjiCount:kanjiItems.length,grammarCount:grammarItems.length,forms,writingItems:allWritingItems,lifeLessons,offlineHtml:offline.view()}),
   onRoute(name,param){if(name==='study'&&session().studyUnit!==param){session().studyUnit=param;session().studyTab='learn';}if(['practice','exam-session'].includes(name)&&session().lastV2Route!==`${name}/${param||''}`)session().order=[];session().lastV2Route=`${name}/${param||''}`;},
   validateCatalog(s){

@@ -24,3 +24,5 @@ body.large-text .lesson-text p,body.large-text dd,body.large-text .library-entry
 @media(pointer:coarse){.primary:hover{filter:none}}
 @media(max-width:740px){.preview-bar{padding-top:calc(6px + env(safe-area-inset-top,0px))}.toast{bottom:calc(100px + env(safe-area-inset-bottom,0px))}.exam-timer{top:0}.library-entry h2{font-size:23px}}
 @media(max-width:359px){.study-tabs button{font-size:11px}.quiz-choices{grid-template-columns:1fr}.library-tabs{gap:10px}.library-tabs a{font-size:11px}.kanji-heading{gap:9px}.kanji-heading>.jp{font-size:52px}.reading-passage{font-size:20px}}
+
+.support-tabs{flex-wrap:wrap;gap:4px 16px}.support-tabs a{min-height:44px;display:flex;align-items:center;flex:0 1 calc(50% - 8px)}
