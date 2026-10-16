@@ -3,7 +3,7 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {units,scenarios,allUnits,forms,words,kanjiItems,grammarItems,unitQuestions,resolveQuestion,levels} from '../app/content/catalog.mjs';
 const required=(text,label)=>assert.ok(typeof text==='string'&&text.trim(),label);
-assert.equal(units.length,114);assert.equal(scenarios.length,80);assert.equal(allUnits.length,206);assert.equal(forms.length,8);
+assert.equal(units.length,114);assert.equal(scenarios.length,80);assert.equal(allUnits.length,238);assert.equal(forms.length,8);
 const expected={N5:24,N4:30,N3:36,N2:24},wordTargets={N5:800,N4:1000,N3:1400,N2:500},readTargets={N5:100,N4:180,N3:300,N2:450};
 const ids=new Set();
 function question(q){
@@ -17,9 +17,10 @@ function question(q){
 }
 for(const level of levels){assert.equal(units.filter(u=>u.level===level).length,expected[level]);assert.equal(scenarios.filter(u=>u.level===level).length,20);assert.ok(words.filter(w=>w.levels.includes(level)).length>=wordTargets[level]);}
 for(const unit of allUnits){
- required(unit.title,unit.id);required(unit.goal,unit.id);assert.ok(unit.vocabulary.length>=4);assert.ok(unit.dialogue.length>=4);
+ required(unit.title,unit.id);required(unit.goal,unit.id);assert.ok(unit.vocabulary.length>=4);assert.ok(unit.dialogue.length>=(unit.kind==='support'?0:4));
  unit.vocabulary.forEach(w=>{for(const k of ['jp','reading','zh'])required(w[k],unit.id);});unit.dialogue.forEach(d=>{for(const k of ['jp','reading','zh'])required(d[k],unit.id);});
  required(unit.writing.prompt,unit.id);required(unit.writing.sample,unit.id);assert.ok(unit.writing.checklist.length>=3);
+ if(unit.kind==='support'){required(unit.memoryTip,unit.id);assert.equal(unit.reviewStatus,'trial');assert.equal(unitQuestions(unit).length,3);assert.ok(unit.vocabulary.length>=4);}
  if(units.includes(unit)){assert.ok(unit.vocabulary.length>=12&&unit.grammar.length>=2&&unit.kanji.length>=3&&unit.dialogue.length>=6);assert.equal(unit.questions.length,8);assert.equal(unit.reading.questions.length,2);assert.ok([...unit.reading.jp].length>=readTargets[unit.level]);}
  for(const g of unit.grammar){for(const key of ['pattern','meaning','formation','explanation','contrast','pitfall'])required(g[key],unit.id);assert.ok(g.examples.length>=2);g.examples.forEach(ex=>{required(ex.jp,unit.id);required(ex.zh,unit.id);});}
  unitQuestions(unit).forEach(question);
@@ -30,4 +31,4 @@ const load=async path=>JSON.parse((await readFile(new URL(`../app/${path}`,impor
 const shell=await load('assets/shell-manifest.json'),offline=await load('assets/offline-manifest.json');
 for(const file of shell.files){const bytes=await readFile(new URL(`../app/${file}`,import.meta.url));assert.equal(createHash('sha256').update(bytes).digest('hex'),shell.hashes[file],`離線shell雜湊已過期 ${file}，請先 npm run build`);}
 assert.ok(offline.packs.every(pack=>pack.complete&&pack.missingAudioCount===0),'離線音檔尚未完整生成');
-console.log(JSON.stringify({units:units.length,scenarios:scenarios.length,life:12,words:words.length,wordsByLevel:Object.fromEntries(levels.map(l=>[l,words.filter(w=>w.levels.includes(l)).length])),kanji:kanjiItems.length,grammar:grammarItems.length,questions:ids.size,forms:forms.length,shellFiles:shell.files.length,packs:offline.packs.map(p=>({id:p.id,files:p.files.length,bytes:p.bytes}))},null,2));
+console.log(JSON.stringify({units:units.length,scenarios:scenarios.length,life:12,supplements:allUnits.filter(u=>u.kind==='support').length,words:words.length,wordsByLevel:Object.fromEntries(levels.map(l=>[l,words.filter(w=>w.levels.includes(l)).length])),kanji:kanjiItems.length,grammar:grammarItems.length,questions:ids.size,forms:forms.length,shellFiles:shell.files.length,packs:offline.packs.map(p=>({id:p.id,files:p.files.length,bytes:p.bytes}))},null,2));
