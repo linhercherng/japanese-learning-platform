@@ -33,4 +33,8 @@ shell fingerprint：bacea002ce9a18575effad1c157438d681adacacbd098c74d5ce0eb16b76
 
 ## 發布
 
-待PR／Pages與正式HTTPS驗證完成後補記。
+- [PR #16](https://github.com/linhercherng/japanese-learning-platform/pull/16)已合併；程式head c2354d3bf6962b06bf1a55497c5ad12e05a5b35e，合併d9dd13ef1dfb22d91d37cec958e3cfd7e3b0ec1c。
+- [正式Pages run 39608932910](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39608932910) build／deploy均成功。
+- 2026-10-21 21:34台北，正式HTTPS 90/90 shell SHA-256、JS MIME、SW fingerprint一致，38音檔HTTP抽樣通過。
+- 現有受控分頁原先保持舊離線版本。暫離網站並重新開啟後，新工坊三入口已顯示，既有學習資料未清除。正式來源隔離QA實際開始9題小循環，並確認線索與拼詞頁載入、無警告／錯誤；390px正式畫面已另留本機驗收證據，不提交QA資料。
+- 入口：[三字小循環](https://linhercherng.github.io/japanese-learning-platform/#kana-mini)、[生活詞拼拼看](https://linhercherng.github.io/japanese-learning-platform/#kana-build)、[我的記憶線索](https://linhercherng.github.io/japanese-learning-platform/#kana-notes)。若仍看到舊版，關閉所有日和分頁後重開，勿清除瀏覽器進度。
