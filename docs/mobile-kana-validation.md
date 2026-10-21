@@ -39,4 +39,9 @@
 
 ## 發布
 
-待CI、Pages與正式資源校驗成功後補記。
+- [PR #15](https://github.com/linhercherng/japanese-learning-platform/pull/15)已合併，程式commit a8e95a29ac7a518b2a83cd544442f5fcc163e423。
+- [Pages run 39590515696](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39590515696) build／deploy成功；CI 210項測試、build、check與audit通過。
+- 2026-10-21 19:16台北，正式HTTPS 86/86 shell逐檔SHA-256與JavaScript MIME、SW版本、38個音檔HTTP抽查通過。Fingerprint：4ac8c8db411f043a78ea5c8811e55ae40beaee38bdff1e0282b3ebd7072cbb8b。
+- 正式390px QA：選ぬ → 生活詞 → 3詞回想 → 點breadcrumb回到h-306c，網址正確、無橫向溢出、console error／warn為0。已保留正式非QA練習工坊分頁供使用。
+- 既有離線版本最初仍由舊worker服務；關閉本次驗證分頁後重開，新版本正常接手，不清除學習資料。符合既有README的版本切換方式，沒有以清空cache／資料庫繞過。
+- 正式手機入口：[五十音練習工坊](https://linhercherng.github.io/japanese-learning-platform/#kana-studio)。390px正式畫面保存在本機work/mobile-qa/published-390-studio.jpg，作為本次交付證據。
