@@ -20,6 +20,11 @@ test('twelve authored rhythm cards preserve full readings, mora groups and exist
  assert.deepEqual(rhythmCards.find(c=>c.reading==='コーヒー').beats,['コ','ー','ヒ','ー']);
  assert(exposedRhythmItems(rhythmCards.find(c=>c.reading==='しゃしん')).includes('h-3057-3083'));
  assert.deepEqual(exposedRhythmItems(null),[]);
+ assert(exposedRhythmItems(rhythmCards.find(c=>c.id==='stamp')).includes('h-3064'),'visible group explanation also exposes normal つ');
+});
+test('all rhythm word audio is included in the offline kana pack',()=>{
+ const audio=JSON.parse(fs.readFileSync('app/assets/audio.json','utf8')),pack=JSON.parse(fs.readFileSync('app/assets/offline-manifest.json','utf8')).packs.find(p=>p.id==='K');
+ for(const c of rhythmCards)assert(pack.files.includes(audio[c.audio]),c.id+' should work after downloading the kana pack');
 });
 test('repair references accept only matching ordered unique kana and one check ability each',()=>{
  const ids=['kc:check:h-3042:pair','kc:check:k-30a4:listen'];
@@ -41,6 +46,11 @@ test('same-day retry never erases a weak daily first; new-day independent first 
  assert.equal(selectRepairQuestions(s,now).length,1);
  s=add(s,'next-day','h-3042','listening','2026-10-21T02:00:00Z',{correct:true});assert.equal(selectRepairQuestions(s,now).length,0);
  s=add(s,'hint','h-3044','recognition','2026-10-21T03:00:00Z',{correct:true,hinted:true});assert.equal(selectRepairQuestions(s,now)[0].reviewItem,'h-3044');
+});
+test('future answers on a currently weak card cannot change its due priority or displace it',()=>{
+ let s=initialState();for(const [i,item] of ['h-3042','h-3044','h-3046','h-3048'].entries())s=add(s,'past-'+i,item,'recognition','2026-10-20T0'+i+':00:00Z');
+ const expected=selectRepairQuestions(s,now);
+ for(const correct of [true,false]){const future=add(s,'future','h-3042','recognition','2027-01-01T00:00:00Z',{correct});assert.deepEqual(selectRepairQuestions(future,now),expected);}
 });
 test('repair preserves the pending round, first answers and backup while later history changes',()=>{
  let s=add(initialState(),'wrong','h-3042','listening','2026-10-20T01:00:00Z');

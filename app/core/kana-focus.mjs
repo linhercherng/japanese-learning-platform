@@ -1,8 +1,11 @@
 import {kanaMemoryMap} from './kana-coach.mjs';
 import {coachQuestion} from '../content/kana-coach.mjs';
 import {beginV3Session} from './v3-learning.mjs';
+import {initialState,recordAnswers} from './learning.mjs';
 export function selectRepairQuestions(state,time){
- const candidates=kanaMemoryMap(state,time).flatMap(k=>['recognition','listening'].filter(d=>k[d].weak).map(d=>({item:k.id,dimension:d,...k[d]})));
+ const visible=state.attempts.filter(a=>Date.parse(a.time)<=Date.parse(time)).sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id));
+ const snapshot={...state,reviews:recordAnswers(initialState(),visible).reviews};
+ const candidates=kanaMemoryMap(snapshot,time).flatMap(k=>['recognition','listening'].filter(d=>k[d].weak).map(d=>({item:k.id,dimension:d,...k[d]})));
  candidates.sort((a,b)=>Number(b.due)-Number(a.due)||Date.parse(a.lastTime)-Date.parse(b.lastTime)||a.item.localeCompare(b.item)||a.dimension.localeCompare(b.dimension));
  const used=new Set(),questions=[];
  for(const c of candidates){if(used.has(c.item))continue;used.add(c.item);questions.push(coachQuestion('kc:check:'+c.item+':'+(c.dimension==='recognition'?'pair':'listen')));if(questions.length===3)break;}
