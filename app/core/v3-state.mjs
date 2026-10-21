@@ -12,7 +12,7 @@ const uniqueIds=items=>Array.isArray(items)&&items.every(safe)&&new Set(items).s
 function answer(a){shape(a,['value','correct','hinted','time']);requireValue(validAnswerValue(a.value)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&time(a.time));}
 export function validateSession(s){
  shape(s,['id','source','reference','questionIds','queue','cursor','answers','hints','corrections','deferred','createdAt','updatedAt','completedAt']);
- requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
  requireValue(Array.isArray(s.queue)&&s.queue.length<=120&&s.queue.length>=s.questionIds.length&&Number.isInteger(s.cursor)&&s.cursor>=0&&s.cursor<=s.queue.length);
  const original=[];
  for(const q of s.queue){shape(q,['questionId','repeat','sourceId']);requireValue(safe(q.questionId)&&typeof q.repeat==='boolean'&&(q.repeat?s.questionIds.includes(q.sourceId):q.sourceId===null));if(!q.repeat)original.push(q.questionId);}
@@ -40,7 +40,7 @@ export function validateV3(v,artifacts=[]){
  requireValue(Array.isArray(v.dailyPlans)&&v.dailyPlans.length<=60&&new Set(v.dailyPlans.map(p=>p.id)).size===v.dailyPlans.length);
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
- const checks=v.sessions.filter(s=>s.source==='kana-check');requireValue(new Set(checks.map(s=>s.reference)).size===checks.length,'同日隔天檢查有不同輪次，請保留備份並先完成目前輪次。');
+ const checks=v.sessions.filter(s=>['kana-check','kana-week'].includes(s.source));requireValue(new Set(checks.map(s=>s.source+':'+s.reference)).size===checks.length,'同日隔天檢查有不同輪次，請保留備份並先完成目前輪次。');
  for(const p of v.dailyPlans)for(const step of p.steps)if(step.sessionId!==null)requireValue(v.sessions.some(s=>s.id===step.sessionId&&s.source==='daily'&&s.reference===p.id&&JSON.stringify(s.questionIds)===JSON.stringify(step.questionIds)),'每日安排與回想輪次不一致');
  for(const s of v.sessions)if(s.source==='daily'&&!s.completedAt)requireValue(v.dailyPlans.some(p=>p.id===s.reference&&p.steps.some(step=>step.sessionId===s.id&&JSON.stringify(step.questionIds)===JSON.stringify(s.questionIds))),'未完成的每日回想缺少安排');
  requireValue(plain(v.lessonSteps)&&plain(v.artifactParents));
