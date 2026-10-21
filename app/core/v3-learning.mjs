@@ -1,4 +1,5 @@
-import {confusedKana} from '../content/kana-coach.mjs';
+import {pairExposure} from '../content/kana-recall.mjs';
+import {confusedKana,coachQuestion} from '../content/kana-coach.mjs';
 import {recordAnswer,saveArtifact,validateState} from './learning.mjs';
 import {gradeQuestion,validAnswerValue} from './study.mjs';
 import {validateDailyPlan,validateSession,learningGoals,studyDay} from './v3-state.mjs';
@@ -84,6 +85,8 @@ export function organizeV3(state,time){
  const removed=new Set(next.v3.dailyPlans.filter(p=>p.steps.every(s=>s.completedAt)&&Date.parse(p.updatedAt)<cutoff).map(p=>p.id));
  next.v3.dailyPlans=next.v3.dailyPlans.filter(p=>!removed.has(p.id));
  const required=new Set(next.v3.dailyPlans.flatMap(p=>p.steps.map(s=>s.sessionId).filter(Boolean)));
+ const retainedWeeks=next.v3.sessions.filter(s=>s.source==='kana-week'&&(!s.completedAt||Date.parse(s.updatedAt)>=cutoff||required.has(s.id)));
+ for(const session of next.v3.sessions)if(Object.entries(session.answers).some(([id,a])=>{const partner=pairExposure(id);return partner&&retainedWeeks.some(w=>Date.parse(a.time)>=Date.parse(w.createdAt)&&(!w.completedAt||Date.parse(a.time)<=Date.parse(w.updatedAt))&&w.questionIds.some(qid=>coachQuestion(qid)?.reviewItem===partner));}))required.add(session.id);
  next.v3.sessions=next.v3.sessions.filter(s=>!s.completedAt||Date.parse(s.updatedAt)>=cutoff||required.has(s.id));
  return JSON.stringify(next)===JSON.stringify(state)?state:changed(next);
 }

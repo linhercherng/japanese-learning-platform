@@ -1,3 +1,5 @@
+import {kanaDrills} from './kana-drills.mjs';
+import {memoryFor} from './kana-memory.mjs';
 import {buildQuestion} from './kana-lab.mjs';
 import {coachQuestion} from './kana-coach.mjs';
 export function typingQuestion(id,registry){
@@ -11,3 +13,6 @@ export function validRecallReference(source,reference,ids,registry){
  if(source==='kana-type')return ids.length<=3&&ids.every(id=>typingQuestion(id,registry)?.reviewItem===reference);
  return source==='kana-week'&&/^\d{4}-\d\d-\d\d$/.test(reference)&&Number.isFinite(Date.parse(reference))&&new Date(reference).toISOString().slice(0,10)===reference&&ids.length<=10&&ids.every(id=>/^kc:check:/.test(id)&&coachQuestion(id));
 }
+
+const pairDrills=new Map(kanaDrills.filter(q=>q.mode==='pair').map(q=>[q.id,q]));
+export function pairExposure(id){const q=String(id).endsWith(':pair')?coachQuestion(id):pairDrills.get(id);return q?.mode==='pair'?memoryFor(q.reviewItem).partnerId:null;}

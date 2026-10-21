@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "ae762a19739d7c57000310a62163f191f5f0e5664be76ec5920a1dffacc00550",
+  "fingerprint": "a9f0afa863669ee42c6ed095ce63927edecb5be9e17806e1e12783cebf0c3d94",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -118,7 +118,7 @@
     "content/kana-drills.mjs": "4a180627136736eb6bf0394cbbddf867469d28f717b51005eb05e6c88316c61c",
     "content/kana-lab.mjs": "31e532ab357379a61258af8f3dcf1e881e5fec57cea822cea1498bba3d65f7e1",
     "content/kana-memory.mjs": "4726fe277561e1e7f619f7333d9e9a0d031c95850d1d0e97630c2cb774408abd",
-    "content/kana-recall.mjs": "c6072becac737433bc48756405b8f6599bdf98389f5eca9cc817f98c3b85bdd1",
+    "content/kana-recall.mjs": "47140af84fcbd418d8b8652b483f651025c2b95fca87919edc1097ecc10cb9d1",
     "content/kana-visuals.mjs": "5f2864e8ef9b17b1a181058155c7a247f23ee748731e6e0806a70a35b75b7bd8",
     "content/kana-words.mjs": "2a91de31642f63f28ebc818ffb8a9571a4d8a7b0cf7bb95f67b3ed3ba3aa12cb",
     "content/kana.mjs": "724964f5ac33f8761028d1391c61b0478497aa65bc61d8edbe09fe15ff404a8a",
@@ -151,7 +151,7 @@
     "core/exam.mjs": "83cffdf8a9b93feea9dbf7fdf41ac00f231cefa8cc76a04b5d386844159e25c6",
     "core/kana-coach.mjs": "14800d4dc33ec27b9d8496b61f916a838994301fe4c2488fdc211f4c673d289a",
     "core/kana-lab.mjs": "cc8ff15b4ded8257f1f6daf81dc034e65c664db0fbdfdf55855979aed3653224",
-    "core/kana-recall.mjs": "269146b018b1b572302b62c6503a34e8f3aae72492b987a81ba5879c19645933",
+    "core/kana-recall.mjs": "5a68041a022519cb448c67da899f0c36eb7213f0e7e8fffe089904dea79e4d88",
     "core/kana-studio-state.mjs": "a65cf0df21a460c993d8e0c729ecb1c581caf3040c3e77df9236e463e6c24426",
     "core/kana-studio.mjs": "67618c9eefacc9b0b385e5bcf6ac293fc3f24c59624c595321c9fd6cbdf4ef28",
     "core/learning.mjs": "d323148490299eb5375f5c6f572ec9405a6470807b18825a943b59e5fca218f3",
@@ -159,7 +159,7 @@
     "core/quiz.mjs": "cb59f0ef0a22b6905bfd2aaeb1b87f0ebb7ed045fe13cf9ae3fcc9d6242129af",
     "core/storage.mjs": "f42811a3a8edd4341e5cda37cdd4562e03e2c7b9ce483c7758ae62e48fdf14ec",
     "core/study.mjs": "6c9bcef4ee6f468f6e06a517dc99b2b3672249dbeaaa71987f39a82a66e363ec",
-    "core/v3-learning.mjs": "1e44c06e0880e3e60856ae2b0caa4862aadd36b067e8ac61e2edede5346052c9",
+    "core/v3-learning.mjs": "d0cc84ccd6856c98569cd22c084fc1ed56f0da3906f220e28ec591c369acad0d",
     "core/v3-state.mjs": "a14fe30d1d433e7ff19816599f9b4b8833b967fdfa90d6e04e1edfa7be6af0c6",
     "index.html": "392f4668bd9086f515553399cc5f26fd8e1547a9d0b8ea8a8a635af3a3c81f40",
     "kana-coach.mjs": "3eebc5cb96869bc81d9346299b21834f1a7aed5ec4f51e2de940d72b63b0bfa3",
@@ -193,5 +193,5 @@
     "v3.css": "cf82faa5292b5de531ba3175c51327c266df6305ebb11dcc4988dba305bad80d",
     "v3.mjs": "d2f5bda190888bcf35d69a5a75e33593c29e1b84cff73e1de3c07406a03e37ea"
   },
-  "bytes": 8156283
+  "bytes": 8157122
 }
