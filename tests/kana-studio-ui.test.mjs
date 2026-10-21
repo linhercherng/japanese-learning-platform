@@ -24,12 +24,16 @@ test('life words teach distinct natural forms and rare katakana gets an honest a
  const c=context();assert.match(kanaWordsView(c,item),/生活詞/);assert.match(kanaWordsView(c,item),/data-studio-action="words-start"/);
  const rare=kanaWordsView(c,'k-30f2');assert.match(rare,/沒有足夠的自然生活詞/);assert(!rare.includes('data-studio-action="words-start"'));assert.match(rare,/kana-words\/h-3092/);
 });
-test('studio routes and word recall preserve parents without revealing selected target in navigation',()=>{
+test('studio routes preserve parents without revealing selected target in navigation',()=>{
  const c=context();for(const name of ['kana-studio','kana-fade','kana-dictation','kana-words']){const n=navigationContext(c,name,item);assert(n.trail.some(t=>t.route==='kana-studio'));assert(!/[ぬヌ]/.test(navigationView(n)));}
- c.state.v3.sessions=[{id:'word-session',source:'kana-words',reference:item}];const nav=navigationContext(c,'v3-practice','word-session');assert(nav.trail.some(t=>t.route==='kana-words'));assert(!/[ぬヌ]/.test(navigationView(nav)));
+ c.state.v3.sessions=[{id:'word-session',source:'kana-words',reference:item}];const nav=navigationContext(c,'v3-practice','word-session');assert(nav.trail.some(t=>t.route==='kana-words/'+item));assert(!/[ぬヌ]/.test(navigationView(nav)));
 });
 
 test('studio selector has five semivoiced cards per script and kata examples use the displayed script label',()=>{
  const c=context(),html=studioSelectView(c);for(const name of ['平','片']){const section=html.split('label="'+name+'假名・半濁音">')[1]?.split('</optgroup>')[0];assert(section);assert.equal((section.match(/<option /g)||[]).length,5);}
  assert(!kanaWordsView(c,'k-30df-30e5').includes('這裡轉寫成平假名'));
+});
+
+test('word recall breadcrumb returns to the selected card without exposing its glyph',()=>{
+ const c=context();c.state.v3.sessions=[{id:'round',source:'kana-words',reference:item}];const n=navigationContext(c,'v3-practice','round');assert(n.trail.some(t=>t.route==='kana-words/'+item));assert(!/[ぬヌ]/.test(navigationView(n)));
 });

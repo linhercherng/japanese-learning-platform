@@ -1,5 +1,5 @@
 /* Local app shell and explicitly downloaded audio packs. No user-data or third-party cache. */
-const BUILD_ID = '2cec2b9d1107f2040b684cb8ab7de52b40f98909ea8933638750f224ea16a2c2';
+const BUILD_ID = '4ac8c8db411f043a78ea5c8811e55ae40beaee38bdff1e0282b3ebd7072cbb8b';
 const SHELL_PREFIX='hiyori-shell-',SHELL_NAME=SHELL_PREFIX+BUILD_ID;
 const BASE=new URL(self.registration.scope),MANIFEST=new URL('assets/shell-manifest.json',BASE).href;
 const PACK_MARKER=new URL('__hiyori_pack_info__',BASE).href;
