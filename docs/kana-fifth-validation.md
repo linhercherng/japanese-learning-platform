@@ -32,7 +32,12 @@
 
 本機HTTP：98/98 shell逐檔SHA-256、JS MIME、SW fingerprint及50音檔抽查通過。fingerprint：2d83f1ea4709ce743fcee5bef0e70d28dd5f49890dbd72c4b76875bd740a56dc。
 
-待GitHub CI／Pages與正式HTTPS補記。
+- [PR21](https://github.com/linhercherng/japanese-learning-platform/pull/21)已合併，merge commit 0b5ad2a77715e53bb0bc5a842e90876662d8e9bb；來源head 6ccfa599bb70832f132a0f1c1d4e49096d306b8d。
+- PR CI run 39627685414成功；[Pages run 39627940330](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39627940330)建置及部署成功。
+- 2026-10-21T15:43:26.484Z正式HTTPS：98/98 shell SHA-256、JS MIME、SW fingerprint一致，50音檔抽查通過。fingerprint 2d83f1ea4709ce743fcee5bef0e70d28dd5f49890dbd72c4b76875bd740a56dc。
+- 正常公開工坊在離線更新啟用後，可點「今天怎麼練」進入新導引。正式站隔離QA 390px實際播放咖啡詞音、連點四拍、展開4格對照；提示保存狀態正常，無溢出，console warn／error空。弱點空狀態入口正常。截圖在ignored work/fifth-qa/public-390-beats.jpg。
+- 測試分頁已關閉、viewport復原；原公開頁保留於 #kana-path。沒有清除使用者資料。
+- 正式入口：https://linhercherng.github.io/japanese-learning-platform/#kana-path
 
 ## 已知邊界與回退
 
