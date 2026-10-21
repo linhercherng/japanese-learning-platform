@@ -1,3 +1,4 @@
+import {wordExamples} from '../app/content/kana-words.mjs';
 import{readFile,writeFile,readdir}from'node:fs/promises';
 import{resolve,join,relative}from'node:path';
 import{fileURLToPath}from'node:url';
@@ -12,7 +13,7 @@ export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],k
  const texts=new Map(ids.map(id=>[id,new Set()])),optional=new Map(ids.map(id=>[id,new Set()]));
  function add(level,text,required=true){if(text&&texts.has(level))(required?texts:optional).get(level).add(text);}
  function word(level,w){add(level,w.jp);add(level,wordAudioKey(w));add(level,w.example);}
- for(const item of kana){add('K',item.glyph);add('K',item.word);add('K',item.wordReading,false);}
+ for(const item of kana){for(const ex of wordExamples(item.id,words))add('K',ex.audio);add('K',item.glyph);add('K',item.word);add('K',item.wordReading,false);}
  for(const lesson of kanaLessons)for(const ex of lesson.examples||[]){add('K',ex.jp);for(const part of ex.jp.split('／'))add('K',part,false);}
  for(const section of kanaPhonology)for(const q of section.questions||[]){add('K',q.transcript);for(const choice of q.choices||[])add('K',choice,false);}
  for(const u of allUnits){

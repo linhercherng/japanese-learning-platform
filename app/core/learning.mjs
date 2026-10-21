@@ -1,3 +1,4 @@
+import {validateStudioDraft,mergeDictationDraft,reconcileDictationDrafts} from './kana-studio-state.mjs';
 /** Pure learning state. Recognition, listening and self-rated writing remain separate. */
 import {validatePractice} from './study.mjs';
 import {validateExamSession} from './exam.mjs';
@@ -74,7 +75,7 @@ export function validateState(s){
   requireValue(Array.isArray(r.history)&&r.history.length<=10&&r.history.every(h=>typeof h.correct==='boolean'&&typeof h.hinted==='boolean'&&validTime(h.time))&&(r.lastAdvance===null||/^\d{4}-\d\d-\d\d$/.test(r.lastAdvance)));
  }
  for(const [id,t] of Object.entries(s.completed))requireValue(safeId(id)&&validTime(t));
- for(const [id,d] of Object.entries(s.drafts)){requireValue(safeId(id)&&plain(d)&&typeof d.text==='string'&&d.text.length<=2000&&validTime(d.time));validateArtifact({id:'draft',item:id,kind:'handwriting',text:d.text,points:d.points||[],time:d.time});}
+ for(const [id,d] of Object.entries(s.drafts)){validateStudioDraft(id,d);requireValue(safeId(id)&&plain(d)&&typeof d.text==='string'&&d.text.length<=2000&&validTime(d.time));validateArtifact({id:'draft',item:id,kind:'handwriting',text:d.text,points:d.points||[],time:d.time});}
  s.artifacts.forEach(validateArtifact);
  if(s.schema>=2){
   requireValue(Array.isArray(s.bookmarks)&&s.bookmarks.length<=10000&&s.bookmarks.every(safeId)&&new Set(s.bookmarks).size===s.bookmarks.length);
@@ -105,7 +106,8 @@ export function mergeStates(current,incoming){
  const artifacts=new Map(next.artifacts.map(a=>[a.id,a]));
  for(const a of incoming.artifacts){if(!artifacts.has(a.id))artifacts.set(a.id,a);else requireValue(JSON.stringify(artifacts.get(a.id))===JSON.stringify(a),'作品 ID 衝突，未匯入');}
  next.artifacts=[...artifacts.values()];
- for(const [id,d] of Object.entries(incoming.drafts))if(!next.drafts[id]||d.time>next.drafts[id].time)next.drafts[id]=d;
+ for(const [id,d] of Object.entries(incoming.drafts)){if(id.startsWith('write:KS-')&&next.drafts[id])next.drafts[id]=mergeDictationDraft(id,next.drafts[id],d);else if(!next.drafts[id]||d.time>next.drafts[id].time)next.drafts[id]=d;}
+ reconcileDictationDrafts(next);
  next.bookmarks=[...new Set([...next.bookmarks,...incoming.bookmarks])];
  const exams=new Map(next.examAttempts.map(a=>[a.id,a]));
  for(const exam of incoming.examAttempts){if(exams.has(exam.id))requireValue(JSON.stringify(exams.get(exam.id))===JSON.stringify(exam),'模擬紀錄 ID 衝突');else exams.set(exam.id,exam);}
