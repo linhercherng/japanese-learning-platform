@@ -38,4 +38,10 @@ Computer Use工具在讀取獨立驗證瀏覽器視窗時，因無法可靠辨�
 
 ## 發布紀錄
 
-待PR／Pages及正式HTTP驗證完成後補上。
+- PR #13 已合併： https://github.com/linhercherng/japanese-learning-platform/pull/13
+- 發布程式commit：`9e88030b5f62ed19e64353101b0a283a4696330a`。
+- Pages workflow 39581194857 build／deploy成功： https://github.com/linhercherng/japanese-learning-platform/actions/runs/39581194857
+- CI再次執行186項測試全通過，素材檢查及audit通過。
+- 2026-10-21 18:00台北：正式HTTPS逐檔校驗79/79、JavaScript MIME、SW版本與6個既有音檔HTTP抽樣通過。
+- shell fingerprint：`3ffd4bbce77da3592a04ef9f6b53a540c6ed23ac165f1dfbce73b5c648e9c20d`。
+- 正式入口：[記憶地圖](https://linhercherng.github.io/japanese-learning-platform/#kana-map)、[混淆字專練](https://linhercherng.github.io/japanese-learning-platform/#kana-confusions)、[隔天檢查](https://linhercherng.github.io/japanese-learning-platform/#kana-check)。HTTP校驗不代表上方尚未完成的瀏覽器操作已驗收。
