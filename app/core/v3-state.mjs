@@ -40,6 +40,10 @@ export function validateV3(v,artifacts=[]){
  requireValue(Array.isArray(v.dailyPlans)&&v.dailyPlans.length<=60&&new Set(v.dailyPlans.map(p=>p.id)).size===v.dailyPlans.length);
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
+ for(const session of v.sessions)if(session.source==='kana-week')for(const [qid,a] of Object.entries(session.answers)){
+  const item=qid.split(':')[2],hint=v.kanaHints?.[item]?.lastHintAt;
+  requireValue(a.hinted||!hint||Date.parse(hint)>Date.parse(a.time)||Date.parse(hint)<Date.parse(session.createdAt)&&(Date.parse(studyDay(a.time))-Date.parse(studyDay(hint)))/86400000>=7,'七日回想提示曝光與首答衝突，請保留原備份。');
+ }
  const checks=v.sessions.filter(s=>['kana-check','kana-week'].includes(s.source));requireValue(new Set(checks.map(s=>s.source+':'+s.reference)).size===checks.length,'同日隔天檢查有不同輪次，請保留備份並先完成目前輪次。');
  for(const p of v.dailyPlans)for(const step of p.steps)if(step.sessionId!==null)requireValue(v.sessions.some(s=>s.id===step.sessionId&&s.source==='daily'&&s.reference===p.id&&JSON.stringify(s.questionIds)===JSON.stringify(step.questionIds)),'每日安排與回想輪次不一致');
  for(const s of v.sessions)if(s.source==='daily'&&!s.completedAt)requireValue(v.dailyPlans.some(p=>p.id===s.reference&&p.steps.some(step=>step.sessionId===s.id&&JSON.stringify(step.questionIds)===JSON.stringify(s.questionIds))),'未完成的每日回想缺少安排');

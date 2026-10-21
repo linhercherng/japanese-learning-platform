@@ -8,15 +8,19 @@ const validItem=item=>requireValue(kana.some(k=>k.id===item),'請選擇有效的
 const changed=state=>{state.revision++;return validateState(state);};
 export function readDictation(state,item){const key=dictationKey(item),draft=state.drafts[key];return draft?{key,meta:parseDictation(key,draft),points:draft.points}:null;}
 function store(state,item,meta,points,time){state.drafts[dictationKey(item)]={text:JSON.stringify(meta),points:structuredClone(points),time};return changed(state);}
+function markWeekHints(state,item,time){
+ for(const session of state.v3.sessions)if(session.source==='kana-week'&&!session.completedAt&&Date.parse(time)>=Date.parse(session.createdAt))for(const qid of session.questionIds)if(qid.startsWith('kc:check:'+item+':')&&!session.answers[qid]&&!session.hints.includes(qid)){session.hints.push(qid);session.updatedAt=time;}
+}
 export function setHintStage(state,item,stage,time,exposed=stage<3){
  validItem(item);requireValue(Number.isInteger(stage)&&stage>=0&&stage<=3,'提示階段不正確。');const next=structuredClone(state),old=next.v3.kanaHints?.[item];
  next.v3.kanaHints??={};next.v3.kanaHints[item]={stage,updatedAt:time,lastHintAt:exposed?time:old?.lastHintAt||null};
  const active=readDictation(next,item);if(exposed&&active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}
+ if(exposed)markWeekHints(next,item,time);
  return changed(next);
 }
 export function recordKanaExposure(state,items,time){
  const ids=[...new Set(items)];if(!ids.length)return state;ids.forEach(validItem);const next=structuredClone(state);next.v3.kanaHints??={};
- for(const item of ids){const old=next.v3.kanaHints[item];next.v3.kanaHints[item]={stage:old?.stage??0,updatedAt:time,lastHintAt:time};const active=readDictation(next,item);if(active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}}
+ for(const item of ids){markWeekHints(next,item,time);const old=next.v3.kanaHints[item];next.v3.kanaHints[item]={stage:old?.stage??0,updatedAt:time,lastHintAt:time};const active=readDictation(next,item);if(active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}}
  return changed(next);
 }
 export function startDictation(state,{item,id,time}){

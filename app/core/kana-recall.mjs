@@ -29,7 +29,8 @@ export function weekEvidence(state,session){
   const q=coachQuestion(id);if(!q){result.excluded++;continue;}
   const list=histories.get(q.reviewItem+':'+q.dimension)||[],before=list.filter(h=>Date.parse(h.time)<Date.parse(session.createdAt)),last=before.at(-1);
   const between=list.some(h=>Date.parse(h.time)>=Date.parse(session.createdAt)&&Date.parse(h.time)<Date.parse(a.time)),sameTime=list.filter(h=>Date.parse(h.time)===Date.parse(a.time));
-  if(!last||ordinal(a.time)-ordinal(last.time)<7||between||sameTime.length!==1){result.excluded++;continue;}
+  const hint=state.v3.kanaHints?.[q.reviewItem]?.lastHintAt,recentBefore=hint&&Date.parse(hint)<Date.parse(session.createdAt)&&Date.parse(hint)<=Date.parse(a.time)&&ordinal(a.time)-ordinal(hint)<7;
+  if(!last||ordinal(a.time)-ordinal(last.time)<7||recentBefore||between||sameTime.length!==1){result.excluded++;continue;}
   result.total++;if(a.hinted)result.hinted++;if(a.correct&&!a.hinted)result.correct++;
  }return result;
 }

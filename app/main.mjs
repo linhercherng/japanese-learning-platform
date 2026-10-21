@@ -1,3 +1,4 @@
+import {createKanaRecall} from './kana-recall.mjs';
 import {createKanaLab} from './kana-lab.mjs';
 import {createKanaStudio} from './kana-studio.mjs';
 import {createKanaCoach} from './kana-coach.mjs';
@@ -33,6 +34,7 @@ const v3=createV3({getState:()=>unsaved||state,getContext:context,update,toast,r
 const kanaCoach=createKanaCoach({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id});
 const kanaStudio=createKanaStudio({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaLab=createKanaLab({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+const kanaRecall=createKanaRecall({getContext:context,update,toast,now,id});
 function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,audioIndex,due:dueReviews(state),...v2.contextExtras()};}
 function update(fn){
  pendingWrites++;status.textContent='保存中…';
@@ -63,6 +65,7 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(kanaCoach.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaStudio.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaLab.views))views[view]=()=>renderer(param);
+ for(const [view,renderer] of Object.entries(kanaRecall.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
  const navigation=navigationContext(ctx,name,param);
  locationContext.innerHTML=navigationView(navigation);
@@ -140,7 +143,7 @@ function validateCatalog(s){
  const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
  if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!draftIds.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
  v2.validateCatalog(s);
- v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);kanaLab.validateCatalog(s);
+ v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);kanaLab.validateCatalog(s);kanaRecall.validateCatalog(s);
 }
 async function importFile(file){
  if(!file)return;if(file.size>12*1024*1024){toast('備份超過 12 MB，未匯入。');return;}

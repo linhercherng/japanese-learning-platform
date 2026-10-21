@@ -1,5 +1,7 @@
+import {recordKanaExposure,readDictation} from './core/kana-studio.mjs';
+import {memoryFor} from './content/kana-memory.mjs';
 import * as catalog from './content/catalog.mjs';
-import {kanaLessons} from './content/kana.mjs';
+import {kana,kanaLessons} from './content/kana.mjs';
 import {concepts} from './content/concepts.mjs';
 import {v3Questions} from './content/practice-v3.mjs';
 import {deepLessons} from './content/deep-lessons.mjs';
@@ -14,7 +16,7 @@ import {v3HomeView,dailyView,practiceV3View,weaknessesView,confusionView,deepVie
 
 /** V3 owns its event namespace; V1/V2 audio, writing and backup flows remain shared. */
 export function createV3({getState,getContext,update,toast,render,now,id,cacheDraft}){
- const state=()=>getState(),ctx=()=>getContext();
+ const state=()=>getState(),ctx=()=>getContext();let composingInput=null,compositionSubmitBlocked=false;
  const local=()=>ctx().session.v3ui??=( {order:[],deepIndex:0} );
  const resolve=(qid,dimension)=>catalog.resolveLearningQuestion(qid,dimension);
  const units=[...catalog.allUnits,...kanaLessons.map(u=>({...u,level:'K'}))];
@@ -83,10 +85,10 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
    case 'start-step':return startStep(d.v3Plan,d.v3Step);
    case 'finish-step':await update(s=>completeDailyStep(s,d.v3Plan,d.v3Step,now()));break;
    case 'adjust-plan':{const minutes=Number(document.querySelector('#v3-adjust')?.value);await update(s=>adjustDailyPlan(s,d.v3Plan,minutes,now(),{questions:v3Questions}));toast('已做的內容保留，剩下活動已調整。');break;}
-   case 'submit-text':return submit(document.querySelector('#v3-answer')?.value.trim()||'');
+   case 'submit-text':{const field=document.querySelector('#v3-answer'),value=field?.value.trim()||'';if(currentQuestion()?.q.id.startsWith('kt:')){if(composingInput===field||compositionSubmitBlocked){compositionSubmitBlocked=false;toast('先完成日文輸入法的選字，再提交。');return;}if(!value){toast('先輸入假名，再提交；需要幫忙可以使用提示。');return;}if(value.length>50){toast('這題最多輸入50字。');return;}}return submit(value);}
    case 'submit-order':return submit([...(local().order||[])]);
    case 'next':return nextQuestion();
-   case 'hint':{const current=currentQuestion();if(!current)return;await update(s=>{const active=s.v3.sessions.find(p=>p.id===current.sid);return active&&!active.completedAt&&active.cursor===current.cursor?hintV3Question(s,current.sid,now()):s;});break;}
+   case 'hint':{const current=currentQuestion();if(!current)return;const time=now();await update(s=>{const active=s.v3.sessions.find(p=>p.id===current.sid);if(!active||active.completedAt||active.cursor!==current.cursor||(active.queue[active.cursor].repeat?active.corrections[active.cursor]:active.answers[current.q.id]))return s;let next=hintV3Question(s,current.sid,time);if(kana.some(k=>k.id===current.q.reviewItem)){const items=[current.q.reviewItem];if(current.q.mode==='pair')items.push(memoryFor(current.q.reviewItem).partnerId);next=recordKanaExposure(next,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}}return next;});break;}
    case 'concept-practice':{const qs=v3Questions.filter(q=>q.conceptId===d.v3Concept&&q.dimension===d.v3Dimension);return begin(qs,{source:'concept',reference:`${d.v3Concept}:${d.v3Dimension}`});}
    case 'confusion-practice':{const pair=confusionPairs.find(p=>p.id===d.v3Pair);if(!pair)throw new Error('找不到這組字');return begin(v3Questions.filter(q=>q.conceptId===pair.conceptId),{source:'confusion',reference:pair.id});}
    case 'deep-practice':{const u=deepLessons.find(u=>u.id===d.v3Unit);if(!u)throw new Error('找不到這一課');return begin(u.questionIds.map(resolve).filter(Boolean),{source:'lesson',reference:u.id});}
@@ -117,16 +119,20 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
   if(el.dataset.v3Goal!==undefined){const goal=el.value,hash=location.hash;update(s=>setLearningGoal(s,goal)).then(()=>refresh(hash)).catch(error=>toast(error.message));}
   if(el.dataset.v3BackupConfirm!==undefined){local().backupConfirmed=el.checked;render(false);}
  }
+ function pointerDown(event){const b=event.target.closest?.('button');compositionSubmitBlocked=Boolean(b?.dataset.v3Action==='submit-text'&&composingInput&&composingInput===document.querySelector('#v3-answer'));}
+ function compositionStart(event){if(event.target.id==='v3-answer')composingInput=event.target;}
+ function compositionEnd(event){if(composingInput===event.target)composingInput=null;}
+ document.addEventListener('pointerdown',pointerDown);document.addEventListener('compositionstart',compositionStart);document.addEventListener('compositionend',compositionEnd);
  document.addEventListener('click',click);document.addEventListener('input',input);document.addEventListener('change',change);
  return {
   views:{home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve),weaknesses:()=>weaknessesView(ctx()),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
-  onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}},
+  onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){composingInput=null;compositionSubmitBlocked=false;ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}},
   validateCatalog(s){
    const conceptIds=new Set(concepts.map(c=>c.id)),unitIds=new Set(units.map(u=>u.id)),deepIds=new Set(deepLessons.map(u=>u.id)),pairIds=new Set(confusionPairs.map(p=>p.id));
    for(const p of s.v3.dailyPlans){if(!unitIds.has(p.unitId)||p.conceptIds.some(cid=>!conceptIds.has(cid))||(p.newConceptIds||[]).some(cid=>!conceptIds.has(cid))||p.steps.some(step=>step.questionIds.some(qid=>!resolve(qid))))throw new Error('備份包含未知每日教材');}
    for(const p of s.v3.sessions){if(p.source==='kana'&&!validKanaReference(p.reference,p.queue.map(q=>q.questionId)))throw new Error('備份包含不一致的假名加練');if(p.queue.some(q=>!resolve(q.questionId)))throw new Error('備份包含未知第三版題目');if(p.source==='lesson'&&!deepIds.has(p.reference)||p.source==='confusion'&&!pairIds.has(p.reference)||p.source==='concept'&&!concepts.some(c=>c.dimensions.some(d=>p.reference===`${c.id}:${d}`)))throw new Error('備份包含未知第三版活動');}
    if(Object.keys(s.v3.lessonSteps).some(uid=>!deepIds.has(uid)))throw new Error('備份包含未知深化課程');
   },
-  dispose(){document.removeEventListener('click',click);document.removeEventListener('input',input);document.removeEventListener('change',change);}
+  dispose(){document.removeEventListener('pointerdown',pointerDown);document.removeEventListener('compositionstart',compositionStart);document.removeEventListener('compositionend',compositionEnd);document.removeEventListener('click',click);document.removeEventListener('input',input);document.removeEventListener('change',change);}
  };
 }
