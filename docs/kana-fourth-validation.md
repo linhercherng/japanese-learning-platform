@@ -35,7 +35,11 @@ IME事件防護由控制器事件測試確認；瀏覽器以填入假名／半�
 
 ## 發布
 
-待PR／CI／Pages與正式HTTPS完成後補記。
+- v0.8.0：PR17，merge 1650db6bdd3733f4c4c0b0a0688d253acad8b7e1，Pages run 39615256633成功。
+- v0.8.1：PR18／19／20整合提示與歷史證據修正。最終merge acfcef1ddd508e2c8d0060a19d95c9ca42e6f59e；PR20 CI與Pages run 39621419214全部成功（253項測試、build、check、audit）。PR19中間部署排隊時取消，改由涵蓋全部修正的PR20發布。
+- 2026-10-21T14:59:42.977Z 正式HTTPS驗證：94/94 shell逐檔SHA-256、JS MIME、service-worker fingerprint一致，38音檔HTTP抽樣通過。最終fingerprint a9f0afa863669ee42c6ed095ce63927edecb5be9e17806e1e12783cebf0c3d94。
+- 正式IAB 390px：三詞打字首題輸入「あめ」成功，下一題正常；七日無資料說明與小結入口正常，小結記為詞語運用1/1，認字／聽辨維持0/0。無橫向溢出，console warning／error皆空。正式站手機截圖保存在ignored work/fourth-qa/public-final-390-type.jpg。測試分頁關閉、viewport復原，原公開工坊頁保留。
+- 正式網址：https://linhercherng.github.io/japanese-learning-platform/#kana-studio
 
 
 ## v0.8.1 提示生命週期修補
