@@ -1,5 +1,6 @@
+import {startWeekCheck} from '../app/core/kana-recall.mjs';
 import test from 'node:test';import assert from 'node:assert/strict';
-import {initialState,exportBackup,parseBackup} from '../app/core/learning.mjs';
+import {initialState,recordAnswer,exportBackup,parseBackup} from '../app/core/learning.mjs';
 import {createKanaStudio} from '../app/kana-studio.mjs';
 import {readDictation,dictationKey} from '../app/core/kana-studio.mjs';
 import {createV3} from '../app/v3.mjs';import {resolveLearningQuestion} from '../app/content/catalog.mjs';
@@ -32,3 +33,7 @@ test('controller locks in-progress ink, saves once and runs three stable life-wo
  let steps=0;while(!session.completedAt){assert(steps++<8);const q=resolveLearningQuestion(session.queue[session.cursor].questionId);if(!session.answers[q.id]){h.inputs['#v3-answer']={value:q.accepted[0]};await h.click({v3Action:'submit-text'});}await h.click({v3Action:'next'});h.c.state=parseBackup(exportBackup(h.c.state));h.controller.validateCatalog(h.c.state);h.v3.validateCatalog(h.c.state);session=h.c.state.v3.sessions[0];}
  assert.equal(Object.keys(session.answers).length,3);assert.match(h.v3.views['v3-practice'](session.id),/kana-words/);assert.equal(h.errors.length,1);assert.match(h.errors[0],/自評已保存/);
 }));
+
+test('rendering the locked dictation comparison exposes pending week recall without rewriting original hint metadata',async()=>harness(async h=>{h.c.state=recordAnswer(h.c.state,{id:'old-week',item,dimension:'recognition',correct:true,hinted:false,time:'2026-10-01T01:00:00Z'});h.c.state=startWeekCheck(h.c.state,{id:'week',time});await h.click({studioAction:'start',studioItem:item});h.controller.afterRender('kana-dictation',item);h.ink();await h.click({studioAction:'lock',studioItem:item});assert.equal(readDictation(h.context().state,item).meta.hinted,false);h.controller.beforeRender();h.controller.afterRender('kana-dictation',item);await new Promise(r=>setImmediate(r));assert.equal(h.c.state.v3.kanaHints[item].lastHintAt,time);assert.equal(h.c.state.v3.sessions[0].hints.length,1);assert.equal(readDictation(h.context().state,item).meta.hinted,false);h.controller.afterRender('kana-dictation',item);await new Promise(r=>setImmediate(r));assert.equal(parseBackup(exportBackup(h.context().state)).v3.sessions[0].hints.length,1);}));
+
+test('a retained locked draft for an already saved task shows no reference and records no new exposure',async()=>harness(async h=>{await h.click({studioAction:'start',studioItem:item});h.controller.afterRender('kana-dictation',item);h.ink();await h.click({studioAction:'lock',studioItem:item});const active=readDictation(h.context().state,item);h.c.state=recordAnswer(h.c.state,{id:'ksw-'+active.meta.id,item,dimension:'writing',correct:true,hinted:false,time});h.controller.beforeRender();h.controller.afterRender('kana-dictation',item);await new Promise(r=>setImmediate(r));assert.equal(h.c.state.v3.kanaHints,undefined);}));

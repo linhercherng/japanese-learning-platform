@@ -36,7 +36,7 @@ export function updateDictationPoints(state,item,points,time){
 }
 export function revealDictationHint(state,item,time){
  const active=readDictation(state,item);requireValue(active?.meta.stage==='writing','本輪已鎖定，請使用對照區。');
- return store(structuredClone(state),item,{...active.meta,hinted:true},active.points,time);
+ return store(recordKanaExposure(state,[item],time),item,{...active.meta,hinted:true},active.points,time);
 }
 export function lockDictation(state,item,time){
  const active=readDictation(state,item);requireValue(active,'請先開始這輪默寫。');if(active.meta.stage==='locked')return state;

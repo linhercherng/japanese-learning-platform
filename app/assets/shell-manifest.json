@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "f583c4a0030a4cf3f3d17aa194a9ab445f43f8d4053423fc060ccdc0870d4a4f",
+  "fingerprint": "799b60d7d52161b29b8d9a9ec24388dd5b5330d1596c06ce5a6fc052cb9ef493",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -151,22 +151,22 @@
     "core/exam.mjs": "83cffdf8a9b93feea9dbf7fdf41ac00f231cefa8cc76a04b5d386844159e25c6",
     "core/kana-coach.mjs": "14800d4dc33ec27b9d8496b61f916a838994301fe4c2488fdc211f4c673d289a",
     "core/kana-lab.mjs": "cc8ff15b4ded8257f1f6daf81dc034e65c664db0fbdfdf55855979aed3653224",
-    "core/kana-recall.mjs": "3d4078a47b19c68ab602f25e345fff01502adb5f852a86444abbcde1b0a08deb",
+    "core/kana-recall.mjs": "69bc6625144826f1df8d4e7f796d272f65c8699ee1455de4011eb852dd2dba38",
     "core/kana-studio-state.mjs": "a65cf0df21a460c993d8e0c729ecb1c581caf3040c3e77df9236e463e6c24426",
-    "core/kana-studio.mjs": "cdbcec2ffe3d2551852c4675ed60699bb93cd0c96a376c3643887d97de69f1ef",
+    "core/kana-studio.mjs": "67618c9eefacc9b0b385e5bcf6ac293fc3f24c59624c595321c9fd6cbdf4ef28",
     "core/learning.mjs": "d323148490299eb5375f5c6f572ec9405a6470807b18825a943b59e5fca218f3",
     "core/offline.mjs": "9915330023973e22b924a0c472786c068852be0ea1138d74d2d131a2ad37f57f",
     "core/quiz.mjs": "cb59f0ef0a22b6905bfd2aaeb1b87f0ebb7ed045fe13cf9ae3fcc9d6242129af",
     "core/storage.mjs": "f42811a3a8edd4341e5cda37cdd4562e03e2c7b9ce483c7758ae62e48fdf14ec",
     "core/study.mjs": "6c9bcef4ee6f468f6e06a517dc99b2b3672249dbeaaa71987f39a82a66e363ec",
-    "core/v3-learning.mjs": "1e357b25e83402635108ba93ab357ca10a681326cf1a1534c72402a9d55ce283",
-    "core/v3-state.mjs": "73b2da6f6afca3ce9cf189e124ff59c9c9e9e466d3e1065eb45de7981f0de6a1",
+    "core/v3-learning.mjs": "1e44c06e0880e3e60856ae2b0caa4862aadd36b067e8ac61e2edede5346052c9",
+    "core/v3-state.mjs": "a14fe30d1d433e7ff19816599f9b4b8833b967fdfa90d6e04e1edfa7be6af0c6",
     "index.html": "392f4668bd9086f515553399cc5f26fd8e1547a9d0b8ea8a8a635af3a3c81f40",
     "kana-coach.mjs": "3eebc5cb96869bc81d9346299b21834f1a7aed5ec4f51e2de940d72b63b0bfa3",
     "kana-lab.mjs": "e8795238a4740200eb9b42b80b86b403b50dfb4f2c4468ca2e37a477e94ab7fe",
     "kana-recall.mjs": "7f78d3f100f9d7781d576363f3d8ca9da899d6fc0ad2a1602a6bccc4c58b0563",
-    "kana-studio.mjs": "7c50fb0c511ff79d3b80b7a786203739d717d815d95ee506dfa85ae6b0bcc781",
-    "main.mjs": "00dbaf8d996d2108b6ee7f33fc4ed914bf69f1dbeda1dc4b1a309b5297775e38",
+    "kana-studio.mjs": "76a6782a99642e70651593aa93d290adbbb092f71a575f8fe08ffa0627a2e137",
+    "main.mjs": "4b06cd373a9c213ad10b008a6be647f888351dd841b9b6a8c6ff9a5e7e0efe25",
     "manifest.webmanifest": "665f46ac36c2b46959260fe9ef71e33b7bcef4bed924d37e771e1c4114025cfb",
     "styles.css": "3dcc2fe89bb0989d6a70315bfe0a5099fb3d622daafaddf72b87a1b91bcb4739",
     "ui/courses.mjs": "4a1e641aae1fce3aeb51f3b823558f235a5908bbd886c9d61958976e4cf176c7",
@@ -186,12 +186,12 @@
     "ui/shared.mjs": "d791eb8eea9ccc75d6a46f62c890907c0f01087016a954808b0582c299d44c03",
     "ui/study.mjs": "5dab5167656857e9c4c1732b704c23d15bcff430efccb217283b2505e54af705",
     "ui/support.mjs": "f0e901ebd013d347d96a67c184ade461aebdf94db7e618f0011b8f31fcac9360",
-    "ui/v3.mjs": "e3d1e1d48e197d22d6c205a3314a2881da1f73b62495cbe1219ae8fe89a269c7",
+    "ui/v3.mjs": "fd5c988a3d64acde7fe5335a191630f4e60d1e3eb1b1be8f6fe3bfe41ed07515",
     "ui/writing.mjs": "7cf8774598aa5d072b29ae12cbb08917c186bd7da3cb449d806078f316686991",
     "v2.css": "16a7170fa42a4b23f5b1ba6e63d0422ab5a054dbbe4bbb5106e9ad99e1740f70",
     "v2.mjs": "2ca059f455512795af7d9e328617ea75b1ffd24e67e5a7dbf77b9260832ac40c",
     "v3.css": "cf82faa5292b5de531ba3175c51327c266df6305ebb11dcc4988dba305bad80d",
-    "v3.mjs": "996f2c98b56902e8130c3a71bc1eb265d19e60fa1f247f2578beb1542ff3ce61"
+    "v3.mjs": "8825273d7a0e24ac519118f8efee6a39cc9e2126095a8de4f265aa0763878287"
   },
-  "bytes": 8154304
+  "bytes": 8155720
 }
