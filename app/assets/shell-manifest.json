@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "1bf0e77637884f323cd0b8245981ee454fbf6b35a5f24ad8a1b08a2ea26ae159",
+  "fingerprint": "b27244b2a3cddec782c04f15e39dda47dff37fb9cd51ed51c6e772c62ff47e39",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-v2.json",
@@ -17,6 +17,7 @@
     "content/concepts.mjs",
     "content/confusions.mjs",
     "content/deep-lessons.mjs",
+    "content/kana-coach.mjs",
     "content/kana-drills.mjs",
     "content/kana-memory.mjs",
     "content/kana.mjs",
@@ -47,6 +48,7 @@
     "core/daily-plan.mjs",
     "core/exam-progress.mjs",
     "core/exam.mjs",
+    "core/kana-coach.mjs",
     "core/learning.mjs",
     "core/offline.mjs",
     "core/quiz.mjs",
@@ -90,10 +92,11 @@
     "assets/stroke-codes.json": "ac02bf039674d73665605fd861329f72ecb7ab047b1e90eab1cd258b2835d49c",
     "assets/stroke-manifest.json": "56d791dc9f4d839172c0139008fe6ceb8085ea880700c93db2eb76b08d835221",
     "assets/strokes.json": "b25adc270368718b1fb627b66c32fe151ac706b7590ba04ba04411c5c265ff55",
-    "content/catalog.mjs": "332eb1683fcf298589cf6d3126354aca3c5ddcc8a145004663331e18e1c0322d",
+    "content/catalog.mjs": "04bf4497ba066392fb74472c22bd831e13eb7adbafaca3d051085cf4d8f1580a",
     "content/concepts.mjs": "524fa1d7f4536fba71324110a6064e7ce61d4e487ad27b9a779735cce0dc96ea",
     "content/confusions.mjs": "0af86c5d1a4a3167793eae0407e577e8976f12d057e325a5b5afdd47ec351fb9",
     "content/deep-lessons.mjs": "0e34001c017634098de731ce24a516aefba62a322eb4d890e7c241af8a77272f",
+    "content/kana-coach.mjs": "ebf6e9b0ef8acb9794026e5f7860970f759b430a1fa617d63e7b8aa9d33b7af1",
     "content/kana-drills.mjs": "4a180627136736eb6bf0394cbbddf867469d28f717b51005eb05e6c88316c61c",
     "content/kana-memory.mjs": "4726fe277561e1e7f619f7333d9e9a0d031c95850d1d0e97630c2cb774408abd",
     "content/kana.mjs": "724964f5ac33f8761028d1391c61b0478497aa65bc61d8edbe09fe15ff404a8a",
@@ -124,13 +127,14 @@
     "core/daily-plan.mjs": "68df1dab05c766853f940f324a52f2f0e065a0a197c3af109ddc3c99b38039e7",
     "core/exam-progress.mjs": "a818af00583eede753eaae05123061503ebb0fd06fbe5e806251a9504e5ef05a",
     "core/exam.mjs": "83cffdf8a9b93feea9dbf7fdf41ac00f231cefa8cc76a04b5d386844159e25c6",
-    "core/learning.mjs": "a61c824cf4df9a6004e5e4985b5d997b0415bc4cee1c9c26842d9b577543d1dc",
+    "core/kana-coach.mjs": "ed5d1a9c0b7fe128478fa9210616da695f1a5ba213722afbf3ffc357c897ceea",
+    "core/learning.mjs": "e3ec84763a531637b4bad0a083f62cb34beba9cde8cce89bd887b0c4ee930bec",
     "core/offline.mjs": "9915330023973e22b924a0c472786c068852be0ea1138d74d2d131a2ad37f57f",
     "core/quiz.mjs": "cb59f0ef0a22b6905bfd2aaeb1b87f0ebb7ed045fe13cf9ae3fcc9d6242129af",
     "core/storage.mjs": "f42811a3a8edd4341e5cda37cdd4562e03e2c7b9ce483c7758ae62e48fdf14ec",
     "core/study.mjs": "6c9bcef4ee6f468f6e06a517dc99b2b3672249dbeaaa71987f39a82a66e363ec",
-    "core/v3-learning.mjs": "4012396b564e9a929401d5876e6f5d55e5068ff17c2834b4bcac7159b556cf23",
-    "core/v3-state.mjs": "daa5d93ccb98f041072d393f572ca0f94c0356ef53d93545c6fa24e1dd879f93",
+    "core/v3-learning.mjs": "de65ea7225851e38d6e833faf92c7e07071f8f9e22dec7e91538ef05c3ca22a3",
+    "core/v3-state.mjs": "71c4ffb0eca697c89428a196d8dc4c1c23eeaf640db41a76b4bdabb977887633",
     "index.html": "392f4668bd9086f515553399cc5f26fd8e1547a9d0b8ea8a8a635af3a3c81f40",
     "main.mjs": "56f080c9bfce7fceb0a666dd611f6062523b23a6a7eaac05a2ce0b6b3b440e19",
     "manifest.webmanifest": "665f46ac36c2b46959260fe9ef71e33b7bcef4bed924d37e771e1c4114025cfb",
@@ -155,5 +159,5 @@
     "v3.css": "a4873ae0236b1a6fe527b670f91fe3c1b80c7707d57ab33e29af361ccb515d5f",
     "v3.mjs": "386409195bd29a1d2a6af26b735ca8b46fcdc8b2b318fbb49cb41a32563d7f88"
   },
-  "bytes": 8011397
+  "bytes": 8019066
 }

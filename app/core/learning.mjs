@@ -16,7 +16,7 @@ export function upgradeState(state){
  next.practiceHistory??=[];for(const p of [next.practice,...next.practiceHistory].filter(Boolean))p.hints??=[];
  next.reviews={};next.attempts.sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).forEach(a=>applyReview(next.reviews,a));return validateState(next);
 }
-function validateAttempt(a){requireValue(plain(a)&&safeId(a.id)&&safeId(a.item)&&dimensions.includes(a.dimension)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&validTime(a.time),'作答資料不正確');}
+function validateAttempt(a){if(a?.kanaConfusion!==undefined){const c=a.kanaConfusion;requireValue(plain(c)&&Object.keys(c).length===2&&safeId(c.target)&&safeId(c.chosen)&&c.target!==c.chosen&&!a.correct,'假名混淆紀錄不正確');}requireValue(plain(a)&&safeId(a.id)&&safeId(a.item)&&dimensions.includes(a.dimension)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&validTime(a.time),'作答資料不正確');}
 function applyReview(reviews,a){
  const key=`${a.item}:${a.dimension}`;
  const previous=reviews[key]||{item:a.item,dimension:a.dimension,correct:0,total:0,independent:0,step:0,due:a.time,lastAdvance:null,history:[]};

@@ -1,3 +1,4 @@
+import {coachQuestion} from './kana-coach.mjs';
 import {kana,kanaLessons,kanaPhonology} from './kana.mjs';
 import {lifeLessons as originalLife} from './life.mjs';
 import {additionalLifeLessons} from './life-expanded.mjs';
@@ -75,7 +76,7 @@ for(const target of kana)for(const dimension of ['recognition','listening']){
  legacyReviewQuestions.set(id,{id,reviewItem:target.id,kind:dimension==='listening'?'listen':'choice',dimension,prompt:dimension==='recognition'?`「${target.glyph}」的輔助讀音是？`:'先聽，再選出這個字。',transcript:target.glyph,options:choices.map(k=>dimension==='recognition'?k.reading:k.glyph),correct:0,explanation:`${target.glyph} 的輔助讀音是 ${target.reading}。`});
 }
 for(const unit of kanaPhonology)unit.questions.forEach((q,i)=>{const id=`${unit.lessonId}-p${i}`;legacyReviewQuestions.set(id,{id,kind:'choice',dimension:'language',prompt:q.prompt,options:q.choices,correct:q.choices.indexOf(q.answer),explanation:q.explanation});});
-export function resolveQuestion(id){return questionById.get(id)||legacyReviewQuestions.get(id)||wordQuestion(id);}
+export function resolveQuestion(id){return questionById.get(id)||legacyReviewQuestions.get(id)||coachQuestion(id)||wordQuestion(id);}
 const examQuestionIds=new Set(forms.flatMap(f=>f.sections.flatMap(s=>s.questions.map(q=>q.id))));
 // This old item has two plausible answers; retain its history, omit it from V3 evidence and routes.
 const unreliableQuestionIds=new Set(['N4-12-G2']);
