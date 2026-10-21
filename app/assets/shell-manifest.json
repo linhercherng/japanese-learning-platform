@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "3ffd4bbce77da3592a04ef9f6b53a540c6ed23ac165f1dfbce73b5c648e9c20d",
+  "fingerprint": "0f849cf74c67fe9c0b05b21ed752fa8c36831431ef7f6fec42e5d2439c617c4b",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-v2.json",
@@ -49,6 +49,8 @@
     "core/exam-progress.mjs",
     "core/exam.mjs",
     "core/kana-coach.mjs",
+    "core/kana-studio-state.mjs",
+    "core/kana-studio.mjs",
     "core/learning.mjs",
     "core/offline.mjs",
     "core/quiz.mjs",
@@ -130,13 +132,15 @@
     "core/exam-progress.mjs": "a818af00583eede753eaae05123061503ebb0fd06fbe5e806251a9504e5ef05a",
     "core/exam.mjs": "83cffdf8a9b93feea9dbf7fdf41ac00f231cefa8cc76a04b5d386844159e25c6",
     "core/kana-coach.mjs": "14800d4dc33ec27b9d8496b61f916a838994301fe4c2488fdc211f4c673d289a",
-    "core/learning.mjs": "e3ec84763a531637b4bad0a083f62cb34beba9cde8cce89bd887b0c4ee930bec",
+    "core/kana-studio-state.mjs": "0ac5b6615daf07a83b48e4b474d7004cff7b847397b007c34d7de577d9568b86",
+    "core/kana-studio.mjs": "4c8c2227134453aeba1e7834f0f9217e4c6d007a89db77e51661d4ee158bb1ce",
+    "core/learning.mjs": "456b6fb828f21fe9e601ed2008c27da8cee2696678354bfb86c897d28492149a",
     "core/offline.mjs": "9915330023973e22b924a0c472786c068852be0ea1138d74d2d131a2ad37f57f",
     "core/quiz.mjs": "cb59f0ef0a22b6905bfd2aaeb1b87f0ebb7ed045fe13cf9ae3fcc9d6242129af",
     "core/storage.mjs": "f42811a3a8edd4341e5cda37cdd4562e03e2c7b9ce483c7758ae62e48fdf14ec",
     "core/study.mjs": "6c9bcef4ee6f468f6e06a517dc99b2b3672249dbeaaa71987f39a82a66e363ec",
     "core/v3-learning.mjs": "de65ea7225851e38d6e833faf92c7e07071f8f9e22dec7e91538ef05c3ca22a3",
-    "core/v3-state.mjs": "cf045a158dd4a9d8111da543befd028c03b44adbf3d37c78054df4978b70c685",
+    "core/v3-state.mjs": "797be6548f3c35a0d05a2bad3820a42b8f9162d39e750773e961d01dd7da9960",
     "index.html": "392f4668bd9086f515553399cc5f26fd8e1547a9d0b8ea8a8a635af3a3c81f40",
     "kana-coach.mjs": "3eebc5cb96869bc81d9346299b21834f1a7aed5ec4f51e2de940d72b63b0bfa3",
     "main.mjs": "5a5d8a413e03abe769166518cdfc3c75a63c67f6f18d6d50d3545380cf8f0282",
@@ -163,5 +167,5 @@
     "v3.css": "08f14a738cdbf607d763e681d67c14d38907df812171babd4e267055ce4ad275",
     "v3.mjs": "386409195bd29a1d2a6af26b735ca8b46fcdc8b2b318fbb49cb41a32563d7f88"
   },
-  "bytes": 8036485
+  "bytes": 8043246
 }
