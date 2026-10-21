@@ -35,4 +35,9 @@ Computer Use讀取驗證瀏覽器時，因無法可靠辨識Windows目前網址�
 
 ## 發布紀錄
 
-待本輪CI與Pages成功後補入實際PR、commit、run與正式HTTPS逐檔結果。
+- [PR #14](https://github.com/linhercherng/japanese-learning-platform/pull/14)已合併，程式commit：f35e87b3a3e022605b8a42dd28fed825055d7fb7。
+- [Pages run 39587700491](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39587700491) build／deploy成功，CI再次通過206項測試、build、check與audit。
+- 2026-10-21 18:53台北，正式HTTPS 86/86 shell逐檔SHA-256、JavaScript MIME、SW版本一致；32個新增音檔＋6個既有音檔共38份HTTP檢查通過。
+- shell fingerprint：2cec2b9d1107f2040b684cb8ab7de52b40f98909ea8933638750f224ea16a2c2。
+- 正式入口：[練習工坊](https://linhercherng.github.io/japanese-learning-platform/#kana-studio)、[圖像提示退場](https://linhercherng.github.io/japanese-learning-platform/#kana-fade)、[聽音默寫](https://linhercherng.github.io/japanese-learning-platform/#kana-dictation)、[不同生活詞](https://linhercherng.github.io/japanese-learning-platform/#kana-words)。
+- 以上為部署與HTTP證據，不代表尚未完成的瀏覽器及手機觸控驗收已通過。
