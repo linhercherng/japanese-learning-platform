@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "799b60d7d52161b29b8d9a9ec24388dd5b5330d1596c06ce5a6fc052cb9ef493",
+  "fingerprint": "ae762a19739d7c57000310a62163f191f5f0e5664be76ec5920a1dffacc00550",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -151,7 +151,7 @@
     "core/exam.mjs": "83cffdf8a9b93feea9dbf7fdf41ac00f231cefa8cc76a04b5d386844159e25c6",
     "core/kana-coach.mjs": "14800d4dc33ec27b9d8496b61f916a838994301fe4c2488fdc211f4c673d289a",
     "core/kana-lab.mjs": "cc8ff15b4ded8257f1f6daf81dc034e65c664db0fbdfdf55855979aed3653224",
-    "core/kana-recall.mjs": "69bc6625144826f1df8d4e7f796d272f65c8699ee1455de4011eb852dd2dba38",
+    "core/kana-recall.mjs": "269146b018b1b572302b62c6503a34e8f3aae72492b987a81ba5879c19645933",
     "core/kana-studio-state.mjs": "a65cf0df21a460c993d8e0c729ecb1c581caf3040c3e77df9236e463e6c24426",
     "core/kana-studio.mjs": "67618c9eefacc9b0b385e5bcf6ac293fc3f24c59624c595321c9fd6cbdf4ef28",
     "core/learning.mjs": "d323148490299eb5375f5c6f572ec9405a6470807b18825a943b59e5fca218f3",
@@ -191,7 +191,7 @@
     "v2.css": "16a7170fa42a4b23f5b1ba6e63d0422ab5a054dbbe4bbb5106e9ad99e1740f70",
     "v2.mjs": "2ca059f455512795af7d9e328617ea75b1ffd24e67e5a7dbf77b9260832ac40c",
     "v3.css": "cf82faa5292b5de531ba3175c51327c266df6305ebb11dcc4988dba305bad80d",
-    "v3.mjs": "8825273d7a0e24ac519118f8efee6a39cc9e2126095a8de4f265aa0763878287"
+    "v3.mjs": "d2f5bda190888bcf35d69a5a75e33593c29e1b84cff73e1de3c07406a03e37ea"
   },
-  "bytes": 8155720
+  "bytes": 8156283
 }

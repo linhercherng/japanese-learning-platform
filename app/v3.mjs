@@ -49,8 +49,8 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  function afterRender(name,sid){
   if(name!=='v3-practice')return;const session=ctx().state.v3.sessions.find(s=>s.id===sid);if(!session||session.completedAt)return;
   const entry=session.queue[session.cursor],q=resolve(entry?.questionId),answer=entry?.repeat?session.corrections[session.cursor]:session.answers[entry?.questionId];
-  if(!answer||!q||!kana.some(k=>k.id===q.reviewItem))return;
-  const time=new Date(Math.max(Date.parse(now()),Date.parse(answer.time)+1)).toISOString();
+  if(!q||!kana.some(k=>k.id===q.reviewItem)||!answer&&!session.hints.includes(q.id))return;
+  const time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString();
   update(s=>expose(s,q,time)).catch(error=>toast(error.message));
  }
  async function submit(value){
