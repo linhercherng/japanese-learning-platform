@@ -44,6 +44,8 @@ export function answerV3Session(state,{sessionId,question,value,eventId,time,var
  requireValue(validAnswerValue(value),'答案格式不正確');let next=structuredClone(state),s=active(next,sessionId),entry=s.queue[s.cursor];
  requireValue(entry?.questionId===question.id,'畫面已切換，請回答目前題目');
  if(entry.repeat?s.corrections[s.cursor]:s.answers[question.id])return state;
+ const exposure=next.v3.kanaHints?.[question.reviewItem]?.lastHintAt;
+ if(s.source==='kana-week'&&exposure&&Date.parse(exposure)>=Date.parse(s.createdAt)&&Date.parse(exposure)<=Date.parse(time)&&!s.hints.includes(question.id))s.hints.push(question.id);
  const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id),time};
  if(entry.repeat)s.corrections[s.cursor]=a;
  else{
