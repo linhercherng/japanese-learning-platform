@@ -1,3 +1,4 @@
+import {memoryFor} from '../content/kana-memory.mjs';
 import {kana} from '../content/kana.mjs';
 import {coachQuestion} from '../content/kana-coach.mjs';
 import {studyDay} from './v3-state.mjs';
@@ -24,14 +25,16 @@ export function startWeekCheck(state,{id,time}){
  const ids=weekSchedule(state,time).questions.map(q=>q.id);return ids.length?beginV3Session(state,ids,{id,source:'kana-week',reference:studyDay(time),time}):state;
 }
 export function weekEvidence(state,session){
+ const pairCues=state.v3.sessions.flatMap(s=>Object.entries(s.answers).filter(([id])=>id.startsWith('kc:')&&id.endsWith(':pair')).flatMap(([id,a])=>{const q=coachQuestion(id);return q?[{item:memoryFor(q.reviewItem).partnerId,time:Date.parse(a.time)}]:[];}));
  const histories=history(state,session.updatedAt),result={total:0,correct:0,hinted:0,excluded:0};
  for(const [id,a] of Object.entries(session.answers)){
   const q=coachQuestion(id);if(!q){result.excluded++;continue;}
   if(a.hinted){result.hinted++;result.excluded++;continue;}
   const list=histories.get(q.reviewItem+':'+q.dimension)||[],before=list.filter(h=>Date.parse(h.time)<Date.parse(session.createdAt)),last=before.at(-1);
-  const between=list.some(h=>Date.parse(h.time)>=Date.parse(session.createdAt)&&Date.parse(h.time)<Date.parse(a.time)),sameTime=list.filter(h=>Date.parse(h.time)===Date.parse(a.time));
+  const cardHistory=state.attempts.filter(h=>h.item===q.reviewItem),between=cardHistory.some(h=>Date.parse(h.time)>=Date.parse(session.createdAt)&&Date.parse(h.time)<Date.parse(a.time)),sameTime=cardHistory.filter(h=>Date.parse(h.time)===Date.parse(a.time));
   const hint=state.v3.kanaHints?.[q.reviewItem]?.lastHintAt,recentBefore=hint&&Date.parse(hint)<Date.parse(session.createdAt)&&Date.parse(hint)<=Date.parse(a.time)&&ordinal(a.time)-ordinal(hint)<7;
-  if(!last||ordinal(a.time)-ordinal(last.time)<7||recentBefore||between||sameTime.length!==1){result.excluded++;continue;}
+  const priorPair=pairCues.some(c=>c.item===q.reviewItem&&c.time>=Date.parse(session.createdAt)&&c.time<Date.parse(a.time));
+  if(!last||ordinal(a.time)-ordinal(last.time)<7||recentBefore||between||priorPair||sameTime.length!==1){result.excluded++;continue;}
   result.total++;if(a.hinted)result.hinted++;if(a.correct&&!a.hinted)result.correct++;
  }return result;
 }
