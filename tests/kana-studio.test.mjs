@@ -37,3 +37,11 @@ test('merging a newer unlocked branch cannot replace a locked original or erase 
  const joined=mergeStates(locked,branch);assert.equal(readDictation(joined,item).meta.stage,'locked');assert.equal(readDictation(joined,item).meta.hinted,true);assert.deepEqual(readDictation(joined,item).points,points);
  assert.throws(()=>mergeStates(base,startDictation(initialState(),{item,id:'other',time:later})),/不同.*默寫/);
 });
+
+test('completed dictation cannot import a hinted branch as an unhinted first answer',()=>{
+ let base=startDictation(initialState(),{item,id:'one',time});base=updateDictationPoints(base,item,points,time);
+ const locked=lockDictation(base,item,time),saved=finishDictation(locked,{item,taskId:'one',shape:true,order:true,confirmed:true,time});
+ assert.throws(()=>mergeStates(saved,revealDictationHint(base,item,later)),/提示.*衝突/);
+ assert.throws(()=>mergeStates(revealDictationHint(base,item,later),saved),/提示.*衝突/);
+ assert(!mergeStates(saved,locked).drafts[dictationKey(item)]);
+});

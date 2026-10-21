@@ -27,3 +27,10 @@ export function mergeDictationDraft(key,a,b){
  const chosen=x.stage==='locked'?a:y.stage==='locked'?b:b.time>a.time?b:a,meta=parseDictation(key,chosen);
  return {...structuredClone(chosen),text:JSON.stringify({...meta,hinted:x.hinted||y.hinted}),time:a.time>b.time?a.time:b.time};
 }
+
+export function reconcileDictationDrafts(state){
+ for(const [key,draft] of Object.entries(state.drafts)){if(!key.startsWith('write:KS-'))continue;const meta=parseDictation(key,draft),answer=state.attempts.find(a=>a.id==='ksw-'+meta.id);if(!answer)continue;
+  requireValue(answer.item===meta.item&&answer.dimension==='writing'&&answer.hinted===meta.hinted,'默寫首答與提示紀錄衝突，未匯入。');
+  const artifact=state.artifacts.find(a=>a.id==='ks-'+meta.id);requireValue(artifact&&artifact.item===meta.item&&JSON.stringify(artifact.points)===JSON.stringify(draft.points),'默寫原跡與作品衝突，未匯入。');delete state.drafts[key];
+ }return state;
+}
