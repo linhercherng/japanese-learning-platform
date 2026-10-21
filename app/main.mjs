@@ -1,3 +1,4 @@
+import {createKanaLab} from './kana-lab.mjs';
 import {createKanaStudio} from './kana-studio.mjs';
 import {createKanaCoach} from './kana-coach.mjs';
 import {confusedKana} from './content/kana-coach.mjs';
@@ -31,6 +32,7 @@ const v2=createV2({getState:()=>unsaved||state,getContext:context,update,toast,r
 const v3=createV3({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaCoach=createKanaCoach({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id});
 const kanaStudio=createKanaStudio({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+const kanaLab=createKanaLab({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,audioIndex,due:dueReviews(state),...v2.contextExtras()};}
 function update(fn){
  pendingWrites++;status.textContent='保存中…';
@@ -60,6 +62,7 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(v3.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaCoach.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaStudio.views))views[view]=()=>renderer(param);
+ for(const [view,renderer] of Object.entries(kanaLab.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
  const navigation=navigationContext(ctx,name,param);
  locationContext.innerHTML=navigationView(navigation);
@@ -73,7 +76,7 @@ function render(focus=true){
   const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
- kanaStudio.afterRender(name,param);
+ kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
 }
 function phonologyQuestions(lessonId){return (kanaPhonology.find(p=>p.lessonId===lessonId)?.questions||[]).map((q,i)=>({item:`${lessonId}-p${i}`,dimension:'language',prompt:q.prompt,options:q.choices.map((label,j)=>({value:String(j),label})),correct:q.choices.indexOf(q.answer),explanation:q.explanation}));}
@@ -134,10 +137,10 @@ async function saveLife(lessonId){
 }
 function exportFile(){const blob=new Blob([exportBackup(context().state)],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`hiyori-backup-${new Date().toISOString().slice(0,10)}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('備份已匯出，包含進度、草稿與作品。');}
 function validateCatalog(s){
- const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...kana.map(k=>`KS-${k.id}`),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
+ const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
  if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!draftIds.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
  v2.validateCatalog(s);
- v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);
+ v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);kanaLab.validateCatalog(s);
 }
 async function importFile(file){
  if(!file)return;if(file.size>12*1024*1024){toast('備份超過 12 MB，未匯入。');return;}

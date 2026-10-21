@@ -8,10 +8,15 @@ const validItem=item=>requireValue(kana.some(k=>k.id===item),'請選擇有效的
 const changed=state=>{state.revision++;return validateState(state);};
 export function readDictation(state,item){const key=dictationKey(item),draft=state.drafts[key];return draft?{key,meta:parseDictation(key,draft),points:draft.points}:null;}
 function store(state,item,meta,points,time){state.drafts[dictationKey(item)]={text:JSON.stringify(meta),points:structuredClone(points),time};return changed(state);}
-export function setHintStage(state,item,stage,time){
+export function setHintStage(state,item,stage,time,exposed=stage<3){
  validItem(item);requireValue(Number.isInteger(stage)&&stage>=0&&stage<=3,'提示階段不正確。');const next=structuredClone(state),old=next.v3.kanaHints?.[item];
- next.v3.kanaHints??={};next.v3.kanaHints[item]={stage,updatedAt:time,lastHintAt:stage<3?time:old?.lastHintAt||null};
- const active=readDictation(next,item);if(stage<3&&active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}
+ next.v3.kanaHints??={};next.v3.kanaHints[item]={stage,updatedAt:time,lastHintAt:exposed?time:old?.lastHintAt||null};
+ const active=readDictation(next,item);if(exposed&&active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}
+ return changed(next);
+}
+export function recordKanaExposure(state,items,time){
+ const ids=[...new Set(items)];if(!ids.length)return state;ids.forEach(validItem);const next=structuredClone(state);next.v3.kanaHints??={};
+ for(const item of ids){const old=next.v3.kanaHints[item];next.v3.kanaHints[item]={stage:old?.stage??0,updatedAt:time,lastHintAt:time};const active=readDictation(next,item);if(active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}}
  return changed(next);
 }
 export function startDictation(state,{item,id,time}){
@@ -38,6 +43,6 @@ export function finishDictation(state,{item,taskId,shape,order,confirmed,time}){
  if(state.attempts.some(a=>a.id===`ksw-${taskId}`))return state;
  const active=readDictation(state,item);requireValue(active?.meta.id===taskId&&active.meta.stage==='locked','先鎖定本輪原字跡，再對照自評。');
  requireValue(confirmed===true&&typeof shape==='boolean'&&typeof order==='boolean','請先對照範字，確認完成自查。');
- let next=saveArtifact(state,{id:`ks-${taskId}`,item,kind:'handwriting',points:active.points,text:`聽音默寫自評：字形${shape?'符合':'需再對照'}、筆順${order?'符合':'需再對照'}；${active.meta.hinted?'本輪或同日圖像練習使用過提示':'本輪未顯示提示'}。非自動辨識。`,time});
+ let next=saveArtifact(state,{id:`ks-${taskId}`,item,kind:'handwriting',points:active.points,text:`聽音默寫自評：字形${shape?'符合':'需再對照'}、筆順${order?'符合':'需再對照'}；${active.meta.hinted?'本輪或同日使用過記憶提示':'本輪未顯示提示'}。非自動辨識。`,time});
  next=recordAnswer(next,{id:`ksw-${taskId}`,item,dimension:'writing',correct:shape&&order,hinted:active.meta.hinted,time});delete next.drafts[active.key];return changed(next);
 }

@@ -1,0 +1,26 @@
+import {kana} from '../content/kana.mjs';
+import {words} from '../content/catalog.mjs';
+import {memoryFor} from '../content/kana-memory.mjs';
+import {buildExamples,splitKanaBlocks,miniQuestions} from '../content/kana-lab.mjs';
+import {selectMiniCards,pendingMini,noteKey} from '../core/kana-lab.mjs';
+import {studioSelectView} from './kana-studio.mjs';
+import {escapeHtml as e,heading,back,primary,note,audioButton} from './shared.mjs';
+const groups={basic:'基本字',voiced:'濁音',semivoiced:'半濁音',contracted:'拗音',all:'全部分類'};
+export function miniFilter(session){const f=session.kanaMini??={script:'hira',group:'basic'};return {script:['hira','kata'].includes(f.script)?f.script:'hira',group:Object.hasOwn(groups,f.group)?f.group:'basic'};}
+export function labLinks(item){return `<nav class="ks-links" aria-label="第三批記憶練習"><a href="#kana-mini">三字小循環</a><a href="#kana-build/${e(item)}">生活詞拼拼看</a><a href="#kana-notes/${e(item)}">我的記憶線索</a></nav>`;}
+export function miniView(ctx,time){
+ const f=miniFilter(ctx.session),pending=pendingMini(ctx.state,f),selected=selectMiniCards(ctx.state,{...f,time}),questions=miniQuestions(selected.map(k=>k.id),words);
+ const saved=ctx.state.v3.sessions.filter(s=>s.source==='kana-mini'&&!s.completedAt&&s.id!==pending?.id).slice(-4);
+ return `${back('練習工坊','kana-studio')}${heading('一次三字，少一點更好記。','先認字、再聽辨，最後把聲音拼成生活詞。')}<div class="kc-filters"><label>字形<select data-lab-filter="script"><option value="hira" ${f.script==='hira'?'selected':''}>平假名</option><option value="kata" ${f.script==='kata'?'selected':''}>片假名</option></select></label><label>範圍<select data-lab-filter="group">${Object.entries(groups).map(([id,title])=>`<option value="${id}" ${f.group===id?'selected':''}>${title}</option>`).join('')}</select></label></div>${pending?`<section class="v3-section"><h2>這輪已經開始，接著想就好。</h2><p>題目與首次答案已固定；此頁先收起範字和線索。</p>${primary('接續這輪三字回想','v3-practice/'+pending.id)}</section>`:`<p>這輪3字、${questions.length}題。最多先照顧2個需複習的字，再留1個位置給新字；不足時補其他字。</p><div class="kl-cards">${selected.map(k=>`<section class="kl-card"><div class="row-title"><strong class="jp" lang="ja">${e(k.glyph)}</strong><span class="tag">${e(k.reason)}</span>${audioButton(k.glyph)}</div><p>${e(memoryFor(k.id).tip)}</p>${ctx.state.v3.kanaNotes?.[k.id]?.text?`<p class="memory-note">我的線索：${e(ctx.state.v3.kanaNotes[k.id].text)}</p>`:''}<a class="text-button" href="#kana-notes/${k.id}">寫自己的線索</a></section>`).join('')}</div><button class="primary lesson-footer" data-lab-action="mini-start">收起範字，開始 ${questions.length} 題小循環</button>`}${saved.length?`<section class="v3-section"><h2>其他未完成的小循環</h2>${saved.map(s=>`<a class="v3-line" href="#v3-practice/${e(s.id)}">接續已固定的${s.questionIds.length}題</a>`).join('')}</section>`:''}${note('這是練習，不是長期熟練判定。想停時可離開，明天再用「隔天檢查」回想。')}${primary('看看隔天檢查','kana-check')}`;
+}
+export function notesView(ctx,item){
+ if(!item){const saved=Object.entries(ctx.state.v3.kanaNotes||{}).filter(([,n])=>n.text);return studioSelectView(ctx,'kana-notes','我的記憶線索')+`<section class="v3-section"><h2>已保存 ${saved.length} 個自己的線索</h2>${saved.map(([id,n])=>`<a class="v3-line" href="#kana-notes/${id}"><strong class="jp">${e(kana.find(k=>k.id===id)?.glyph)}</strong><span>${e(n.text)}</span></a>`).join('')||'<p>先挑一個字，用自己的話記下一處差異。</p>'}</section>`;}
+ const k=kana.find(k=>k.id===item);if(!k)return `${heading('這張字卡無法開啟。','請重新選字。')}${primary('選擇字卡','kana-notes')}`;
+ const draft=ctx.state.drafts[noteKey(item)],text=draft?.text??ctx.state.v3.kanaNotes?.[item]?.text??'';
+ return `${back('我的線索目錄','kana-notes')}${heading('換成自己的話，更容易想起來。','只記一處差異，不必背整段解說。')}<div class="kl-note-target"><span class="jp" lang="ja">${e(k.glyph)}</span>${audioButton(k.glyph)}</div>${note(memoryFor(item).tip)}<label for="kana-note">我想記住的線索（最多160字）</label><textarea id="kana-note" data-lab-note="${item}" maxlength="160" aria-describedby="kana-note-help">${e(text)}</textarea><p id="kana-note-help">可以寫像什麼、差在哪裡。這是個人聯想，不是字源或發音規則；資料只存本機，隨JSON備份帶走。看這頁會記錄提示曝光。</p><div class="button-row"><button class="secondary" data-lab-action="clear-note" data-lab-item="${item}">清空草稿</button><button class="primary" data-lab-action="save-note" data-lab-item="${item}">保存記憶線索</button></div><p class="review-explainer">${draft?'有尚未按保存的草稿。':'已保存的線索會在使用提示後幫你回想。'}空白保存會清除已存線索；既有作答與作品保留。</p>${labLinks(item)}`;
+}
+export function buildView(ctx,item){
+ if(!item)return studioSelectView(ctx,'kana-build','生活詞拼拼看');const k=kana.find(k=>k.id===item);if(!k)return `${heading('這張字卡無法開啟。','請重新選字。')}${primary('選擇字卡','kana-build')}`;
+ const list=buildExamples(item,words),pending=ctx.state.v3.sessions.find(s=>s.source==='kana-build'&&s.reference===item&&!s.completedAt);
+ return `${back('練習工坊','kana-studio')}${heading('聽一個詞，親手拼回來。','先聽詞音、看意思，再點字塊；點已選字塊可退回。')}<p class="ks-target jp" lang="ja">${e(k.glyph)}</p>${list.length?`${list.map(w=>`<section class="v3-section"><h2>${e(w.zh)}</h2><p>${splitKanaBlocks(w.practice).length}個字塊 · ${k.script==='hira'?'練平假名讀音':'練實際片假名詞形'}</p>${audioButton(w.audio)}</section>`).join('')}<button class="primary" data-lab-action="build-start" data-lab-item="${item}">${pending?'接續':'開始'} ${list.length} 詞拼字</button>`:`<section class="v3-section"><h2>這張卡目前沒有可用的自然詞。</h2><p>不把練習用轉寫當常用詞；可以先用另一套字形練完整詞音。</p>${primary('看同音平假名詞例','kana-build/'+memoryFor(item).partnerId)}</section>`}${note('小字和前字合成字塊；字塊不等同發音拍數。完整詞形在提交後才出現，當次首答和提示各自保留。')}${labLinks(item)}`;
+}

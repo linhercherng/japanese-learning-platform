@@ -1,3 +1,4 @@
+import {kana} from '../content/kana.mjs';
 import {kanaMemoryMap} from './kana-coach.mjs';
 import {memoryFor} from '../content/kana-memory.mjs';
 import {validateState} from './learning.mjs';
@@ -14,3 +15,6 @@ export function selectMiniCards(state,{script='hira',group='basic',time=new Date
  const review=pool.filter(weak),fresh=pool.filter(unseen),selected=review.slice(0,2);for(const k of [...fresh,...review.slice(2),...pool])if(selected.length<3&&!selected.some(x=>x.id===k.id))selected.push(k);
  return selected.map(k=>({id:k.id,glyph:k.glyph,script:k.script,reason:weak(k)?'需要再回想':unseen(k)?'尚未練過':'溫和複習'}));
 }
+
+export function storeNoteDraft(state,item,text,time){const next=structuredClone(state);next.drafts[noteKey(item)]={text,points:[],time};next.revision++;return validateState(next);}
+export function pendingMini(state,{script='hira',group='basic'}={}){return [...state.v3.sessions].reverse().find(s=>s.source==='kana-mini'&&!s.completedAt&&s.reference.split(':').every(id=>{const k=kana.find(k=>k.id===id);return k&&k.script===script&&(group==='all'||memoryFor(id).group===group);}));}
