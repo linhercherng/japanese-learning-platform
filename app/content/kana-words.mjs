@@ -55,3 +55,5 @@ export function resolveKanaWordQuestion(id,registry){
  const ex=example(k,w);return {id,reviewItem:item,unitId:k.group==='basic'?'K01':'K14',level:'K',kind:'cloze',dimension:'language',audio:ex.audio,prompt:`${ex.practice.replaceAll(k.glyph,'＿＿')}（${w.zh}）：填入缺少的${k.script==='hira'?'平':'片'}假名；多個空格填同一組一次。`,accepted:[k.glyph],explanation:`${w.jp}（${w.reading}）：${w.zh}。${ex.label}。完整練習詞形：${ex.practice}。`};
 }
 export function validWordReference(item,ids,registry){return Array.isArray(ids)&&ids.length>0&&ids.length<=3&&new Set(ids).size===ids.length&&ids.every(id=>resolveKanaWordQuestion(id,registry)?.reviewItem===item);}
+
+export function kanaWordExample(item,wordId,registry){const k=kana.find(k=>k.id===item),w=pool(registry).find(w=>w.id===wordId);return k&&w&&usable(k,w)?example(k,w):null;}
