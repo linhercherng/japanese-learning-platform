@@ -4,7 +4,7 @@ import {memoryFor} from './kana-memory.mjs';
 const byId=new Map(kana.map(k=>[k.id,k])),byGlyph=new Map(kana.map(k=>[k.glyph,k]));
 const drills=new Map(kanaDrills.map(q=>[`${q.reviewItem}:${q.mode}`,q]));
 const sound=k=>k.reading==='wo'?'o':k.reading;
-export const coachSources=['kana-check','kana-confusion'];
+export const coachSources=['kana-check','kana-confusion','kana-map'];
 export function confusedKana(question,value){
  if(!['choice','listen'].includes(question.kind)||!Number.isInteger(value)||value===question.correct)return null;
  const target=byGlyph.get(question.options?.[question.correct]),chosen=byGlyph.get(question.options?.[value]);
@@ -33,6 +33,7 @@ export function confusionQuestions(reference){
 }
 export function validCoachReference(source,reference,questionIds){
  if(!Array.isArray(questionIds)||!questionIds.length||new Set(questionIds).size!==questionIds.length)return false;
+ if(source==='kana-map')return byId.has(reference)&&questionIds.length<=2&&questionIds.every(id=>id.startsWith('kc:check:')&&coachQuestion(id)?.reviewItem===reference);
  if(source==='kana-confusion'){
   const allowed=new Set(confusionQuestions(reference).map(q=>q.id));
   return questionIds.length<=6&&questionIds.every(id=>allowed.has(id));

@@ -4,6 +4,7 @@ import {initialState,recordAnswer,exportBackup,parseBackup,mergeStates} from '..
 import {beginV3Session,answerV3Session,nextV3Question} from '../app/core/v3-learning.mjs';
 import {kanaMemoryMap,kanaConfusions,nextDayCandidates,startKanaCheck,checkEvidence} from '../app/core/kana-coach.mjs';
 import {coachQuestion,confusedKana,confusionQuestions,validCoachReference} from '../app/content/kana-coach.mjs';
+import {kana} from '../app/content/kana.mjs';
 const yesterday='2026-10-20T02:00:00.000Z',today='2026-10-21T02:00:00.000Z';
 const add=(s,{id=String(s.attempts.length+1),item='h-306c',dimension='recognition',correct=true,hinted=false,time=yesterday,...rest}={})=>recordAnswer(s,{id,item,dimension,correct,hinted,time,...rest});
 
@@ -51,6 +52,21 @@ test('actual first-answer confusions survive backup, merge and removal of comple
  assert.throws(()=>add(initialState(),{kanaConfusion:{target:'h-306c',chosen:'h-306c'}}));
 });
 test('wrong-without-choice history is not treated as a known confused pair',()=>{assert.equal(kanaConfusions(add(initialState(),{correct:false})).length,0);});
+test('a hinted or wrong daily first answer is not relabelled independent after a same-day retry',()=>{
+ let s=add(initialState(),{hinted:true});s=add(s,{time:'2026-10-20T03:00:00.000Z'});
+ const r=kanaMemoryMap(s,today).find(r=>r.id==='h-306c');assert.equal(r.recognition.independentDays,0);assert.equal(r.recognition.label,'需要複習');
+});
+test('pair confusion records the actual answer script and does not double count its retained session',()=>{
+ const q=coachQuestion('kc:h-306c:h-3081:pair');assert.deepEqual(confusedKana(q,q.options.indexOf('メ')),{target:'k-30cc',chosen:'k-30e1'});
+ let s=beginV3Session(initialState(),[q.id],{id:'pair-one',source:'kana-confusion',reference:'h-306c:h-3081',time:yesterday});
+ s=answerV3Session(s,{sessionId:'pair-one',question:q,value:q.options.indexOf('メ'),eventId:'pair-error',time:yesterday});assert.equal(kanaConfusions(s)[0].count,1);
+});
+test('check caps at ten and both daily results and backup merges cannot create a second check that date',()=>{
+ let s=initialState();for(const k of kana.slice(0,12))s=add(s,{item:k.id});assert.equal(nextDayCandidates(s,today).length,10);
+ const a=startKanaCheck(s,{id:'branch-a',time:today}),b=startKanaCheck(s,{id:'branch-b',time:today});assert.throws(()=>mergeStates(a,b),/同日隔天檢查/);
+ let one=startKanaCheck(add(initialState()),{id:'one',time:today});const q=coachQuestion(one.v3.sessions[0].questionIds[0]);
+ one=answerV3Session(one,{sessionId:'one',question:q,value:q.correct,eventId:'one-answer',time:today});one=nextV3Question(one,'one',today);assert.deepEqual(startKanaCheck(one,{id:'again',time:today}),one);
+});
 test('check evidence counts only today first answers after earlier learning, not a later retry or hinted success',()=>{
  const q=coachQuestion('kc:check:h-306c:pair');let s=startKanaCheck(add(initialState()),{id:'check',time:today});
  s=answerV3Session(s,{sessionId:'check',question:q,value:q.correct,eventId:'check-answer',time:today});

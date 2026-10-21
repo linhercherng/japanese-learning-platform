@@ -11,12 +11,13 @@ function histories(state,time){
 function ability(list=[],dimension){
  const first=new Map();for(const a of list)if(!first.has(studyDay(a.time)))first.set(studyDay(a.time),a);
  const independentDays=[...first.values()].filter(a=>a.correct&&!a.hinted).length,last=list.at(-1);
- const weak=last&&(!last.correct||last.hinted);
+ const latestFirst=[...first.values()].at(-1);
+ const weak=last&&(!last.correct||last.hinted||!latestFirst.correct||latestFirst.hinted);
  const label=dimension==='writing'?(last?(weak?'自評需再對照':'已有手寫自評'):'未留下自評'):!last?'未練習':weak?'需要複習':independentDays>=2?'已有跨日回想':'已獨立答對';
  return {label,total:list.length,days:first.size,independentDays,weak:Boolean(weak),lastTime:last?.time||null};
 }
 export function kanaMemoryMap(state,time=new Date().toISOString()){
- const map=histories(state,time);return kana.map(k=>({...k,...Object.fromEntries(dimensions.map(d=>[d,ability(map.get(`${k.id}:${d}`),d)]))}));
+ const map=histories(state,time);return kana.map(k=>({...k,...Object.fromEntries(dimensions.map(d=>[d,{...ability(map.get(`${k.id}:${d}`),d),due:Boolean(state.reviews[`${k.id}:${d}`]&&Date.parse(state.reviews[`${k.id}:${d}`].due)<=Date.parse(time))}]))}));
 }
 export function kanaConfusions(state){
  const events=new Map();

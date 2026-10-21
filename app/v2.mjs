@@ -1,3 +1,4 @@
+import {confusedKana} from './content/kana-coach.mjs';
 import {topics,allUnits,units,scenarios,lifeLessons,unitById,unitQuestions,completionKey,words,forms,allWritingItems,resolveQuestion,reviewQuestions,practicePool,grammarItems,kanjiItems} from './content/catalog.mjs';
 import {createPractice,answerPractice,hintPractice,presentationOrder} from './core/study.mjs';
 import {recordAnswer,saveArtifact,exportBackup,organizeCompletedPractice} from './core/learning.mjs';
@@ -31,7 +32,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(location.hash==='#exam-session'){
    await update(s=>({...s,activeExam:answerExam(s.activeExam,forms.find(f=>f.id===s.activeExam.formId),q.id,value,now()),revision:s.revision+1}));render(false);return;
   }
-  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const nextPractice=answerPractice(p,q,value,{time:now()});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time});next.practice=nextPractice;return next;});render(false);
+  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const nextPractice=answerPractice(p,q,value,{time:now()});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
  }
  async function nextExamSection({submit=false,abandon=false}={}){
   const exam=state().activeExam;if(!exam)return;
