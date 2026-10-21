@@ -1,4 +1,4 @@
-import {validateHintRecords,mergeHintRecords} from './kana-studio-state.mjs';
+import {validateHintRecords,mergeHintRecords,validateKanaNotes,mergeKanaNotes} from './kana-studio-state.mjs';
 import {validAnswerValue} from './study.mjs';
 export const learningGoals=['K','L','N5','N4','N3','N2'];
 export const studyDay=time=>new Date(time).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
@@ -36,7 +36,7 @@ export function validateDailyPlan(p){
  requireValue(time(p.createdAt)&&time(p.updatedAt));return p;
 }
 export function validateV3(v,artifacts=[]){
- shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[])]);if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);requireValue(learningGoals.includes(v.goal));
+ shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
  requireValue(Array.isArray(v.dailyPlans)&&v.dailyPlans.length<=60&&new Set(v.dailyPlans.map(p=>p.id)).size===v.dailyPlans.length);
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
@@ -79,5 +79,6 @@ export function mergeV3(a,b,{blank=false,artifacts=[]}={}){
  for(const [id,steps] of Object.entries(b.lessonSteps))next.lessonSteps[id]={...steps,...next.lessonSteps[id]};
  for(const [child,parent] of Object.entries(b.artifactParents)){if(next.artifactParents[child])requireValue(next.artifactParents[child]===parent,'作品修訂分支衝突，未匯入');next.artifactParents[child]=parent;}
  if(a.kanaHints||b.kanaHints)next.kanaHints=mergeHintRecords(a.kanaHints,b.kanaHints);
+ if(a.kanaNotes||b.kanaNotes)next.kanaNotes=mergeKanaNotes(a.kanaNotes,b.kanaNotes);
  return validateV3(next,artifacts);
 }

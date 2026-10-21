@@ -1,4 +1,4 @@
-import {validateStudioDraft,mergeDictationDraft,reconcileDictationDrafts} from './kana-studio-state.mjs';
+import {validateStudioDraft,mergeDictationDraft,reconcileDictationDrafts,mergeNoteDraft,reconcileNoteDrafts} from './kana-studio-state.mjs';
 /** Pure learning state. Recognition, listening and self-rated writing remain separate. */
 import {validatePractice} from './study.mjs';
 import {validateExamSession} from './exam.mjs';
@@ -106,7 +106,7 @@ export function mergeStates(current,incoming){
  const artifacts=new Map(next.artifacts.map(a=>[a.id,a]));
  for(const a of incoming.artifacts){if(!artifacts.has(a.id))artifacts.set(a.id,a);else requireValue(JSON.stringify(artifacts.get(a.id))===JSON.stringify(a),'作品 ID 衝突，未匯入');}
  next.artifacts=[...artifacts.values()];
- for(const [id,d] of Object.entries(incoming.drafts)){if(id.startsWith('write:KS-')&&next.drafts[id])next.drafts[id]=mergeDictationDraft(id,next.drafts[id],d);else if(!next.drafts[id]||d.time>next.drafts[id].time)next.drafts[id]=d;}
+ for(const [id,d] of Object.entries(incoming.drafts)){if(id.startsWith('write:KS-')&&next.drafts[id])next.drafts[id]=mergeDictationDraft(id,next.drafts[id],d);else if(id.startsWith('text:KN-')&&next.drafts[id])next.drafts[id]=mergeNoteDraft(next.drafts[id],d);else if(!next.drafts[id]||d.time>next.drafts[id].time)next.drafts[id]=d;}
  reconcileDictationDrafts(next);
  next.bookmarks=[...new Set([...next.bookmarks,...incoming.bookmarks])];
  const exams=new Map(next.examAttempts.map(a=>[a.id,a]));
@@ -136,6 +136,7 @@ export function mergeStates(current,incoming){
  const terminal=next.examAttempts.find(a=>a.id===next.activeExam?.id);
  if(terminal){for(const [qid,a] of Object.entries(next.activeExam.answers))requireValue(JSON.stringify(terminal.answers[qid])===JSON.stringify(a),'完成與續考答案衝突，未匯入');next.activeExam=null;}
  next.v3=mergeV3(current.v3,incoming.v3,{blank,artifacts:next.artifacts});
+ reconcileNoteDrafts(next);
  if(JSON.stringify({...next,revision:0})!==JSON.stringify({...current,revision:0}))next.revision=Math.max(current.revision,incoming.revision)+1;
  return validateState(next);
 }
