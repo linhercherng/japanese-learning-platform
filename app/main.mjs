@@ -79,7 +79,7 @@ function render(focus=true){
   const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
- kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);
+ kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);v3.afterRender(name,param);
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
 }
 function phonologyQuestions(lessonId){return (kanaPhonology.find(p=>p.lessonId===lessonId)?.questions||[]).map((q,i)=>({item:`${lessonId}-p${i}`,dimension:'language',prompt:q.prompt,options:q.choices.map((label,j)=>({value:String(j),label})),correct:q.choices.indexOf(q.answer),explanation:q.explanation}));}

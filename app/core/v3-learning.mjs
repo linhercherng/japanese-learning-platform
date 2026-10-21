@@ -1,7 +1,7 @@
 import {confusedKana} from '../content/kana-coach.mjs';
 import {recordAnswer,saveArtifact,validateState} from './learning.mjs';
 import {gradeQuestion,validAnswerValue} from './study.mjs';
-import {validateDailyPlan,validateSession,learningGoals} from './v3-state.mjs';
+import {validateDailyPlan,validateSession,learningGoals,studyDay} from './v3-state.mjs';
 const changed=state=>{state.revision++;return validateState(state);};
 const requireValue=(value,message)=>{if(!value)throw new Error(message);};
 export function setLearningGoal(state,goal){requireValue(learningGoals.includes(goal),'不支援的學習目標');if(state.v3.goal===goal)return state;const next=structuredClone(state);next.v3.goal=goal;return changed(next);}
@@ -45,7 +45,7 @@ export function answerV3Session(state,{sessionId,question,value,eventId,time,var
  requireValue(entry?.questionId===question.id,'畫面已切換，請回答目前題目');
  if(entry.repeat?s.corrections[s.cursor]:s.answers[question.id])return state;
  const exposure=next.v3.kanaHints?.[question.reviewItem]?.lastHintAt;
- if(s.source==='kana-week'&&exposure&&Date.parse(exposure)>=Date.parse(s.createdAt)&&Date.parse(exposure)<=Date.parse(time)&&!s.hints.includes(question.id))s.hints.push(question.id);
+ if(s.source==='kana-week'&&exposure&&Date.parse(exposure)<=Date.parse(time)&&(Date.parse(exposure)>=Date.parse(s.createdAt)||(Date.parse(studyDay(time))-Date.parse(studyDay(exposure)))/86400000<7)&&!s.hints.includes(question.id))s.hints.push(question.id);
  const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id),time};
  if(entry.repeat)s.corrections[s.cursor]=a;
  else{

@@ -1,7 +1,7 @@
 import {kana} from './content/kana.mjs';
 import {words} from './content/catalog.mjs';
 import {wordExamples,validWordReference} from './content/kana-words.mjs';
-import {setHintStage,startDictation,updateDictationPoints,lockDictation,revealDictationHint,finishDictation,readDictation,dictationKey} from './core/kana-studio.mjs';
+import {recordKanaExposure,setHintStage,startDictation,updateDictationPoints,lockDictation,revealDictationHint,finishDictation,readDictation,dictationKey} from './core/kana-studio.mjs';
 import {beginV3Session} from './core/v3-learning.mjs';
 import {studioSelectView,kanaFadeView,kanaDictationView,kanaWordsView} from './ui/kana-studio.mjs';
 import {attachWriting} from './ui/writing.mjs';
@@ -13,7 +13,7 @@ export function createKanaStudio({getState,getContext,update,render,toast,now,id
   if(name==='kana-fade'&&kana.some(k=>k.id===item)){
    const stage=ctx().state.v3.kanaHints?.[item]?.stage||0;if(stage<3)mutate(item,(s,time)=>setHintStage(s,item,stage,time),false).catch(error=>toast(error.message));return;
   }
-  if(name!=='kana-dictation')return;const active=readDictation(ctx().state,item),canvas=document.querySelector('#studio-canvas');if(!canvas||active?.meta.stage!=='writing')return;
+  if(name!=='kana-dictation')return;const active=readDictation(ctx().state,item);if(active?.meta.stage==='locked'){if(ctx().state.attempts.some(a=>a.id==='ksw-'+active.meta.id))return;mutate(item,(s,time)=>recordKanaExposure(s,[item],time),false).catch(error=>toast(error.message));return;}const canvas=document.querySelector('#studio-canvas');if(!canvas||active?.meta.stage!=='writing')return;
   attachedItem=item;pad=attachPad(canvas,active.points,points=>{
    const current=readDictation(ctx().state,item);if(!current||current.meta.id!==active.meta.id||current.meta.stage!=='writing')return;
    const time=now(),draft={text:JSON.stringify(current.meta),points,time};cacheDraft(current.key,draft);update(s=>updateDictationPoints(s,item,points,time)).catch(()=>{});

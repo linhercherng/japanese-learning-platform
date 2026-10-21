@@ -27,6 +27,7 @@ export function weekEvidence(state,session){
  const histories=history(state,session.updatedAt),result={total:0,correct:0,hinted:0,excluded:0};
  for(const [id,a] of Object.entries(session.answers)){
   const q=coachQuestion(id);if(!q){result.excluded++;continue;}
+  if(a.hinted){result.hinted++;result.excluded++;continue;}
   const list=histories.get(q.reviewItem+':'+q.dimension)||[],before=list.filter(h=>Date.parse(h.time)<Date.parse(session.createdAt)),last=before.at(-1);
   const between=list.some(h=>Date.parse(h.time)>=Date.parse(session.createdAt)&&Date.parse(h.time)<Date.parse(a.time)),sameTime=list.filter(h=>Date.parse(h.time)===Date.parse(a.time));
   const hint=state.v3.kanaHints?.[q.reviewItem]?.lastHintAt,recentBefore=hint&&Date.parse(hint)<Date.parse(session.createdAt)&&Date.parse(hint)<=Date.parse(a.time)&&ordinal(a.time)-ordinal(hint)<7;
