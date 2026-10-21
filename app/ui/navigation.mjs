@@ -52,7 +52,7 @@ export function navigationContext(ctx,name='home',param){
   case 'daily':section='home';trail=[home,item('每日安排',route)];break;
   case 'v3-practice':{
    section='practice-hub';const s=state.v3.sessions.find(s=>s.id===param);
-   const origin=s?.source==='kana-words'?['kana-words']:s?.source==='kana-map'?['kana-map']:s?.source==='kana-check'?['kana-check']:s?.source==='kana-confusion'?['kana-confusions']:s?.source==='daily'?['daily',s.reference]:s?.source==='lesson'?['deep',s.reference]:s?.source==='confusion'?['confusion',s.reference]:s?.source==='kana'?['kana-memory']:['weaknesses'];
+   const origin=s?.source==='kana-words'?['kana-words',s.reference]:s?.source==='kana-map'?['kana-map']:s?.source==='kana-check'?['kana-check']:s?.source==='kana-confusion'?['kana-confusions']:s?.source==='daily'?['daily',s.reference]:s?.source==='lesson'?['deep',s.reference]:s?.source==='confusion'?['confusion',s.reference]:s?.source==='kana'?['kana-memory']:['weaknesses'];
    trail=[...navigationContext(ctx,...origin).trail,item('回想練習',route)];break;
   }
   case 'exam':section='exam';trail=[home,exam];break;

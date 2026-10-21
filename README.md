@@ -2,11 +2,13 @@
 
 繁體中文、手機優先的日語學習平台，從五十音到生活日語，再循序練習 N5、N4、N3、N2。每課先理解、聽讀，收起提示回想，最後寫自己的句子。
 
-**五十音練習工坊公開試用程式 v0.6.0，2026-10-21。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
+**五十音練習工坊公開試用程式 v0.6.1，2026-10-21。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
 
 新增[記憶地圖](https://linhercherng.github.io/japanese-learning-platform/#kana-map)、[混淆字專練](https://linhercherng.github.io/japanese-learning-platform/#kana-confusions)、[隔天檢查](https://linhercherng.github.io/japanese-learning-platform/#kana-check)：分能力查看208張卡，依實際首答補強混淆，每日最多10題檢查較早學過的字。手寫仍為作品與自評；備份沿用現有格式，詳見[本批驗收與限制](docs/kana-coach-validation.md)。
 
 第二批新增[圖像提示退場](https://linhercherng.github.io/japanese-learning-platform/#kana-fade)、[聽音默寫](https://linhercherng.github.io/japanese-learning-platform/#kana-dictation)、[不同生活詞](https://linhercherng.github.io/japanese-learning-platform/#kana-words)：208卡循序收起提示，獨立默寫原稿鎖定後再對照，190卡提供514個詞中回想題。另18個少見片假名字形明示沒有自然詞例，提供平假名對照；不把練字轉寫當成常用詞。新增32個生活詞合成音，提示與原稿可隨舊schema3備份合併。見[第二批驗收與限制](docs/kana-studio-validation.md)。
+
+v0.6.1補做手機版驗收：320／390px各15類頁面、320px大字6頁與畫板尺寸切換，修正生活詞來源導覽、活動筆畫清除／撤銷及44px切換按鈕。210項測試通過；已完成內建瀏覽器畫面與拖曳流程，真實iOS／Android鍵盤與手勢仍待實機。詳見[手機驗收](docs/mobile-kana-validation.md)。
 
 保留固定於頁頂的「目前位置」路徑，可直接返回分類或來源課程；練習、深連結與重新整理保留可辨識的所屬層級。生活任務切換分類會同步網址。
 
