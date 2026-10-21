@@ -1,4 +1,5 @@
 import {wordExamples} from '../app/content/kana-words.mjs';
+import {rhythmCards} from '../app/content/kana-focus.mjs';
 import{readFile,writeFile,readdir}from'node:fs/promises';
 import{resolve,join,relative}from'node:path';
 import{fileURLToPath}from'node:url';
@@ -9,13 +10,14 @@ const titles={K:'假名與聲音',L:'生活起步',N5:'N5 基礎完整教材',N4
 const hash=body=>createHash('sha256').update(body).digest('hex');
 const serialize=value=>JSON.stringify(value,null,2)+'\n';
 /** Build against a frozen local audio index; safe to rerun after more audio is generated. */
-export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],kanaPhonology=[],allUnits=[],words=[],kanjiItems=[],forms=[],v3Questions=[],deepLessons=[],concepts=[]}){
+export async function buildManifests({appDir,audioIndex,kana=[],kanaLessons=[],kanaPhonology=[],rhythmExamples=[],allUnits=[],words=[],kanjiItems=[],forms=[],v3Questions=[],deepLessons=[],concepts=[]}){
  const texts=new Map(ids.map(id=>[id,new Set()])),optional=new Map(ids.map(id=>[id,new Set()]));
  function add(level,text,required=true){if(text&&texts.has(level))(required?texts:optional).get(level).add(text);}
  function word(level,w){add(level,w.jp);add(level,wordAudioKey(w));add(level,w.example);}
  for(const item of kana){for(const ex of wordExamples(item.id,words))add('K',ex.audio);add('K',item.glyph);add('K',item.word);add('K',item.wordReading,false);}
  for(const lesson of kanaLessons)for(const ex of lesson.examples||[]){add('K',ex.jp);for(const part of ex.jp.split('／'))add('K',part,false);}
  for(const section of kanaPhonology)for(const q of section.questions||[]){add('K',q.transcript);for(const choice of q.choices||[])add('K',choice,false);}
+ for(const card of rhythmExamples)add('K',card.audio);
  for(const u of allUnits){
   for(const w of u.vocabulary||[])word(u.level,w);
   for(const g of u.grammar||[])for(const ex of g.examples||[])add(u.level,ex.jp);
@@ -59,7 +61,7 @@ export async function writeManifests(){
  const[{kana,kanaLessons,kanaPhonology},catalog]=await Promise.all([import('../app/content/kana.mjs'),import('../app/content/catalog.mjs')]);
  const audioIndex=JSON.parse((await readFile(join(appDir,'assets/audio.json'),'utf8')).replace(/^\uFEFF/,''));
  const {concepts}=await import('../app/content/concepts.mjs');
- const{offline,shell}=await buildManifests({appDir,audioIndex,kana,kanaLessons,kanaPhonology,concepts,...catalog});
+ const{offline,shell}=await buildManifests({appDir,audioIndex,kana,kanaLessons,kanaPhonology,rhythmExamples:rhythmCards,concepts,...catalog});
  await writeFile(join(appDir,'assets/offline-manifest.json'),serialize(offline));
  await writeFile(join(appDir,'assets/shell-manifest.json'),serialize(shell));
  const workerPath=join(appDir,'service-worker.js'),source=await readFile(workerPath,'utf8');

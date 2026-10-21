@@ -67,3 +67,6 @@
 ## 五十音記憶第四批（2026-10-21）
 
 聽音打字回想：既有190卡509個自然詞／讀音題，最多3詞，要求指定平／片假名，不替代手寫評分。七日回想：同能力最近作答至少隔7個台北日曆日且無近期已紀錄提示，最多10題，不補新字。回想小結：最近7日期的字卡×能力每日首筆，手寫只列自評。沿用K包音檔、schema3、首答及草稿，無新增個資上傳或素材授權；教師審校狀態不變。詳見[kana-fourth-validation](kana-fourth-validation.md)。
+## 五十音記憶第五批（2026-10-21）
+
+12個生活詞與合成音沿用既有詞庫／音檔，納入假名K離線包，無新增外部音訊、圖片或依賴。「一拍一格」拍格、繁中訣竅與介面文字為日和自編試用內容，尚待教師審校。音拍規則查核參考[東京外國語大學拗音練習](https://www.coelang.tufs.ac.jp/mt/ja/pmod/practical/01-11-02.php)、[長音](https://www.coelang.tufs.ac.jp/mt/ja/pmod/practical/02-02-01.php)及[撥音](https://www.coelang.tufs.ac.jp/mt/ja/pmod/practical/02-03-01.php)，未複製其音檔／插圖。範圍與證據見[第五批驗收](kana-fifth-validation.md)。
