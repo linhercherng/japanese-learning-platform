@@ -45,3 +45,7 @@
 - 正式390px QA：選ぬ → 生活詞 → 3詞回想 → 點breadcrumb回到h-306c，網址正確、無橫向溢出、console error／warn為0。已保留正式非QA練習工坊分頁供使用。
 - 既有離線版本最初仍由舊worker服務；關閉本次驗證分頁後重開，新版本正常接手，不清除學習資料。符合既有README的版本切換方式，沒有以清空cache／資料庫繞過。
 - 正式手機入口：[五十音練習工坊](https://linhercherng.github.io/japanese-learning-platform/#kana-studio)。390px正式畫面保存在本機work/mobile-qa/published-390-studio.jpg，作為本次交付證據。
+
+## 2026-10-21 實機驗收決定
+
+依使用者要求，本輪略過iPhone／Android實機測試，直接更新GitHub及公開網站。實機日文鍵盤、IME、手指手勢與系統行為狀態記為「略過／未驗證」，本輪可直接發布。既有210項自動測試及內建瀏覽器手機尺寸驗收紀錄保留；程式仍為v0.6.1，沒有新增程式變更。

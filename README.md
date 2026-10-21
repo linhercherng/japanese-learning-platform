@@ -8,7 +8,7 @@
 
 第二批新增[圖像提示退場](https://linhercherng.github.io/japanese-learning-platform/#kana-fade)、[聽音默寫](https://linhercherng.github.io/japanese-learning-platform/#kana-dictation)、[不同生活詞](https://linhercherng.github.io/japanese-learning-platform/#kana-words)：208卡循序收起提示，獨立默寫原稿鎖定後再對照，190卡提供514個詞中回想題。另18個少見片假名字形明示沒有自然詞例，提供平假名對照；不把練字轉寫當成常用詞。新增32個生活詞合成音，提示與原稿可隨舊schema3備份合併。見[第二批驗收與限制](docs/kana-studio-validation.md)。
 
-v0.6.1補做手機版驗收：320／390px各15類頁面、320px大字6頁與畫板尺寸切換，修正生活詞來源導覽、活動筆畫清除／撤銷及44px切換按鈕。210項測試通過；已完成內建瀏覽器畫面與拖曳流程，真實iOS／Android鍵盤與手勢仍待實機。詳見[手機驗收](docs/mobile-kana-validation.md)。
+v0.6.1補做手機版驗收：320／390px各15類頁面、320px大字6頁與畫板尺寸切換，修正生活詞來源導覽、活動筆畫清除／撤銷及44px切換按鈕。210項測試通過；已完成內建瀏覽器畫面與拖曳流程，本輪依使用者指示略過iPhone／Android實機鍵盤與手勢驗收，狀態保留為未驗證。詳見[手機驗收](docs/mobile-kana-validation.md)。
 
 保留固定於頁頂的「目前位置」路徑，可直接返回分類或來源課程；練習、深連結與重新整理保留可辨識的所屬層級。生活任務切換分類會同步網址。
 
