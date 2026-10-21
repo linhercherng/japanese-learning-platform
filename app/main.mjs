@@ -1,3 +1,5 @@
+import {createKanaCoach} from './kana-coach.mjs';
+import {confusedKana} from './content/kana-coach.mjs';
 import {navigationContext,navigationView} from './ui/navigation.mjs';
 import {kana,kanaLessons,kanaPhonology} from './content/kana.mjs';
 import {lifeLessons,knownItems,knownLessons,allWritingItems} from './content/catalog.mjs';
@@ -26,6 +28,7 @@ const mediaIndex={};
 const media=createMedia(mediaIndex,toast);
 const v2=createV2({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const v3=createV3({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+const kanaCoach=createKanaCoach({getState:()=>unsaved||state,getContext:context,update,toast,render,now,id});
 function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,audioIndex,due:dueReviews(state),...v2.contextExtras()};}
 function update(fn){
  pendingWrites++;status.textContent='保存中…';
@@ -52,6 +55,7 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(v2.views))views[view]=()=>renderer(param);
  views.life=()=>v2.views.level('L');views.lesson=()=>v2.views.study(param);
  for(const [view,renderer] of Object.entries(v3.views))views[view]=()=>renderer(param);
+ for(const [view,renderer] of Object.entries(kanaCoach.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
  const navigation=navigationContext(ctx,name,param);
  locationContext.innerHTML=navigationView(navigation);
@@ -84,7 +88,8 @@ function quizView(){
 }
 async function submitQuiz(choice){
  const quiz=session.quiz;if(!quiz||quiz.answered)return;quiz.answered=true;const q=quiz.questions[quiz.index],correct=Number(choice)===Number(q.correct);
- try{await update(s=>recordAnswer(s,{id:`${quiz.started}-${quiz.index}`,item:q.item,dimension:q.dimension,correct,hinted:quiz.hinted,time:now()}));}
+ const confusion=!correct?confusedKana({kind:'choice',correct:q.correct,options:q.options.map(o=>kana.find(k=>k.id===o.value)?.glyph||o.label)},Number(choice)):null;
+ try{await update(s=>recordAnswer(s,{id:`${quiz.started}-${quiz.index}`,item:q.item,dimension:q.dimension,correct,hinted:quiz.hinted,time:now(),...(confusion?{kanaConfusion:confusion}:{})}));}
  catch{quiz.answered=false;return;}
  quiz.results.push({correct,hinted:quiz.hinted});
  if(session.quiz!==quiz||route().name!=='quiz')return;
@@ -127,7 +132,7 @@ function validateCatalog(s){
  const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
  if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!draftIds.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
  v2.validateCatalog(s);
- v3.validateCatalog(s);
+ v3.validateCatalog(s);kanaCoach.validateCatalog(s);
 }
 async function importFile(file){
  if(!file)return;if(file.size>12*1024*1024){toast('備份超過 12 MB，未匯入。');return;}

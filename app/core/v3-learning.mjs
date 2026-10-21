@@ -1,3 +1,4 @@
+import {confusedKana} from '../content/kana-coach.mjs';
 import {recordAnswer,saveArtifact,validateState} from './learning.mjs';
 import {gradeQuestion,validAnswerValue} from './study.mjs';
 import {validateDailyPlan,validateSession,learningGoals} from './v3-state.mjs';
@@ -47,7 +48,7 @@ export function answerV3Session(state,{sessionId,question,value,eventId,time,var
  if(entry.repeat)s.corrections[s.cursor]=a;
  else{
   s.answers[question.id]=a;
-  next=recordAnswer(next,{id:eventId,item:question.reviewItem||question.id,dimension:question.dimension,correct:a.correct,hinted:a.hinted,time});s=next.v3.sessions.find(s=>s.id===sessionId);
+  next=recordAnswer(next,{id:eventId,item:question.reviewItem||question.id,dimension:question.dimension,correct:a.correct,hinted:a.hinted,time,...(!a.correct&&confusedKana(question,value)?{kanaConfusion:confusedKana(question,value)}:{})});s=next.v3.sessions.find(s=>s.id===sessionId);
   if(!a.correct||a.hinted){
    const following=s.queue.length-s.cursor-1;
    const variant=variants.find(q=>q.conceptId&&q.conceptId===question.conceptId&&q.dimension===question.dimension&&!s.queue.some(entry=>entry.questionId===q.id));
