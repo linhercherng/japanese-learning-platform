@@ -2,7 +2,7 @@
 
 繁體中文、手機優先的日語學習平台，從五十音到生活日語，再循序練習 N5、N4、N3、N2。每課先理解、聽讀，收起提示回想，最後寫自己的句子。
 
-**五十音練習工坊公開試用程式 v0.18.0，2026-10-23。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
+**五十音練習工坊公開試用程式 v0.19.0，2026-10-23。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
 
 新增[記憶地圖](https://linhercherng.github.io/japanese-learning-platform/#kana-map)、[混淆字專練](https://linhercherng.github.io/japanese-learning-platform/#kana-confusions)、[隔天檢查](https://linhercherng.github.io/japanese-learning-platform/#kana-check)：分能力查看208張卡，依實際首答補強混淆，每日最多10題檢查較早學過的字。手寫仍為作品與自評；備份沿用現有格式，詳見[本批驗收與限制](docs/kana-coach-validation.md)。
 
@@ -27,6 +27,8 @@ v0.6.1補做手機版驗收：320／390px各15類頁面、320px大字6頁與畫�
 第十批深化[一拍一格](https://linhercherng.github.io/japanese-learning-platform/#kana-beats)：12個既有生活詞可先自行估拍、看差異對照，再做同類聽音數拍三題。新12題沿用完整詞音，拍數辨認獨立記錄；同日／本輪看過該詞拍格另記提示，原首答／續作／備份保留，也涵蓋每日及到期複習。詳見[第十批規劃](docs/plans/2026-10-22-kana-tenth.md)與[驗收](docs/kana-tenth-validation.md)。
 
 第十一批新增[不熟字口袋](https://linhercherng.github.io/japanese-learning-platform/#kana-pocket)：翻卡選「還不熟」可留下字卡，之後每輪最多三個不同字，先回想再展開原讀音／訣竅，主動保留或移出。清單隨本機資料與備份保存；展示進度暫存，自評不增加答對或熟練數。詳見[第十一批規劃](docs/plans/2026-10-22-kana-eleventh.md)與[驗收](docs/kana-eleventh-validation.md)。
+
+第十五批加入「錯字雙向聽辨」：從自己的錯字雙卡收起線索，做同一對字的兩題聽音選字，各當一次目標。原輪／首答／提示與中斷保存，新一輪不改原錯答或自評口袋；同日看過的兩字提示另列。[規劃](docs/plans/2026-10-23-kana-fifteenth.md)與[驗收](docs/kana-fifteenth-validation.md)。
 
 第十四批接上「錯字雙卡對照」：只用原錯答的參考字與原選字，各聽字音、看既有例詞與訣竅；再遮住字形自己回想、揭開核對，不新增答對數或改寫原首答。對照按需展開、切字／刷新收起。[規劃](docs/plans/2026-10-23-kana-fourteenth.md)與[驗收](docs/kana-fourteenth-validation.md)。
 

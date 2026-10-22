@@ -24,14 +24,14 @@ UI沿用淺底卡、明確返回與不含答案的麵包屑；新控制器防連
 
 Files：app/content/kana-contrast.mjs、app/core/kana-contrast.mjs、app/content/catalog.mjs、app/core/v3-state.mjs、app/core/v3-learning.mjs；tests/kana-contrast.test.mjs。
 
-- [ ] 先紅：有效／同字／同音／異script／未知拒絕、原pair兩方向與原音檔、strict題序／queue／單pending、備份合併、中斷與新舊首答、兩字曝光時間邊界、不改口袋。
-- [ ] 實作最小content/core/validator與lazy resolver，相關測試綠；提交。
+- [x] 先紅：有效／同字／同音／異script／未知拒絕、原pair兩方向與原音檔、strict題序／queue／單pending、備份合併、中斷與新舊首答、兩字曝光時間邊界、不改口袋。
+- [x] 實作最小content/core/validator與lazy resolver，相關測試綠；提交。
 
 ## Task 2：入口與V3整合
 
 Files：app/ui/kana-contrast.mjs、app/kana-contrast.mjs、app/main.mjs、app/ui/kana-pocket-review.mjs、app/kana-pocket-review.mjs、app/ui/v3.mjs、app/v3.mjs、app/ui/navigation.mjs；tests/kana-contrast-ui.test.mjs、tests/kana-contrast-controller.test.mjs。
 
-- [ ] 先紅：雙卡入口、無預覽、兩音選項／提示／原結果返回、pending回顧遮蔽、刷新／連按／過期／延遲／失敗、七日／默寫cache與原首答保留。
+- [x] 先紅：雙卡入口、無預覽、兩音選項／提示／原結果返回、pending回顧遮蔽、刷新／連按／過期／延遲／失敗、七日／默寫cache與原首答保留。
 - [ ] 最小整合，版本0.19.0；完整npm test→build→check及audit；README／規格／課綱／素材／驗收；提交。
 
 ## Task 3：驗收與發布
