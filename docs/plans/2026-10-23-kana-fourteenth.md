@@ -22,15 +22,15 @@
 
 Files：app/core/kana-pocket-review.mjs、tests/kana-pocket-contrast.test.mjs。
 
-- [ ] 先紅：原錯答配對／順序、正確與未知／同字拒絕、208字選項涵蓋、既有difference雙向匹配、無匹配不造規則、實際雙卡文字曝光、純查詢與備份不變。
-- [ ] 實作pocketContrast(entry)與contrastCueItems(pair)，node --test tests/kana-pocket-contrast.test.mjs綠；提交。
+- [x] 先紅：原錯答配對／順序、正確與未知／同字拒絕、208字選項涵蓋、既有difference雙向匹配、無匹配不造規則、實際雙卡文字曝光、純查詢與備份不變。
+- [x] 實作pocketContrast(entry)與contrastCueItems(pair)，node --test tests/kana-pocket-contrast.test.mjs綠；提交。
 
 ## Task 2：對照／遮住／核對小循環
 
 Files：app/ui/kana-pocket-review.mjs、app/kana-pocket-review.mjs、app/ui/shared.mjs；tests/kana-pocket-contrast-ui.test.mjs、tests/kana-pocket-contrast-controller.test.mjs。
 
-- [ ] 先紅：只有錯答入口、雙音鈕命名與HTML編碼、遮住不洩字音／選字／線索、切字／刷新重置、pending遮蔽、過期操作與焦點、無作答副作用、七日／默寫cache及失敗保存。
-- [ ] 最小整合：reviewLocal加contrast/covered；兩面板互斥；cover/uncover只局部UI；afterRender可見分流，covered直接不曝光；成功動作聚焦實際存在的控制。保留原keep行為。
+- [x] 先紅：只有錯答入口、雙音鈕命名與HTML編碼、遮住不洩字音／選字／線索、切字／刷新重置、pending遮蔽、過期操作與焦點、無作答副作用、七日／默寫cache及失敗保存。
+- [x] 最小整合：reviewLocal加contrast/covered；兩面板互斥；cover/uncover只局部UI；afterRender可見分流，covered直接不曝光；成功動作聚焦實際存在的控制。保留原keep行為。
 - [ ] npm test→build→check及audit，版本0.18.0，更新README、規格、課綱、素材與驗收；提交。
 
 ## Task 3：實際驗收與發布

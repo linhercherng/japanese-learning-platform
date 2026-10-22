@@ -5,7 +5,7 @@ export const primary=(text,route)=>`<a class="primary" href="#${route}">${escape
 export const back=(text,route)=>`<a class="page-back" href="#${route}">${icon('back')}${escapeHtml(text)}</a>`;
 export const note=text=>`<div class="memory-note">${icon('spark')}<span>${escapeHtml(text)}</span></div>`;
 export const heading=(title,description)=>`<div class="page-heading"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p></div>`;
-export const audioButton=text=>`<button class="sound-button" data-audio="${escapeHtml(text)}">${icon('sound')}聽發音</button>`;
+export const audioButton=(text,label='聽發音')=>`<button class="sound-button" data-audio="${escapeHtml(text)}">${icon('sound')}${escapeHtml(label)}</button>`;
 export const wordAudioKey=word=>`${word.jp}［${word.reading}］`;
 export const wordAudioButton=word=>audioButton(wordAudioKey(word));
 export const dateLabel=time=>new Date(time).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
