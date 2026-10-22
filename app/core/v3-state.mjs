@@ -63,8 +63,7 @@ export function validateV3(v,artifacts=[]){
  requireValue(Array.isArray(v.dailyPlans)&&v.dailyPlans.length<=60&&new Set(v.dailyPlans.map(p=>p.id)).size===v.dailyPlans.length);
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
- requireValue(v.sessions.filter(s=>s.source==='kana-pocket-listen'&&!s.completedAt).length<=1,'口袋聽辨有不同未完成輪次，請先完成目前輪次並保留備份。');
- requireValue(v.sessions.filter(s=>s.source==='kana-contrast'&&!s.completedAt).length<=1,'錯字雙向聽辨有不同未完成輪次，請先完成目前輪次並保留備份。');
+ requireValue(v.sessions.filter(s=>['kana-pocket-listen','kana-contrast'].includes(s.source)&&!s.completedAt).length<=1,'口袋聽辨有不同未完成輪次，請先完成目前輪次並保留備份。');
  validateWeekExposure(v.sessions,v.kanaHints);
  const checks=v.sessions.filter(s=>['kana-check','kana-week'].includes(s.source));requireValue(new Set(checks.map(s=>s.source+':'+s.reference)).size===checks.length,'同日隔天檢查有不同輪次，請保留備份並先完成目前輪次。');
  for(const p of v.dailyPlans)for(const step of p.steps)if(step.sessionId!==null)requireValue(v.sessions.some(s=>s.id===step.sessionId&&s.source==='daily'&&s.reference===p.id&&JSON.stringify(s.questionIds)===JSON.stringify(step.questionIds)),'每日安排與回想輪次不一致');

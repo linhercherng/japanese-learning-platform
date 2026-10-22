@@ -171,6 +171,6 @@ kana-pocket內整合聽辨入口與最近結果，不增導覽。source=kana-poc
 
 ## 五十音記憶第十五批（v0.19.0，2026-10-23）
 
-錯字雙卡提供kana-contrast/<reference>入口；reference為原參考字ID:原選字ID，動態kp題先問原選字、再問原參考字，兩選一聽辨。嚴格same-script／異字異音、兩題queue無repeat、source=kana-contrast全站最多一pending；schema3與舊source不遷移。先接續既有pending，刷新不重排，原錯答與自評不變。兩字同日／本輪提示都影響hinted；實際已顯示解說／個人線索同步曝光、七日未答題及默寫cache。未完成新聽辨時原回顧遮蔽；保存失敗保留待存匯出，延遲離頁不拉回。新輪不依賴原session留存，回來源入口再回口袋，麵包屑不洩答案。
+錯字雙卡提供kana-contrast/<reference>入口；reference為原參考字ID:原選字ID，動態kp題先問原選字、再問原參考字，兩選一聽辨。嚴格same-script／異字異音、兩題queue無repeat、source=kana-contrast與口袋聽辨合計最多一pending；schema3與舊source不遷移。先接續既有pending，刷新不重排，原錯答與自評不變。兩字同日／本輪提示都影響hinted；實際已顯示解說／個人線索同步曝光、七日未答題及默寫cache。未完成新聽辨時原回顧遮蔽；保存失敗保留待存匯出，延遲離頁不拉回。新輪不依賴原session留存，回來源入口再回口袋，麵包屑不洩答案。
 
 見[規劃](plans/2026-10-23-kana-fifteenth.md)與[驗收](kana-fifteenth-validation.md)。

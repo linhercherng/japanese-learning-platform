@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "e342a79643526f067a575260040cc8abf57d1e294e54ccf7f7c1bcf1ffbb04a4",
+  "fingerprint": "bc45fc2a0a60ea7ea5b4622bc94057fb43c567c3eb6c70af09ecb11d7d8df5d6",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -191,13 +191,13 @@
     "core/exam.mjs": "83cffdf8a9b93feea9dbf7fdf41ac00f231cefa8cc76a04b5d386844159e25c6",
     "core/kana-bridge.mjs": "05df0435e2b61f5e3a9ab3638d8574716fcc4b28f113d7dc41b99c0221272877",
     "core/kana-coach.mjs": "14800d4dc33ec27b9d8496b61f916a838994301fe4c2488fdc211f4c673d289a",
-    "core/kana-contrast.mjs": "66335ee4b184b27565fbd91e0dd89464dfe683ccdf93b12c25dfa629f4922cf6",
+    "core/kana-contrast.mjs": "806a1eeb5be9bdd5c528ed4017cb4b59311dca8b0ab6f526cda92b155cc007b9",
     "core/kana-family.mjs": "54fca61a4e0c8991d3e45e3fc708b5bc6f7bb91c668c71b24a9cef5c7ab98319",
     "core/kana-focus.mjs": "919fa62954e3a0c41f77ceb95383aee9fbae29a0a8c998ec69f89f6e19978f08",
     "core/kana-lab.mjs": "cc8ff15b4ded8257f1f6daf81dc034e65c664db0fbdfdf55855979aed3653224",
     "core/kana-pocket-review.mjs": "ed4c6ef7dc27787be5957080bed79acd166703da1dd2703cf34cb1f92466f3b3",
     "core/kana-pocket-state.mjs": "7324f83c8ef1600a42af90fef9f7c97880e56d706876c22bbc564ccb60fdd3e0",
-    "core/kana-pocket.mjs": "6b066a0026e8093b83d121d98a9462ae4c3cd57ee134bccd578238beba6aa8d3",
+    "core/kana-pocket.mjs": "2d8a032fdbf851e098fadaa1606dcaad224527299a7626eb1326994876bb64f5",
     "core/kana-recall.mjs": "f0654984458d7cadbe09f55af2e49aa79bbed1b6d1aeaa7dbe6d6876992f0105",
     "core/kana-rhythm.mjs": "9653db540cb8d7eeff7f7af92f3a68dab60568fcea05a1857614a214a5ec9531",
     "core/kana-row.mjs": "027dbd231577ed79d5e30b740315a25fa71e2b3043aac4675de890bc690730ce",
@@ -210,7 +210,7 @@
     "core/storage.mjs": "f42811a3a8edd4341e5cda37cdd4562e03e2c7b9ce483c7758ae62e48fdf14ec",
     "core/study.mjs": "6c9bcef4ee6f468f6e06a517dc99b2b3672249dbeaaa71987f39a82a66e363ec",
     "core/v3-learning.mjs": "964053f09685c6d1d8a398bca26a4d325faa812ebbe55252c434b842204cd3e1",
-    "core/v3-state.mjs": "944c290399f022c45f0be417f901e0007e5a02a61226d4c8f218156a63cb2a0b",
+    "core/v3-state.mjs": "39e63465f64a48883a0cff213d6f00a91835daa4bc188b91bd3171fa2b802ac7",
     "index.html": "392f4668bd9086f515553399cc5f26fd8e1547a9d0b8ea8a8a635af3a3c81f40",
     "kana-bridge.mjs": "4ae09af8d3cc7fc0486c0d88f525aac8e924e47eb0b3a67eae4659f170bade40",
     "kana-coach.mjs": "3eebc5cb96869bc81d9346299b21834f1a7aed5ec4f51e2de940d72b63b0bfa3",
@@ -221,7 +221,7 @@
     "kana-pocket-review.mjs": "bc59fdeda79b3d84bee5b1f6657a29e927688ff9b7d60c005cb1d287d76a0d03",
     "kana-recall.mjs": "7f78d3f100f9d7781d576363f3d8ca9da899d6fc0ad2a1602a6bccc4c58b0563",
     "kana-row.mjs": "0d413bce8ebf6b4c8d79384fe13ea747f7b4df9daeab1aef97241c7f17fc53b2",
-    "kana-sixth.mjs": "464764f487e9c41d163110e671fe8576b1c89eb7fa7f73945b3436ed075d93a1",
+    "kana-sixth.mjs": "1d63a4ef970ef67947dcde0fa1da206e7da18f5d1cae6cec26c9cb7a6aa3dccb",
     "kana-studio.mjs": "76a6782a99642e70651593aa93d290adbbb092f71a575f8fe08ffa0627a2e137",
     "main.mjs": "7f0f68a2267186502be361d384ed7cc32bef9f535408ef0da50fbbf823ebc7cd",
     "manifest.webmanifest": "665f46ac36c2b46959260fe9ef71e33b7bcef4bed924d37e771e1c4114025cfb",
@@ -238,7 +238,7 @@
     "ui/kana-pocket-review.mjs": "1d4af55bd6bc597925319b32000cdf3fd2b65e3339b871709f2aa1355e0b04d8",
     "ui/kana-recall.mjs": "628fabc4e1804021bd8ce186f9a5932f228c9c0c8cc1be94c30f09291e3bb66f",
     "ui/kana-row.mjs": "ade8fb813cd5550449293323231f2e5679fa1c7f8b7c4d677436eeb92eff2c21",
-    "ui/kana-sixth.mjs": "4f2db4c54f87fd8262a55dcf9ba73f3f7f3c0a3c00f06de97e2007fe6faac6a2",
+    "ui/kana-sixth.mjs": "74bdc9a06d1b29512b4720d56417bcf08b7e084d9a113e91b30e142823a4edde",
     "ui/kana-studio.mjs": "3e774168bc48d337e061066e24d1920ee4d6c0cb21f3f20d6a481719b458056b",
     "ui/kana.mjs": "a9decb07481fedd226740423320428d582ede27336dee8da0939f0efca23c1ce",
     "ui/library.mjs": "e55c28faf715e0ce059c1f5d5e9337d8c77ee4d68d918db9afdfb96f31147d2f",
@@ -257,5 +257,5 @@
     "v3.css": "a1d71563412df145d40687cd0f66dde5e5847a449d792d55a6626cd01bfe2423",
     "v3.mjs": "69c8db92cb73bee69921d8d82822a71aee69572b9e80c69af4baea5bd7d691be"
   },
-  "bytes": 8255992
+  "bytes": 8256055
 }

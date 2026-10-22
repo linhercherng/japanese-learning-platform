@@ -2,7 +2,7 @@ import {kana} from '../content/kana.mjs';
 import {memoryFor} from '../content/kana-memory.mjs';
 import {duelPairs,nextFlipStart} from '../content/kana-sixth.mjs';
 import {newFlip} from '../core/kana-sixth.mjs';
-import {pocketItems,pendingPocketListen,pocketListeningIds} from '../core/kana-pocket.mjs';
+import {pocketItems,pendingPocketActivity,pocketListeningIds} from '../core/kana-pocket.mjs';
 import {escapeHtml as e,heading,back,primary,note,audioButton} from './shared.mjs';
 const groups={basic:'基本字',voiced:'濁音',semivoiced:'半濁音',contracted:'拗音'};
 export function flipLocal(session,item){if(session.kanaFlip?.key!==item)session.kanaFlip=newFlip(item);return session.kanaFlip;}
@@ -20,8 +20,8 @@ export function flipView(ctx,item='h-3042'){
 export function pocketView(ctx,time=new Date().toISOString()){
  const count=pocketItems(ctx.state).length,r=ctx.session.kanaPocketRound,k=kana.find(k=>k.id===r?.queue[r.cursor]);
  const intro=back('看字想聲翻卡','kana-flip')+heading('不熟字，留一個小口袋。','先回想，再看原有讀音與訣竅；每輪最多三字，不必一次清空。')+'<p role="status">口袋裡有'+count+'字。</p>';
- const pending=pendingPocketListen(ctx.state),latest=ctx.state.v3.sessions.filter(s=>s.source==='kana-pocket-listen'&&s.completedAt).at(-1),listenCount=pocketListeningIds(ctx.state,time).length;
- if(pending)return intro+'<section class="hero"><h2>先接續原來的聽音回想。</h2><p>原字卡、題序與首答已保存，先把字卡與讀音收起。</p>'+primary('接續口袋聽音回想','v3-practice/'+pending.id)+'</section>'+note('清單後來有調整，也會接續原輪；聽辨答對不會自動移出口袋。')+primary('今天怎麼練','kana-path');
+ const pending=pendingPocketActivity(ctx.state),latest=ctx.state.v3.sessions.filter(s=>s.source==='kana-pocket-listen'&&s.completedAt).at(-1),listenCount=pocketListeningIds(ctx.state,time).length;
+ if(pending)return intro+'<section class="hero"><h2>先接續原來的聽音回想。</h2><p>原字卡、題序與首答已保存，先把字卡與讀音收起。</p>'+primary(pending.source==='kana-contrast'?'接續錯字雙向聽辨':'接續口袋聽音回想','v3-practice/'+pending.id)+'</section>'+note('清單後來有調整，也會接續原輪；聽辨答對不會自動移出口袋。')+primary('今天怎麼練','kana-path');
  const listening=(listenCount?'<section class="v3-section"><h2>收起字卡，從聲音想一次。</h2><p>這輪最多'+listenCount+'題，正常或慢速聽完再選字；看過同日／本輪提示的首答會另列，原清單不會自動移出。</p><button class="secondary" data-six-action="pocket-listen">收起字卡，聽音回想</button></section>':'')+(latest?primary('看看這輪口袋聽辨結果','v3-practice/'+latest.id):'');
  const footer=note('口袋是自己的練習清單，不是答對或熟練證明。清單隨本機資料與JSON備份保存；移出仍保留既有答題與提示。自評展示進度暫存，刷新會收起提示、重新挑尚留口袋的字；聽音回想的原輪與首答另行保存。')+primary('隔天獨立檢查','kana-check')+primary('今天怎麼練','kana-path');
  if(!r||!k)return intro+'<section class="hero"><h2>'+(r?'這輪已對照'+r.queue.length+'字。':count?'從較早留下的字開始。':'還沒有留下不熟字。')+'</h2><p>'+(r?'先休息一下，需要時再手動挑下一輪。':count?'混合不同位置留下的字，不按原來同一行順序提示。':'在翻卡展開對照後，選「還不熟，稍後再想」即可留下。')+'</p>'+(count?'<button class="primary" data-six-action="pocket-start">'+(r?'再挑最多三字':'挑最多三字，先回想')+'</button>':primary('去翻卡留下一個字','kana-flip'))+'</section>'+listening+footer;
