@@ -162,3 +162,9 @@ kana-pocket內整合聽辨入口與最近結果，不增導覽。source=kana-poc
 完成kana-pocket-listen後，結果頁連到kana-pocket-review/<sessionId>，依原題序逐字呈現原首答與提示，不重評、不新增attempt或source。訣竅與個人線索預設收起，切字／刷新收起；待完成口袋聽辨時遮蔽所有回顧字卡。已移出的字可明示留回自評口袋，無自動掌握判定。實際顯示的目標／原選字與展開線索同步曝光、七日未答題及默寫草稿快取。過期事件、連按、延遲離頁與保存失敗都有守護；schema3與舊ID不變。
 
 見[規劃](plans/2026-10-22-kana-thirteenth.md)與[驗收](kana-thirteenth-validation.md)。
+
+## 五十音記憶第十四批（v0.18.0，2026-10-23）
+
+逐字回顧的有效錯答可展開參考字／原選字雙卡，保留原角色與原首答。從原numeric choice解析canonical假名，同字、正確或未知值不產生對照。兩張卡含既有字音、輔助讀音、例詞／詞義與memory.tip；僅匹配既有confusionPairs時呈現difference，不生成新規則。可遮住整個字形／原選字／線索／音鈕，再揭開核對，不產生attempt或自評分。局部contrast/covered與原提示互斥，切字／刷新重置，pending仍遮蔽。實際展開文字同步提示／七日／默寫cache；遮住不新增曝光；schema3與舊ID不變。
+
+見[規劃](plans/2026-10-23-kana-fourteenth.md)與[驗收](kana-fourteenth-validation.md)。
