@@ -1,3 +1,4 @@
+import {bridgeQuestions} from './kana-bridge.mjs';
 import {duelQuestions} from './kana-sixth.mjs';
 import {typingQuestion} from './kana-recall.mjs';
 import {buildQuestion} from './kana-lab.mjs';
@@ -66,6 +67,7 @@ for(const form of forms)for(const section of form.sections)for(const q of sectio
 for(const q of v3Questions){knownItems.add(q.id);questionById.set(q.id,q);}
 for(const q of kanaDrills){knownItems.add(q.id);questionById.set(q.id,q);}
 for(const q of duelQuestions){knownItems.add(q.id);questionById.set(q.id,q);}
+for(const q of bridgeQuestions){knownItems.add(q.id);questionById.set(q.id,q);}
 export function stableId(prefix,text){let a=2166136261,b=5381;for(const char of text){const n=char.codePointAt(0);a=Math.imul(a^n,16777619);b=Math.imul(b,33)^n;}return `${prefix}-${(a>>>0).toString(16).padStart(8,'0')}${(b>>>0).toString(16).padStart(8,'0')}`;}
 export function wordQuestion(id){
  const word=words.find(w=>id===`${w.id}-read`||id===`${w.id}-meaning`);if(!word)return null;
