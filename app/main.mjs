@@ -1,4 +1,5 @@
 import {createKanaPocketReview} from './kana-pocket-review.mjs';
+import {createKanaContrast} from './kana-contrast.mjs';
 import {createKanaRow} from './kana-row.mjs';
 import {createKanaFamily} from './kana-family.mjs';
 import {createKanaBridge} from './kana-bridge.mjs';
@@ -44,6 +45,7 @@ const kanaRecall=createKanaRecall({getContext:context,update,toast,now,id});
 const kanaSixth=createKanaSixth({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaRow=createKanaRow({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaPocketReview=createKanaPocketReview({getContext:context,update,render,toast,now,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+const kanaContrast=createKanaContrast({getContext:context,update,toast,now,id});
 const kanaFamily=createKanaFamily({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaBridge=createKanaBridge({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaFocus=createKanaFocus({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
@@ -82,6 +84,7 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(kanaSixth.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaRow.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaPocketReview.views))views[view]=()=>renderer(param);
+ for(const [view,renderer] of Object.entries(kanaContrast.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaFamily.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaBridge.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;

@@ -14,11 +14,12 @@ export function advancePocket(round,{item,index}){
  return {...round,cursor:round.cursor+1,revealed:false};
 }
 export function pendingPocketListen(state){return state.v3.sessions.find(s=>s.source==='kana-pocket-listen'&&!s.completedAt);}
+export function pendingPocketActivity(state){return state.v3.sessions.find(s=>['kana-pocket-listen','kana-contrast'].includes(s.source)&&!s.completedAt);}
 export function pocketListeningIds(state,time){
  const items=pocketItems(state).filter(k=>Date.parse(state.v3.kanaPocket[k.id].time)<=Date.parse(time)).slice(0,3);
  return [...items.slice(1),...items.slice(0,1)].map(k=>'kc:check:'+k.id+':listen');
 }
 export function startPocketListen(state,{id,time}){
- if(pendingPocketListen(state))return state;
+ if(pendingPocketActivity(state))return state;
  const ids=pocketListeningIds(state,time);return ids.length?beginV3Session(state,ids,{id,time,source:'kana-pocket-listen',reference:ids.map(qid=>qid.split(':')[2]).join(':')}):state;
 }

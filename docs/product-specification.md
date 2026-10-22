@@ -168,3 +168,9 @@ kana-pocket內整合聽辨入口與最近結果，不增導覽。source=kana-poc
 逐字回顧的有效錯答可展開參考字／原選字雙卡，保留原角色與原首答。從原numeric choice解析canonical假名，同字、正確或未知值不產生對照。兩張卡含既有字音、輔助讀音、例詞／詞義與memory.tip；僅匹配既有confusionPairs時呈現difference，不生成新規則。可遮住整個字形／原選字／線索／音鈕，再揭開核對，不產生attempt或自評分。局部contrast/covered與原提示互斥，切字／刷新重置，pending仍遮蔽。實際展開文字同步提示／七日／默寫cache；遮住不新增曝光；schema3與舊ID不變。
 
 見[規劃](plans/2026-10-23-kana-fourteenth.md)與[驗收](kana-fourteenth-validation.md)。
+
+## 五十音記憶第十五批（v0.19.0，2026-10-23）
+
+錯字雙卡提供kana-contrast/<reference>入口；reference為原參考字ID:原選字ID，動態kp題先問原選字、再問原參考字，兩選一聽辨。嚴格same-script／異字異音、兩題queue無repeat、source=kana-contrast與口袋聽辨合計最多一pending；schema3與舊source不遷移。先接續既有pending，刷新不重排，原錯答與自評不變。兩字同日／本輪提示都影響hinted；實際已顯示解說／個人線索同步曝光、七日未答題及默寫cache。未完成新聽辨時原回顧遮蔽；保存失敗保留待存匯出，延遲離頁不拉回。新輪不依賴原session留存，回來源入口再回口袋，麵包屑不洩答案。
+
+見[規劃](plans/2026-10-23-kana-fifteenth.md)與[驗收](kana-fifteenth-validation.md)。

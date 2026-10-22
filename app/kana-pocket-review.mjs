@@ -1,5 +1,6 @@
 import {pocketReview,reviewCueItems,pocketContrast,contrastCueItems} from './core/kana-pocket-review.mjs';
 import {setPocket,pendingPocketListen} from './core/kana-pocket.mjs';
+import {pendingContrast} from './core/kana-contrast.mjs';
 import {pocketReviewView,reviewLocal} from './ui/kana-pocket-review.mjs';
 import {recordKanaExposure,readDictation} from './core/kana-studio.mjs';
 
@@ -7,7 +8,7 @@ export function createKanaPocketReview({getContext,update,render,toast,now,cache
  let saving=false;
  function current(){
   const [name,key]=location.hash.slice(1).split('/'),ctx=getContext();
-  if(name!=='kana-pocket-review'||pendingPocketListen(ctx.state))return null;
+  if(name!=='kana-pocket-review'||pendingPocketListen(ctx.state)||pendingContrast(ctx.state))return null;
   const review=pocketReview(ctx.state,key);if(!review)return null;
   const ui=reviewLocal(ctx.session,key),entry=review.entries[ui.index];return entry?{key,ui,entry}:null;
  }
@@ -26,7 +27,7 @@ export function createKanaPocketReview({getContext,update,render,toast,now,cache
   if(d.pocketReviewAction!=='keep'||saving||getContext().state.v3.kanaPocket?.[c.entry.item]?.active)return;
   saving=true;const origin=location.hash,index=c.ui.index,time=now();let kept=false;
   try{
-   await update(s=>{if(!pocketReview(s,c.key)||pendingPocketListen(s))return s;kept=true;return setPocket(s,c.entry.item,true,time);});
+   await update(s=>{if(!pocketReview(s,c.key)||pendingPocketListen(s)||pendingContrast(s))return s;kept=true;return setPocket(s,c.entry.item,true,time);});
    if(kept&&location.hash===origin&&current()?.ui===c.ui&&c.ui.index===index){render(false);document.querySelector('#pocket-review-picker')?.focus();toast('已留回口袋');}
   }finally{saving=false;}
  }
@@ -37,7 +38,7 @@ export function createKanaPocketReview({getContext,update,render,toast,now,cache
   c.ui.index=index;c.ui.revealed=false;c.ui.contrast=false;c.ui.covered=false;render(false);document.querySelector('#pocket-review-picker')?.focus();
  }
  function afterRender(name,key){
-  if(name!=='kana-pocket-review')return;const ctx=getContext();if(pendingPocketListen(ctx.state))return;
+  if(name!=='kana-pocket-review')return;const ctx=getContext();if(pendingPocketListen(ctx.state)||pendingContrast(ctx.state))return;
   const review=pocketReview(ctx.state,key);if(!review)return;const ui=reviewLocal(ctx.session,key),entry=review.entries[ui.index];if(!entry)return;
   // Freeze only text actually shown by this render, even if the learner navigates while saving.
   const pair=pocketContrast(entry),contrast=pair&&ui.contrast;if(contrast&&ui.covered)return;
