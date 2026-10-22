@@ -1,5 +1,7 @@
 import {kana} from '../content/kana.mjs';
 import {coachQuestion} from '../content/kana-coach.mjs';
+import {memoryFor} from '../content/kana-memory.mjs';
+import {confusionPairs} from '../content/confusions.mjs';
 
 // Read the saved first answer; a later review must never grade it again.
 export function pocketReview(state,id){
@@ -16,5 +18,19 @@ export function pocketReview(state,id){
 
 export function reviewCueItems(entry,revealed,personalText=''){
  const shown=entry.question.transcript+entry.chosen+(revealed?entry.question.explanation+personalText:'');
+ return kana.filter(k=>shown.includes(k.glyph)).map(k=>k.id);
+}
+
+export function pocketContrast(entry){
+ if(!entry||entry.answer.correct||!Number.isInteger(entry.answer.value))return null;
+ const reference=kana.find(k=>k.id===entry.item),chosen=entry.question.options[entry.answer.value],selected=kana.find(k=>k.glyph===chosen);
+ if(!reference||!selected||reference.id===selected.id||reference.script!==selected.script)return null;
+ const pair=confusionPairs.find(p=>[p.leftId,p.rightId].includes(reference.id)&&[p.leftId,p.rightId].includes(selected.id));
+ return {reference:{...reference,tip:memoryFor(reference.id).tip},selected:{...selected,tip:memoryFor(selected.id).tip},difference:pair?.difference||null};
+}
+
+export function contrastCueItems(pair){
+ if(!pair)return [];
+ const shown=[pair.reference,pair.selected].map(k=>k.glyph+k.reading+k.word+k.wordReading+k.meaning+k.tip).join('')+(pair.difference||'');
  return kana.filter(k=>shown.includes(k.glyph)).map(k=>k.id);
 }
