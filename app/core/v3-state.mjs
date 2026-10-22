@@ -1,3 +1,4 @@
+import {validRhythmReference,validRhythmHints} from '../content/kana-rhythm.mjs';
 import {validRowReference} from '../content/kana-row.mjs';
 import {validFamilyReference} from '../content/kana-family.mjs';
 import {validBridgeReference} from '../content/kana-bridge.mjs';
@@ -17,7 +18,8 @@ const uniqueIds=items=>Array.isArray(items)&&items.every(safe)&&new Set(items).s
 function answer(a){shape(a,['value','correct','hinted','time']);requireValue(validAnswerValue(a.value)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&time(a.time));}
 export function validateSession(s){
  shape(s,['id','source','reference','questionIds','queue','cursor','answers','hints','corrections','deferred','createdAt','updatedAt','completedAt']);
- requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel','kana-bridge','kana-family','kana-row'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel','kana-bridge','kana-family','kana-row','kana-rhythm'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ if(s.source==='kana-rhythm')requireValue(validRhythmReference(s.reference,s.questionIds)&&s.queue?.length===3,'節奏三題與來源不一致。');
  if(s.source==='kana-row')requireValue(validRowReference(s.reference,s.questionIds),'行段題目與來源不一致。');
  if(s.source==='kana-family')requireValue(validFamilyReference(s.reference,s.questionIds),'聲音家族題目與來源不一致。');
  if(s.source==='kana-bridge')requireValue(validBridgeReference(s.reference,s.questionIds),'平片互換題目與來源不一致。');
@@ -52,7 +54,7 @@ function validateWeekExposure(sessions,hints){
  }
 }
 export function validateV3(v,artifacts=[]){
- shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
+ shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'rhythmHints')?['rhythmHints']:[]),...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'rhythmHints'))requireValue(validRhythmHints(v.rhythmHints),'節奏提示紀錄不正確。');if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
  requireValue(Array.isArray(v.dailyPlans)&&v.dailyPlans.length<=60&&new Set(v.dailyPlans.map(p=>p.id)).size===v.dailyPlans.length);
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
@@ -96,6 +98,7 @@ export function mergeV3(a,b,{blank=false,artifacts=[]}={}){
  }next.dailyPlans=[...plans.values()];
  for(const [id,steps] of Object.entries(b.lessonSteps))next.lessonSteps[id]={...steps,...next.lessonSteps[id]};
  for(const [child,parent] of Object.entries(b.artifactParents)){if(next.artifactParents[child])requireValue(next.artifactParents[child]===parent,'作品修訂分支衝突，未匯入');next.artifactParents[child]=parent;}
+ if(a.rhythmHints||b.rhythmHints){next.rhythmHints={...a.rhythmHints};for(const [key,value] of Object.entries(b.rhythmHints||{}))if(!next.rhythmHints[key]||Date.parse(value)>Date.parse(next.rhythmHints[key]))next.rhythmHints[key]=value;}
  if(a.kanaHints||b.kanaHints)next.kanaHints=mergeHintRecords(a.kanaHints,b.kanaHints);
  if(a.kanaNotes||b.kanaNotes)next.kanaNotes=mergeKanaNotes(a.kanaNotes,b.kanaNotes);
  return validateV3(next,artifacts);
