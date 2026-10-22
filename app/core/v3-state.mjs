@@ -1,3 +1,4 @@
+import {validRowReference} from '../content/kana-row.mjs';
 import {validFamilyReference} from '../content/kana-family.mjs';
 import {validBridgeReference} from '../content/kana-bridge.mjs';
 import {validDuelReference} from '../content/kana-sixth.mjs';
@@ -16,7 +17,8 @@ const uniqueIds=items=>Array.isArray(items)&&items.every(safe)&&new Set(items).s
 function answer(a){shape(a,['value','correct','hinted','time']);requireValue(validAnswerValue(a.value)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&time(a.time));}
 export function validateSession(s){
  shape(s,['id','source','reference','questionIds','queue','cursor','answers','hints','corrections','deferred','createdAt','updatedAt','completedAt']);
- requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel','kana-bridge','kana-family'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel','kana-bridge','kana-family','kana-row'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ if(s.source==='kana-row')requireValue(validRowReference(s.reference,s.questionIds),'行段題目與來源不一致。');
  if(s.source==='kana-family')requireValue(validFamilyReference(s.reference,s.questionIds),'聲音家族題目與來源不一致。');
  if(s.source==='kana-bridge')requireValue(validBridgeReference(s.reference,s.questionIds),'平片互換題目與來源不一致。');
  if(s.source==='kana-duel')requireValue(validDuelReference(s.reference,s.questionIds),'二選一題目與來源不一致。');

@@ -1,0 +1,16 @@
+import {kanaRows,rowById,rowRounds,nextRow,otherScriptRow} from '../content/kana-row.mjs';import {memoryFor} from '../content/kana-memory.mjs';import {pendingRow} from '../core/kana-row.mjs';
+import {escapeHtml as e,heading,back,primary,note,audioButton} from './shared.mjs';
+export function rowLocal(session,id){if(session.kanaRow?.id!==id)session.kanaRow={id,selected:rowById.get(id)?.cells.find(Boolean).id,revealed:false};return session.kanaRow;}
+export function rowView(ctx,id='h-2'){
+ const row=rowById.get(id);if(!row)return back('今天怎麼練','kana-path')+heading('這一行無法開啟。','請重新選擇一行。')+primary('重新選擇','kana-row');
+ const ui=rowLocal(ctx.session,id),pending=pendingRow(ctx.state,id),shown=ui.revealed&&!pending,k=row.cells.find(k=>k?.id===ui.selected),attrs=' data-row-id="'+id+'"',rounds=rowRounds.filter(r=>r.rowId===id),latest=ctx.state.v3.sessions.filter(s=>s.source==='kana-row'&&rounds.some(r=>r.id===s.reference)&&s.completedAt).at(-1);
+ return back('今天怎麼練','kana-path')+heading('先找位置，再把聲音連起來。','一次一行，先自己回想，再按一格看提示。')+
+ '<label for="row-picker">這次練哪一行？</label><select id="row-picker" data-row-picker>'+['hira','kata'].map(script=>'<optgroup label="'+(script==='hira'?'平':'片')+'假名">'+kanaRows.filter(r=>r.script===script).map(r=>'<option value="'+r.id+'" '+(r.id===id?'selected':'')+'>第'+r.number+'行・'+r.cells.filter(Boolean).length+'字</option>').join('')+'</optgroup>').join('')+'</select>'+
+ '<section class="hero"><h2>'+(row.script==='hira'?'平':'片')+'假名・第'+row.number+'行</h2><p>同一行依a、i、u、e、o段排列；用位置幫忙回想，最後仍以字與音確認。</p>'+
+ (pending?'<p>原輪的題目與首答已保存，對照先收起。</p>'+primary('接續原來的聽辨','v3-practice/'+pending.id):'<div class="button-row">'+rounds.map((r,i)=>'<button class="primary" data-row-action="start"'+attrs+' data-row-round="'+r.id+'">'+(rounds.length===1?'這行':i?'後2字':'前3字')+'・離序聽辨'+r.questionIds.length+'題</button>').join('')+'</div>')+'</section>'+
+ (!pending?'<section class="v3-section"><h2>先回想，再逐格打開。</h2><div class="kr-grid" aria-label="母音段位置">'+row.cells.map((cell,i)=>'<div><span>'+['a','i','u','e','o'][i]+'段</span>'+(cell?'<button class="'+(shown&&cell.id===k.id?'primary':'secondary')+'" data-row-action="select"'+attrs+' data-row-target="'+cell.id+'" aria-label="'+['a','i','u','e','o'][i]+'段，先回想再看" aria-pressed="'+Boolean(shown&&cell.id===k.id)+'"><span class="jp" lang="ja">'+(shown&&cell.id===k.id?e(cell.glyph):'？')+'</span></button>':'<span class="kr-empty" aria-label="此段留空">—</span>')+'</div>').join('')+'</div><p>空格保持空白，不補新字。每次只打開一格，其他格繼續自己想。</p>'+
+ (shown?'<div class="kf-answer"><h3>輔助讀音：'+e(k.reading)+'</h3><div class="k6-glyph jp" lang="ja">'+e(k.glyph)+'</div>'+audioButton(k.glyph)+'<p class="jp" lang="ja">'+e(k.word)+'（'+e(k.wordReading)+'）</p><p>'+e(memoryFor(k.id).tip)+'</p><button class="secondary" data-row-action="hide"'+attrs+'>收起字卡，再回想</button>'+note('已顯示的字、詞與訣竅會記錄為提示。切格與自行跟讀不新增答對數或發音評分。')+'</div>':'')+'</section>':'')+
+ '<nav class="button-row lesson-footer" aria-label="切換行段">'+primary('下一行','kana-row/'+nextRow(id))+primary('同一行，換平片假名','kana-row/'+otherScriptRow(id))+'</nav>'+primary('撥音另外練','kana-map/'+(row.script==='hira'?'h-3093':'k-30f3'))+
+ note('羅馬字只是輔助定位，請聽每個字的實際音。撥音不放進母音欄；濁音、半濁音與拗音可到聲音家族另練。離序聽辨只記聽辨能力，不等於會手寫或已跨日記住。')+primary('練清濁聲音家族','kana-family')+(latest?primary('看看最近這輪結果','v3-practice/'+latest.id):'')+primary('隔天再檢查','kana-check')+
+ note('逐格提示刷新後收起，原題與首答會保存。教材與合成音尚待教師審校。');
+}

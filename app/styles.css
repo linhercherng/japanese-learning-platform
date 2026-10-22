@@ -13,3 +13,6 @@
 
 #location-context{position:sticky;top:0;z-index:11;background:var(--paper);border-bottom:1px solid var(--line)}
 .location-nav{padding:10px 24px;font-size:12px;line-height:1.6}.location-label{display:block;color:var(--muted);font-size:10px;letter-spacing:.08em}.location-nav ol{display:flex;flex-wrap:wrap;align-items:center;gap:0 7px;list-style:none;margin:0;padding:0}.location-nav li{display:inline;min-width:0;overflow-wrap:anywhere}.location-nav li+li:before{content:'›';color:var(--muted);margin-right:7px}.location-nav a{display:inline-block;padding:5px 0;text-decoration:underline;text-underline-offset:3px}.location-nav [aria-current]{font-weight:650;color:var(--red)}
+
+/* Five vowel positions stay visible on narrow phones; absent kana are not controls. */
+.kr-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.kr-grid>div{min-width:0;text-align:center}.kr-grid>div>span:first-child{display:block;margin-bottom:8px}.kr-grid button{width:100%;min-width:0;min-height:52px;padding:8px 0}.kr-grid button .jp{font-size:24px}.kr-empty{display:grid;min-height:52px;place-items:center;color:var(--muted)}
