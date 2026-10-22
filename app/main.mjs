@@ -1,3 +1,4 @@
+import {createKanaRow} from './kana-row.mjs';
 import {createKanaFamily} from './kana-family.mjs';
 import {createKanaBridge} from './kana-bridge.mjs';
 import {createKanaSixth} from './kana-sixth.mjs';
@@ -40,6 +41,7 @@ const kanaStudio=createKanaStudio({getState:()=>unsaved||state,getContext:contex
 const kanaLab=createKanaLab({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaRecall=createKanaRecall({getContext:context,update,toast,now,id});
 const kanaSixth=createKanaSixth({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+const kanaRow=createKanaRow({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaFamily=createKanaFamily({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaBridge=createKanaBridge({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaFocus=createKanaFocus({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
@@ -76,6 +78,7 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(kanaRecall.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaFocus.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaSixth.views))views[view]=()=>renderer(param);
+ for(const [view,renderer] of Object.entries(kanaRow.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaFamily.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaBridge.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
@@ -91,7 +94,7 @@ function render(focus=true){
   const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
- kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);v3.afterRender(name,param);
+ kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);v3.afterRender(name,param);
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
 }
 function phonologyQuestions(lessonId){return (kanaPhonology.find(p=>p.lessonId===lessonId)?.questions||[]).map((q,i)=>({item:`${lessonId}-p${i}`,dimension:'language',prompt:q.prompt,options:q.choices.map((label,j)=>({value:String(j),label})),correct:q.choices.indexOf(q.answer),explanation:q.explanation}));}
@@ -155,7 +158,7 @@ function validateCatalog(s){
  const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
  if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!draftIds.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
  v2.validateCatalog(s);
- v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);kanaLab.validateCatalog(s);kanaRecall.validateCatalog(s);kanaFocus.validateCatalog(s);kanaSixth.validateCatalog(s);kanaBridge.validateCatalog(s);kanaFamily.validateCatalog(s);
+ v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);kanaLab.validateCatalog(s);kanaRecall.validateCatalog(s);kanaFocus.validateCatalog(s);kanaSixth.validateCatalog(s);kanaBridge.validateCatalog(s);kanaFamily.validateCatalog(s);kanaRow.validateCatalog(s);
 }
 async function importFile(file){
  if(!file)return;if(file.size>12*1024*1024){toast('備份超過 12 MB，未匯入。');return;}
