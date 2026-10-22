@@ -38,6 +38,6 @@ Files：修改app/kana-focus.mjs、app/ui/kana-focus.mjs、app/v3.mjs、app/ui/v
 
 - [x] 隔離瀏覽器4組／12卡、估拍／對照／三題正錯提示、刷新／同組續作與原來源、正常慢速音；320／390px與44px／鍵盤焦點／console，既有行段與家族回歸。
 - [x] 獨立審查、完整test／build／check／audit、shell hash／JS MIME／SW與音檔HTTP；同步README／課綱／規格／素材／驗收。
-- [ ] PR、CI、相同head合併、Pages、正式HTTPS與瀏覽器驗證／截圖、發布紀錄、remote一致；清理QA頁、server及尺寸。
+- [x] PR #26、CI、相同head合併、Pages、正式HTTPS 116份shell／128次音檔與瀏覽器驗證／截圖、發布紀錄、remote一致；清理QA頁、server及尺寸。
 
 實機依先前決定略過，不宣稱系統IME、真人發音或手寫驗收。QA資料／音檔與個人資料不可提交，證據放ignored work。回退前匯出JSON，舊版可能不識別新來源／optional rhythmHints，保留備份等新版，不清IndexedDB。

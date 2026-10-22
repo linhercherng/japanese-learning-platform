@@ -40,7 +40,12 @@ fingerprint `608f0d890a8f209373d796db7b7dc2e71e0bc1f7680d3c1b1b266204e3da40b6`�
 
 ## 發布
 
-待PR／CI／Pages、正式HTTPS與瀏覽器補記。
+- [PR #26](https://github.com/linhercherng/japanese-learning-platform/pull/26)，head `a74903170c1765657c12964f4ea56e8ff5841f72`；[CI 39788767259](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39788767259)成功，以相同head合併。
+- merge `faf6ff6ca0109abd61889921139943f5e0cb58bf`；[Pages 39789062806](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39789062806)建置與部署成功，完成2026-10-22 13:43:04 UTC（台北21:43）。
+- [正式入口](https://linhercherng.github.io/japanese-learning-platform/#kana-beats)。HTTPS 116份shell SHA／JS MIME／SW與本機fingerprint一致、128次音檔抽查通過；2026-10-22 13:45:36 UTC（台北21:45），ignored `work/tenth-public-http.json`。
+- 一般正式頁舊快取下載後離頁再回，已看到數拍三題；未清快取或IndexedDB。正常庫只讀，隔離QA在390px實際茶估3拍／參考2拍及拍格お／ちゃ，空白鍵估拍可操作。正式畫面在ignored `work/tenth-qa/public-390-rhythm.jpg`。
+- 正式三題照片／旅行／茶均答對：正常／慢速音都確認播放成功，首題刷新仍保留；暫停換同組照片後音鈕與拍格隱藏，續作同UUID，原來源tea不變。茶只因事先看過拍格而列提示，完成2/3無提示、1題提示，沒有提前開解說；返回tea正確。390px無橫溢，console warn／error空。
+- QA頁已關閉、尺寸還原、本機18116server已停止；保留正常正式站入口。此補記只改文件，不改已部署網站檔案。
 
 ## 內容與回退
 
