@@ -26,5 +26,5 @@ export function flipCueItems(item,revealed){
 // Practice cues from today or this still-open round remain distinct from independent recall.
 export function duelCueSeen(hints,q,createdAt,time){
  const day=t=>new Date(t).toLocaleDateString('en-CA',{timeZone:'Asia/Taipei'});
- return [q.reviewItem,q.otherItem].some(id=>{const cue=hints?.[id]?.lastHintAt;return cue&&Date.parse(cue)<=Date.parse(time)&&(Date.parse(cue)>=Date.parse(createdAt)||day(cue)===day(time));});
+ return (q.cueItems||[q.reviewItem,q.otherItem]).some(id=>{const cue=hints?.[id]?.lastHintAt;return cue&&Date.parse(cue)<=Date.parse(time)&&(Date.parse(cue)>=Date.parse(createdAt)||day(cue)===day(time));});
 }

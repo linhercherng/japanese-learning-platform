@@ -1,4 +1,4 @@
-import {pairExposure} from '../content/kana-recall.mjs';
+import {extraKanaExposure} from '../content/kana-recall.mjs';
 import {kana} from '../content/kana.mjs';
 import {coachQuestion} from '../content/kana-coach.mjs';
 import {studyDay} from './v3-state.mjs';
@@ -25,7 +25,7 @@ export function startWeekCheck(state,{id,time}){
  const ids=weekSchedule(state,time).questions.map(q=>q.id);return ids.length?beginV3Session(state,ids,{id,source:'kana-week',reference:studyDay(time),time}):state;
 }
 export function weekEvidence(state,session){
- const pairCues=state.v3.sessions.flatMap(s=>Object.entries(s.answers).flatMap(([id,a])=>{const item=pairExposure(id);return item?[{item,time:Date.parse(a.time)}]:[];}));
+ const pairCues=state.v3.sessions.flatMap(s=>Object.entries(s.answers).flatMap(([id,a])=>extraKanaExposure(id).map(item=>({item,time:Date.parse(a.time)}))));
  const histories=history(state,session.updatedAt),result={total:0,correct:0,hinted:0,excluded:0};
  for(const [id,a] of Object.entries(session.answers)){
   const q=coachQuestion(id);if(!q){result.excluded++;continue;}
