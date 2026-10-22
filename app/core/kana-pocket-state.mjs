@@ -1,6 +1,6 @@
 import {kana} from '../content/kana.mjs';
 const ids=new Set(kana.map(k=>k.id)),plain=v=>v&&typeof v==='object'&&!Array.isArray(v);
-const validTime=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
+const validTime=v=>typeof v==='string'&&/^\d{4}-\d\d-\d\dT/.test(v)&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
 export function validatePocket(records){
  if(!plain(records)||Object.keys(records).length>ids.size)throw Error('不熟字口袋格式不正確。');
  for(const [id,r]of Object.entries(records))if(!ids.has(id)||!plain(r)||Object.keys(r).length!==2||typeof r.active!=='boolean'||!validTime(r.time))throw Error('不熟字口袋格式不正確。');

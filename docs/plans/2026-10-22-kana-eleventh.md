@@ -27,8 +27,8 @@ Files：app/core/kana-pocket-state.mjs、app/core/kana-pocket.mjs、app/core/v3-
 
 Files：app/kana-sixth.mjs、app/ui/kana-sixth.mjs、app/ui/kana-focus.mjs、app/ui/navigation.mjs；tests/kana-pocket-ui.test.mjs、tests/kana-pocket-controller.test.mjs。
 
-- [ ] 先失敗：空清單／三字前後隱藏、顯式留存與移出、翻卡原功能、刷新／過期／雙擊／延遲／失敗保存、曝光與默寫／七日同步、麵包屑無答案。
-- [ ] 實作入口、固定三字局部輪、按鈕焦點、清楚自評說明，版本v0.15.0；test、build後check，提交。
+- [x] 先失敗：空清單／三字前後隱藏、顯式留存與移出、翻卡原功能、刷新／過期／雙擊／延遲／失敗保存、曝光與默寫／七日同步、麵包屑無答案。
+- [x] 實作入口、固定三字局部輪、按鈕焦點、清楚自評說明，版本v0.15.0；test、build後check，提交。
 
 ## Task 3：驗收、審查、發布
 
