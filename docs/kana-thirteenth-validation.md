@@ -24,7 +24,12 @@
 
 本機122份shell逐檔SHA-256、JS MIME、SW fingerprint與128次既有音檔HTTP抽查通過，2026-10-22 16:02:14 UTC（台北10/23 00:02）。fingerprint `71e22cfc69251f278c82f30bfcbe03ea5859ffdef1c6e308ba7d84183078aa53`。ignored work/thirteenth-local-http.json。
 
-正式GitHub與Pages發布尚待執行，完成後補上可查核證據。
+- [PR #29](https://github.com/linhercherng/japanese-learning-platform/pull/29)，head `6e1368689a32f367d845bff4c89abe8e036fdba8`；[PR CI 39810651860](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39810651860) completed/success，按相同head合併。
+- merge `92563600a910ab2885d7894f079a363a0028f348`，2026-10-22 16:05:27 UTC（台北10/23 00:05）；[Pages 39810937235](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39810937235) build/deploy皆completed/success，deploy完成16:06:44 UTC（台北00:06）。
+- 正式HTTPS端點122份shell SHA、JS MIME、SW fingerprint與本機相同，128次音檔抽查全通過；2026-10-22 16:08:03 UTC（台北10/23 00:08），ignored work/thirteenth-public-http.json。
+- 一般正式來源重載、離頁再開後，無效回顧路由呈現新版缺輪提示，回正常口袋0字；未清快取或IndexedDB，未改個人學習資料。
+- 正式隔離QA沿用第十二批已完成的が／パ／あ原輪：新版結果入口、原順序與提示狀態正確；パ仍是首答答錯、原選字ベ。切字關閉線索，空白鍵展開與字音播放正常；刷新回首字且收起。自評移出あ後，從原回顧主動留回，狀態與選單焦點正確；再回原結果仍0/3無提示、3提示，沒有新增成績。
+- 正式320/390px共5個收起、展開、留回及最終狀態量測，無橫溢、主要控制至少44px，console warn/error空。手機畫面ignored work/thirteenth-qa/public-390-review.jpg，public-layout.json保留量測。QA頁關閉、尺寸還原、本機18119 server停止；保留一般正式站分頁。此補記僅更新文件，不改已發布app檔案。
 
 ## 邊界與回退
 
