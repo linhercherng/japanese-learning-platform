@@ -1,7 +1,7 @@
 import {kana} from './content/kana.mjs';
 import {duelPairs,flipCueItems,validDuelReference} from './content/kana-sixth.mjs';
 import {newFlip,advanceFlip,startDuel} from './core/kana-sixth.mjs';
-import {setPocket,newPocketRound,advancePocket} from './core/kana-pocket.mjs';
+import {setPocket,newPocketRound,advancePocket,startPocketListen,pendingPocketListen} from './core/kana-pocket.mjs';
 import {recordKanaExposure,readDictation} from './core/kana-studio.mjs';
 import {flipView,duelView,flipLocal,pendingDuel,pocketView} from './ui/kana-sixth.mjs';
 export function createKanaSixth({getContext,update,render,toast,now,id,cacheDraft}){
@@ -10,6 +10,13 @@ export function createKanaSixth({getContext,update,render,toast,now,id,cacheDraf
   const [name,param]=location.hash.slice(1).split('/'),ctx=getContext();
   if(name==='kana-pocket'){
    const r=ctx.session.kanaPocketRound;
+   if(d.sixAction==='pocket-listen'){
+    if(!pendingPocketListen(ctx.state)&&r&&r.cursor<r.queue.length)return;
+    const origin=location.hash,sessionId=id(),time=now();let destination;
+    await update(s=>{const next=startPocketListen(s,{id:sessionId,time});destination=pendingPocketListen(next)?.id;return next;});
+    if(destination&&location.hash===origin)location.hash='v3-practice/'+destination;return;
+   }
+   if(pendingPocketListen(ctx.state))return;
    if(d.sixAction==='pocket-start'){if(r&&r.cursor<r.queue.length)return;ctx.session.kanaPocketRound=newPocketRound(ctx.state,id());}
    else {if(!r||r.key!==d.pocketRound||r.cursor!==Number(d.sixIndex)||r.queue[r.cursor]!==d.sixItem)return;
     if(d.sixAction==='pocket-reveal')r.revealed=true;
@@ -37,10 +44,10 @@ export function createKanaSixth({getContext,update,render,toast,now,id,cacheDraf
  function afterRender(name,param){
   const ctx=getContext();let items=[];
   if(name==='kana-flip'){const r=flipLocal(ctx.session,param||'h-3042');items=r.cursor<r.queue.length?flipCueItems(r.queue[r.cursor],r.revealed):r.needs;}
-  if(name==='kana-pocket'){const r=ctx.session.kanaPocketRound;if(r&&r.cursor<r.queue.length)items=flipCueItems(r.queue[r.cursor],r.revealed);}
+  if(name==='kana-pocket'&&!pendingPocketListen(ctx.state)){const r=ctx.session.kanaPocketRound;if(r&&r.cursor<r.queue.length)items=flipCueItems(r.queue[r.cursor],r.revealed);}
   if(name==='kana-duel'){const p=duelPairs.find(p=>p.id===param);if(p&&ctx.session.sixCompare===p.id&&!pendingDuel(ctx.state,p.id)){const text=p.left+p.right+p.difference+p.memoryTip;items=kana.filter(k=>text.includes(k.glyph)).map(k=>k.id);}}
   if(!items.length)return;const time=now();update(s=>{const next=recordKanaExposure(s,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));
  }
  document.addEventListener('click',click);document.addEventListener('change',change);
- return {views:{'kana-pocket':()=>pocketView(getContext()),'kana-flip':item=>flipView(getContext(),item),'kana-duel':pair=>duelView(getContext(),pair)},afterRender,validateCatalog(state){for(const s of state.v3.sessions)if(s.source==='kana-duel'&&(!validDuelReference(s.reference,s.questionIds)||s.queue.some(q=>!s.questionIds.includes(q.questionId))))throw Error('備份含不一致的二選一。');},dispose(){document.removeEventListener('click',click);document.removeEventListener('change',change);}};
+ return {views:{'kana-pocket':()=>pocketView(getContext(),now()),'kana-flip':item=>flipView(getContext(),item),'kana-duel':pair=>duelView(getContext(),pair)},afterRender,validateCatalog(state){for(const s of state.v3.sessions)if(s.source==='kana-duel'&&(!validDuelReference(s.reference,s.questionIds)||s.queue.some(q=>!s.questionIds.includes(q.questionId))))throw Error('備份含不一致的二選一。');},dispose(){document.removeEventListener('click',click);document.removeEventListener('change',change);}};
 }

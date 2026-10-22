@@ -2,7 +2,7 @@ import {kana} from '../content/kana.mjs';
 import {memoryFor} from '../content/kana-memory.mjs';
 import {duelPairs,nextFlipStart} from '../content/kana-sixth.mjs';
 import {newFlip} from '../core/kana-sixth.mjs';
-import {pocketItems} from '../core/kana-pocket.mjs';
+import {pocketItems,pendingPocketListen,pocketListeningIds} from '../core/kana-pocket.mjs';
 import {escapeHtml as e,heading,back,primary,note,audioButton} from './shared.mjs';
 const groups={basic:'基本字',voiced:'濁音',semivoiced:'半濁音',contracted:'拗音'};
 export function flipLocal(session,item){if(session.kanaFlip?.key!==item)session.kanaFlip=newFlip(item);return session.kanaFlip;}
@@ -17,11 +17,14 @@ export function flipView(ctx,item='h-3042'){
  return intro+'<section class="v3-section"><p>'+ (r.cursor+1)+' / '+r.queue.length+' 次展示'+(r.repeated.includes(k.id)&&r.cursor>=3?' · 隔開後再看':'')+'</p><div class="k6-glyph jp" lang="ja">'+e(k.glyph)+'</div><p>先自己讀一次；再按對照確認，不必搶快。</p>'+
  (r.revealed?'<div class="feedback"><h2>輔助讀音：'+e(k.reading)+'</h2>'+audioButton(k.glyph)+'<p class="jp" lang="ja">'+e(k.word)+'（'+e(k.wordReading)+'）</p><p>'+e(memoryFor(k.id).tip)+'</p></div><div class="button-row"><button class="secondary" data-six-action="flip-again"'+attrs+'>還不熟，稍後再想</button><button class="primary" data-six-action="flip-next"'+attrs+'>先往下一張</button></div>':'<button class="primary" data-six-action="flip-reveal"'+attrs+'>展開讀音與訣竅</button>')+'</section>'+note('選「還不熟」會保存到不熟字口袋；後方至少有兩張才排到末尾，每卡最多一次；不足時留待下一輪。最多六次展示，不把自評當作答對。')+'<button class="secondary" data-six-action="flip-reset">這組重新開始</button>'+primary('換下一組三張','kana-flip/'+nextFlipStart(item))+note('本輪暫存，刷新會重新開始；不熟字口袋保留。看字與對照會記錄提示曝光；想確認是否記住，隔天再檢查。');
 }
-export function pocketView(ctx){
+export function pocketView(ctx,time=new Date().toISOString()){
  const count=pocketItems(ctx.state).length,r=ctx.session.kanaPocketRound,k=kana.find(k=>k.id===r?.queue[r.cursor]);
  const intro=back('看字想聲翻卡','kana-flip')+heading('不熟字，留一個小口袋。','先回想，再看原有讀音與訣竅；每輪最多三字，不必一次清空。')+'<p role="status">口袋裡有'+count+'字。</p>';
- const footer=note('口袋是自己的練習清單，不是答對或熟練證明。清單隨本機資料與JSON備份保存；移出仍保留既有答題與提示。這輪展示進度暫存，刷新會收起提示、重新挑尚留口袋的字。')+primary('隔天獨立檢查','kana-check')+primary('今天怎麼練','kana-path');
- if(!r||!k)return intro+'<section class="hero"><h2>'+(r?'這輪已對照'+r.queue.length+'字。':count?'從較早留下的字開始。':'還沒有留下不熟字。')+'</h2><p>'+(r?'先休息一下，需要時再手動挑下一輪。':count?'混合不同位置留下的字，不按原來同一行順序提示。':'在翻卡展開對照後，選「還不熟，稍後再想」即可留下。')+'</p>'+(count?'<button class="primary" data-six-action="pocket-start">'+(r?'再挑最多三字':'挑最多三字，先回想')+'</button>':primary('去翻卡留下一個字','kana-flip'))+'</section>'+footer;
+ const pending=pendingPocketListen(ctx.state),latest=ctx.state.v3.sessions.filter(s=>s.source==='kana-pocket-listen'&&s.completedAt).at(-1),listenCount=pocketListeningIds(ctx.state,time).length;
+ if(pending)return intro+'<section class="hero"><h2>先接續原來的聽音回想。</h2><p>原字卡、題序與首答已保存，先把字卡與讀音收起。</p>'+primary('接續口袋聽音回想','v3-practice/'+pending.id)+'</section>'+note('清單後來有調整，也會接續原輪；聽辨答對不會自動移出口袋。')+primary('今天怎麼練','kana-path');
+ const listening=(listenCount?'<section class="v3-section"><h2>收起字卡，從聲音想一次。</h2><p>這輪最多'+listenCount+'題，正常或慢速聽完再選字；看過同日／本輪提示的首答會另列，原清單不會自動移出。</p><button class="secondary" data-six-action="pocket-listen">收起字卡，聽音回想</button></section>':'')+(latest?primary('看看這輪口袋聽辨結果','v3-practice/'+latest.id):'');
+ const footer=note('口袋是自己的練習清單，不是答對或熟練證明。清單隨本機資料與JSON備份保存；移出仍保留既有答題與提示。自評展示進度暫存，刷新會收起提示、重新挑尚留口袋的字；聽音回想的原輪與首答另行保存。')+primary('隔天獨立檢查','kana-check')+primary('今天怎麼練','kana-path');
+ if(!r||!k)return intro+'<section class="hero"><h2>'+(r?'這輪已對照'+r.queue.length+'字。':count?'從較早留下的字開始。':'還沒有留下不熟字。')+'</h2><p>'+(r?'先休息一下，需要時再手動挑下一輪。':count?'混合不同位置留下的字，不按原來同一行順序提示。':'在翻卡展開對照後，選「還不熟，稍後再想」即可留下。')+'</p>'+(count?'<button class="primary" data-six-action="pocket-start">'+(r?'再挑最多三字':'挑最多三字，先回想')+'</button>':primary('去翻卡留下一個字','kana-flip'))+'</section>'+listening+footer;
  const attrs=' data-pocket-round="'+e(r.key)+'" data-six-item="'+k.id+'" data-six-index="'+r.cursor+'"';
  return intro+'<section class="v3-section"><p>'+(r.cursor+1)+' / '+r.queue.length+' · 這輪字卡已固定</p><div class="k6-glyph jp" lang="ja">'+e(k.glyph)+'</div><p>先在心裡讀一次，再展開確認。</p>'+(r.revealed?'<div class="feedback"><h2>輔助讀音：'+e(k.reading)+'</h2>'+audioButton(k.glyph)+'<p class="jp" lang="ja">'+e(k.word)+'（'+e(k.wordReading)+'）</p><p>'+e(memoryFor(k.id).tip)+'</p></div><div class="button-row"><button class="secondary" data-six-action="pocket-keep"'+attrs+'>還不熟，留在口袋</button><button class="primary" data-six-action="pocket-remove"'+attrs+'>這次想起，移出口袋</button></div>':'<button class="primary" data-six-action="pocket-reveal"'+attrs+'>展開讀音與訣竅</button>')+'</section>'+footer;
 }

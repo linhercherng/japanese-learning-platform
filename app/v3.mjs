@@ -58,7 +58,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  }
  async function submit(value){
   const snapshot=currentQuestion();if(!snapshot)return;const {sid,cursor,q}=snapshot,hash=location.hash,time=now(),eventId=id();
-  await update(s=>{const current=s.v3.sessions.find(s=>s.id===sid);if(!current||current.completedAt||current.cursor!==cursor||current.queue[cursor].questionId!==q.id)throw new Error('題目已切換，請回答目前顯示的題目。');let next=answerV3Session(s,{sessionId:sid,question:q,value,eventId,time,variants:q.mode?kanaDrills:v3Questions});delete next.drafts[`text:${sid}`];return next;});
+  await update(s=>{const current=s.v3.sessions.find(s=>s.id===sid);if(!current||current.completedAt||current.cursor!==cursor||current.queue[cursor].questionId!==q.id)throw new Error('題目已切換，請回答目前顯示的題目。');let next=answerV3Session(s,{sessionId:sid,question:q,value,eventId,time,variants:current.source==='kana-pocket-listen'?[]:q.mode?kanaDrills:v3Questions});delete next.drafts[`text:${sid}`];return next;});
   clearDraft(sid);refresh(hash);
  }
  async function nextQuestion(){
