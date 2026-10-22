@@ -148,3 +148,7 @@
 ## 五十音記憶第十批（v0.14.0，2026-10-22）
 
 一拍一格內整合估拍差異、數拍三題及最近結果，不增加導覽入口。source=kana-rhythm、reference=原來源card，嚴格三題順序，同組pending先續原輪且收起對照。optional rhythmHints只接受12詞時間，schema3不遷移，備份合併保留較晚曝光；V3全來源及V2到期複習均依實際kr題套提示與答後曝光，保留首答。實際假名曝光同步七日／默寫草稿快取。[規劃](plans/2026-10-22-kana-tenth.md)、[驗收](kana-tenth-validation.md)。
+
+## 五十音記憶第十一批（v0.15.0，2026-10-22）
+
+翻卡與今天怎麼練可進入kana-pocket。optional v3.kanaPocket僅存208個合法字卡的active／canonical UTC time事件，移出亦保留墓碑，較晚事件優先、同時衝突保留active，備份拒絕不合法資料。原schema3／題庫／作答與複習不變。每輪最多三張、先展開才自評，按鈕阻止快速連按與過期動作；保存失敗不前進、待存可匯出，延遲離頁不拉回。字形及實際展開例詞／訣竅沿用曝光機制同步七日與默寫快取。自評不計分，輪次暫存刷新重來，清單保存。[規劃](plans/2026-10-22-kana-eleventh.md)、[驗收](kana-eleventh-validation.md)。
