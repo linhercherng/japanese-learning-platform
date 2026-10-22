@@ -23,6 +23,6 @@
 - [x] 控制器過期按鈕、翻卡焦點／刷新、提示曝光與保存失敗測試。
 - [x] 320／390px真實瀏覽器：分類、三張循環／重排、二選一／提示／續作／來源導航，console及尺寸。
 - [x] test／build／check／audit、獨立審查與修正。
-- [ ] PR／CI／merge／Pages／正式HTTPS、發布紀錄與清理。
+- [x] PR／CI／merge／Pages／正式HTTPS、發布紀錄與清理。
 
 回退前匯出JSON；舊版不保證讀取新kana-duel來源，保留備份等待新版恢復。不清IndexedDB。無真人發音／實機效果或長期記憶效果驗收。

@@ -31,7 +31,12 @@
 
 ## 發布
 
-待PR、CI、Pages及正式HTTPS與瀏覽器補記。
+- [PR #22](https://github.com/linhercherng/japanese-learning-platform/pull/22)：實作head `588a1712a44418528da5811bfb07a2c322e9f630`；[PR CI](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39767785778)成功，依相同head合併。
+- main merge `85ddc584d844b09e99d4af4c9e9e051c2c428e3d`；[Pages build／deploy](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39767971805)均成功，2026-10-22 11:06:34 UTC完成部署（台北19:06）。
+- 正式HTTPS於2026-10-22 11:07:21 UTC（台北19:07）逐檔驗證：102個shell SHA-256與本機manifest相符、JS MIME及service-worker fingerprint一致，62次音檔HTTP抽查通過。fingerprint同上；完整JSON在ignored `work/sixth-public-http.json`。
+- 正式站既有瀏覽器先顯示舊快取；重新載入下載更新，離開頁面再回來後，正常資料庫的今天怎麼練已顯示兩個新版入口，未清除個人進度或快取。
+- 正式站 `?qa=1` 隔離庫、390px：實際從今天怎麼練進翻卡，確認展開讀音／詞例／訣竅、播放狀態，以及還不熟後進到2/4。返回路徑進混淆字目錄，以ソ／ン完成兩題；正常與慢速音鈕可操作，首答正確刷新仍保留，第二題因答後雙字曝光顯示提示狀態且解說仍收起。完成列1/2無提示、1題提示。console warn／error空，無橫向溢出。畫面留於ignored `work/sixth-qa/public-390-flip.jpg`。
+- 公開入口：[今天怎麼練](https://linhercherng.github.io/japanese-learning-platform/#kana-path)、[看字想聲翻卡](https://linhercherng.github.io/japanese-learning-platform/#kana-flip)、[混淆字二選一](https://linhercherng.github.io/japanese-learning-platform/#kana-duel)。
 
 ## 邊界與回退
 
