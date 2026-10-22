@@ -152,3 +152,7 @@
 ## 五十音記憶第十一批（v0.15.0，2026-10-22）
 
 翻卡與今天怎麼練可進入kana-pocket。optional v3.kanaPocket僅存208個合法字卡的active／canonical UTC time事件，移出亦保留墓碑，較晚事件優先、同時衝突保留active，備份拒絕不合法資料。原schema3／題庫／作答與複習不變。每輪最多三張、先展開才自評，按鈕阻止快速連按與過期動作；保存失敗不前進、待存可匯出，延遲離頁不拉回。字形及實際展開例詞／訣竅沿用曝光機制同步七日與默寫快取。自評不計分，輪次暫存刷新重來，清單保存。[規劃](plans/2026-10-22-kana-eleventh.md)、[驗收](kana-eleventh-validation.md)。
+
+## 五十音記憶第十二批（v0.16.0，2026-10-22）
+
+kana-pocket內整合聽辨入口與最近結果，不增導覽。source=kana-pocket-listen，每輪1～3個既有kc聽辨題；reference依原題序連字卡ID，嚴格驗證queue與單一pending，清單改動不重排原輪。source的首答提示包含同日／本輪目標曝光；V3只有實際render出解說／個人線索後才解析其中假名，更新七日／默寫草稿／快取，隱藏文字不預記。自評清單不因答對改動，原schema3／ID不遷移，保存失敗可匯出、延遲離頁不拉回。[規劃](plans/2026-10-22-kana-twelfth.md)、[驗收](kana-twelfth-validation.md)。

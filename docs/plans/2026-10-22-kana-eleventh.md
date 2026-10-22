@@ -35,6 +35,6 @@ Files：app/kana-sixth.mjs、app/ui/kana-sixth.mjs、app/ui/kana-focus.mjs、app
 - [x] 隔離瀏覽器建立口袋、刷新、三字混合／先回想再展開／移出；Node備份往返；空、進行、完成狀態320／390px、44px、鍵盤／音鈕與console；既有翻卡／二選一與節奏回歸。
 - [x] 依requesting-code-review獨立審查核心與UI，完整npm test 349/349、npm run build、npm run check、npm audit --audit-level=high；README／規格／課綱／素材／驗收同步。
 - [x] PR #27、CI成功、相同head合併、正式HTTPS118份shell SHA／MIME／SW及128次音檔、隔離瀏覽器驗證／截圖；發布證據與remote同步；清理本輪server／QA頁。
-- [ ] Pages工作整體completed／success回報：網站已實際驗證新版，build成功，但API最後仍顯示deploy waiting，詳見驗收；未變更環境防護。
+- [x] Pages工作整體completed／success回報：第十二批於2026-10-22補查build／deploy皆成功（deploy完成14:20:05 UTC）；前次waiting為當時API觀測，詳見驗收；未變更環境防護。
 
 實機依使用者前次決定略過，不宣稱實機／IME／發音自動評分。素材沿用既有原創試用教材，尚待教師審校。回退前保留JSON，新optional欄位舊版可能無法匯入，不清IndexedDB。

@@ -42,6 +42,8 @@ optional v3.kanaPocket存active／canonical UTC time（含移出墓碑）；合�
 
 ## 教材與回退
 
+第十二批補查（2026-10-22）：上述Pages工作39793736230已completed／success，build／deploy皆成功，deploy completedAt為14:20:05 UTC；waiting為先前API觀測，正式驗證與最終工作結果均已確認。詳見[第十二批驗收](kana-twelfth-validation.md)。
+
 沿用208卡、508筆順、10947音檔索引與K包668檔，無新增依賴或外部素材。原創試用訣竅與合成音仍待教師審校。口袋自評不能取代隔天獨立回想，亦不偵測站外學習或評分發音。
 
 回退前匯出JSON；舊版可能不識別optional kanaPocket，保留備份等新版，不清IndexedDB。QA資料、個人清單與備份不提交。

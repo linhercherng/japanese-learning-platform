@@ -44,9 +44,9 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
   local().order=[];location.hash=`v3-practice/${destination}`;
  }
  function currentQuestion(){const [name,sid]=route(),s=state().v3.sessions.find(s=>s.id===sid);if(name!=='v3-practice'||!s||s.completedAt)return null;const entry=s.queue[s.cursor],q=resolve(entry?.questionId);return q?{sid,cursor:s.cursor,q}:null;}
- function expose(s,q,time){
+ function expose(s,q,time,shownItems=[]){
   const rhythm=rhythmQuestion(q.id);if(!rhythm&&!kana.some(k=>k.id===q.reviewItem))return s;
-  const items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[q.reviewItem,...extraKanaExposure(q.id)];
+  const items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[...new Set([q.reviewItem,...extraKanaExposure(q.id),...shownItems])];
   const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time):recordKanaExposure(s,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;
  }
  function afterRender(name,sid){
@@ -54,11 +54,14 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
   const entry=session.queue[session.cursor],q=resolve(entry?.questionId),answer=entry?.repeat?session.corrections[session.cursor]:session.answers[entry?.questionId];
   if(!q||!rhythmQuestion(q.id)&&!kana.some(k=>k.id===q.reviewItem)||!answer&&!session.hints.includes(q.id))return;
   const time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString();
-  update(s=>expose(s,q,time)).catch(error=>toast(error.message));
+  // Only the feedback and personal cue that this render actually showed count as exposure.
+  const shownText=session.source==='kana-pocket-listen'?q.explanation+(ctx().state.v3.kanaNotes?.[q.reviewItem]?.text||''):'';
+  const shownItems=kana.filter(k=>shownText.includes(k.glyph)).map(k=>k.id);
+  update(s=>expose(s,q,time,shownItems)).catch(error=>toast(error.message));
  }
  async function submit(value){
   const snapshot=currentQuestion();if(!snapshot)return;const {sid,cursor,q}=snapshot,hash=location.hash,time=now(),eventId=id();
-  await update(s=>{const current=s.v3.sessions.find(s=>s.id===sid);if(!current||current.completedAt||current.cursor!==cursor||current.queue[cursor].questionId!==q.id)throw new Error('題目已切換，請回答目前顯示的題目。');let next=answerV3Session(s,{sessionId:sid,question:q,value,eventId,time,variants:q.mode?kanaDrills:v3Questions});delete next.drafts[`text:${sid}`];return next;});
+  await update(s=>{const current=s.v3.sessions.find(s=>s.id===sid);if(!current||current.completedAt||current.cursor!==cursor||current.queue[cursor].questionId!==q.id)throw new Error('題目已切換，請回答目前顯示的題目。');let next=answerV3Session(s,{sessionId:sid,question:q,value,eventId,time,variants:current.source==='kana-pocket-listen'?[]:q.mode?kanaDrills:v3Questions});delete next.drafts[`text:${sid}`];return next;});
   clearDraft(sid);refresh(hash);
  }
  async function nextQuestion(){
@@ -103,7 +106,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
    case 'submit-text':{const field=document.querySelector('#v3-answer'),value=field?.value.trim()||'';if(currentQuestion()?.q.id.startsWith('kt:')){if(composingInput===field||compositionSubmitBlocked){compositionSubmitBlocked=false;toast('先完成日文輸入法的選字，再提交。');return;}if(!value){toast('先輸入假名，再提交；需要幫忙可以使用提示。');return;}if(value.length>50){toast('這題最多輸入50字。');return;}}return submit(value);}
    case 'submit-order':return submit([...(local().order||[])]);
    case 'next':return nextQuestion();
-   case 'hint':{const current=currentQuestion();if(!current)return;const time=now();await update(s=>{const active=s.v3.sessions.find(p=>p.id===current.sid);if(!active||active.completedAt||active.cursor!==current.cursor||(active.queue[active.cursor].repeat?active.corrections[active.cursor]:active.answers[current.q.id]))return s;return expose(hintV3Question(s,current.sid,time),current.q,time);});break;}
+   case 'hint':{const current=currentQuestion();if(!current)return;const time=now();await update(s=>{const active=s.v3.sessions.find(p=>p.id===current.sid);if(!active||active.completedAt||active.cursor!==current.cursor||(active.queue[active.cursor].repeat?active.corrections[active.cursor]:active.answers[current.q.id]))return s;const next=hintV3Question(s,current.sid,time);return active.source==='kana-pocket-listen'?next:expose(next,current.q,time);});break;}
    case 'concept-practice':{const qs=v3Questions.filter(q=>q.conceptId===d.v3Concept&&q.dimension===d.v3Dimension);return begin(qs,{source:'concept',reference:`${d.v3Concept}:${d.v3Dimension}`});}
    case 'confusion-practice':{const pair=confusionPairs.find(p=>p.id===d.v3Pair);if(!pair)throw new Error('找不到這組字');return begin(v3Questions.filter(q=>q.conceptId===pair.conceptId),{source:'confusion',reference:pair.id});}
    case 'deep-practice':{const u=deepLessons.find(u=>u.id===d.v3Unit);if(!u)throw new Error('找不到這一課');return begin(u.questionIds.map(resolve).filter(Boolean),{source:'lesson',reference:u.id});}
