@@ -1,3 +1,4 @@
+import {duelQuestion} from './kana-sixth.mjs';
 import {kanaDrills} from './kana-drills.mjs';
 import {memoryFor} from './kana-memory.mjs';
 import {buildQuestion} from './kana-lab.mjs';
@@ -15,4 +16,4 @@ export function validRecallReference(source,reference,ids,registry){
 }
 
 const pairDrills=new Map(kanaDrills.filter(q=>q.mode==='pair').map(q=>[q.id,q]));
-export function pairExposure(id){const q=String(id).endsWith(':pair')?coachQuestion(id):pairDrills.get(id);return q?.mode==='pair'?memoryFor(q.reviewItem).partnerId:null;}
+export function pairExposure(id){const duel=duelQuestion(id);if(duel)return duel.otherItem;const q=String(id).endsWith(':pair')?coachQuestion(id):pairDrills.get(id);return q?.mode==='pair'?memoryFor(q.reviewItem).partnerId:null;}

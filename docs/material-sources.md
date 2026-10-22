@@ -70,3 +70,8 @@
 ## 五十音記憶第五批（2026-10-21）
 
 12個生活詞與合成音沿用既有詞庫／音檔，納入假名K離線包，無新增外部音訊、圖片或依賴。「一拍一格」拍格、繁中訣竅與介面文字為日和自編試用內容，尚待教師審校。音拍規則查核參考[東京外國語大學拗音練習](https://www.coelang.tufs.ac.jp/mt/ja/pmod/practical/01-11-02.php)、[長音](https://www.coelang.tufs.ac.jp/mt/ja/pmod/practical/02-02-01.php)及[撥音](https://www.coelang.tufs.ac.jp/mt/ja/pmod/practical/02-03-01.php)，未複製其音檔／插圖。範圍與證據見[第五批驗收](kana-fifth-validation.md)。
+
+
+## 五十音記憶第六批（v0.10.0，2026-10-22）
+
+使用既有208卡、六組原創試用差異說明及K包音檔，沒有新音檔／圖像／依賴或外部素材。新介面與練習編排為日和原創；教材與合成音仍待獨立教師審校。詳見[第六批設計](plans/2026-10-22-kana-sixth.md)與[驗收](kana-sixth-validation.md)。

@@ -20,3 +20,5 @@
 .kf-beats{display:flex;flex-wrap:wrap;gap:.65rem;list-style:none;padding:0;margin:1rem 0}
 .kf-beats li{display:grid;place-items:center;min-width:3rem;min-height:3rem;padding:.35rem .65rem;border:1px solid var(--line);border-radius:.6rem;background:var(--green-soft);font-size:1.5rem}
 .kf-answer{margin-top:1.25rem;border-top:1px solid var(--line);padding-top:1rem}
+.k6-glyph{font-size:80px;line-height:1.5;text-align:center;margin:1rem 0;color:var(--green)}
+.k6-pair{display:flex;justify-content:space-evenly;gap:1rem;font-size:64px;line-height:1.5;margin:1rem 0}

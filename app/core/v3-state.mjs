@@ -1,3 +1,4 @@
+import {validDuelReference} from '../content/kana-sixth.mjs';
 import {validRepairReference} from '../content/kana-focus.mjs';
 import {validateHintRecords,mergeHintRecords,validateKanaNotes,mergeKanaNotes} from './kana-studio-state.mjs';
 import {validAnswerValue} from './study.mjs';
@@ -13,7 +14,8 @@ const uniqueIds=items=>Array.isArray(items)&&items.every(safe)&&new Set(items).s
 function answer(a){shape(a,['value','correct','hinted','time']);requireValue(validAnswerValue(a.value)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&time(a.time));}
 export function validateSession(s){
  shape(s,['id','source','reference','questionIds','queue','cursor','answers','hints','corrections','deferred','createdAt','updatedAt','completedAt']);
- requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ if(s.source==='kana-duel')requireValue(validDuelReference(s.reference,s.questionIds),'二選一題目與來源不一致。');
  if(s.source==='kana-repair')requireValue(validRepairReference(s.reference,s.questionIds),'弱點三題的字卡與題目不一致。');
  requireValue(Array.isArray(s.queue)&&s.queue.length<=120&&s.queue.length>=s.questionIds.length&&Number.isInteger(s.cursor)&&s.cursor>=0&&s.cursor<=s.queue.length);
  const original=[];
