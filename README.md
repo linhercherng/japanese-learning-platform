@@ -2,7 +2,7 @@
 
 繁體中文、手機優先的日語學習平台，從五十音到生活日語，再循序練習 N5、N4、N3、N2。每課先理解、聽讀，收起提示回想，最後寫自己的句子。
 
-**五十音練習工坊公開試用程式 v0.9.0，2026-10-21。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
+**五十音練習工坊公開試用程式 v0.10.0，2026-10-22。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
 
 新增[記憶地圖](https://linhercherng.github.io/japanese-learning-platform/#kana-map)、[混淆字專練](https://linhercherng.github.io/japanese-learning-platform/#kana-confusions)、[隔天檢查](https://linhercherng.github.io/japanese-learning-platform/#kana-check)：分能力查看208張卡，依實際首答補強混淆，每日最多10題檢查較早學過的字。手寫仍為作品與自評；備份沿用現有格式，詳見[本批驗收與限制](docs/kana-coach-validation.md)。
 
@@ -15,6 +15,8 @@ v0.6.1補做手機版驗收：320／390px各15類頁面、320px大字6頁與畫�
 第四批新增[聽音打字回想](https://linhercherng.github.io/japanese-learning-platform/#kana-type)、[七日回想](https://linhercherng.github.io/japanese-learning-platform/#kana-week)、[回想小結](https://linhercherng.github.io/japanese-learning-platform/#kana-recall)：509題改用日文鍵盤自主輸入，七日檢查依真實作答日期與提示挑最多10題，小結以同字同能力每日首筆分開呈現認字／聽辨／詞語運用。IME選字中與空白不誤送，既有首答、草稿與備份保留；詳見[第四批規劃](docs/plans/2026-10-21-kana-fourth.md)與[驗收](docs/kana-fourth-validation.md)。
 
 第五批新增[今天怎麼練](https://linhercherng.github.io/japanese-learning-platform/#kana-path)、[弱點三題](https://linhercherng.github.io/japanese-learning-platform/#kana-repair)、[一拍一格](https://linhercherng.github.io/japanese-learning-platform/#kana-beats)：依四種學習目的選練法，從真實弱項挑最多三字三題；12個生活詞先聽、數拍，再展開拍格與訣竅。拍格為引導對照，不自動評分拍點或發音；首答、提示曝光、續作及舊資料保留。詳見[第五批規劃](docs/plans/2026-10-21-kana-fifth.md)與[驗收](docs/kana-fifth-validation.md)。
+
+第六批新增[看字想聲翻卡](https://linhercherng.github.io/japanese-learning-platform/#kana-flip)、[混淆字二選一](https://linhercherng.github.io/japanese-learning-platform/#kana-duel)：208卡一次最多三張，不熟卡至少隔兩張再想；六組混淆共12題，正常／慢速聽音與主動差異對照。翻卡為暫存自評不計分，二選一的同日／本輪對照列為提示，原首答與備份保留；入口整合到「今天怎麼練」。詳見[第六批規劃](docs/plans/2026-10-22-kana-sixth.md)與[驗收](docs/kana-sixth-validation.md)。
 
 保留固定於頁頂的「目前位置」路徑，可直接返回分類或來源課程；練習、深連結與重新整理保留可辨識的所屬層級。生活任務切換分類會同步網址。
 

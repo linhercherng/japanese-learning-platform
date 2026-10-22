@@ -29,8 +29,8 @@ export function navigationContext(ctx,name='home',param){
   case 'study':case 'lesson':trail=unitTrail(param);break;
   case 'kana':trail=[home,courses,kana];break;
   case 'unit':trail=[home,courses,kana,item(kanaLessons.find(l=>l.id===param)?.title||'五十音單元',route)];break;
-  case 'kana-path':case 'kana-repair':case 'kana-beats':case 'kana-type':case 'kana-week':case 'kana-recall':case 'kana-studio':case 'kana-fade':case 'kana-dictation':case 'kana-words':case 'kana-mini':case 'kana-notes':case 'kana-build':
-   if(['kana-path','kana-repair','kana-beats','kana-dictation','kana-mini','kana-build','kana-type','kana-week','kana-recall'].includes(name))section='practice-hub';trail=[home,courses,kana,item('五十音練習工坊','kana-studio')];if(name!=='kana-studio')trail.push(item(({'kana-path':'今天怎麼練','kana-repair':'弱點三題','kana-beats':'一拍一格','kana-type':'聽音打字回想','kana-week':'七日回想','kana-recall':'回想小結','kana-fade':'圖像提示退場','kana-dictation':'聽音默寫','kana-words':'不同生活詞','kana-mini':'三字小循環','kana-notes':'我的記憶線索','kana-build':'生活詞拼拼看'})[name],route));break;
+  case 'kana-flip':case 'kana-duel':case 'kana-path':case 'kana-repair':case 'kana-beats':case 'kana-type':case 'kana-week':case 'kana-recall':case 'kana-studio':case 'kana-fade':case 'kana-dictation':case 'kana-words':case 'kana-mini':case 'kana-notes':case 'kana-build':
+   if(['kana-flip','kana-duel','kana-path','kana-repair','kana-beats','kana-dictation','kana-mini','kana-build','kana-type','kana-week','kana-recall'].includes(name))section='practice-hub';trail=[home,courses,kana,item('五十音練習工坊','kana-studio')];if(name!=='kana-studio')trail.push(item(({'kana-flip':'看字想聲翻卡','kana-duel':'混淆字二選一','kana-path':'今天怎麼練','kana-repair':'弱點三題','kana-beats':'一拍一格','kana-type':'聽音打字回想','kana-week':'七日回想','kana-recall':'回想小結','kana-fade':'圖像提示退場','kana-dictation':'聽音默寫','kana-words':'不同生活詞','kana-mini':'三字小循環','kana-notes':'我的記憶線索','kana-build':'生活詞拼拼看'})[name],route));break;
   case 'kana-map':case 'kana-confusions':case 'kana-check':
    trail=[home,courses,kana,item('記憶地圖','kana-map')];if(name!=='kana-map')trail.push(item(name==='kana-check'?'隔天檢查':'混淆字專練',name));else if(param)trail.push(item('字卡記憶紀錄',route));break;
   case 'kana-memory':trail=[home,courses,kana,item('五十音記憶加練',route)];break;
@@ -52,7 +52,7 @@ export function navigationContext(ctx,name='home',param){
   case 'daily':section='home';trail=[home,item('每日安排',route)];break;
   case 'v3-practice':{
    section='practice-hub';const s=state.v3.sessions.find(s=>s.id===param);
-   const origin=s?.source==='kana-repair'?['kana-repair']:s?.source==='kana-type'?['kana-type',s.reference]:s?.source==='kana-week'?['kana-week']:s?.source==='kana-mini'?['kana-mini']:s?.source==='kana-build'?['kana-build',s.reference]:s?.source==='kana-words'?['kana-words',s.reference]:s?.source==='kana-map'?['kana-map']:s?.source==='kana-check'?['kana-check']:s?.source==='kana-confusion'?['kana-confusions']:s?.source==='daily'?['daily',s.reference]:s?.source==='lesson'?['deep',s.reference]:s?.source==='confusion'?['confusion',s.reference]:s?.source==='kana'?['kana-memory']:['weaknesses'];
+   const origin=s?.source==='kana-duel'?['kana-duel',s.reference]:s?.source==='kana-repair'?['kana-repair']:s?.source==='kana-type'?['kana-type',s.reference]:s?.source==='kana-week'?['kana-week']:s?.source==='kana-mini'?['kana-mini']:s?.source==='kana-build'?['kana-build',s.reference]:s?.source==='kana-words'?['kana-words',s.reference]:s?.source==='kana-map'?['kana-map']:s?.source==='kana-check'?['kana-check']:s?.source==='kana-confusion'?['kana-confusions']:s?.source==='daily'?['daily',s.reference]:s?.source==='lesson'?['deep',s.reference]:s?.source==='confusion'?['confusion',s.reference]:s?.source==='kana'?['kana-memory']:['weaknesses'];
    trail=[...navigationContext(ctx,...origin).trail,item('回想練習',route)];break;
   }
   case 'exam':section='exam';trail=[home,exam];break;
