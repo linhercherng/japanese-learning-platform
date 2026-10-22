@@ -1,3 +1,7 @@
+import {rhythmCueSeen,rhythmQuestion} from './content/kana-rhythm.mjs';
+import {rhythmCards,exposedRhythmItems} from './content/kana-focus.mjs';
+import {recordRhythmExposure} from './core/kana-rhythm.mjs';
+import {readDictation} from './core/kana-studio.mjs';
 import {confusedKana} from './content/kana-coach.mjs';
 import {topics,allUnits,units,scenarios,lifeLessons,unitById,unitQuestions,completionKey,words,forms,allWritingItems,resolveQuestion,reviewQuestions,practicePool,grammarItems,kanjiItems} from './content/catalog.mjs';
 import {createPractice,answerPractice,hintPractice,presentationOrder} from './core/study.mjs';
@@ -32,7 +36,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(location.hash==='#exam-session'){
    await update(s=>({...s,activeExam:answerExam(s.activeExam,forms.find(f=>f.id===s.activeExam.formId),q.id,value,now()),revision:s.revision+1}));render(false);return;
   }
-  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const nextPractice=answerPractice(p,q,value,{time:now()});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
+  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const time=now(),nextPractice=answerPractice(p,q,value,{time,hinted:rhythmCueSeen(s.v3.rhythmHints,q,p.startedAt,time)});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
  }
  async function nextExamSection({submit=false,abandon=false}={}){
   const exam=state().activeExam;if(!exam)return;
@@ -96,12 +100,14 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(seconds===0){examTimerBusy=true;try{await nextExamSection();}catch(error){toast(error.message);}finally{examTimerBusy=false;}}
  },1000);
  document.addEventListener('click',handleClick);document.addEventListener('input',handleInput);document.addEventListener('change',handleChange);document.addEventListener('submit',handleSubmit);
+ function afterRender(name){if(name!=='practice')return;const p=state().practice,q=p&&rhythmQuestion(p.questionIds[p.index]),answer=q&&p.answers[q.id];if(!q||!answer&&!(p.hints||[]).includes(q.id))return;const time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString();update(s=>{const next=recordRhythmExposure(s,q.rhythmCard,time);for(const item of exposedRhythmItems(rhythmCards.find(c=>c.id===q.rhythmCard))){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));}
  return {
+  afterRender,
   async startReview(reviews){
    const first=reviews[0];if(first?.dimension==='writing'){const item=allWritingItems.find(k=>k.id===first.item);if(item)location.hash=`write/${item.id}`;else if(unitById.has(first.item)){session().studyUnit=first.item;session().studyTab='write';location.hash=`study/${first.item}`;}return;}
    await beginPractice('review-set',reviewQuestions(reviews,Math.max(5,state().settings.dailyMinutes)));
   },
-  views:{support:param=>supportView(ctx(),param),courses:()=>coursesView(ctx()),level:param=>levelView(ctx(),param),topics:()=>topicsView(ctx()),study:param=>studyView(ctx(),param),practice:()=>practiceView({...ctx(),practiceQuestions:practiceQuestions()}),'practice-hub':()=>practiceHubView(ctx()),library:param=>libraryView(ctx(),param),exam:()=>examsView(ctx()),'exam-session':()=>examSessionView(ctx()),'exam-result':param=>examResultView(ctx(),param)},
+  views:{support:param=>supportView(ctx(),param),courses:()=>coursesView(ctx()),level:param=>levelView(ctx(),param),topics:()=>topicsView(ctx()),study:param=>studyView(ctx(),param),practice:()=>practiceView({...ctx(),practiceQuestions:practiceQuestions()},now()),'practice-hub':()=>practiceHubView(ctx()),library:param=>libraryView(ctx(),param),exam:()=>examsView(ctx()),'exam-session':()=>examSessionView(ctx()),'exam-result':param=>examResultView(ctx(),param)},
   contextExtras:()=>({units,scenarios,allUnits,wordCount:words.length,kanjiCount:kanjiItems.length,grammarCount:grammarItems.length,forms,writingItems:allWritingItems,lifeLessons,offlineHtml:offline.view()}),
   onRoute(name,param){if(name==='topics'&&topics.some(([id])=>id===param))session().topic=param;if(name==='study'&&session().studyUnit!==param){session().studyUnit=param;session().studyTab='learn';}if(['practice','exam-session'].includes(name)&&session().lastV2Route!==`${name}/${param||''}`)session().order=[];session().lastV2Route=`${name}/${param||''}`;},
   validateCatalog(s){

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "d13651fa08360ad4b2ac7f528614b443caba573b58573ec14620218a22ba1a88",
+  "fingerprint": "608f0d890a8f209373d796db7b7dc2e71e0bc1f7680d3c1b1b266204e3da40b6",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -193,7 +193,7 @@
     "core/quiz.mjs": "cb59f0ef0a22b6905bfd2aaeb1b87f0ebb7ed045fe13cf9ae3fcc9d6242129af",
     "core/storage.mjs": "f42811a3a8edd4341e5cda37cdd4562e03e2c7b9ce483c7758ae62e48fdf14ec",
     "core/study.mjs": "6c9bcef4ee6f468f6e06a517dc99b2b3672249dbeaaa71987f39a82a66e363ec",
-    "core/v3-learning.mjs": "516672381850c37fa41d327bcee51f5bdc9a202d979e2da98c61b63d0200ee9a",
+    "core/v3-learning.mjs": "a666f5d771ccffcf77ff1188633f5574940e40e11970465150413ed553f6fdcf",
     "core/v3-state.mjs": "19b254a70ff6eb8a7eb208c223a3a6e2ff48dfd056ede4ae953befa87bd45a72",
     "index.html": "392f4668bd9086f515553399cc5f26fd8e1547a9d0b8ea8a8a635af3a3c81f40",
     "kana-bridge.mjs": "4ae09af8d3cc7fc0486c0d88f525aac8e924e47eb0b3a67eae4659f170bade40",
@@ -205,7 +205,7 @@
     "kana-row.mjs": "0d413bce8ebf6b4c8d79384fe13ea747f7b4df9daeab1aef97241c7f17fc53b2",
     "kana-sixth.mjs": "e510c028328c84052ec7d1f6676b7c9e9c2cdd2e4cbf8300cce6c8167770e713",
     "kana-studio.mjs": "76a6782a99642e70651593aa93d290adbbb092f71a575f8fe08ffa0627a2e137",
-    "main.mjs": "71b5ca2de1d9266e1a3b3b8ab28ce217492e0eb040029ca29cecbf65eb0a9cfd",
+    "main.mjs": "4b20897b51e5821ec154c5ceb95019a796be68304b49ead980717fa961bf3085",
     "manifest.webmanifest": "665f46ac36c2b46959260fe9ef71e33b7bcef4bed924d37e771e1c4114025cfb",
     "styles.css": "9fbe2184ff1d28983e89b033a9daa69a26da31d9678288528506dc1ade69323b",
     "ui/courses.mjs": "4a1e641aae1fce3aeb51f3b823558f235a5908bbd886c9d61958976e4cf176c7",
@@ -228,14 +228,14 @@
     "ui/offline.mjs": "f61a44e670879a84510203f275c010487d25bbc99608c59465585e58bf054206",
     "ui/profile.mjs": "1a8113f49226d41db02bd94f7138764070a7c719a72cc0820a39162ebc11cc6f",
     "ui/shared.mjs": "d791eb8eea9ccc75d6a46f62c890907c0f01087016a954808b0582c299d44c03",
-    "ui/study.mjs": "5dab5167656857e9c4c1732b704c23d15bcff430efccb217283b2505e54af705",
+    "ui/study.mjs": "e9bf02e399b56fe38b102e154ce56c2779ec376c639cf4ce132353c132971a78",
     "ui/support.mjs": "f0e901ebd013d347d96a67c184ade461aebdf94db7e618f0011b8f31fcac9360",
-    "ui/v3.mjs": "25c41c64cd1c6217551252ee89b92b22ff0cc81fee8dc163cad639a636c17c2f",
+    "ui/v3.mjs": "e09fa9808cbef2e34dd3b4c691f0874e59f435767598d54537ab0846975123fd",
     "ui/writing.mjs": "7cf8774598aa5d072b29ae12cbb08917c186bd7da3cb449d806078f316686991",
     "v2.css": "16a7170fa42a4b23f5b1ba6e63d0422ab5a054dbbe4bbb5106e9ad99e1740f70",
-    "v2.mjs": "2ca059f455512795af7d9e328617ea75b1ffd24e67e5a7dbf77b9260832ac40c",
+    "v2.mjs": "ab20b6c5197601b8fec1eeceacdf8c680a80500a23dc9242c56a6808c91463d9",
     "v3.css": "a1d71563412df145d40687cd0f66dde5e5847a449d792d55a6626cd01bfe2423",
     "v3.mjs": "5ff21303f82aa19163f5a985acf866409369811dc87caadf2eef1b49bbffb9a0"
   },
-  "bytes": 8226147
+  "bytes": 8227336
 }
