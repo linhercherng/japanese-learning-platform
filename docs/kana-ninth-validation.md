@@ -36,7 +36,12 @@ fingerprint `cfa61de7a0240f009fe33085630f92eae66ce92f6d44fc84ccccb2a668a40187`�
 
 ## 發布
 
-待PR／CI／Pages、正式HTTPS與瀏覽器補記。
+- [PR #25](https://github.com/linhercherng/japanese-learning-platform/pull/25)，head `b2bd13f330444956e3364d149a61ba3af3fb6c1f`；[CI 39783500038](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39783500038)成功，以相同head合併。
+- merge `32a4501c04fc621a9600fb18c0bbddee34fb4afe`；[Pages 39783685190](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39783685190)建置與部署成功，部署完成2026-10-22 13:06:30 UTC（台北21:06）。
+- [正式入口](https://linhercherng.github.io/japanese-learning-platform/#kana-row)。HTTPS 114份shell hash／JS MIME／SW與本機fingerprint一致，128次音檔抽查通過，2026-10-22 13:08:12 UTC（台北21:08），ignored `work/ninth-public-http.json`。
+- 舊離線快取下載後離頁再回，正式分頁已見行段入口，未清快取或IndexedDB。正常站只讀；隔離QA實際點進入口，在390px選第8行u段顯示ゆ／yu、兩個空位，空白鍵選格與播放可操作；正式截圖在ignored `work/ninth-qa/public-390-row.jpg`。
+- 第10行先看o段を，完成を／わ兩題：首題提示後答對並刷新保留、次題無提示答對，結果1/2無提示、1題提示；返回原行並換k-10正確。正常／慢速音均確認合成音播放狀態。快速切頁時曾出現播放重試提示，在練習頁重新播放成功；console warn／error空。390px無橫溢。
+- QA頁關閉、臨時尺寸還原、本機18115server已停止，保留正常正式入口。此發布補記只改文件，不改已部署網站檔案。
 
 ## 內容與邊界
 

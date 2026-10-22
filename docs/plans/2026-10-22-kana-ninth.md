@@ -36,6 +36,6 @@ Files：新增 `app/ui/kana-row.mjs`、`app/kana-row.mjs`、UI／controller測�
 
 - [x] 本機隔離QA實際操作20行切換、空格／平片／2與3題／正錯與提示／音鈕／刷新續作；320／390px檢查、鍵盤焦點、console與舊入口回歸。實機依先前決定略過。
 - [x] 獨立審查、完整test／build／check／audit；逐檔shell hash／MIME／SW及音檔HTTP；同步README、規格、課綱、素材與驗收文件。
-- [ ] PR、CI、相同head合併、Pages成功、正式HTTPS與隔離瀏覽器實測／截圖，補發布證據；remote一致、停server、關QA並還原視窗。
+- [x] PR #25、CI、相同head合併、Pages成功、正式HTTPS 114份shell／128次音檔與隔離瀏覽器實測／截圖，補發布證據；remote一致、停server、關QA並還原視窗。
 
 QA與日誌只存ignored work。schema3與舊ID不遷移，保留IndexedDB；回退前匯出JSON，舊版可能不識別kana-row來源，保留備份等新版，不能清個人資料。
