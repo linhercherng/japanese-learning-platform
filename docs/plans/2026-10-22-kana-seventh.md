@@ -20,19 +20,19 @@
 
 Files：新增 `app/content/kana-bridge.mjs`、`app/core/kana-bridge.mjs`、`tests/kana-bridge.test.mjs`；整合catalog、v3-state、v3-learning、kana-recall。
 
-- [ ] 先寫失敗測試：104對／208題唯一、雙向對應／同音異字／半濁音、每題三選項且僅一正解、既有音檔、固定三題、未知／混組reference拒絕、首答／續作／備份、同日提示與未來時間邊界。
-- [ ] `node --test tests/kana-bridge.test.mjs` 觀察失敗，再實作最小模組與整合；新舊測試通過後 build／check 並提交。
+- [x] 先寫失敗測試：104對／208題唯一、雙向對應／同音異字／半濁音、每題三選項且僅一正解、既有音檔、固定三題、未知／混組reference拒絕、首答／續作／備份、同日提示與未來時間邊界。
+- [x] `node --test tests/kana-bridge.test.mjs` 觀察失敗，再實作最小模組與整合；新舊測試通過後 build／check 並提交。
 
 ## Task 2：介面、控制器與曝光
 
 Files：新增 `app/ui/kana-bridge.mjs`、`app/kana-bridge.mjs`、`tests/kana-bridge-ui.test.mjs`、`tests/kana-bridge-controller.test.mjs`；整合main、navigation、path及v3結果返回。
 
-- [ ] 先紅後綠：隱藏答案、八分類／反向／下一組、原輪續作、不洩漏對照、過期動作拒絕、提示曝光／草稿快取、保存失敗可匯出；不新增自評分數。通過test／build／check後提交。
+- [x] 先紅後綠：隱藏答案、八分類／反向／下一組、原輪續作、不洩漏對照、過期動作拒絕、提示曝光／草稿快取、保存失敗可匯出；不新增自評分數。通過test／build／check後提交。
 
 ## Task 3：審查、驗收與發布
 
-- [ ] 真實瀏覽器隔離QA：三題含正答／提示、刷新與返回續作、展開／收起、反向、八分類、320／390px尺寸與44px操作目標、console、既有入口回歸；實機沿用使用者略過決定。
-- [ ] 獨立審查並修正重要問題；完整npm test、build、check、audit。同步README、規格、課綱、素材與驗收文件；不得提交QA或個人資料。
+- [x] 真實瀏覽器隔離QA：三題含正答／提示、刷新與返回續作、展開／收起、反向、八分類、320／390px尺寸與44px操作目標、console、既有入口回歸；實機沿用使用者略過決定。
+- [x] 獨立審查並修正重要問題；完整npm test、build、check、audit。同步README、規格、課綱、素材與驗收文件；不得提交QA或個人資料。
 - [ ] PR／CI／相同head合併／Pages成功；正式HTTPS逐檔shell SHA-256、JS MIME、SW fingerprint與音檔抽查，正式瀏覽器操作與截圖。補發布紀錄、推送並確認remote一致，清理測試分頁與server。
 
 回退前匯出JSON；舊版可能不識別kana-bridge來源，保留備份等待新版，不清IndexedDB。教材／合成語音沿用原創試用與待教師審校邊界。

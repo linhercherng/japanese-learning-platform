@@ -2,8 +2,9 @@ import test from 'node:test';import assert from 'node:assert/strict';import fs f
 import {kana} from '../app/content/kana.mjs';import {memoryFor} from '../app/content/kana-memory.mjs';
 import {bridgePairs,bridgeQuestions,bridgeQuestion,bridgePartner,bridgeCards,bridgeIds,validBridgeReference,bridgeCueItems} from '../app/content/kana-bridge.mjs';
 import {startBridge} from '../app/core/kana-bridge.mjs';
-import {initialState,exportBackup,parseBackup,mergeStates} from '../app/core/learning.mjs';
-import {answerV3Session,nextV3Question} from '../app/core/v3-learning.mjs';import {recordKanaExposure} from '../app/core/kana-studio.mjs';
+import {initialState,exportBackup,parseBackup,mergeStates,recordAnswer} from '../app/core/learning.mjs';
+import {answerV3Session,nextV3Question,organizeV3} from '../app/core/v3-learning.mjs';import {recordKanaExposure} from '../app/core/kana-studio.mjs';
+import {startWeekCheck,weekEvidence} from '../app/core/kana-recall.mjs';
 import {resolveLearningQuestion} from '../app/content/catalog.mjs';import {pairExposure} from '../app/content/kana-recall.mjs';
 const time='2026-10-22T04:00:00.000Z';
 test('104 cross-script pairs cover all 208 cards without conflating same-reading glyphs',()=>{
@@ -34,4 +35,10 @@ test('same-day or in-round pair cues mark new bridge answers hinted without rewr
 });
 test('comparison exposure covers visible pairs and mnemonic text but no hidden comparison',()=>{
  assert.deepEqual(bridgeCueItems('bad'),[]);for(const k of bridgeCards('h-3042')){assert(bridgeCueItems('h-3042').includes(k.id));assert(bridgeCueItems('h-3042').includes(bridgePartner(k.id).id));}
+});
+test('bridge feedback for the source glyph cannot become independent week evidence after organizing old rounds',()=>{
+ let s=recordAnswer(initialState(),{id:'old',item:'h-3042',dimension:'recognition',correct:true,hinted:false,time:'2026-09-01T00:00:00Z'});s=startWeekCheck(s,{id:'week',time:'2026-10-01T00:00:00Z'});s=startBridge(s,{item:'h-3042',id:'bridge',time:'2026-10-02T00:00:00Z'});
+ for(const [i,id]of bridgeIds('h-3042').entries()){const q=bridgeQuestion(id);s=answerV3Session(s,{sessionId:'bridge',question:q,value:q.correct,eventId:'b-'+i,time:'2026-10-02T00:0'+i+':00Z'});s=nextV3Question(s,'bridge','2026-10-02T00:03:00Z');}
+ const q=resolveLearningQuestion(s.v3.sessions.find(s=>s.id==='week').questionIds[0]);s=answerV3Session(s,{sessionId:'week',question:q,value:q.correct,eventId:'check',time:'2026-10-20T00:00:00Z'});s=nextV3Question(s,'week','2026-10-20T00:01:00Z');
+ const before=weekEvidence(s,s.v3.sessions.find(s=>s.id==='week'));assert.equal(before.total,0);assert.equal(before.excluded,1);s=organizeV3(s,time);assert(s.v3.sessions.some(s=>s.id==='bridge'));s=parseBackup(exportBackup(s));assert.deepEqual(weekEvidence(s,s.v3.sessions.find(s=>s.id==='week')),before);
 });

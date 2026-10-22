@@ -8,7 +8,7 @@ export function beatState(session,id){
 export function pathView(ctx,time){
  const pending=pendingRepair(ctx.state),count=selectRepairQuestions(ctx.state,time).length;
  const paths=[
-  ['剛開始，先記少量','先用三字小循環認字、聽辨，再慢慢收起圖像。',[['看字想聲翻卡','kana-flip'],['一次三字','kana-mini'],['提示慢慢退場','kana-fade']]],
+  ['剛開始，先記少量','先用三字小循環認字、聽辨，再慢慢收起圖像。',[['平片互換三題','kana-bridge'],['看字想聲翻卡','kana-flip'],['一次三字','kana-mini'],['提示慢慢退場','kana-fade']]],
   ['容易混淆，找出差異','依實際錯答選練習，或回到字卡找一處記憶線索。',[['混淆字二選一','kana-duel'],['弱點三題','kana-repair'],['混淆字專練','kana-confusions'],['寫自己的線索','kana-notes']]],
   ['放進生活詞，聲音連字形','先聽完整詞，練拍數或拼詞，再試著自己輸入。',[['一拍一格','kana-beats'],['生活詞拼拼看','kana-build'],['聽音打字回想','kana-type'],['聽音默寫','kana-dictation']]],
   ['隔天再想，看看記住多少','用真正日期留下回想紀錄；沒有符合項目時不用硬補題。',[['隔天檢查','kana-check'],['七日回想','kana-week'],['回想小結','kana-recall'],['記憶地圖','kana-map']]]
