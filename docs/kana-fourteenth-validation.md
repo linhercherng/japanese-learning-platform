@@ -10,11 +10,21 @@
 
 ## 自動驗證與審查
 
-新增核心、UI與真控制器測試先紅後綠，覆蓋208字的原錯選項、角色／未知值／同字、既有difference雙向、雙卡實際曝光、遮住不洩、兩音鈕／HTML編碼、局部重置、pending／過期動作、焦點、原答案不變、七日／默寫cache與失敗保存。完整驗證與獨立審查進行中。
+新增17項核心、UI與真控制器測試先紅後綠，覆蓋208字的原錯選項、角色／未知值／同字、既有difference雙向、雙卡實際曝光、遮住不洩、兩音鈕／HTML編碼、局部重置、pending／過期動作、焦點、原答案不變、七日／默寫cache與失敗保存。最終完整npm test **396/396**，build後check與npm audit --audit-level=high通過，0 vulnerabilities。
+
+核心獨立審查30項新舊相關測試無P1/P2。UI獨立審查39項回歸發現P2：shared audioButton新增第二參數後，V3舊availableAudio的map(audioButton)會把index當文字，K01例句音鈕變0/1。新增真deepView K01步驟2、含分隔例句共5音鈕的回歸先紅後綠；呼叫改為單參數callback，app搜尋無其他同類呼叫。獨立複核18項測試通過，無剩餘P1/P2。
 
 ## 瀏覽器與發布
 
-本機／正式驗收及GitHub發布尚待執行，完成後補上可查核證據。
+本機內建瀏覽器127.0.0.1:18120/?qa=1獨立庫，僅透過可見UI留下あ／い，完成い刻意選ら錯答、あ正確。結果0/2無提示、2題提示符合當天看過字卡。從結果進逐字回顧，錯字對照顯示い／ら原角色、例詞與訣竅，兩音鈕可分別操作，空白鍵可播放；正確的あ沒有錯字對照入口。
+
+遮住後目前參考字／原選字、雙卡、線索與音鈕皆不在main DOM，焦點落在揭開按鈕；揭開回相同雙卡並聚焦遮住按鈕。切字與刷新收起對照、刷新回首字且保留原錯答；原線索1音鈕與對照2音鈕互斥。返回原結果仍0/2無提示、2提示，未新增成績。另開pending聽辨後舊回顧仍整頁遮蔽，僅提供接續。K01既有深化課對照例句實際五鈕皆顯示聽發音，確認P2修補。
+
+320／390px共11個展開、遮住／揭開、正確卡、刷新、原線索互斥、pending與舊課程狀態量測，無橫溢，main button/select/primary至少44px；console warn/error空。淺底雙卡與文字可讀，例詞／訣竅在窄版換行。ignored work/fourteenth-qa/local-layout.json。保存失敗／七日／默寫cache以Node真控制器驗證，未在瀏覽器注入資料或製造容量耗盡。
+
+本機122份shell SHA-256、JS MIME與SW fingerprint相符，128次既有音檔HTTP抽查通過；2026-10-22 16:50:57 UTC（台北10/23 00:50）。fingerprint `2e2c9d03f719dc6ae728a599e08e6b355b5c09eb140daad6e56e0981903fe45f`，ignored work/fourteenth-local-http.json。
+
+GitHub與Pages尚待發布，完成後補上正式證據。
 
 ## 素材與邊界
 

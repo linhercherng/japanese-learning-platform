@@ -31,12 +31,12 @@ Files：app/ui/kana-pocket-review.mjs、app/kana-pocket-review.mjs、app/ui/shar
 
 - [x] 先紅：只有錯答入口、雙音鈕命名與HTML編碼、遮住不洩字音／選字／線索、切字／刷新重置、pending遮蔽、過期操作與焦點、無作答副作用、七日／默寫cache及失敗保存。
 - [x] 最小整合：reviewLocal加contrast/covered；兩面板互斥；cover/uncover只局部UI；afterRender可見分流，covered直接不曝光；成功動作聚焦實際存在的控制。保留原keep行為。
-- [ ] npm test→build→check及audit，版本0.18.0，更新README、規格、課綱、素材與驗收；提交。
+- [x] npm test→build→check及audit，版本0.18.0，更新README、規格、課綱、素材與驗收；提交。
 
 ## Task 3：實際驗收與發布
 
-- [ ] 隔離真實瀏覽器造原錯答→雙卡→兩音→遮住／核對→切字／刷新→原結果；320／390px、主要控制44px、鍵盤焦點、長文字與console。
-- [ ] requesting-code-review獨立審查，必要修正再驗證；本機shell SHA/MIME/SW與既有音檔HTTP通過。
+- [x] 隔離真實瀏覽器造原錯答→雙卡→兩音→遮住／核對→切字／刷新→原結果；320／390px、主要控制44px、鍵盤焦點、長文字與console。
+- [x] requesting-code-review獨立審查，必要修正再驗證；本機shell SHA/MIME/SW與既有音檔HTTP通過。
 - [ ] PR／CI相同head合併、Pages成功；正式HTTPS與隔離瀏覽器確認、保存截圖，補發布文件並push，remote同步；關閉QA與server。
 
 教材仍是尚待教師審校的既有試用內容／合成音；沿用208卡、508筆順、10947音檔索引，K包668檔。實機依先前決定略過；回退前匯出JSON，不清IndexedDB。個人線索／答案與QA紀錄不提交公開Git。
