@@ -34,7 +34,11 @@ optional v3.kanaPocket存active／canonical UTC time（含移出墓碑）；合�
 
 ## 發布
 
-待PR／CI、Pages及正式HTTPS與瀏覽器驗證完成後補記。
+- [PR #27](https://github.com/linhercherng/japanese-learning-platform/pull/27)，head `c5b51673b59f7888dcfda53d396707636632f3b0`；[PR CI 39792883449](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39792883449) completed／success，檢查及GitHub自動審查沒有待解問題，按相同head合併。
+- merge `270719d4820b9196c33c194186b83544a95d82b0`，2026-10-22 14:12:42 UTC（台北22:12）；[Pages工作 39793736230](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39793736230)的build／test／check／audit／artifact upload全部成功。工作狀態回報長時間queued／waiting；環境只有允許main的branch policy，無wait timer或reviewer名單，設定未修改。嘗試重新排程時取消端點回「工作已完成」，重跑端點回「仍在執行」，沒有成功取消或另起attempt。**最後查詢deploy仍waiting，不能把API回報寫成completed／success。**
+- [正式入口](https://linhercherng.github.io/japanese-learning-platform/#kana-pocket)已可讀到新版。2026-10-22 14:24:52 UTC（台北22:24），118份shell SHA-256／JS MIME／SW fingerprint與本機版本一致，128次音檔HTTP抽查全部通過；ignored `work/eleventh-public-http.json`。這是實際HTTPS版本驗證，與尚未更新完成的工作狀態分開記錄。
+- 正常正式頁重載後離頁再回，已顯示不熟字口袋及正確麵包屑，沒有清除快取或IndexedDB，正常庫僅查看。正式隔離QA實際保存あ／い／パ，刷新仍3字；固定三字先回想後展開，空白鍵操作與字音播放成功，保留あ、移出い／パ後剩1字，刷新仍1字且提示收起。320／390px無橫溢、主要控制≥44px，console warn／error空。
+- 正式手機畫面在ignored `work/eleventh-qa/public-390-pocket.jpg`；QA頁已關閉、尺寸還原、本機18117 server停止；保留一般正式入口。此補記只改文件，不改已驗證的網站檔案。
 
 ## 教材與回退
 
