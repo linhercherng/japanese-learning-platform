@@ -36,7 +36,12 @@
 
 ## 發布
 
-待PR／CI／Pages、正式HTTPS與瀏覽器補記。
+- [PR #24](https://github.com/linhercherng/japanese-learning-platform/pull/24)：head `186a0a1fb1d836602c10aef8fd0f73a32963f106`；[PR CI 39774837356](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39774837356)成功，以相同head合併。
+- merge `e891e454a56e9bea8dec803535c5151ad2f211f0`；[Pages 39774987774](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39774987774)建置與部署成功，部署完成2026-10-22 12:04:44 UTC（台北20:04）。
+- [正式入口](https://linhercherng.github.io/japanese-learning-platform/#kana-family)。HTTPS逐檔校驗110份shell SHA-256／JS MIME／SW fingerprint與本機一致，98次音檔HTTP抽查通過；2026-10-22 12:07:09 UTC（台北20:07），ignored `work/eighth-public-http.json`。
+- 正式瀏覽器舊快取下載後離頁再回，已看到清濁聲音家族入口，未清快取或IndexedDB。正常站只讀；`?qa=1`隔離庫完成原字→兩點→小圈、空白鍵切換／音鈕、正常與慢速音、三題聽辨與首答刷新。先看對照的三題皆列提示，結果為0/3無提示、3題提示；來源返回及同家族換片假名正確。
+- 正式390px記憶卡及結果無橫向溢出，console warn／error空。瀏覽器控制曾單次逾時，重新讀取畫面確認尚未作答，再以可見按鈕完成，未見網站錯誤。實際正式站截圖在ignored `work/eighth-qa/public-390-family.jpg`。
+- QA分頁已關閉，臨時視窗尺寸已還原；本機18114驗收server已停止，保留正常正式站入口。此補記僅改文件，不改已部署網站檔案。
 
 ## 素材與邊界
 
