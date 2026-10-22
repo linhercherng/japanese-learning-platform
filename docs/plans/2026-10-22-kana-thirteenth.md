@@ -30,12 +30,12 @@ Files：app/core/kana-pocket-review.mjs、tests/kana-pocket-review.test.mjs。
 Files：app/kana-pocket-review.mjs、app/ui/kana-pocket-review.mjs、app/main.mjs、app/ui/v3.mjs、app/ui/navigation.mjs；tests/kana-pocket-review-ui.test.mjs、tests/kana-pocket-review-controller.test.mjs。
 
 - [x] 先失敗：入口／原來源返回、逐字選擇與預設收起、pending遮蔽、HTML安全、留回口袋、重複／過期動作、延遲／失敗保存、七日／默寫草稿快取、刷新保留首答。
-- [ ] 實作整合，版本v0.17.0；npm test、build後check、audit；更新README／規格／課綱／來源／驗收；提交。
+- [x] 實作整合，版本v0.17.0；npm test、build後check、audit；更新README／規格／課綱／來源／驗收；提交。
 
 ## Task 3：實際驗收與發布
 
-- [ ] 隔離瀏覽器完成三題→回顧正錯與提示、切字／訣竅／音鈕、刷新／已移出再留回／原結果返回；pending不洩答案；320／390px、44px、鍵盤焦點與console。
-- [ ] requesting-code-review獨立核心與整合審查，必要修正；完整test／build／check／audit與本機shell SHA／MIME／SW／音檔HTTP通過。
+- [x] 隔離瀏覽器完成三題→回顧正錯與提示、切字／訣竅／音鈕、刷新／已移出再留回／原結果返回；pending不洩答案；320／390px、44px、鍵盤焦點與console。
+- [x] requesting-code-review獨立核心與整合審查，必要修正；完整test／build／check／audit與本機shell SHA／MIME／SW／音檔HTTP通過。
 - [ ] PR／CI／相同head合併／Pages成功、正式HTTPS與隔離瀏覽器驗證／截圖、發布文件／remote同步；清理QA及server。
 
 延用208卡及既有試用解說／合成音，尚待教師審校。實機依使用者先前決定略過，不推論發音或手寫評分。回退不清IndexedDB；無新schema欄位、source或ID，但回退前仍保存JSON。個人清單／線索／作答與QA紀錄不提交。

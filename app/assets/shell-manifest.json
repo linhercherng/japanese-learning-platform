@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "9d130e409990a6da390c675bff8839fde9b239e31a1419cd7512cdd92b66276d",
+  "fingerprint": "71e22cfc69251f278c82f30bfcbe03ea5859ffdef1c6e308ba7d84183078aa53",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -211,7 +211,7 @@
     "kana-family.mjs": "e37d601cbf6459e03b30304cd007025d84c2367c25e79f16748bf426f5fe880a",
     "kana-focus.mjs": "927ad05f582a47e5015ed847990068e802e1bfb4e5455d399c6a1745b4b5dd07",
     "kana-lab.mjs": "e8795238a4740200eb9b42b80b86b403b50dfb4f2c4468ca2e37a477e94ab7fe",
-    "kana-pocket-review.mjs": "27e8dcd1e8b54f78403af7f87aafdd617823a3403c92e69d6f4f45716f012c26",
+    "kana-pocket-review.mjs": "65e71ab87f08ca658f7db96ce5120ced71a5b76a21d9c59e35eea594ebc6c84d",
     "kana-recall.mjs": "7f78d3f100f9d7781d576363f3d8ca9da899d6fc0ad2a1602a6bccc4c58b0563",
     "kana-row.mjs": "0d413bce8ebf6b4c8d79384fe13ea747f7b4df9daeab1aef97241c7f17fc53b2",
     "kana-sixth.mjs": "464764f487e9c41d163110e671fe8576b1c89eb7fa7f73945b3436ed075d93a1",
@@ -227,7 +227,7 @@
     "ui/kana-focus.mjs": "f7cd8b8a53a2af8f3500afd1d4d2a630a4fdc94153e284badb2f171b82870942",
     "ui/kana-lab.mjs": "c4e50d0cb3b228f6fc316a815c2c72d6df3aadf36f2257ff0b9ef51a18efa51b",
     "ui/kana-memory.mjs": "867d0970769c0fb51e0a3afda79c98d2af0ed687131fced4b77e088429f7de77",
-    "ui/kana-pocket-review.mjs": "c1ad84aeda1ca131b3c2b4eec99e677dec163f770dc0cbc748b12c4151dc9554",
+    "ui/kana-pocket-review.mjs": "a3bb456a867e924e61586be792c7dd0b931e1e78f4ae064f7accb83e6c75fbfa",
     "ui/kana-recall.mjs": "628fabc4e1804021bd8ce186f9a5932f228c9c0c8cc1be94c30f09291e3bb66f",
     "ui/kana-row.mjs": "ade8fb813cd5550449293323231f2e5679fa1c7f8b7c4d677436eeb92eff2c21",
     "ui/kana-sixth.mjs": "4f2db4c54f87fd8262a55dcf9ba73f3f7f3c0a3c00f06de97e2007fe6faac6a2",
@@ -249,5 +249,5 @@
     "v3.css": "a1d71563412df145d40687cd0f66dde5e5847a449d792d55a6626cd01bfe2423",
     "v3.mjs": "1ff0e42ef8119ac210ff7a49673938289e35dbbc00dead21fc3e5ca8a1faade9"
   },
-  "bytes": 8245681
+  "bytes": 8245779
 }

@@ -18,7 +18,7 @@ export function createKanaPocketReview({getContext,update,render,toast,now,cache
   saving=true;const origin=location.hash,index=c.ui.index,time=now();let kept=false;
   try{
    await update(s=>{if(!pocketReview(s,c.key)||pendingPocketListen(s))return s;kept=true;return setPocket(s,c.entry.item,true,time);});
-   if(kept&&location.hash===origin&&current()?.ui===c.ui&&c.ui.index===index){render(false);toast('已留回口袋');}
+   if(kept&&location.hash===origin&&current()?.ui===c.ui&&c.ui.index===index){render(false);document.querySelector('#pocket-review-picker')?.focus();toast('已留回口袋');}
   }finally{saving=false;}
  }
  function click(event){const b=event.target.closest('button');if(!b?.dataset.pocketReviewAction)return;b.disabled=true;action({...b.dataset}).catch(error=>toast(error.message)).finally(()=>{if(b.isConnected)b.disabled=false;});}
