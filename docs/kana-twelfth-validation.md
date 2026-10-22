@@ -33,7 +33,11 @@ UI獨立複核修補與原口袋／翻卡／V3／V2節奏共38項，確認P2解�
 
 本機119份shell逐檔SHA-256、JS MIME與SW fingerprint一致，128次既有音檔HTTP抽查通過。fingerprint `2ccfb9e408c8a88d8f36f5c8d397df562c7804297f88530c52a2ca0486eb2595`；2026-10-22 15:04:48 UTC（台北23:04），ignored `work/twelfth-local-http.json`。
 
-待本批PR／CI／Pages及正式站驗證完成後補記。
+- [PR #28](https://github.com/linhercherng/japanese-learning-platform/pull/28)，head `1c6a63eb63e9b7b2bdcb609a0ece974e08187d1c`；[PR CI 39801842563](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39801842563) completed／success，按相同head合併。
+- merge `ef9810745e959f89440b3f19e93415d09c1a0ff8`，2026-10-22 15:09:34 UTC（台北23:09）；[Pages工作39802171270](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39802171270) build／deploy皆completed／success，部署完成15:10:48 UTC（台北23:10）。
+- [正式入口](https://linhercherng.github.io/japanese-learning-platform/#kana-pocket)的119份shell SHA／JS MIME／SW fingerprint與本機相符，128次音檔HTTP抽查全通過；2026-10-22 15:13:34 UTC（台北23:13），ignored `work/twelfth-public-http.json`。
+- 一般正式頁重載、離頁再回，已載入新版；沒有清除快取或IndexedDB，正常庫僅查看。正式隔離QA沿用口袋あ，再由翻卡加入が／パ，聽辨依が／パ／あ固定三題。正常及慢速音播放成功，空白鍵可開始；が首答正確後刷新，原UUID與答案保留；2/3暫停時口袋字卡與音鈕收起，續作同輪。パ刻意選ベ答錯，あ明示提示後答對；當天看過的三字均另列提示，結果0/3無提示、3題提示，錯答不覆寫。
+- 完成返回仍3字，最近結果可開啟；320／390px題目無橫溢、主要控制≥44px，console warn／error空。正式手機畫面在ignored `work/twelfth-qa/public-390-menu.jpg`，版面紀錄在public-layout.json。QA頁已關閉、尺寸還原、本機18118 server停止，保留一般正式站入口。此補記只改文件，不改已部署的網站檔案。
 
 前批補查：[第十一批Pages工作39793736230](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39793736230)現已completed／success，build與deploy皆成功，deploy completedAt為2026-10-22 14:20:05 UTC。前批驗收中的waiting保留為當時觀測；未變更部署保護或重新部署其他版本。
 

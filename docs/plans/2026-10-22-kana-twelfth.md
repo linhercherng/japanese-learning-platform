@@ -34,6 +34,6 @@ Files：修改app/kana-sixth.mjs、app/ui/kana-sixth.mjs、app/ui/v3.mjs、app/u
 
 - [x] 隔離瀏覽器口袋→聽辨→首答→刷新／返回續作→結果，正／錯／明示提示、原清單不自動移出；320／390px、44px、鍵盤／正常慢速音與console；原自評／翻卡回歸。
 - [x] requesting-code-review獨立核心與整合審查；npm test／build／check／audit通過；本機shell SHA／MIME／SW與音檔HTTP驗收。
-- [ ] PR／CI／相同head合併／Pages成功，正式HTTPS與瀏覽器驗證／截圖，發布文件與remote同步，清理QA與server；不從localhost推論部署。
+- [x] PR #28／CI／相同head合併／Pages成功，正式HTTPS119份shell與128次音檔、瀏覽器驗證／截圖，發布文件與remote同步，清理QA與server；不從localhost推論部署。
 
 延用既有208卡與試用教材、合成音，尚待教師審校；不加新外部內容。實機依使用者先前決定略過。回退前保存JSON，舊版可能不認得新source，保留備份、不清IndexedDB。前批Pages狀態本輪重新查詢已completed／success，舊文件保留原觀測時間，補記於本輪驗收。
