@@ -27,3 +27,7 @@ test('stale round, item and cursor actions are ignored; choices cannot race and 
 test('failed original-flip save remains exportable and does not advance or report completion',async()=>run(async h=>{
  h.render();await h.click({sixAction:'flip-reveal',sixIndex:'0',sixItem:'h-3042'});h.fail();await h.click({sixAction:'flip-again',sixIndex:'0',sixItem:'h-3042'});assert(h.messages.includes('quota'));assert(parseBackup(exportBackup(h.c.state)).v3.kanaPocket['h-3042'].active);assert.equal(h.c.session.kanaFlip.cursor,0);
 }));
+test('failed pocket removal retains an exportable tombstone and keeps the current card open',async()=>run(async h=>{
+ h.c.state=setPocket(h.c.state,'h-3042',true,time);location.hash='kana-pocket';await h.click({sixAction:'pocket-start'});const r=h.c.session.kanaPocketRound;await h.click(pocketAction(r,'pocket-reveal'));h.fail();await h.click(pocketAction(r,'pocket-remove'));
+ assert(h.messages.includes('quota'));assert.equal(h.c.session.kanaPocketRound.cursor,0);assert(h.c.session.kanaPocketRound.revealed);assert.equal(parseBackup(exportBackup(h.c.state)).v3.kanaPocket['h-3042'].active,false);assert.equal(h.c.state.attempts.length,0);
+}));
