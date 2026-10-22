@@ -22,20 +22,20 @@
 
 Files：新增 `app/content/kana-row.mjs`、`app/core/kana-row.mjs`、`tests/kana-row.test.mjs`；修改 `app/core/v3-state.mjs`、`app/core/v3-learning.mjs`。
 
-- [ ] 先寫失敗測試：20行90字／36組，空格與o段、canonical題／音庫、2／3題非順序、嚴格reference／queue、未完先接續、首答／提示／備份合併／未來及跨日曝光。
-- [ ] 實作 `rowById`／`rowRounds`／`validRowReference`／`rowVisibleItems`、pendingRow／startRow，註冊來源並使用目標字曝光。先紅後綠，新舊test、build再check，提交。
+- [x] 先寫失敗測試：20行90字／36組，空格與o段、canonical題／音庫、2／3題非順序、嚴格reference／queue、未完先接續、首答／提示／備份合併／未來及跨日曝光。
+- [x] 實作 `rowById`／`rowRounds`／`validRowReference`／`rowVisibleItems`、pendingRow／startRow，註冊來源並使用目標字曝光。先紅後綠，新舊test、build再check，提交。
 
 ## Task 2：行段介面與整合
 
 Files：新增 `app/ui/kana-row.mjs`、`app/kana-row.mjs`、UI／controller測試；修改main、navigation、path、v3返回路徑與CSS。
 
-- [ ] 先失敗測試：隱藏字音與空格不可按、20行選單／換平片／下一行、只展一字、pending收起、來源返回、提示警語、過期動作、延遲保存離頁、保存失敗匯出、曝光同步七日與默寫草稿快取。
-- [ ] 實作逐格選擇／收起／離序小輪、既有UI樣式及44px五欄；test／build／check通過提交。
+- [x] 先失敗測試：隱藏字音與空格不可按、20行選單／換平片／下一行、只展一字、pending收起、來源返回、提示警語、過期動作、延遲保存離頁、保存失敗匯出、曝光同步七日與默寫草稿快取。
+- [x] 實作逐格選擇／收起／離序小輪、既有UI樣式及44px五欄；test／build／check通過提交。
 
 ## Task 3：瀏覽器、審查與發布
 
-- [ ] 本機隔離QA實際操作20行切換、空格／平片／2與3題／正錯與提示／音鈕／刷新續作；320／390px檢查、鍵盤焦點、console與舊入口回歸。實機依先前決定略過。
-- [ ] 獨立審查、完整test／build／check／audit；逐檔shell hash／MIME／SW及音檔HTTP；同步README、規格、課綱、素材與驗收文件。
+- [x] 本機隔離QA實際操作20行切換、空格／平片／2與3題／正錯與提示／音鈕／刷新續作；320／390px檢查、鍵盤焦點、console與舊入口回歸。實機依先前決定略過。
+- [x] 獨立審查、完整test／build／check／audit；逐檔shell hash／MIME／SW及音檔HTTP；同步README、規格、課綱、素材與驗收文件。
 - [ ] PR、CI、相同head合併、Pages成功、正式HTTPS與隔離瀏覽器實測／截圖，補發布證據；remote一致、停server、關QA並還原視窗。
 
 QA與日誌只存ignored work。schema3與舊ID不遷移，保留IndexedDB；回退前匯出JSON，舊版可能不識別kana-row來源，保留備份等新版，不能清個人資料。

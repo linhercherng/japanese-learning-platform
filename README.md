@@ -2,7 +2,7 @@
 
 繁體中文、手機優先的日語學習平台，從五十音到生活日語，再循序練習 N5、N4、N3、N2。每課先理解、聽讀，收起提示回想，最後寫自己的句子。
 
-**五十音練習工坊公開試用程式 v0.12.0，2026-10-22。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
+**五十音練習工坊公開試用程式 v0.13.0，2026-10-22。** 已依使用者確認的畫面實作，並依「直接公開」指示設定 GitHub Pages。`prototype/` 保留原樣稿，第一版可從版本歷史與原交付包回溯。
 
 新增[記憶地圖](https://linhercherng.github.io/japanese-learning-platform/#kana-map)、[混淆字專練](https://linhercherng.github.io/japanese-learning-platform/#kana-confusions)、[隔天檢查](https://linhercherng.github.io/japanese-learning-platform/#kana-check)：分能力查看208張卡，依實際首答補強混淆，每日最多10題檢查較早學過的字。手寫仍為作品與自評；備份沿用現有格式，詳見[本批驗收與限制](docs/kana-coach-validation.md)。
 
@@ -21,6 +21,8 @@ v0.6.1補做手機版驗收：320／390px各15類頁面、320px大字6頁與畫�
 第七批新增[平片互換三題](https://linhercherng.github.io/japanese-learning-platform/#kana-bridge)：104對、208個雙向題，每輪同類三字，按需展開同音雙形與既有記憶訣竅，再換方向回想。兩種方向保留各自首答，同日／輪內提示另列；刷新續作與合併備份保留。只練字形辨認，不代替聽辨、書寫或跨日證據。詳見[第七批規劃](docs/plans/2026-10-22-kana-seventh.md)與[驗收](docs/kana-seventh-validation.md)。
 
 第八批新增[清濁聲音家族](https://linhercherng.github.io/japanese-learning-platform/#kana-family)：58組、132題，將原字、兩點與小圈放進同一家族記。按需展開家族卡、切換標記與既有訣竅，再完成2／3題正常／慢速聽辨；答後全家族曝光、提示、首答與續作均保留。詳見[第八批規劃](docs/plans/2026-10-22-kana-eighth.md)與[驗收](docs/kana-eighth-validation.md)。
+
+第九批新增[行段記憶導航](https://linhercherng.github.io/japanese-learning-platform/#kana-row)：20行、90個既有清音，一次一行、逐格回想，保留や／わ行空格。36組離序小輪沿用既有聽辨題，每輪2／3題、正常／慢速音；原首答、提示、刷新續作與備份保留。詳見[第九批規劃](docs/plans/2026-10-22-kana-ninth.md)與[驗收](docs/kana-ninth-validation.md)。
 
 保留固定於頁頂的「目前位置」路徑，可直接返回分類或來源課程；練習、深連結與重新整理保留可辨識的所屬層級。生活任務切換分類會同步網址。
 
