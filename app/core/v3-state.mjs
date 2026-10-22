@@ -1,4 +1,5 @@
 import {validatePocket,mergePocket} from './kana-pocket-state.mjs';
+import {validContrastReference} from '../content/kana-contrast.mjs';
 import {validPocketListenReference} from '../content/kana-pocket-listen.mjs';
 import {validRhythmReference,validRhythmHints} from '../content/kana-rhythm.mjs';
 import {validRowReference} from '../content/kana-row.mjs';
@@ -20,8 +21,9 @@ const uniqueIds=items=>Array.isArray(items)&&items.every(safe)&&new Set(items).s
 function answer(a){shape(a,['value','correct','hinted','time']);requireValue(validAnswerValue(a.value)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&time(a.time));}
 export function validateSession(s){
  shape(s,['id','source','reference','questionIds','queue','cursor','answers','hints','corrections','deferred','createdAt','updatedAt','completedAt']);
- requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel','kana-bridge','kana-family','kana-row','kana-rhythm','kana-pocket-listen'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel','kana-bridge','kana-family','kana-row','kana-rhythm','kana-pocket-listen','kana-contrast'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
  if(s.source==='kana-pocket-listen')requireValue(validPocketListenReference(s.reference,s.questionIds)&&s.queue?.length===s.questionIds.length,'口袋聽辨題目與原字卡不一致。');
+ if(s.source==='kana-contrast')requireValue(validContrastReference(s.reference,s.questionIds)&&s.queue?.length===2,'錯字雙向聽辨與原字對不一致。');
  if(s.source==='kana-rhythm')requireValue(validRhythmReference(s.reference,s.questionIds)&&s.queue?.length===3,'節奏三題與來源不一致。');
  if(s.source==='kana-row')requireValue(validRowReference(s.reference,s.questionIds),'行段題目與來源不一致。');
  if(s.source==='kana-family')requireValue(validFamilyReference(s.reference,s.questionIds),'聲音家族題目與來源不一致。');
@@ -62,6 +64,7 @@ export function validateV3(v,artifacts=[]){
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
  requireValue(v.sessions.filter(s=>s.source==='kana-pocket-listen'&&!s.completedAt).length<=1,'口袋聽辨有不同未完成輪次，請先完成目前輪次並保留備份。');
+ requireValue(v.sessions.filter(s=>s.source==='kana-contrast'&&!s.completedAt).length<=1,'錯字雙向聽辨有不同未完成輪次，請先完成目前輪次並保留備份。');
  validateWeekExposure(v.sessions,v.kanaHints);
  const checks=v.sessions.filter(s=>['kana-check','kana-week'].includes(s.source));requireValue(new Set(checks.map(s=>s.source+':'+s.reference)).size===checks.length,'同日隔天檢查有不同輪次，請保留備份並先完成目前輪次。');
  for(const p of v.dailyPlans)for(const step of p.steps)if(step.sessionId!==null)requireValue(v.sessions.some(s=>s.id===step.sessionId&&s.source==='daily'&&s.reference===p.id&&JSON.stringify(s.questionIds)===JSON.stringify(step.questionIds)),'每日安排與回想輪次不一致');
