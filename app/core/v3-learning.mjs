@@ -1,5 +1,5 @@
 import {duelCueSeen} from '../content/kana-sixth.mjs';
-import {pairExposure} from '../content/kana-recall.mjs';
+import {extraKanaExposure} from '../content/kana-recall.mjs';
 import {confusedKana,coachQuestion} from '../content/kana-coach.mjs';
 import {recordAnswer,saveArtifact,validateState} from './learning.mjs';
 import {gradeQuestion,validAnswerValue} from './study.mjs';
@@ -48,7 +48,7 @@ export function answerV3Session(state,{sessionId,question,value,eventId,time,var
  if(entry.repeat?s.corrections[s.cursor]:s.answers[question.id])return state;
  const exposure=next.v3.kanaHints?.[question.reviewItem]?.lastHintAt;
  if(s.source==='kana-week'&&exposure&&Date.parse(exposure)<=Date.parse(time)&&(Date.parse(exposure)>=Date.parse(s.createdAt)||(Date.parse(studyDay(time))-Date.parse(studyDay(exposure)))/86400000<7)&&!s.hints.includes(question.id))s.hints.push(question.id);
- const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id)||['kana-duel','kana-bridge'].includes(s.source)&&duelCueSeen(next.v3.kanaHints,question,s.createdAt,time),time};
+ const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id)||['kana-duel','kana-bridge','kana-family'].includes(s.source)&&duelCueSeen(next.v3.kanaHints,question,s.createdAt,time),time};
  if(entry.repeat)s.corrections[s.cursor]=a;
  else{
   s.answers[question.id]=a;
@@ -87,7 +87,7 @@ export function organizeV3(state,time){
  next.v3.dailyPlans=next.v3.dailyPlans.filter(p=>!removed.has(p.id));
  const required=new Set(next.v3.dailyPlans.flatMap(p=>p.steps.map(s=>s.sessionId).filter(Boolean)));
  const retainedWeeks=next.v3.sessions.filter(s=>s.source==='kana-week'&&(!s.completedAt||Date.parse(s.updatedAt)>=cutoff||required.has(s.id)));
- for(const session of next.v3.sessions)if(Object.entries(session.answers).some(([id,a])=>{const partner=pairExposure(id);return partner&&retainedWeeks.some(w=>Date.parse(a.time)>=Date.parse(w.createdAt)&&(!w.completedAt||Date.parse(a.time)<=Date.parse(w.updatedAt))&&w.questionIds.some(qid=>coachQuestion(qid)?.reviewItem===partner));}))required.add(session.id);
+ for(const session of next.v3.sessions)if(Object.entries(session.answers).some(([id,a])=>extraKanaExposure(id).some(partner=>retainedWeeks.some(w=>Date.parse(a.time)>=Date.parse(w.createdAt)&&(!w.completedAt||Date.parse(a.time)<=Date.parse(w.updatedAt))&&w.questionIds.some(qid=>coachQuestion(qid)?.reviewItem===partner)))))required.add(session.id);
  next.v3.sessions=next.v3.sessions.filter(s=>!s.completedAt||Date.parse(s.updatedAt)>=cutoff||required.has(s.id));
  return JSON.stringify(next)===JSON.stringify(state)?state:changed(next);
 }

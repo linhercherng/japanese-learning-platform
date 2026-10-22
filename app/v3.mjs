@@ -1,5 +1,5 @@
 import {recordKanaExposure,readDictation} from './core/kana-studio.mjs';
-import {pairExposure} from './content/kana-recall.mjs';
+import {extraKanaExposure} from './content/kana-recall.mjs';
 import * as catalog from './content/catalog.mjs';
 import {kana,kanaLessons} from './content/kana.mjs';
 import {concepts} from './content/concepts.mjs';
@@ -43,7 +43,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  function currentQuestion(){const [name,sid]=route(),s=state().v3.sessions.find(s=>s.id===sid);if(name!=='v3-practice'||!s||s.completedAt)return null;const entry=s.queue[s.cursor],q=resolve(entry?.questionId);return q?{sid,cursor:s.cursor,q}:null;}
  function expose(s,q,time){
   if(!kana.some(k=>k.id===q.reviewItem))return s;
-  const items=[q.reviewItem],other=pairExposure(q.id);if(other)items.push(other);
+  const items=[q.reviewItem,...extraKanaExposure(q.id)];
   const next=recordKanaExposure(s,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;
  }
  function afterRender(name,sid){
