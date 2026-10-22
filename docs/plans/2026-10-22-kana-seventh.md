@@ -33,6 +33,6 @@ Files：新增 `app/ui/kana-bridge.mjs`、`app/kana-bridge.mjs`、`tests/kana-br
 
 - [x] 真實瀏覽器隔離QA：三題含正答／提示、刷新與返回續作、展開／收起、反向、八分類、320／390px尺寸與44px操作目標、console、既有入口回歸；實機沿用使用者略過決定。
 - [x] 獨立審查並修正重要問題；完整npm test、build、check、audit。同步README、規格、課綱、素材與驗收文件；不得提交QA或個人資料。
-- [ ] PR／CI／相同head合併／Pages成功；正式HTTPS逐檔shell SHA-256、JS MIME、SW fingerprint與音檔抽查，正式瀏覽器操作與截圖。補發布紀錄、推送並確認remote一致，清理測試分頁與server。
+- [x] PR／CI／相同head合併／Pages成功；正式HTTPS逐檔shell SHA-256、JS MIME、SW fingerprint與音檔抽查，正式瀏覽器操作與截圖。補發布紀錄、推送並確認remote一致，清理測試分頁與server。
 
 回退前匯出JSON；舊版可能不識別kana-bridge來源，保留備份等待新版，不清IndexedDB。教材／合成語音沿用原創試用與待教師審校邊界。

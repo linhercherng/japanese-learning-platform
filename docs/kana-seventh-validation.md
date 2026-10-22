@@ -32,7 +32,12 @@
 
 ## 發布
 
-待PR／CI／Pages及正式HTTPS／瀏覽器補記。QA資料、日誌與截圖只留ignored work，不提交個人紀錄。
+- [PR #23](https://github.com/linhercherng/japanese-learning-platform/pull/23)，head `5c32d911c3b631588849c4af38d84514640534d7`；[PR CI](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39771082264)成功，依相同head合併。
+- main merge `f78a7ba8bc2653a5fa69ba8cd040836d5e260c33`；[Pages build／deploy](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39771209588)均成功，2026-10-22 11:32:53 UTC完成部署（台北19:32）。
+- 正式HTTPS於2026-10-22 11:33:59 UTC（台北19:33）確認106個shell SHA-256、JS MIME及service-worker fingerprint與本機相符，78次音檔HTTP抽查通過。完整JSON在ignored `work/seventh-public-http.json`，fingerprint同上。
+- 正常資料庫的既有頁面先顯示第六批快取，待新版shell下載完成，離開頁面再開回來後出現「平片互換三題」。未清快取、個人資料或資料庫。
+- 正式站 `?qa=1` 隔離庫390px：由今天怎麼練進入，選看平選片拗音，展開きゃ／キャ、きゅ／キュ、きょ／キョ，空白鍵播放顯示合成語音播放狀態。實際完成三題、首題保存後刷新仍為提示後答對；結果列0/3無提示、3題提示。完成後換方向，URL與「看片假名，選平假名」一致。console warn／error空，無橫向溢出；畫面在ignored `work/seventh-qa/public-390-bridge.jpg`。
+- 公開入口：[平片互換三題](https://linhercherng.github.io/japanese-learning-platform/#kana-bridge)、[今天怎麼練](https://linhercherng.github.io/japanese-learning-platform/#kana-path)。測試分頁與本機server已關閉，還原viewport，保留正常公開入口。QA資料、日誌與截圖只留ignored work，不提交個人紀錄。
 
 ## 素材與回退
 
