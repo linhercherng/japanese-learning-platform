@@ -1,3 +1,6 @@
+import {rhythmQuestion} from './content/kana-rhythm.mjs';
+import {rhythmCards,exposedRhythmItems} from './content/kana-focus.mjs';
+import {recordRhythmExposure} from './core/kana-rhythm.mjs';
 import {recordKanaExposure,readDictation} from './core/kana-studio.mjs';
 import {extraKanaExposure} from './content/kana-recall.mjs';
 import * as catalog from './content/catalog.mjs';
@@ -42,14 +45,14 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  }
  function currentQuestion(){const [name,sid]=route(),s=state().v3.sessions.find(s=>s.id===sid);if(name!=='v3-practice'||!s||s.completedAt)return null;const entry=s.queue[s.cursor],q=resolve(entry?.questionId);return q?{sid,cursor:s.cursor,q}:null;}
  function expose(s,q,time){
-  if(!kana.some(k=>k.id===q.reviewItem))return s;
-  const items=[q.reviewItem,...extraKanaExposure(q.id)];
-  const next=recordKanaExposure(s,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;
+  const rhythm=rhythmQuestion(q.id);if(!rhythm&&!kana.some(k=>k.id===q.reviewItem))return s;
+  const items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[q.reviewItem,...extraKanaExposure(q.id)];
+  const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time):recordKanaExposure(s,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;
  }
  function afterRender(name,sid){
   if(name!=='v3-practice')return;const session=ctx().state.v3.sessions.find(s=>s.id===sid);if(!session||session.completedAt)return;
   const entry=session.queue[session.cursor],q=resolve(entry?.questionId),answer=entry?.repeat?session.corrections[session.cursor]:session.answers[entry?.questionId];
-  if(!q||!kana.some(k=>k.id===q.reviewItem)||!answer&&!session.hints.includes(q.id))return;
+  if(!q||!rhythmQuestion(q.id)&&!kana.some(k=>k.id===q.reviewItem)||!answer&&!session.hints.includes(q.id))return;
   const time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString();
   update(s=>expose(s,q,time)).catch(error=>toast(error.message));
  }

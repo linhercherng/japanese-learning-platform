@@ -1,0 +1,26 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createV2} from '../app/v2.mjs';import {initialState,recordAnswer,exportBackup,parseBackup} from '../app/core/learning.mjs';
+import {makeDailyPlan} from '../app/core/daily-plan.mjs';import {storeDailyPlan,beginV3Session,answerV3Session} from '../app/core/v3-learning.mjs';
+import {concepts} from '../app/content/concepts.mjs';import {v3Questions} from '../app/content/practice-v3.mjs';import {units,resolveLearningQuestion} from '../app/content/catalog.mjs';
+import {recordRhythmExposure} from '../app/core/kana-rhythm.mjs';import {startWeekCheck} from '../app/core/kana-recall.mjs';import {startDictation,readDictation} from '../app/core/kana-studio.mjs';
+const time='2026-10-22T13:30:00.000Z';
+test('actual daily due selection preserves rhythm cue semantics across the shared V3 source',()=>{
+ let s=recordAnswer(initialState(),{id:'old',item:'kr:photo',dimension:'listening',correct:false,hinted:false,time:'2026-10-20T12:00:00Z'});s=recordRhythmExposure(s,'photo',time);const plan=makeDailyPlan(s,{concepts,questions:v3Questions,units,resolveQuestion:resolveLearningQuestion,id:'plan',time}),step=plan.steps.find(x=>x.id==='recall');assert(step.questionIds.includes('kr:photo'));s=storeDailyPlan(s,plan);s=beginV3Session(s,step.questionIds,{id:'daily',source:'daily',reference:plan.id,time,planId:plan.id,stepId:step.id});s=answerV3Session(s,{sessionId:'daily',question:resolveLearningQuestion('kr:photo'),value:0,eventId:'new',time});assert.equal(s.v3.sessions.find(x=>x.id==='daily').answers['kr:photo'].hinted,true);
+});
+async function run(body){const old={document:globalThis.document,location:globalThis.location,add:globalThis.addEventListener,remove:globalThis.removeEventListener,navigator:Object.getOwnPropertyDescriptor(globalThis,'navigator')},listeners=new Map(),c={state:initialState(),session:{}},cache={};let hash='#review',v2,html='';
+ globalThis.location={get hash(){return hash;},set hash(v){hash=v.startsWith('#')?v:'#'+v;},href:'http://localhost/?qa=1#review'};globalThis.addEventListener=()=>{};globalThis.removeEventListener=()=>{};Object.defineProperty(globalThis,'navigator',{value:{},configurable:true});
+ globalThis.document={addEventListener:(n,f)=>listeners.set(n,[...(listeners.get(n)||[]),f]),removeEventListener:(n,f)=>listeners.set(n,(listeners.get(n)||[]).filter(x=>x!==f)),querySelector:()=>null};
+ const render=()=>{if(hash==='#practice')html=v2.views.practice();v2.afterRender?.(hash.slice(1));};
+ const options={getState:()=>c.state,getContext:()=>c,update:async f=>{c.state=f(c.state);},render,toast:()=>{},now:()=>time,id:()=>'review',cacheDraft:(k,v)=>cache[k]=v};
+ const click=async dataset=>{for(const f of listeners.get('click')||[])f({target:{closest:selector=>selector==='button'?{dataset,disabled:false,isConnected:true,hasAttribute:()=>false}:null}});await new Promise(r=>setImmediate(r));render();await new Promise(r=>setImmediate(r));};
+ try{v2=createV2(options);await body({c,v2,cache,render,click,get html(){return html;}});}finally{v2?.dispose();globalThis.document=old.document;globalThis.location=old.location;globalThis.addEventListener=old.add;globalThis.removeEventListener=old.remove;if(old.navigator)Object.defineProperty(globalThis,'navigator',old.navigator);else delete globalThis.navigator;}
+}
+test('V2 due review warns without revealing the answer and counts today cue before the first reply',async()=>run(async h=>{
+ h.c.state=recordRhythmExposure(h.c.state,'photo',time);await h.v2.startReview([{item:'kr:photo',dimension:'listening'}]);h.render();assert.match(h.html,/看過這個詞的拍格/);assert(!h.html.includes('しゃしん'));assert.equal(h.c.state.practice.hints.length,0);await h.click({studyChoice:'0'});assert(h.c.state.practice.answers['kr:photo'].hinted);const first=structuredClone(h.c.state.practice.answers);await h.click({studyChoice:'1'});assert.deepEqual(h.c.state.practice.answers,first);assert.equal(h.c.state.attempts.length,1);
+}));
+test('V2 answer feedback exposes word/actual kana and syncs week plus dictation cache without rewriting its answer',async()=>run(async h=>{
+ h.c.state=recordAnswer(h.c.state,{id:'old',item:'h-3057-3083',dimension:'recognition',correct:true,hinted:false,time:'2026-10-01T00:00:00Z'});h.c.state=startWeekCheck(h.c.state,{id:'week',time});h.c.state=startDictation(h.c.state,{item:'h-3057-3083',id:'ink',time});await h.v2.startReview([{item:'kr:photo',dimension:'listening'}]);await h.click({studyChoice:'0'});assert.equal(h.c.state.practice.answers['kr:photo'].hinted,false);assert.equal(h.c.state.v3.rhythmHints.photo,'2026-10-22T13:30:00.001Z');assert(readDictation(h.c.state,'h-3057-3083').meta.hinted);assert(Object.keys(h.cache).length);assert(h.c.state.v3.sessions[0].hints.includes('kc:check:h-3057-3083:pair'));assert(parseBackup(exportBackup(h.c.state)).v3.rhythmHints.photo);
+}));
+test('V2 explicit rhythm hint records a cue before reply with no extra scored attempt',async()=>run(async h=>{
+ await h.v2.startReview([{item:'kr:tea',dimension:'listening'}]);await h.click({studyAction:'hint'});assert.equal(h.c.state.v3.rhythmHints.tea,time);assert.equal(h.c.state.attempts.length,0);assert(h.c.state.practice.hints.includes('kr:tea'));await h.click({studyChoice:'0'});assert.equal(h.c.state.attempts.length,1);assert(h.c.state.practice.answers['kr:tea'].hinted);
+}));

@@ -144,3 +144,7 @@
 ## 五十音記憶第九批（v0.13.0，2026-10-22）
 
 單一kana-row入口，20行、90字、36小輪；逐格對照預設收起，只有選中字／詞／訣竅記錄曝光，同步七日與默寫草稿。kana-row來源嚴格驗證reference及原題序，同行有未完輪先接續；以目標字同日／本輪提示標新答案，保留原首答及schema3，不清資料。五欄格子與來源麵包屑沿用既有介面。[規劃](plans/2026-10-22-kana-ninth.md)、[驗收](kana-ninth-validation.md)。
+
+## 五十音記憶第十批（v0.14.0，2026-10-22）
+
+一拍一格內整合估拍差異、數拍三題及最近結果，不增加導覽入口。source=kana-rhythm、reference=原來源card，嚴格三題順序，同組pending先續原輪且收起對照。optional rhythmHints只接受12詞時間，schema3不遷移，備份合併保留較晚曝光；V3全來源及V2到期複習均依實際kr題套提示與答後曝光，保留首答。實際假名曝光同步七日／默寫草稿快取。[規劃](plans/2026-10-22-kana-tenth.md)、[驗收](kana-tenth-validation.md)。
