@@ -20,20 +20,20 @@
 
 Files：新增app/content/kana-pocket-listen.mjs；修改app/core/kana-pocket.mjs、app/core/v3-state.mjs、app/core/v3-learning.mjs；tests/kana-pocket-listen.test.mjs。
 
-- [ ] 先失敗：208字均能解析且K包音檔存在、空／1／2／3字選題、時間截止與固定輪轉、原輪續作且清單改動不重排、嚴格reference／queue／單pending、備份／合併、只記listening首答不改自評、同日／前日／未來／輪內提示、首答不回寫。
-- [ ] 最小實作；node --test tests/kana-pocket-listen.test.mjs綠；npm test；提交。
+- [x] 先失敗：208字均能解析且K包音檔存在、空／1／2／3字選題、時間截止與固定輪轉、原輪續作且清單改動不重排、嚴格reference／queue／單pending、備份／合併、只記listening首答不改自評、同日／前日／未來／輪內提示、首答不回寫。
+- [x] 最小實作；node --test tests/kana-pocket-listen.test.mjs綠；npm test；提交。
 
 ## Task 2：口袋與V3介面
 
 Files：修改app/kana-sixth.mjs、app/ui/kana-sixth.mjs、app/ui/v3.mjs、app/ui/navigation.mjs、app/v3.mjs；新增tests/kana-pocket-listen-ui.test.mjs與tests/kana-pocket-listen-controller.test.mjs。
 
-- [ ] 先失敗：聽辨入口／自評輪進行時不插入、pending收起、最近結果／來源返回／麵包屑不洩答案、題目有正常慢速音、答前隱藏／答後曝光、七日／默寫快取、快速連按、過期／延遲離頁／保存失敗可匯出。
-- [ ] 實作整合，版本v0.16.0；test、build後check；更新README／規格／課綱／來源／驗收；提交。
+- [x] 先失敗：聽辨入口／自評輪進行時不插入、pending收起、最近結果／來源返回／麵包屑不洩答案、題目有正常慢速音、答前隱藏／答後曝光、七日／默寫快取、快速連按、過期／延遲離頁／保存失敗可匯出。
+- [x] 實作整合，版本v0.16.0；test、build後check；更新README／規格／課綱／來源／驗收；提交。
 
 ## Task 3：真實驗收及發布
 
-- [ ] 隔離瀏覽器口袋→聽辨→首答→刷新／返回續作→結果，正／錯／明示提示、原清單不自動移出；320／390px、44px、鍵盤／正常慢速音與console；原自評／翻卡回歸。
-- [ ] requesting-code-review獨立核心與整合審查；npm test／build／check／audit通過；本機shell SHA／MIME／SW與音檔HTTP驗收。
+- [x] 隔離瀏覽器口袋→聽辨→首答→刷新／返回續作→結果，正／錯／明示提示、原清單不自動移出；320／390px、44px、鍵盤／正常慢速音與console；原自評／翻卡回歸。
+- [x] requesting-code-review獨立核心與整合審查；npm test／build／check／audit通過；本機shell SHA／MIME／SW與音檔HTTP驗收。
 - [ ] PR／CI／相同head合併／Pages成功，正式HTTPS與瀏覽器驗證／截圖，發布文件與remote同步，清理QA與server；不從localhost推論部署。
 
 延用既有208卡與試用教材、合成音，尚待教師審校；不加新外部內容。實機依使用者先前決定略過。回退前保存JSON，舊版可能不認得新source，保留備份、不清IndexedDB。前批Pages狀態本輪重新查詢已completed／success，舊文件保留原觀測時間，補記於本輪驗收。

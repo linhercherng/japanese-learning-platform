@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "f13bbb852395aa89d98263a6ed676ce71aceacf718783858a1adaaaf56550bf2",
+  "fingerprint": "2ccfb9e408c8a88d8f36f5c8d397df562c7804297f88530c52a2ca0486eb2595",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -241,7 +241,7 @@
     "v2.css": "16a7170fa42a4b23f5b1ba6e63d0422ab5a054dbbe4bbb5106e9ad99e1740f70",
     "v2.mjs": "ab20b6c5197601b8fec1eeceacdf8c680a80500a23dc9242c56a6808c91463d9",
     "v3.css": "a1d71563412df145d40687cd0f66dde5e5847a449d792d55a6626cd01bfe2423",
-    "v3.mjs": "943ea720a19d952c95c1d51924f8f86e6bd1aba0653091e6dc7edd6d890cf904"
+    "v3.mjs": "1ff0e42ef8119ac210ff7a49673938289e35dbbc00dead21fc3e5ca8a1faade9"
   },
-  "bytes": 8237182
+  "bytes": 8237589
 }
