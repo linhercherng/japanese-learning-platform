@@ -156,3 +156,9 @@
 ## 五十音記憶第十二批（v0.16.0，2026-10-22）
 
 kana-pocket內整合聽辨入口與最近結果，不增導覽。source=kana-pocket-listen，每輪1～3個既有kc聽辨題；reference依原題序連字卡ID，嚴格驗證queue與單一pending，清單改動不重排原輪。source的首答提示包含同日／本輪目標曝光；V3只有實際render出解說／個人線索後才解析其中假名，更新七日／默寫草稿／快取，隱藏文字不預記。自評清單不因答對改動，原schema3／ID不遷移，保存失敗可匯出、延遲離頁不拉回。[規劃](plans/2026-10-22-kana-twelfth.md)、[驗收](kana-twelfth-validation.md)。
+
+## 五十音記憶第十三批（v0.17.0，2026-10-22）
+
+完成kana-pocket-listen後，結果頁連到kana-pocket-review/<sessionId>，依原題序逐字呈現原首答與提示，不重評、不新增attempt或source。訣竅與個人線索預設收起，切字／刷新收起；待完成口袋聽辨時遮蔽所有回顧字卡。已移出的字可明示留回自評口袋，無自動掌握判定。實際顯示的目標／原選字與展開線索同步曝光、七日未答題及默寫草稿快取。過期事件、連按、延遲離頁與保存失敗都有守護；schema3與舊ID不變。
+
+見[規劃](plans/2026-10-22-kana-thirteenth.md)與[驗收](kana-thirteenth-validation.md)。

@@ -22,14 +22,14 @@
 
 Files：app/core/kana-pocket-review.mjs、tests/kana-pocket-review.test.mjs。
 
-- [ ] 先失敗：只接受完成來源、依原題序與原答案、四種正錯／提示組合、空／過期／其他來源、個人提示與目標／原選字實際曝光、收起不預記、純查詢不改state、備份往返不變。
-- [ ] 實作最小query／cue helper；node --test tests/kana-pocket-review.test.mjs綠，npm test；提交。
+- [x] 先失敗：只接受完成來源、依原題序與原答案、四種正錯／提示組合、空／過期／其他來源、個人提示與目標／原選字實際曝光、收起不預記、純查詢不改state、備份往返不變。
+- [x] 實作最小query／cue helper；node --test tests/kana-pocket-review.test.mjs綠，npm test；提交。
 
 ## Task 2：結果頁、回顧頁與控制器
 
 Files：app/kana-pocket-review.mjs、app/ui/kana-pocket-review.mjs、app/main.mjs、app/ui/v3.mjs、app/ui/navigation.mjs；tests/kana-pocket-review-ui.test.mjs、tests/kana-pocket-review-controller.test.mjs。
 
-- [ ] 先失敗：入口／原來源返回、逐字選擇與預設收起、pending遮蔽、HTML安全、留回口袋、重複／過期動作、延遲／失敗保存、七日／默寫草稿快取、刷新保留首答。
+- [x] 先失敗：入口／原來源返回、逐字選擇與預設收起、pending遮蔽、HTML安全、留回口袋、重複／過期動作、延遲／失敗保存、七日／默寫草稿快取、刷新保留首答。
 - [ ] 實作整合，版本v0.17.0；npm test、build後check、audit；更新README／規格／課綱／來源／驗收；提交。
 
 ## Task 3：實際驗收與發布
