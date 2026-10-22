@@ -56,3 +56,7 @@ V3.0已於2026-10-13透過PR#4整合至main。成功部署run38392302028；正�
 ## 五十音第十三批發布（2026-10-23，台北）
 
 v0.17.0經[PR #29](https://github.com/linhercherng/japanese-learning-platform/pull/29)合併；[Pages run39810937235](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39810937235)的build/deploy皆success。379項測試、build/check/audit與獨立審查通過，正式122份shell雜湊及128次音檔HTTP抽查相符；正式隔離瀏覽器驗收既有原輪逐字回顧、展開／刷新、錯答保留與主動留回。證據與實機／教師審校邊界見[第十三批驗收](kana-thirteenth-validation.md)。
+
+## 五十音第十四批發布（2026-10-23，台北）
+
+v0.18.0經[PR #30](https://github.com/linhercherng/japanese-learning-platform/pull/30)按必要build成功的同一head合併；[Pages run39818239248](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39818239248)整體completed/success、build/deploy皆success。396項測試、build/check/audit、獨立審查與修補複核通過；正式122份shell雜湊與128次音檔HTTP相符，隔離瀏覽器確認原錯答雙卡、兩字音、遮住／核對、刷新及原統計保留。PR workflow總狀態仍in_progress，與已完成必要檢查分開記錄；完整證據與邊界見[第十四批驗收](kana-fourteenth-validation.md)。

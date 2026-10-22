@@ -37,6 +37,8 @@ Files：app/ui/kana-pocket-review.mjs、app/kana-pocket-review.mjs、app/ui/shar
 
 - [x] 隔離真實瀏覽器造原錯答→雙卡→兩音→遮住／核對→切字／刷新→原結果；320／390px、主要控制44px、鍵盤焦點、長文字與console。
 - [x] requesting-code-review獨立審查，必要修正再驗證；本機shell SHA/MIME/SW與既有音檔HTTP通過。
-- [ ] PR／CI相同head合併、Pages成功；正式HTTPS與隔離瀏覽器確認、保存截圖，補發布文件並push，remote同步；關閉QA與server。
+- [x] PR／CI相同head合併、Pages成功；正式HTTPS與隔離瀏覽器確認、保存截圖，補發布文件並push，remote同步；關閉QA與server。
 
 教材仍是尚待教師審校的既有試用內容／合成音；沿用208卡、508筆順、10947音檔索引，K包668檔。實機依先前決定略過；回退前匯出JSON，不清IndexedDB。個人線索／答案與QA紀錄不提交公開Git。
+
+發布補記：PR必要build成功且GitHub顯示CLEAN後按原head合併；PR workflow總狀態仍延遲in_progress，已分開記錄，不當成整體成功。main Pages工作正常completed/success，正式HTTP與瀏覽器驗證通過，詳見驗收文件。

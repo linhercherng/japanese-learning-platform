@@ -24,7 +24,12 @@
 
 本機122份shell SHA-256、JS MIME與SW fingerprint相符，128次既有音檔HTTP抽查通過；2026-10-22 16:50:57 UTC（台北10/23 00:50）。fingerprint `2e2c9d03f719dc6ae728a599e08e6b355b5c09eb140daad6e56e0981903fe45f`，ignored work/fourteenth-local-http.json。
 
-GitHub與Pages尚待發布，完成後補上正式證據。
+- [PR #30](https://github.com/linhercherng/japanese-learning-platform/pull/30)，head `e34747b447bac40e77c9d766a405c1c2ead963b8`。[PR檢查39817693690](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39817693690)的build於2026-10-22 16:52:54 UTC completed/success，PR部署依設計skipped。合併前GitHub statusCheckRollup皆completed，必要build SUCCESS且mergeStateStatus=CLEAN，按相同head合併。
+- PR workflow總狀態在發布後查詢仍in_progress、conclusion空，與已完成jobs不一致；因此此處僅記必要檢查完成，不宣稱該run整體completed。未取消／重跑遠端workflow或更改部署保護。獨立的main Pages工作已正常completed/success，見下節。
+- merge `1330ea36b9f312941253340a7fc82ed533e7265f`，2026-10-22 16:56:02 UTC（台北10/23 00:56）；[Pages 39818239248](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39818239248)整體completed/success，build/deploy皆success，deploy完成16:57:17 UTC（台北00:57）。
+- 正式HTTPS的122份shell SHA、JS MIME與SW fingerprint與本機一致，128次既有音檔HTTP抽查全通過；2026-10-22 16:59:17 UTC（台北10/23 00:59），ignored work/fourteenth-public-http.json。
+- 一般正式來源重載、離頁再回，未清快取／IndexedDB，個人學習資料未作測試。正式隔離QA沿用第十二批的が／パ／あ完成輪，正確が無錯字入口，原錯答パ／原選字ベ可展開兩卡，原角色、輔助讀音、例詞與既有訣竅正確，兩音鈕各可播放。空白鍵遮住後main無字音／兩字／訣竅，焦點在揭開；揭開回同雙卡、焦點在遮住。切字與刷新收起，返回原結果仍0/3無提示、3提示，沒有改寫原首答或新增成績。
+- 正式320/390px共5個對照、遮住／揭開與最終狀態量測，無橫溢、主要控制至少44px；console warn/error空。淺底字卡／詞例文字在窄版正常換行，正式畫面ignored work/fourteenth-qa/public-390-contrast.jpg，量測public-layout.json。已關閉QA、還原尺寸、停止本機18120 server；保留一般正式站分頁。此補記只改文件，不改已部署app資源。
 
 ## 素材與邊界
 
