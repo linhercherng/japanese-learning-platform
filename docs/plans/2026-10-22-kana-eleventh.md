@@ -20,8 +20,8 @@
 
 Files：app/core/kana-pocket-state.mjs、app/core/kana-pocket.mjs、app/core/v3-state.mjs、tests/kana-pocket.test.mjs。
 
-- [ ] 先失敗：208字／非法ID與時間／額外欄位、舊備份、active/tombstone往返、晚事件與同時衝突雙向合併、三字穩定排序與固定輪、不可未展開自評、無新增attempt/review。
-- [ ] 最小實作，node --test tests/kana-pocket.test.mjs綠；npm test；提交。
+- [x] 先失敗：208字／非法ID與時間／額外欄位、舊備份、active/tombstone往返、晚事件與同時衝突雙向合併、三字穩定排序與固定輪、不可未展開自評、無新增attempt/review。
+- [x] 最小實作，node --test tests/kana-pocket.test.mjs綠；npm test 341/341；提交。
 
 ## Task 2：翻卡與口袋畫面
 
