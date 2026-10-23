@@ -29,7 +29,8 @@ export function createLifeReview({getContext,update,render,toast,now,id}){
   if(Object.hasOwn(d,'lifeMapScope')&&['all','weak','practiced','new'].includes(value)){ui.scope=value;selector='[data-life-map-scope]';}
   if(selector){render(false);document.querySelector(selector)?.focus();}
  }
+ function toggle(event){const el=event.target;if(!el.open||!el.dataset?.lifeReviewPassage)return;const c=current();if(c&&c.sid===el.dataset.lifeReviewPassage&&c.entry.q.id===el.dataset.lifeReviewQuestion&&c.entry.q.passage)expose(c.entry.q.id,now());}
  function afterRender(name,param){if(name!=='life-round')return;const c=current();if(c?.sid===param&&c.ui.revealed)expose(c.entry.q.id,now());}
- document.addEventListener('click',click);document.addEventListener('change',change);
- return {views:{'life-map':()=>lifeMapView(getContext(),now()),'life-round':sid=>lifeRoundView(getContext(),sid,now())},onRoute,afterRender,dispose(){document.removeEventListener('click',click);document.removeEventListener('change',change);}};
+ document.addEventListener('click',click);document.addEventListener('change',change);document.addEventListener('toggle',toggle,true);
+ return {views:{'life-map':()=>lifeMapView(getContext(),now()),'life-round':sid=>lifeRoundView(getContext(),sid,now())},onRoute,afterRender,dispose(){document.removeEventListener('click',click);document.removeEventListener('change',change);document.removeEventListener('toggle',toggle,true);}};
 }

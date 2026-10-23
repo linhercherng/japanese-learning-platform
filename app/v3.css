@@ -24,3 +24,5 @@
 .kf-answer{margin-top:1.25rem;border-top:1px solid var(--line);padding-top:1rem}
 .k6-glyph{font-size:80px;line-height:1.5;text-align:center;margin:1rem 0;color:var(--green)}
 .k6-pair{display:flex;justify-content:space-evenly;gap:1rem;font-size:64px;line-height:1.5;margin:1rem 0}
+
+.life-review-tokens{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}.life-review-tokens span{display:block;padding:.5rem .8rem;border:1px solid #ddd5c8;border-radius:6px;line-height:1.8}.life-review-options{padding-left:1.3rem;line-height:1.9}.life-review-options li{padding:.4rem 0}.life-review-passage{margin:1rem 0}.life-review-passage summary{min-height:48px;padding:.7rem 0;line-height:1.8;cursor:pointer}

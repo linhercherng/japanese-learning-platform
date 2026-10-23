@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {lifeMapView,lifeRoundView} from '../app/ui/life-review.mjs';
 import {initialState,recordAnswer} from '../app/core/learning.mjs';
 import {startLifeMemory,memoryQuestions} from '../app/core/life-memory.mjs';
-import {answerV3Session,nextV3Question} from '../app/core/v3-learning.mjs';
+import {beginV3Session,answerV3Session,nextV3Question} from '../app/core/v3-learning.mjs';
 import {practiceV3View} from '../app/ui/v3.mjs';import {questionById} from '../app/content/catalog.mjs';import {navigationContext} from '../app/ui/navigation.mjs';
 const time='2026-10-23T02:00:00.000Z',ctx=()=>({state:initialState(),session:{}});
 function finished(c){c.state=startLifeMemory(c.state,{unitId:'L07',id:'round',time});for(const q of memoryQuestions('L07')){c.state=answerV3Session(c.state,{sessionId:'round',question:q,value:q.kind==='cloze'?'<img src=x onerror=1>':1,eventId:q.id,time});c.state=nextV3Question(c.state,'round',time);}return c;}
@@ -11,3 +11,9 @@ test('finished round is covered by default; reveal preserves original own value 
 test('any active life round covers every review and returns to the one pending UUID',()=>{const c=finished(ctx());c.state=startLifeMemory(c.state,{unitId:'L01',id:'pending',time});const html=lifeRoundView(c,'round',time);assert.match(html,/#v3-practice\/pending/);assert.doesNotMatch(html,/data-life-review-picker|參考答案：|data-audio/);assert.match(lifeMapView(c,time),/#v3-practice\/pending/);});
 test('result and breadcrumb connect back to original life round, without teaching text in recall breadcrumb',()=>{const c=finished(ctx());assert.match(practiceV3View(c,'round',id=>questionById.get(id),time),/#life-round\/round/);const trail=navigationContext(c,'life-round','round').trail;assert(trail.some(x=>x.route==='life-map'));assert.equal(trail.at(-1).label,'本輪逐題回顧');});
 test('missing, incomplete and empty weak states provide safe paths and never render fake results',()=>{const c=ctx();assert.match(lifeRoundView(c,'missing',time),/找不到|尚未完成/);c.session.lifeReview={scope:'weak'};assert.match(lifeMapView(c,time),/沒有符合/);assert.doesNotMatch(lifeMapView(c,time),/data-life-review-action="repair"/);});
+test('covered review includes original options and stable shuffled order tokens, with reading passage independently expandable',()=>{
+ const c=ctx(),ids=['L02-v2-q3','L07-v2-r1'];c.state=beginV3Session(c.state,ids,{id:'varied',source:'life-repair',reference:'2026-10-23',time});
+ for(const id of ids){const q=questionById.get(id);c.state=answerV3Session(c.state,{sessionId:'varied',question:q,value:q.kind==='order'?[0,1,2]:0,eventId:id,time});c.state=nextV3Question(c.state,'varied',time);}
+ let html=lifeRoundView(c,'varied',time);for(const token of questionById.get(ids[0]).tokens)assert(html.includes(token));assert.doesNotMatch(html,/data-study-token|參考答案：/);assert.equal(lifeRoundView(c,'varied',time),html);
+ c.session.lifeReview={round:'varied',index:1,revealed:false};html=lifeRoundView(c,'varied',time);assert.match(html,/data-life-review-passage="varied"/);assert.match(html,/先讀原題短文/);assert(html.includes(questionById.get(ids[1]).passage));for(const option of questionById.get(ids[1]).options)assert(html.includes(option));assert.doesNotMatch(html,/參考答案：|<details[^>]* open/);
+});
