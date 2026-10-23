@@ -295,3 +295,8 @@ LR／LD目錄主入口依scope選真正匹配句：all第一句、written第一�
 片段input/form/IME與整句分流，300字、逐字不trim，輸入不重繪／不寫DB或latest cache，也不記曝光／作答。刷新／換句／模式／離開丟暫存，明示整句草稿保持。主動核對才揭兩側字元差異／空側，不計分；空submit禁用，但永遠提供明示「這裡不需要文字」，避免選項洩漏空答案。可再遮試一次／回同處差異／整句從空白再想；未輸入整句時不改舊LB。
 
 選字中不可核對／空答或重繪切換；pointerdown記當刻IME，防止blur先compositionend後click/submit誤啟用，本次click取消預設或submit消耗鎖，pointercancel／下一次pointerdown／route清除。原busy／epoch／ref／pending原UUID、原LR／LD／LB／LN／作品／首答與失敗可匯出維持。無新資料欄位／schema／教材／評分source；詳見[規劃](plans/2026-10-23-life-memory-fourteenth.md)。
+
+
+## 生活記憶完整整合（v0.36.0，2026-10-23）
+
+使用者要求不再分批，一次完成生活日語記憶與複習剩餘程式功能。life-path共用lifeNextStep，pending優先、當日完成可收尾、七日／隔天／弱點／新課；不自動起輪。life-workspace搜尋既有LR／LD／LB／LN與lifeNotes，結果僅課名、句序、模式、狀態及日期；每頁10筆，含空稿、原／再想稿及保存／待存線索。明示搜尋，輸入不重繪，IME及本次指標手勢不誤送；索引不寫DB/cache/曝光/作答，pending全遮蔽，只接原UUID。life-guide六段指南連起全部既有工具。舊路由、schema3及原稿／首答／作品／備份保留，無新教材或依賴。完成定義及外部證據邊界見[完成矩陣](life-memory-completion.md)。

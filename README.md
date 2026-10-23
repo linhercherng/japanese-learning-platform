@@ -1,5 +1,7 @@
 # 日和｜日語學習平台
 
+v0.36.0 完成生活日語記憶與複習的剩餘整合，不再分批：[今天怎麼練](https://linhercherng.github.io/japanese-learning-platform/#life-path)沿實際原輪與日期安排下一步，[我的生活練習簿](https://linhercherng.github.io/japanese-learning-platform/#life-workspace)統一找回中文／聽寫原稿、再想稿與線索，[完整六段指南](https://linhercherng.github.io/japanese-learning-platform/#life-guide)串起前十四批。搜尋只讀metadata，不預覽私人文字或增加作答；原稿／首答／備份保留。[完成矩陣](docs/life-memory-completion.md)、[驗收](docs/life-memory-completion-validation.md)。教師、真人、實機與長期成效仍需各自取得證據。
+
 v0.35.0 生活記憶第十四批新增「差異小補練」：[中文回想](https://linhercherng.github.io/japanese-learning-platform/#life-recall)／[聽寫](https://linhercherng.github.io/japanese-learning-platform/#life-dictation)對照後先看一處差異，再「遮住這一處，自己補回」。先補一小段、主動核對、再試或接整句空白回想；片段只暫存，不改原草稿或再想稿，不計分。見[規劃](docs/plans/2026-10-23-life-memory-fourteenth.md)與[驗收](docs/life-memory-fourteenth-validation.md)。
 
 v0.34.0 生活記憶第十三批新增「一次只看一處差異」與「收起答案，從空白再想」：[中文回想](https://linhercherng.github.io/japanese-learning-platform/#life-recall)／[聽寫](https://linhercherng.github.io/japanese-learning-platform/#life-dictation)對照後可逐處觀察，再遮住答案與剛寫的文字，自己重新想一句。開始重想不刪舊稿，輸入才更新最新再想稿；文字相同時也能練。差異只是字元對照，不評同義句或作文。見[規劃](docs/plans/2026-10-23-life-memory-thirteenth.md)與[驗收](docs/life-memory-thirteenth-validation.md)。

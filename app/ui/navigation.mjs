@@ -48,6 +48,7 @@ export function navigationContext(ctx,name='home',param){
   }
   case 'quiz':section='practice-hub';trail=[home,courses,kana];if(ctx.session?.quiz?.lesson)trail.push(item('五十音單元',`unit/${ctx.session.quiz.lesson}`));trail.push(item('五十音回想',route));break;
   case 'life-week':case 'life-schedule':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活記憶地圖','life-map'),item(name==='life-week'?'七日生活回想':'生活複習預告',route)];break;
+  case 'life-path':case 'life-workspace':case 'life-guide':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),...(name==='life-path'?[]:[item('生活今日一小步','life-path')]),item(({'life-path':'生活今日一小步','life-workspace':'我的生活練習簿','life-guide':'生活日語完整指南'})[name],route)];break;
   case 'life-map':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活記憶地圖',route)];break;
   case 'life-round':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活記憶地圖','life-map'),item('本輪逐題回顧',route)];break;
   case 'life-cards':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item(unitById.get(param)?.title||'生活單元','life-memory/'+param),item('逐句回想卡',route)];break;
