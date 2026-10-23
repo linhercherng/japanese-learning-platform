@@ -38,6 +38,6 @@ Files: modify `app/life-dictation.mjs`、`app/ui/life-dictation.mjs`、navigatio
 
 - [x] 版本0.30.0、README／規格／課綱／畫面／來源／驗收同步；完整test→build→check、audit、shell逐檔SHA／JS MIME／SW與146原音HTTP。
 - [x] 隔離QA中文回想→日文草稿→刷新／獨立聽寫→對照→收起，空場景、pending原UUID、舊首答／線索保留；320／390／768／1024／1440、48px／鍵盤／console／截圖。只用?qa=1，不清DB／快取／SW、不注入跨日歷史。
-- [ ] PR同head CI、merge、Pages成功，正式HTTP與隔離UI、正常SW更新；證據文件push遠端一致，離開QA、停止server、復原viewport。
+- [x] PR同head CI、merge、Pages成功，正式HTTP與隔離UI、正常SW更新；證據文件push遠端一致，離開QA、停止server、復原viewport。詳見[驗收紀錄](../life-memory-ninth-validation.md)。
 
 本批不是自由翻譯／作文／口說評量。教材仍原創試用待教師審校；實機／OS日文鍵盤及長期效果不由本批推論。回退先匯出JSON、保留DB與備份，舊版可能不辨LR入口；個人文字與QA不提交Git。

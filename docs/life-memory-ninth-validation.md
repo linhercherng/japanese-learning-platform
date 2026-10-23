@@ -37,4 +37,13 @@ build→check與audit通過，audit 0弱點；208卡／508筆順／10947音檔�
 
 ## 發布驗證
 
-待同head CI、merge、Pages、正式HTTP及隔離UI、正常SW更新與遠端一致後補證據。
+- 最終head `dd38258080dc477199a27eb5a0d84d25f22e1c48`小範圍UI複核通過，兩UI測試檔9/9；兩模式CSS共用已解除焦點／捲動避讓疑慮，精簡LR說明與三列編輯器不影響核心行為。
+- [PR #42](https://github.com/linhercherng/japanese-learning-platform/pull/42)同head [CI39907764548](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39907764548) completed/success後按match-head合併，merge `2456b8055505dd80c03b652bec285b129ef1c739`。
+- [Pages39907888659](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39907888659)整體completed/success，build與deploy均success，deploy UTC05:50:40（台北13:50）完成。[正式中文回想目錄](https://linhercherng.github.io/japanese-learning-platform/#life-recall)已可用。
+- UTC05:52:05正式160份shell逐檔SHA256／JS MIME／SW與146次原音HTTP通過，0重試；fingerprint與本機相同。預設TLS驗證，ignored紀錄 `work/life-ninth-public-http.json`。276句原音全量索引／實體檔案檢查屬自動測試，不宣稱276句都做正式HTTP。
+- 更新前先由既有正式隔離庫展開第八批LD草稿作保留比對。正常分頁reload下載新shell，下載未完成時首次暫離後仍讀舊版；等待正常安裝再暫離，新版life-recall順利接手，沒有清DB／快取／SW或強制跳過等待。所有新輸入／音訊／作答僅使用?qa=1隔離庫。
+- 正式目錄初始12課各0 LR草稿。L07開始後只見原中文意思與空編輯器，空字禁對照，原日文／讀音／音訊不在DOM；日文草稿刷新先收起、開始恢復。對照較短稿只標原句未對上部分，唯讀無textarea，焦點至標題且scroll margin 119.375px；對照後原音／0.75慢速實際回報播放合成日語，收起回中文與自己的草稿。
+- 切聽寫後LD原草稿與更新前相同，再回中文模式恢復不同LR稿；第2句中日文／emoji獨立保存，目錄真實顯示2 LR草稿句。原文完全相同時只敘述文字相同、無mark／分數。N2／food為1課，L／health為0課，換all可復原12課。
+- 正式原輪 `b0ccfc1f-299d-47dd-9f0c-16ccb54ba97b` 未完成時，中文回想全遮蔽中文／草稿／原句／控制，只接同UUID；完成1題／1正確／1提示／0無提示。舊L07首輪 `7a5971bf-9045-4345-85b3-b80dad5bf171`仍3正確／2無提示／1提示；第六批L07中日文線索保持，未改個人文字。
+- 正式編輯器320／390／768／1024／1440px無橫溢，主要控制48px、收起49px，Tab接對照有outline，console warn/error空。ignored截圖 `work/life-ninth-public-390.png`。回正常正式目錄只讀，12課仍全0 LR草稿、沒有寫入測試文字或作答；正常入口截圖 `work/life-ninth-public-entry-390.png`。
+- 離開QA、停止18124伺服器、恢復viewport並保留正常正式入口。第一至第八批一同保留發布；實機／OS日文鍵盤、教師／真人審校及長期效果仍未由本批推論完成。
