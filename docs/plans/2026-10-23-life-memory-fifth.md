@@ -36,6 +36,6 @@ Files: app/life-skills.mjs、app/ui/life-skills.mjs、main／navigation／life-m
 
 - [x] 隔離QA每種能力原題、未練題補齊、提示與三題／單題文案、pending／刷新、日文填空／原排序、320/390px／鍵盤／console與原首答；跨日用固定時間自動測試。
 - [x] 版本0.26.0及README／規格／課綱／畫面／來源／驗收，npm test→build→check、audit與shell SHA／JS MIME／SW、146原音HTTP。
-- [ ] 同head CI成功合併、Pages成功、正式HTTP與隔離UI／截圖、正常SW更新，補證據push遠端一致並關QA／server。
+- [x] 同head CI成功合併、Pages成功、正式HTTP與隔離UI／截圖、正常SW更新，補證據push遠端一致並關QA／server。
 
 回退先匯出JSON，舊版可能不認life-skill，不清DB／快取／SW。個人答案／草稿／QA不進Git。實機、真人／教師審校及真實長期學習成效不由本次自動或桌面測試推論完成。

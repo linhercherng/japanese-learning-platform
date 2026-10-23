@@ -31,4 +31,13 @@
 
 ## 發布驗證進度
 
-本機HTTP UTC03:31:31逐檔校驗148份shell SHA256／JS MIME／SW fingerprint與146次既有音檔通過，1次暫時連線重試。fingerprint `eb5364758a4578f6c8eb26a353a64f49e14632f4092260e628d905da3184d01e`，預設TLS驗證，紀錄ignored `work/life-fifth-local-http.json`。正式發布與UI驗證完成後補證據。
+本機HTTP UTC03:31:31逐檔校驗148份shell SHA256／JS MIME／SW fingerprint與146次既有音檔通過，1次暫時連線重試。fingerprint `eb5364758a4578f6c8eb26a353a64f49e14632f4092260e628d905da3184d01e`，預設TLS驗證，紀錄ignored `work/life-fifth-local-http.json`。
+
+- [PR #38](https://github.com/linhercherng/japanese-learning-platform/pull/38) head `c97267b59179a410b2bf01d4c0af227fd5d78b5c`，同head [CI39895550016](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39895550016) completed/success後按match-head合併。
+- merge `f5993ecc0fcfa0c7dbc558681a483dcb01d9709c`；[Pages39895640748](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39895640748)整體completed/success，build/deploy皆success，deploy UTC03:34:18（台北11:34）完成。
+- 正式[生活能力專練](https://linhercherng.github.io/japanese-learning-platform/#life-skill/L07)及原課上／下方、逐句卡與原輪回顧入口可用。UTC03:35:56正式148份shell逐檔SHA／JS MIME／SW及146次音檔HTTP通過，1次暫時連線重試，fingerprint與本機相同；預設TLS驗證，紀錄ignored `work/life-fifth-public-http.json`。
+- 正式隔離QA能力輪：填空／排序 `0b7e82f9-aa92-4be3-8821-3e6b0d305325`，聽解 `4ade6822-0034-48f7-92ea-eb0d31277713`，理解 `7a3e9e7f-f17a-42c0-bc71-5a0afbf0b200`。排序選第一詞後刷新及回能力頁pending，回同UUID保留草稿；兩題／單題結果正確說明能力及實際題數，今日參考分別2提示／1提示。理解三題含未練原題、皆保存原首答與提示。
+- 能力統計從練過1／1／1變成1／2／3，理解還有2未練原題。舊原輪 `7a5971bf-9045-4345-85b3-b80dad5bf171`仍3首答正確／2無提示／1提示，未被加練改寫。
+- 正式320/390px無橫溢，新按鈕各48px；Tab焦點可見，console warn/error空。截圖ignored `work/life-fifth-public-320.png`／`work/life-fifth-public-390.png`／`work/life-fifth-public-entry-390.png`。
+- 正常分頁等新shell下載後暫離網站，循正常SW生命週期接手，沒有清DB／快取／SW；正常庫只驗原課新入口、能力頁與0練習的真實空歷史，沒有答題或開教材參考。所有新練習用隔離QA。QA與18124伺服器已關閉，正式能力頁保留。
+- 實機、教師／真人審校及實際長期效果仍未由本批推論完成；第四批逐句回想功能保留且已一同整合。
