@@ -50,6 +50,7 @@ export function validateSession(s){
  for(let i=0;i<s.cursor;i++)requireValue(s.queue[i].repeat?Boolean(s.corrections[i]):Boolean(s.answers[s.queue[i].questionId]),'回想中斷點超過已保存答案');
  if(['life-check','life-repair','life-week'].includes(s.source))requireValue(s.reference===studyDay(s.createdAt),'生活複習日期與建立時間不一致。');
  requireValue(time(s.createdAt)&&time(s.updatedAt)&&(s.completedAt===null?s.cursor<s.queue.length:time(s.completedAt)&&s.cursor===s.queue.length));
+ if(isJlptSource(s.source))requireValue(Date.parse(s.updatedAt)>=Date.parse(s.createdAt)&&(!s.completedAt||Date.parse(s.completedAt)>=Date.parse(s.updatedAt))&&Object.values(s.answers).every(a=>Date.parse(a.time)>=Date.parse(s.createdAt)&&Date.parse(a.time)<=Date.parse(s.updatedAt)),'檢定課程原輪時間不一致，請保留備份。');
  return s;
 }
 export function validateDailyPlan(p){

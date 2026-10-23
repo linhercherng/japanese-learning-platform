@@ -49,3 +49,6 @@
 .life-workspace-search button{min-height:48px}
 #life-workspace-results{scroll-margin-top:calc(var(--location-height,100px) + 24px);scroll-margin-bottom:100px}
 #life-workspace-results:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.jlpt-card-reference{margin-block:1rem;overflow-wrap:anywhere}.jlpt-card-reference dd{margin-inline-start:0;margin-bottom:1rem;line-height:1.9}
+#jlpt-results,#jlpt-card-heading,#jlpt-round-heading,#jlpt-note-input{scroll-margin-top:calc(var(--location-height,100px) + 24px);scroll-margin-bottom:100px}
+#jlpt-results:focus-visible,#jlpt-card-heading:focus-visible,#jlpt-round-heading:focus-visible{outline:3px solid var(--red);outline-offset:3px}

@@ -1,3 +1,4 @@
+import {jlptCueSeen} from './core/jlpt-memory-state.mjs';
 import {rhythmCueSeen,rhythmQuestion} from './content/kana-rhythm.mjs';
 import {rhythmCards,exposedRhythmItems} from './content/kana-focus.mjs';
 import {recordRhythmExposure} from './core/kana-rhythm.mjs';
@@ -36,7 +37,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(location.hash==='#exam-session'){
    await update(s=>({...s,activeExam:answerExam(s.activeExam,forms.find(f=>f.id===s.activeExam.formId),q.id,value,now()),revision:s.revision+1}));render(false);return;
   }
-  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const time=now(),nextPractice=answerPractice(p,q,value,{time,hinted:rhythmCueSeen(s.v3.rhythmHints,q,p.startedAt,time)});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
+  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const time=now(),nextPractice=answerPractice(p,q,value,{time,hinted:jlptCueSeen(s.v3.jlptHints,q.id,p.startedAt,time)||rhythmCueSeen(s.v3.rhythmHints,q,p.startedAt,time)});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
  }
  async function nextExamSection({submit=false,abandon=false}={}){
   const exam=state().activeExam;if(!exam)return;

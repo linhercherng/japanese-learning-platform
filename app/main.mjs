@@ -1,3 +1,5 @@
+import {createJlptMemory} from './jlpt-memory.mjs';
+import {jlptUnitMeta} from './content/jlpt-memory-ids.mjs';
 import {createLifeWorkspace} from './life-workspace.mjs';
 import {createLifeDictation} from './life-dictation.mjs';
 import {createLifeTopics} from './life-topics.mjs';
@@ -61,6 +63,7 @@ const kanaContrast=createKanaContrast({getContext:context,update,toast,now,id});
 const kanaFamily=createKanaFamily({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaBridge=createKanaBridge({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaFocus=createKanaFocus({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+const jlptMemory=createJlptMemory({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate),cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const lifeWorkspace=createLifeWorkspace({getContext:context,render,now});
 const lifeMemory=createLifeMemory({getContext:context,update,render,toast,now,id});
 const lifeReview=createLifeReview({getContext:context,update,render,toast,now,id});
@@ -91,7 +94,7 @@ function render(focus=true){
  canvas?.dispose();canvas=null;animationSequence++;document.getAnimations().forEach(a=>a.cancel());
  const {name,param}=route(),ctx=context();
  v2.onRoute(name,param);
- v3.onRoute(name,param);lifeWorkspace.onRoute(name,param);lifeReview.onRoute(name,param);lifeCards.onRoute(name,param);lifeSkills.onRoute(name,param);lifeNotes.onRoute(name,param);lifeTopics.onRoute(name,param);lifeDictation.onRoute(name,param);
+ v3.onRoute(name,param);jlptMemory.onRoute(name,param);lifeWorkspace.onRoute(name,param);lifeReview.onRoute(name,param);lifeCards.onRoute(name,param);lifeSkills.onRoute(name,param);lifeNotes.onRoute(name,param);lifeTopics.onRoute(name,param);lifeDictation.onRoute(name,param);
  if(name==='lesson'&&session.activeLesson!==param){session.activeLesson=param;session.lessonTab='對話';}
  const views={'kana-guide':()=>kanaGuideView(),home:()=>homeView(ctx),kana:()=>kanaView(ctx),unit:()=>unitView(ctx,param),stroke:()=>strokeView(ctx,param),write:()=>writingView(ctx,param||kana[0].id),life:()=>lifeView(ctx),lesson:()=>lifeLessonView(ctx,param),review:()=>reviewView(ctx),profile:()=>profileView(ctx),quiz:quizView,exam:()=>`${heading('一步一步，走向 N3。','完整檢定課程與模擬試卷會在後續版本加入。')}<section class="self-check"><h2>現在先把基礎練穩</h2><p>這一版可練完整五十音、音韻與六個生活任務。這些課程與進度不是 JLPT 合格證明。</p>${primary('練習五十音','kana')}</section>`};
  for(const [view,renderer] of Object.entries(v2.views))views[view]=()=>renderer(param);
@@ -108,6 +111,7 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(kanaContrast.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaFamily.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(kanaBridge.views))views[view]=()=>renderer(param);
+ for(const [view,renderer] of Object.entries(jlptMemory.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(lifeWorkspace.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(lifeMemory.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(lifeReview.views))views[view]=()=>renderer(param);
@@ -130,7 +134,7 @@ function render(focus=true){
   const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
- lifeCards.afterRender(name,param);lifeReview.afterRender(name,param);lifeMemory.afterRender(name,param);kanaNotebook.afterRender(name,param);kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);kanaPocketReview.afterRender(name,param);v2.afterRender(name,param);v3.afterRender(name,param);
+ jlptMemory.afterRender(name,param);lifeCards.afterRender(name,param);lifeReview.afterRender(name,param);lifeMemory.afterRender(name,param);kanaNotebook.afterRender(name,param);kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);kanaPocketReview.afterRender(name,param);v2.afterRender(name,param);v3.afterRender(name,param);
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
 }
 function phonologyQuestions(lessonId){return (kanaPhonology.find(p=>p.lessonId===lessonId)?.questions||[]).map((q,i)=>({item:`${lessonId}-p${i}`,dimension:'language',prompt:q.prompt,options:q.choices.map((label,j)=>({value:String(j),label})),correct:q.choices.indexOf(q.answer),explanation:q.explanation}));}
@@ -191,7 +195,7 @@ async function saveLife(lessonId){
 }
 function exportFile(){const blob=new Blob([exportBackup(context().state)],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`hiyori-backup-${new Date().toISOString().slice(0,10)}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('備份已匯出，包含進度、草稿與作品。');}
 function validateCatalog(s){
- const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
+ const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...[...jlptUnitMeta.keys()].map(uid=>'JN-'+uid),...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
  if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!draftIds.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
  lifeMemory.validateCatalog(s);v2.validateCatalog(s);
  v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);kanaLab.validateCatalog(s);kanaRecall.validateCatalog(s);kanaFocus.validateCatalog(s);kanaSixth.validateCatalog(s);kanaBridge.validateCatalog(s);kanaFamily.validateCatalog(s);kanaRow.validateCatalog(s);
