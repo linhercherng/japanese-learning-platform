@@ -145,7 +145,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  document.addEventListener('pointerdown',pointerDown);document.addEventListener('compositionstart',compositionStart);document.addEventListener('compositionend',compositionEnd);
  document.addEventListener('click',click);document.addEventListener('input',input);document.addEventListener('change',change);
  return {
-  views:{home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:()=>weaknessesView(ctx()),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
+  views:{home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:filter=>weaknessesView(ctx(),now(),filter),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
   afterRender,
   onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){routeEpoch++;composingInput=null;compositionSubmitBlocked=false;ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}},
   validateCatalog(s){

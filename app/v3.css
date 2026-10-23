@@ -59,3 +59,18 @@
 [data-screen="home"] .home-heading{font-size:clamp(2rem,5vw,3.2rem);line-height:1.3;margin-bottom:1.2rem}[data-screen="home"] .v3-goal{margin-block:1rem}[data-screen="home"] .v3-minutes{margin-bottom:.25rem}[data-screen="home"] [data-v3-action="refresh-home"]{min-height:48px}
 [data-screen="home"] :is(button,select,a,summary){scroll-margin-top:calc(var(--location-height,100px) + 24px);scroll-margin-bottom:100px}[data-screen="home"] :is(button,select,a,summary):focus-visible{outline:3px solid var(--red);outline-offset:3px}
 @media(min-width:768px){.unified-track-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.unified-report-links,.unified-review-filters,.unified-review-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0}
+.unified-report-links>a,.unified-review-filters>a{display:flex;align-items:center;min-height:48px;padding:.65rem .9rem;border:1px solid var(--line);border-radius:8px;box-sizing:border-box;line-height:1.7}
+.unified-report-links>a[aria-current="page"],.unified-review-filters>a[aria-current="page"]{background:var(--green-soft);border-color:var(--green);font-weight:700}
+.unified-review-tracks,.unified-review-items{display:grid;gap:1rem;min-width:0}
+.unified-review-tracks>.v3-section,.unified-review-items>.v3-section{margin:0;min-width:0;overflow-wrap:anywhere}
+.unified-review-tracks h3,.unified-review-items h3{font-size:1.15rem;line-height:1.7;margin-top:0}
+.unified-review-counts{margin:1rem 0;display:grid;gap:.6rem}
+.unified-review-counts>div{display:flex;justify-content:space-between;align-items:start;gap:1rem;border-bottom:1px solid var(--line);padding-bottom:.5rem}
+.unified-review-counts dt{font-size:.86rem;line-height:1.8}.unified-review-counts dd{margin:0;text-align:right;font-size:1.35rem;font-weight:700}.unified-review-counts small{display:block;font-size:.75rem;color:var(--muted);font-weight:400}
+.unified-abilities{padding:0;list-style:none}.unified-abilities li{display:grid;gap:.25rem;padding:.65rem 0;border-bottom:1px solid var(--line)}.unified-abilities span{font-size:.85rem;line-height:1.8}
+.unified-review-actions .primary{width:100%;box-sizing:border-box}.unified-review-items code{overflow-wrap:anywhere;white-space:normal}.unified-status{color:var(--green);font-weight:700}.unified-review-next{overflow-wrap:anywhere}
+:is([data-screen="weekly"],[data-screen="weaknesses"]) :is(a,button,summary){scroll-margin-top:calc(var(--location-height,100px) + 24px);scroll-margin-bottom:100px}
+:is([data-screen="weekly"],[data-screen="weaknesses"]) :is(a,button,summary):focus-visible{outline:3px solid var(--red);outline-offset:3px}
+@media(min-width:1024px){.unified-review-tracks,.unified-review-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
