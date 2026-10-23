@@ -12,6 +12,7 @@ import {confusionPairs} from './content/confusions.mjs';
 import {kanaDrills,selectKanaDrills,validKanaReference} from './content/kana-drills.mjs';
 import {kanaMemoryView,kanaMemorySelection} from './ui/kana-memory.mjs';
 import {makeDailyPlan} from './core/daily-plan.mjs';
+import {learningPending} from './core/unified-learning.mjs';
 import {setLearningGoal,storeDailyPlan,startDailyStep,completeDailyStep,adjustDailyPlan,beginV3Session,hintV3Question,answerV3Session,nextV3Question,markDeepStep,saveDailyWriting,saveTextRevision,saveDeepWriting,organizeV3} from './core/v3-learning.mjs';
 import {exportBackup} from './core/learning.mjs';
 import {profileView} from './ui/profile.mjs';
@@ -19,7 +20,7 @@ import {v3HomeView,dailyView,practiceV3View,weaknessesView,confusionView,deepVie
 
 /** V3 owns its event namespace; V1/V2 audio, writing and backup flows remain shared. */
 export function createV3({getState,getContext,update,toast,render,now,id,cacheDraft}){
- const state=()=>getState(),ctx=()=>getContext();let composingInput=null,compositionSubmitBlocked=false;
+ const state=()=>getState(),ctx=()=>getContext();let composingInput=null,compositionSubmitBlocked=false,routeEpoch=0,disposed=false;
  const local=()=>ctx().session.v3ui??=( {order:[],deepIndex:0} );
  const resolve=(qid,dimension)=>catalog.resolveLearningQuestion(qid,dimension);
  const units=[...catalog.allUnits,...kanaLessons.map(u=>({...u,level:'K'}))];
@@ -34,9 +35,9 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
   update(s=>{const session=s.v3.sessions.find(p=>p.id===sid);if(!session||session.cursor!==cursor||session.completedAt)return s;return {...s,drafts:{...s.drafts,[`text:${sid}`]:draft},revision:s.revision+1};}).catch(()=>{});
  }
  async function createPlan(allowNew=false){
-  const planId=id(),time=now();let destination;
-  await update(s=>{const existing=todayPlan(s,time);if(existing&&!allowNew){destination=existing.id;return s;}const plan=makeDailyPlan(s,{concepts,questions:v3Questions,units,resolveQuestion:resolve,time,id:planId,allowNew});destination=plan.id;return storeDailyPlan(s,plan);});
-  location.hash=`daily/${destination}`;
+  const planId=id(),time=now(),origin=location.hash,ticket=routeEpoch;let destination;
+  await update(s=>{const pending=learningPending(s,time,ctx().session.quiz)[0];if(pending){destination=pending.route;return s;}const existing=todayPlan(s,time);if(existing&&!allowNew){destination='daily/'+existing.id;return s;}const plan=makeDailyPlan(s,{concepts,questions:v3Questions,units,resolveQuestion:resolve,time,id:planId,allowNew});destination='daily/'+plan.id;return storeDailyPlan(s,plan);});
+  if(!disposed&&ticket===routeEpoch&&location.hash===origin)location.hash=destination;
  }
  async function begin(questions,{source,reference,planId=null,stepId=null}){
   const questionIds=questions.map(q=>q.id),sessionId=id(),time=now();let destination;
@@ -99,6 +100,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
    case 'kana-start':{const selection={...kanaMemorySelection(ctx().session)};return begin(selectKanaDrills(state(),{...selection,seed:id(),time:now()}),{source:'kana',reference:selection.script+':'+selection.mode+':'+selection.row});}
    case 'kana-hide':kanaMemorySelection(ctx().session).hidden=!kanaMemorySelection(ctx().session).hidden;break;
    case 'create-plan':return createPlan();
+   case 'refresh-home':break;
    case 'extra-plan':return createPlan(true);
    case 'start-step':return startStep(d.v3Plan,d.v3Step);
    case 'finish-step':await update(s=>completeDailyStep(s,d.v3Plan,d.v3Step,now()));break;
@@ -145,13 +147,13 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  return {
   views:{home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:()=>weaknessesView(ctx()),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
   afterRender,
-  onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){composingInput=null;compositionSubmitBlocked=false;ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}},
+  onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){routeEpoch++;composingInput=null;compositionSubmitBlocked=false;ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}},
   validateCatalog(s){
    const conceptIds=new Set(concepts.map(c=>c.id)),unitIds=new Set(units.map(u=>u.id)),deepIds=new Set(deepLessons.map(u=>u.id)),pairIds=new Set(confusionPairs.map(p=>p.id));
    for(const p of s.v3.dailyPlans){if(!unitIds.has(p.unitId)||p.conceptIds.some(cid=>!conceptIds.has(cid))||(p.newConceptIds||[]).some(cid=>!conceptIds.has(cid))||p.steps.some(step=>step.questionIds.some(qid=>!resolve(qid))))throw new Error('備份包含未知每日教材');}
    for(const p of s.v3.sessions){if(p.source==='kana'&&!validKanaReference(p.reference,p.queue.map(q=>q.questionId)))throw new Error('備份包含不一致的假名加練');if(p.queue.some(q=>!resolve(q.questionId)))throw new Error('備份包含未知第三版題目');if(p.source==='lesson'&&!deepIds.has(p.reference)||p.source==='confusion'&&!pairIds.has(p.reference)||p.source==='concept'&&!concepts.some(c=>c.dimensions.some(d=>p.reference===`${c.id}:${d}`)))throw new Error('備份包含未知第三版活動');}
    if(Object.keys(s.v3.lessonSteps).some(uid=>!deepIds.has(uid)))throw new Error('備份包含未知深化課程');
   },
-  dispose(){document.removeEventListener('pointerdown',pointerDown);document.removeEventListener('compositionstart',compositionStart);document.removeEventListener('compositionend',compositionEnd);document.removeEventListener('click',click);document.removeEventListener('input',input);document.removeEventListener('change',change);}
+  dispose(){disposed=true;routeEpoch++;document.removeEventListener('pointerdown',pointerDown);document.removeEventListener('compositionstart',compositionStart);document.removeEventListener('compositionend',compositionEnd);document.removeEventListener('click',click);document.removeEventListener('input',input);document.removeEventListener('change',change);}
  };
 }
