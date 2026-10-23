@@ -30,3 +30,11 @@ export function compareLifeText(own,original){if(typeof own!=='string'||typeof o
  const out=[];function push(kind,text){const last=out.at(-1);if(last?.kind===kind)last.text+=text;else out.push({kind,text});}let i=0,j=0;
  while(i<a.length||j<b.length){if(i<a.length&&j<b.length&&a[i]===b[j]){push('same',a[i]);i++;j++;}else if(i<a.length&&(j===b.length||table[(i+1)*w+j]>=table[i*w+j+1]))push('own',a[i++]);else push('original',b[j++]);}return out;
 }
+export function lifeTextDifferenceSteps(own,original){
+ const steps=[];let before='',step=null;
+ for(const part of compareLifeText(own,original)){
+  if(part.kind==='same'){if(step){step.after=Array.from(part.text).slice(0,4).join('');steps.push(step);step=null;}before=Array.from(part.text).slice(-4).join('');}
+  else{step??={own:'',original:'',before,after:''};step[part.kind]+=part.text;}
+ }
+ if(step)steps.push(step);return steps;
+}
