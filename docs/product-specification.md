@@ -222,3 +222,11 @@ life-cards/<unit>將92課既有三句接成看中文想日文／聽日文想意�
 實際原句／音檔曝光存本課lifeHints，只有中文提示不新增曝光；播放先保存再調用原媒體。pending遮蔽並接續原UUID；結尾可做原課三題、寫一句、隔天及預告。原首答／備份／schema延續，沒有新教材或依賴。
 
 見[規劃](plans/2026-10-23-life-memory-fourth.md)與[驗收](life-memory-fourth-validation.md)。
+
+## 生活記憶第五批（v0.26.0，2026-10-23）
+
+life-skill/<unit>讓92課按聽解、自主填空／排序、字詞／情境理解選擇最多三道同課同能力原題。從cutoff內歷史重建reviews，弱點優先、有未練時至少留一題，再接到期／其他已練。真實已練／未練／弱點題數為紀錄，不當成熟練度。
+
+新增life-skill來源unit:skill，1～3原qid驗證、無插入訂正，與其他生活來源共pending。原題／首答／提示／備份／schema3延續，結果說明實際能力與題數並接回顧、寫作、隔天與預告。無新教材或依賴。
+
+見[規劃](plans/2026-10-23-life-memory-fifth.md)與[驗收](life-memory-fifth-validation.md)。

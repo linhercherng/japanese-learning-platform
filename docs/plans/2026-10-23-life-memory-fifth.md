@@ -22,20 +22,20 @@
 
 Files: app/core/life-skills.mjs、app/content/life-memory-ids.mjs、app/core/v3-state.mjs；tests/life-skills.test.mjs。
 
-- [ ] 先紅：92課能力分類完整、同課／同能力／最多三題、弱點／未練／到期順序、cutoff、唯讀摘要、合法與錯誤reference／來源／qid／queue、共享pending／備份、提示與原首答。
-- [ ] 最小實作，node --test tests/life-skills.test.mjs綠並提交。
+- [x] 先紅：92課能力分類完整、同課／同能力／最多三題、弱點／未練／到期順序、cutoff、唯讀摘要、合法與錯誤reference／來源／qid／queue、共享pending／備份、提示與原首答。
+- [x] 最小實作，node --test tests/life-skills.test.mjs綠並提交。
 
 ## Task 2：手機介面與接續
 
 Files: app/life-skills.mjs、app/ui/life-skills.mjs、main／navigation／life-memory／life-review／life-cards／v3 UI與CSS；tests/life-skills-ui.test.mjs、tests/life-skills-controller.test.mjs。
 
-- [ ] 先紅：三能力／真數字／pending／無答案與錯誤路徑、結果與原輪／來源導覽、連按／過期／失敗匯出／延遲離頁／舊pending。
-- [ ] 實作、生活測試通過，提交；獨立核心與UI審查及必要修補。
+- [x] 先紅：三能力／真數字／pending／無答案與錯誤路徑、結果與原輪／來源導覽、連按／過期／失敗匯出／延遲離頁／舊pending。
+- [x] 實作、生活測試通過，提交；獨立核心與UI審查及必要修補。
 
 ## Task 3：驗收與發布
 
-- [ ] 隔離QA每種能力原題、未練題補齊、提示與三題／單題文案、pending／刷新、日文填空／原排序、320/390px／鍵盤／console與原首答；跨日用固定時間自動測試。
-- [ ] 版本0.26.0及README／規格／課綱／畫面／來源／驗收，npm test→build→check、audit與shell SHA／JS MIME／SW、146原音HTTP。
+- [x] 隔離QA每種能力原題、未練題補齊、提示與三題／單題文案、pending／刷新、日文填空／原排序、320/390px／鍵盤／console與原首答；跨日用固定時間自動測試。
+- [x] 版本0.26.0及README／規格／課綱／畫面／來源／驗收，npm test→build→check、audit與shell SHA／JS MIME／SW、146原音HTTP。
 - [ ] 同head CI成功合併、Pages成功、正式HTTP與隔離UI／截圖、正常SW更新，補證據push遠端一致並關QA／server。
 
 回退先匯出JSON，舊版可能不認life-skill，不清DB／快取／SW。個人答案／草稿／QA不進Git。實機、真人／教師審校及真實長期學習成效不由本次自動或桌面測試推論完成。
