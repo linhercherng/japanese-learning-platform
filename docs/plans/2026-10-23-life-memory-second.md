@@ -21,20 +21,20 @@
 
 Files: `app/core/life-progress.mjs`、`app/core/life-memory.mjs`、`app/content/life-memory-ids.mjs`、`app/core/v3-state.mjs`；`tests/life-progress.test.mjs`。
 
-- [ ] 先紅：未練／錯答／提示／cutoff／重疊首答／能力分開、弱點三課／不湊新題、共享pending／來源日期與備份衝突、只回顧完成原輪且不改寫首答。
-- [ ] 實作純函式，`node --test tests/life-progress.test.mjs tests/life-memory*.test.mjs`綠；提交。
+- [x] 先紅：未練／錯答／提示／cutoff／重疊首答／能力分開、弱點三課／不湊新題、共享pending／來源日期與備份衝突、只回顧完成原輪且不改寫首答。
+- [x] 實作純函式，`node --test tests/life-progress.test.mjs tests/life-memory*.test.mjs`綠；提交。
 
 ## Task 2：手機介面與控制器
 
 Files: `app/life-review.mjs`、`app/ui/life-review.mjs`、`app/main.mjs`、`app/ui/life-memory.mjs`、`app/ui/v3.mjs`、`app/ui/navigation.mjs`、`app/ui/courses.mjs`、`app/v3.css`；`tests/life-review-ui.test.mjs`、`tests/life-review-controller.test.mjs`。
 
-- [ ] 先紅：篩選／空狀態／下一步、原輪編碼／首答／隱藏提示、pending遮蔽／單一返回路徑、弱點三題入口。
-- [ ] 控制器逐題／刷新／實際曝光／音／焦點／連按／過期／延遲／失敗匯出測試綠；整合首頁／練習／第一批入口及結果；提交。
+- [x] 先紅：篩選／空狀態／下一步、原輪編碼／首答／隱藏提示、pending遮蔽／單一返回路徑、弱點三題入口。
+- [x] 控制器逐題／刷新／實際曝光／音／焦點／連按／過期／延遲／失敗匯出測試綠；整合首頁／練習／第一批入口及結果；提交。
 
 ## Task 3：驗收與發布
 
-- [ ] 版本0.23.0、規格／課綱／README／來源／驗收文件；npm test → npm run build → npm run check、audit零high。
-- [ ] requesting-code-review獨立核心／UI審查與修補複核。本機隔離QA完成地圖／回顧遮蔽揭開／弱點三題／刷新／首答提示／320與390px、44px／鍵盤、console與既有輪保留。
+- [x] 版本0.23.0、規格／課綱／README／來源／驗收文件；npm test → npm run build → npm run check、audit零high。
+- [x] requesting-code-review獨立核心／UI審查與修補複核。本機隔離QA完成地圖／回顧遮蔽揭開／弱點三題／刷新／首答提示／320與390px、44px／鍵盤、console與既有輪保留。
 - [ ] 同head成功CI合併、Pages成功；正式136+新增模組shell SHA／JS MIME／SW與146+原音檔HTTP、隔離UI／截圖，補發布證據push、遠端一致，關QA／本機server。
 
 跨日規則用固定時間測試，不注入虛構歷史或修改實機時鐘；真實隔日學習效果、iPhone／Android、教師／真人審校仍分開。回退先匯出JSON，舊版可能不認life-repair；不清資料。個人答案、草稿、QA截圖不進Git。
