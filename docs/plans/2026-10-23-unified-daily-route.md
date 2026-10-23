@@ -36,7 +36,7 @@ Create app/ui/unified-learning.mjs、tests/unified-learning-ui.test.mjs、tests/
 ## Task 3：整包驗收與發布
 
 - [x] 更新README／規格／課綱／畫面／來源／路線、完成矩陣／驗收、版本0.38.0；test→build→check／audit。
-- [ ] 獨立唯讀審查核心及整合；本機隔離QA六目標、原輪續作、完成回首頁、選擇保存／刷新、舊資料、320／390／768／1024／1440、Tab／console／截圖、shell HTTP SHA。
-- [ ] 同head PR CI→merge→Pages→正式HTTP／正常PWA自然更新／隔離操作、個人與舊QA資料比對；文件證據push、遠端HEAD一致、恢復viewport／正式首頁、停server。
+- [x] 獨立唯讀審查核心及整合；本機隔離QA六目標、原輪續作、完成回首頁、選擇保存／刷新、舊資料、320／390／768／1024／1440、Tab／console／截圖、shell HTTP SHA。
+- [x] 同head PR CI→merge→Pages→正式HTTP／正常PWA自然更新／隔離操作、個人與舊QA資料比對；文件證據push、遠端HEAD一致、恢復viewport／正式首頁、停server。
 
 不清DB／cache／SW，不注入瀏覽器歷史或虛構跨日學習。教師／真人審音／實機鍵盤與長期學習成效不由本次程式驗收推論；回退先備份，不丟棄新舊資料。

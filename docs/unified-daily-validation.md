@@ -31,3 +31,15 @@ UI匯出備份比對：原33筆attempts、22輪sessions、13份drafts、生活�
 本次整合既有教材與程式路線；沒有新增日文、音檔、依賴或後端。教師審校、真人審音、iPhone／Android實機OS鍵盤／手勢與真人長期學習成效仍待外部證據。桌面手機尺寸及合成日期測試不代替實機或長期成效，不宣稱官方成績或合格率。回退前匯出JSON，不刪除資料。
 
 最終172份shell fingerprint `cc8dfd1c5e910d7a2dc07b55e118ef5a08066b9a2e1e6a8083addaf55bcc5e45`。UTC11:25:27本機172 shell逐檔SHA256／JS MIME／SW與10原音抽樣HTTP通過，1次暫時重試，PowerShell預設TLS；ignored證據work/unified-local-http.json。10樣本包含K／L及N5～N2原詞與聽解；全量音訊索引檢查不是全量HTTP或真人審音。
+
+## 正式發布
+
+PR [#51](https://github.com/linhercherng/japanese-learning-platform/pull/51) head `7b5e1e03339f4aee2fc07c81f51229dd316a3711`，CI [39946061907](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39946061907) success；UTC11:27:57合併為 `7b3e4c0284100e135056a351edad2f43be784148`。Pages [39946261814](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39946261814) 同merge SHA，整體／build／deploy success，正式發布後另驗檔案與實際瀏覽器。
+
+deploy UTC11:29:19完成。正式URL https://linhercherng.github.io/japanese-learning-platform/ ，UTC11:30:33以PowerShell預設TLS驗證172 shell逐檔SHA256／JS MIME／SW與10原音抽樣HTTP通過，0重試；fingerprint同上述cc8dfd1c。ignored記錄work/unified-public-http.json。音檔沒有異動，抽樣HTTP不冒稱全量真人審音。
+
+正式PWA沿正常更新與重新開頁讀到新首頁，沒有清DB／cache／SW。隔離QA首頁接續原909b78fa-54ee-48a8-b9e0-8ebaa3502d02，另外兩輪可展開找回；點入仍是原第2／3題、輸入空白，未作答或開提示即回首頁。320／390／768／1024／1440收合與展開共10組無橫溢，主要卡片一張、展開控制最小46px；console warn／error皆空，排版證據work/unified-public-layout.json。
+
+更新前後由UI匯出、parseBackup後整份state深比對完全相同：正式QA45筆attempts／28輪sessions／10份drafts，正常個人庫1筆attempt／1輪session／0份draft；沒有因看首頁、更新推薦或接續連結寫入新答案。正常首頁仍接原0e1aef73-23a9-4da6-a47f-d8f7f7acfec5，未點入個人原題。ignored備份為work/unified-public-qa-before.json／after與work/unified-normal-before.json／after。
+
+正式390×844首頁截圖work/unified-public-home-390.png，確認主按鈕未被底部導覽遮住。驗收後恢復viewport、保留正常正式首頁；本機18124伺服器已停止、沒有Listen。最後僅推送驗收文件與勾選紀錄，部署內容仍為上述已驗證merge SHA。
