@@ -30,4 +30,11 @@
 
 ## 發布紀錄
 
-待同head CI、Pages部署與正式HTTP／隔離瀏覽器驗收完成後填入證據；此段在完成前不代表已發布。
+- [PR #34](https://github.com/linhercherng/japanese-learning-platform/pull/34) head `8ba5132104cb17fb9851aa76bdcca5acbb9f9c5b`，PR [CI run39882398897](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39882398897) completed/success後，按相同head合併至main。
+- merge commit `0698580360671c72fdcf5895fd623c10b5a4ac55`，Pages [run39882514268](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39882514268) completed/success，build/deploy皆success；deploy UTC01:12:00完成（台北09:12）。
+- 正式[生活記憶](https://linhercherng.github.io/japanese-learning-platform/#life-memory)與[隔天生活複習](https://linhercherng.github.io/japanese-learning-platform/#life-check)可開啟。
+- UTC01:17:35正式HTTP通過：136份shell逐檔SHA256、JS MIME、SW fingerprint相符；146次原音檔抽查（原128次＋起步／N5／N4／N3／N2生活卡18次）。Node直連遇ECONNRESET／connect timeout，改用PowerShell Invoke-WebRequest預設TLS驗證完成全部抽查，沒有停用憑證驗證；此成功輪無重試。
+- 正式隔離QA走完L07三題：不先看參考，聽解一般音檔後正答仍為無提示；暫停收起卡片、刷新續接同一ID；第二題明示提示與日文填空，第三題未提示，最終3題首答正確／其中2題無提示／1題用提示。隔天頁維持尚無較早日期題目的誠實空狀態，未注入虛構歷史。
+- 既有五十音兩題與三題口袋結果仍為0/2（2提示）與0/3（3提示）；原輪與新生活輪互不覆寫。正常個人資料庫未作答或改動，隔離QA沒有清庫／快取／SW。
+- 正式390／320px記憶卡無橫溢；320px新按鈕48px以上。Enter展開後同卡focus與aria-expanded正確，console warn/error空。既有舊離線分頁正常重新載入、短暫離開網站後取得新版，不清資料。
+- 截圖留在ignored `work/life-public-390.png`、`work/life-public-320.png`；HTTP紀錄`work/life-public-http.json`，本機`work/life-local-320.png`。QA分頁與本機18124伺服器已關閉。實機、真實隔日學習效果與獨立教師審校不由上述測試推論完成。

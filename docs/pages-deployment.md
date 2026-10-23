@@ -73,3 +73,8 @@ v0.20.0「雙向聽辨後逐字回顧」經[PR #32](https://github.com/linherche
 ## 五十音記憶剩餘整合發布（2026-10-23，台北）
 
 v0.21.0經[PR #33](https://github.com/linhercherng/japanese-learning-platform/pull/33)同head成功CI後合併；[Pages run39879287506](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39879287506)整體completed/success，build/deploy皆success。452項測試、build/check/audit及獨立審查／修補複核通過；正式131份shell雜湊及128次音檔HTTP相符。正式隔離UI驗證今日推薦接續較早原輪、六段指南、線索保存／搜尋／口袋篩選／空結果／草稿刷新續寫／筆順與舊首答統計，320/390px無橫溢。完成矩陣見[完整規劃](kana-memory-completion.md)，證據與外部驗證邊界見[整合驗收](kana-memory-completion-validation.md)。
+
+
+## 生活日語記憶與複習發布（2026-10-23，台北）
+
+v0.22.0經[PR #34](https://github.com/linhercherng/japanese-learning-platform/pull/34)同head成功CI後合併；[Pages run39882514268](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39882514268)整體completed/success，build/deploy皆success。474項測試、build→check、audit零弱點與獨立核心／UI修補複核通過；正式136份shell SHA／SW fingerprint與146次音檔HTTP抽查通過。正式隔離UI驗證三題首答、單題提示、刷新／暫停續作、參考卡遮蔽、隔天空狀態及舊五十音紀錄保留；320/390px無橫溢、新按鈕48px以上，鍵盤焦點與console通過。完整範圍、證據與實機／教師審校邊界見[生活記憶驗收](life-memory-validation.md)。

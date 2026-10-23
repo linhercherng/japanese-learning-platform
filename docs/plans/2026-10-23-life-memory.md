@@ -36,6 +36,6 @@ Files：life-memory.mjs、ui/life-memory.mjs、main.mjs、ui/v3.mjs、ui/navigat
 
 - [x] 版本0.22.0，README／規格／課綱／素材／驗收；全npm test→build→check→audit。
 - [x] requesting-code-review獨立審查，必要修補／複核。本機隔離UI三句→三題→首答／提示／刷新接續→結果、原課、隔天空狀態；320/390px、44px、鍵盤、console、HTTP shell SHA／原音檔。
-- [ ] 同head PR CI成功合併、Pages成功，正式HTTP與隔離UI／舊資料、截圖；補發布文件、push遠端一致、清理QA/server。
+- [x] 同head PR CI成功合併、Pages成功，正式HTTP與隔離UI／舊資料、截圖；補發布文件、push遠端一致、清理QA/server。
 
 教師／真人／實機仍依既有邊界；不把桌機尺寸當實機。回退前匯出JSON，舊版可能不識別新source／optional lifeHints，保留備份，不清DB。個人答案／草稿／QA不提交Git。
