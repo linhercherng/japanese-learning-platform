@@ -174,3 +174,10 @@ kana-pocket內整合聽辨入口與最近結果，不增導覽。source=kana-poc
 錯字雙卡提供kana-contrast/<reference>入口；reference為原參考字ID:原選字ID，動態kp題先問原選字、再問原參考字，兩選一聽辨。嚴格same-script／異字異音、兩題queue無repeat、source=kana-contrast與口袋聽辨合計最多一pending；schema3與舊source不遷移。先接續既有pending，刷新不重排，原錯答與自評不變。兩字同日／本輪提示都影響hinted；實際已顯示解說／個人線索同步曝光、七日未答題及默寫cache。未完成新聽辨時原回顧遮蔽；保存失敗保留待存匯出，延遲離頁不拉回。新輪不依賴原session留存，回來源入口再回口袋，麵包屑不洩答案。
 
 見[規劃](plans/2026-10-23-kana-fifteenth.md)與[驗收](kana-fifteenth-validation.md)。
+
+
+## 五十音記憶第十六批（v0.20.0，2026-10-23）
+
+已完成kana-contrast結果接至既有kana-pocket-review，以contrastQuestion解析原kp題與首答，保留原題序／選項／狀態。逐字線索只重用目標memoryFor.tip，使用者線索編碼；錯答沿用雙卡遮住／揭開。從未加入與已移出分開說明，只有明示keep才更新單字口袋，不新增attempt或改寫首答。兩種pending均遮蔽回顧，切字／刷新關閉線索，曝光依實際文字同步七日／默寫及cache；麵包屑保留原雙向輪入口，不含答案。沿用schema3與舊source，不新增題目或儲存欄位。
+
+見[規劃](plans/2026-10-23-kana-sixteenth.md)與[驗收](kana-sixteenth-validation.md)。

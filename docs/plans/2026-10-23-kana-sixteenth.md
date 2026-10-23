@@ -18,19 +18,19 @@
 
 Files：app/core/kana-pocket-review.mjs、app/ui/kana-pocket-review.mjs、app/ui/v3.mjs、app/ui/navigation.mjs；tests/kana-contrast-review.test.mjs。
 
-- [ ] 先寫測試：兩題原順序／四種首答狀態、正確與錯誤原選字、未完成及非指定來源拒絕、備份往返／合併不變、只有實際文字曝光、目標單一訣竅、結果入口／原字對麵包屑、未留與已移出、pending無預覽。
-- [ ] node --test tests/kana-contrast-review.test.mjs確認預期紅；最小實作再綠，原口袋回歸一起跑；提交。
+- [x] 先寫測試：兩題原順序／四種首答狀態、正確與錯誤原選字、未完成及非指定來源拒絕、備份往返／合併不變、只有實際文字曝光、目標單一訣竅、結果入口／原字對麵包屑、未留與已移出、pending無預覽。
+- [x] node --test tests/kana-contrast-review.test.mjs確認預期紅；最小實作再綠，原口袋回歸一起跑；提交。
 
 ## Task 2：真控制器與文件
 
 Files：tests/kana-contrast-review-controller.test.mjs；必要時app/kana-pocket-review.mjs；README、規格、課綱、素材、驗收、package版本。
 
-- [ ] 先寫真控制器行為測試：曝光同步七日／默寫cache、切字關閉與過期事件、遮住不曝光、主動keep與連按／延遲／離頁／保存失敗匯出、pending雙向阻擋，不改原輪。運行確認預期紅；若既有共用控制器已滿足則如實記錄直接綠，不為湊紅改碼。
-- [ ] 版本0.20.0、文件與測試整合；npm test→npm run build→npm run check→npm audit --audit-level=high，獨立審查及必要修正；提交。
+- [x] 先寫真控制器行為測試：曝光同步七日／默寫cache、切字關閉與過期事件、遮住不曝光、主動keep與連按／延遲／離頁／保存失敗匯出、pending雙向阻擋，不改原輪。共用控制器直接綠，無額外改碼。
+- [x] 版本0.20.0、文件與測試整合；npm test→npm run build→npm run check→npm audit --audit-level=high，獨立審查及必要修正；提交。
 
 ## Task 3：瀏覽器與發布
 
-- [ ] 本機隔離UI：原錯答→兩題→新回顧→線索／雙卡遮住揭開→切字／刷新→主動留回→原結果／原首答不變；320/390px無溢出、44px、焦點、console；HTTP雜湊／音檔。
+- [x] 本機隔離UI：合法字對入口→兩題→新回顧→線索／雙卡遮住揭開→切字／刷新→主動留回→原結果／原首答不變；320/390px無溢出、44px、焦點、console；HTTP雜湊／音檔。原錯答入口沿用第十五批，正式站再驗既有原輪。
 - [ ] PR同head CI成功後合併，Pages成功，正式HTTP及隔離UI／截圖驗證。補發布證據、push遠端同步、清理QA/server。
 
 沿用208卡、508筆順、10947音檔索引及K包668檔。既有試用訣竅／合成音仍待獨立教師審校，實機依先前決定略過。個人資料、QA、截圖不提交公開Git；無schema變更，回退前仍先匯出JSON。
