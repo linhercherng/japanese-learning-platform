@@ -37,6 +37,8 @@ Files: create app/life-notes.mjs、app/ui/life-notes.mjs；modify main、navigat
 
 - [x] 隔離QA中文／日文線索、草稿刷新／保存、收起／提示與原輪、索引搜尋篩選、pending／原首答、320/390px／鍵盤／console；保留原資料。
 - [x] 版本0.27.0及README／規格／課綱／畫面／來源／驗收，npm test→build→check、audit、shell SHA／JS MIME／SW與146原音HTTP。
-- [ ] 同head CI成功合併、Pages成功、正式HTTP／隔離UI及截圖、正常SW更新；補證據push遠端一致、關QA／server。
+- [x] 同head CI成功合併、Pages成功、正式HTTP／隔離UI及截圖、正常SW更新；補證據push遠端一致、關QA／server。
 
 不清DB／快取／SW。回退先匯出JSON，舊版可能不認lifeNotes，保留原備份；個人線索／答案／草稿／QA不進公開Git。實機、真人／教師審校及長期記憶效果另列未驗證。
+
+完成：PR39、merge 84e239b、Pages39898233180，正式HTTP與隔離UI驗證通過；詳見[第六批驗收](../life-memory-sixth-validation.md)。

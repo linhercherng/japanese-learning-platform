@@ -30,4 +30,11 @@
 
 ## 發布驗證
 
-待同head CI、合併Pages、正式152份shell與146原音HTTP、隔離UI及正常SW驗證後補入證據。
+- [PR #39](https://github.com/linhercherng/japanese-learning-platform/pull/39) head `84033ffd501e7eac847a96b53458133e5b9e797c`；同head [CI39898145584](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39898145584) completed/success後按match-head合併，merge `84e239b823b700b604ab1c7b359897ba3aa733fb`。
+- [Pages39898233180](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39898233180)整體completed/success，build及deploy均success，deploy job UTC04:04:11（台北12:04）完成。
+- 正式[生活線索簿](https://linhercherng.github.io/japanese-learning-platform/#life-notes)及[單課線索](https://linhercherng.github.io/japanese-learning-platform/#life-notes/L07)可用。UTC04:05:19正式152份shell逐檔SHA256／JS MIME／SW及146次原音HTTP通過，0重試，fingerprint與本機相同，預設TLS驗證；紀錄ignored `work/life-sixth-public-http.json`。
+- 正式隔離QA從空線索簿→原課新入口→中日文草稿→刷新收起→展開原文字→明示保存收起。搜索自己的文字得到本課，正文不在目錄；N2篩選真實空結果、清除復原。保存後焦點回展開按鈕且位於路徑列下方；新按鈕48／49px，Tab outline可見。
+- 正式生活能力聽解原輪 `5c98662d-196d-45de-bbb3-99104298f0a4`：線索頁全遮蔽並接同UUID；完成1題／1正確／1提示／0無提示。舊首輪 `7a5971bf-9045-4345-85b3-b80dad5bf171`仍3首答正確／2無提示／1提示，沒有被改寫。
+- 正式320／390px編輯器無橫溢，console warn/error空，截圖ignored `work/life-sixth-public-390.png`。本機另實測L08空字草稿在待保存篩選可找到、清除復原2課，搜尋結果標題接焦點且320px無橫溢。
+- 正常分頁循SW正常更新生命週期（下載新shell後暫離網站再回來），已出現新入口；能力原紀錄仍0練過／1、2、5未練。正常庫只查看收起的空線索入口，不寫個人文字／作答或打開教材參考；正式入口截圖ignored `work/life-sixth-public-entry-390.png`。未清DB／快取／SW。隔離QA及18124伺服器已關閉，正式單課入口保留。
+- 實機、OS日文鍵盤、教師／真人審校與實際長期效果仍未驗證；第一至第五批功能保留且一同發布。
