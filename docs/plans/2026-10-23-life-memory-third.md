@@ -23,20 +23,20 @@
 
 Files: `app/core/life-retention.mjs`、`app/core/life-progress.mjs`、`app/core/life-memory.mjs`、`app/core/life-memory-state.mjs`、`app/core/v3-learning.mjs`、`app/core/v3-state.mjs`、`app/content/life-memory-ids.mjs`；`tests/life-retention.test.mjs`。
 
-- [ ] 先紅：7日邊界／台北日、最後練習／曝光延後、未來cutoff、三課、每日唯一與pending／備份、7日提示與衝突合併／回調、報告排除、完成收尾／未來完成不算、預告不改原資料。
-- [ ] 實作純函式／原引擎接合，`node --test tests/life-*.test.mjs`綠，提交。
+- [x] 先紅：7日邊界／台北日、最後練習／曝光延後、未來cutoff、三課、每日唯一與pending／備份、7日提示與衝突合併／回調、報告排除、完成收尾／未來完成不算、預告不改原資料。
+- [x] 實作純函式／原引擎接合，`node --test tests/life-*.test.mjs`綠，提交。
 
 ## Task 2：手機路線與預告
 
 Files: `app/life-retention.mjs`、`app/ui/life-retention.mjs`、main／navigation／v3／life-memory／life-review／courses UI，`app/v3.css`；`tests/life-retention-ui.test.mjs`、`tests/life-retention-controller.test.mjs`。
 
-- [ ] 先紅：七日入口／空與未到期／已完成／pending、預告真日期／無答案／HTML編碼、返回／原輪回顧與收尾、自行加練仍可用。
-- [ ] 控制器日唯一／刷新／連按／過期／延遲離頁／失敗匯出測試綠，整合既有入口；提交。
+- [x] 先紅：七日入口／空與未到期／已完成／pending、預告真日期／無答案／HTML編碼、返回／原輪回顧與收尾、自行加練仍可用。
+- [x] 控制器日唯一／刷新／連按／過期／延遲離頁／失敗匯出測試綠，整合既有入口；提交。
 
 ## Task 3：驗收與發布
 
-- [ ] 版本0.24.0、README／規格／課綱／畫面／來源／驗收；npm test→build→check，audit零high。
-- [ ] requesting-code-review獨立核心／UI審查及修補複核；本機隔離QA收尾／預告／七日未到期／既有回顧與加練、320/390px／44px／鍵盤／console／原紀錄。
+- [x] 版本0.24.0、README／規格／課綱／畫面／來源／驗收；npm test→build→check，audit零high。
+- [x] requesting-code-review獨立核心／UI審查及修補複核；本機隔離QA收尾／預告／七日未到期／既有回顧與加練、320/390px／44px／鍵盤／console／原紀錄。
 - [ ] 同head CI成功合併、Pages成功，正式shell SHA／JS MIME／SW與146次原音HTTP、隔離UI與截圖；補證據push、遠端一致、關QA／server。
 
 七日／跨日規則用固定時間自動測試，不注入虛構瀏覽器歷史或改時鐘，不把當日QA說成實際追蹤七天。實機與教師／真人審校另列；回退先匯出JSON，舊版可能不認life-week，勿清DB。個人答案／草稿／QA不進Git。
