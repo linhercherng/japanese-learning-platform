@@ -1,3 +1,4 @@
+import {createLifeRetention} from './life-retention.mjs';
 import {createLifeReview} from './life-review.mjs';
 import {createLifeMemory} from './life-memory.mjs';
 import {kanaGuideView} from './ui/kana-guide.mjs';
@@ -56,6 +57,7 @@ const kanaBridge=createKanaBridge({getContext:context,update,render,toast,now,id
 const kanaFocus=createKanaFocus({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const lifeMemory=createLifeMemory({getContext:context,update,render,toast,now,id});
 const lifeReview=createLifeReview({getContext:context,update,render,toast,now,id});
+const lifeRetention=createLifeRetention({getContext:context,update,render,toast,now,id});
 function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,audioIndex,due:dueReviews(state),...v2.contextExtras()};}
 function update(fn){
  pendingWrites++;status.textContent='保存中…';
@@ -96,6 +98,7 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(kanaBridge.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(lifeMemory.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(lifeReview.views))views[view]=()=>renderer(param);
+ for(const [view,renderer] of Object.entries(lifeRetention.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
  const navigation=navigationContext(ctx,name,param);
  locationContext.innerHTML=navigationView(navigation);

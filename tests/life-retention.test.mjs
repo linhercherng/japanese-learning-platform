@@ -50,3 +50,6 @@ test('forecast is per real practiced course, capped at six, postpones weekly aft
  let s=add(initialState());s=recordLifeExposure(s,[qid],'2026-10-22T02:00:00.000Z');const before=structuredClone(s),f=lifeForecast(s,today);assert.equal(f.entries.length,1);assert.equal(f.entries[0].unitId,'L07');assert.equal(f.entries[0].checkDay,'2026-10-17');assert.equal(f.entries[0].weekDay,'2026-10-29');assert.deepEqual(s,before);
  assert.deepEqual(lifeForecast(initialState(),today).entries,[]);for(const unit of ['L01','L02','L03','L04','L05','L06','L08'])s=add(s,memoryQuestions(unit)[0].id);assert.equal(lifeForecast(s,today).entries.length,6);assert.equal(lifeForecast(s,today).total,8);
 });
+test('a clock-inconsistent future answer cannot count as a completed daily step at the current cutoff',()=>{
+ let s=finish(startLifeMemory(initialState(),{unitId:'L07',id:'memory',time:today}),'memory',future);s.v3.sessions[0].completedAt=today;validateState(s);assert.equal(lifeDailyCompleted(s,today),null);
+});

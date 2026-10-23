@@ -23,7 +23,7 @@ export function startLifeWeek(state,{id,time}){
  if(pendingLife(state)||state.v3.sessions.some(s=>s.source==='life-week'&&s.reference===studyDay(time)))return state;
  const ids=lifeWeekSchedule(state,time).questions.map(q=>q.id);return ids.length?beginV3Session(state,ids,{id,time,source:'life-week',reference:studyDay(time)}):state;
 }
-export function lifeDailyCompleted(state,time){return state.v3.sessions.filter(s=>isLifeSource(s.source)&&s.completedAt&&Date.parse(s.createdAt)<=Date.parse(time)&&Date.parse(s.completedAt)<=Date.parse(time)&&studyDay(s.completedAt)===studyDay(time)).sort((a,b)=>Date.parse(b.completedAt)-Date.parse(a.completedAt)||a.id.localeCompare(b.id))[0]||null;}
+export function lifeDailyCompleted(state,time){return state.v3.sessions.filter(s=>isLifeSource(s.source)&&s.completedAt&&Date.parse(s.createdAt)<=Date.parse(time)&&Date.parse(s.completedAt)<=Date.parse(time)&&Object.values(s.answers).every(a=>Date.parse(a.time)<=Date.parse(time))&&studyDay(s.completedAt)===studyDay(time)).sort((a,b)=>Date.parse(b.completedAt)-Date.parse(a.completedAt)||a.id.localeCompare(b.id))[0]||null;}
 export function lifeForecast(state,time){
  const units=new Map();for(const r of snapshot(state,time)){
   const old=units.get(r.q.unitId);if(!old)units.set(r.q.unitId,{unitId:r.q.unitId,checkDay:r.checkDay,weekDay:r.weekDay});else{old.checkDay=Math.min(old.checkDay,r.checkDay);old.weekDay=Math.min(old.weekDay,r.weekDay);}

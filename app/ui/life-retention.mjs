@@ -1,0 +1,19 @@
+import {topics,unitById} from '../content/catalog.mjs';
+import {lifeWeekSchedule,lifeForecast,lifeDailyCompleted} from '../core/life-retention.mjs';
+import {pendingLife} from '../core/life-memory.mjs';
+import {studyDay} from '../core/v3-state.mjs';
+import {escapeHtml as e,heading,back,primary,note,dateLabel,icon} from './shared.mjs';
+const topicName=id=>topics.find(t=>t[0]===id)?.[1]||'';
+export function lifeWeekView(ctx,time){
+ const p=pendingLife(ctx.state),today=studyDay(time),stored=ctx.state.v3.sessions.find(s=>s.source==='life-week'&&s.reference===today),schedule=lifeWeekSchedule(ctx.state,time),qs=schedule.questions;
+ let body;
+ if(p)body=`<section class="hero"><h2>先接續未完成的生活回想</h2><p>已提交 ${Object.keys(p.answers).length} / ${p.questionIds.length} 題。先完成原輪，首答與提示會保留。</p>${primary('接續這輪生活回想','v3-practice/'+p.id)}</section>`;
+ else if(stored)body=`<section class="hero"><h2>${Date.parse(stored.completedAt)<=Date.parse(time)?'今天的七日回想已完成。':'今天已有七日回想紀錄。'}</h2><p>同一天保留這一輪。可以先收尾，或自行回到記憶地圖加練。</p>${primary('查看這輪七日小結','v3-practice/'+stored.id)}${primary('看看之後何時再想','life-schedule')}</section>`;
+ else if(qs.length)body=`<section class="hero"><span class="eyebrow">${e(today)} · 先不看參考</span><h2>今天先回想 ${qs.length} 題</h2><p>這些原題距離最後練習及參考，依台北日期都已相隔至少7天。每課最多一題，最多三題。</p><ul>${qs.map(q=>`<li>${e(q.level==='L'?'生活起步':q.level)} · ${e(topicName(unitById.get(q.unitId)?.topic))}</li>`).join('')}</ul><button class="primary" data-life-retention-action="week">開始七日生活回想 ${icon('arrow')}</button></section>`;
+ else body=`<section class="self-check"><h2>${schedule.nextDay?'再留一點時間，看看是否記得。':'還沒有適合的七日題。'}</h2><p>${schedule.nextDay?`目前最早可回想日期是 ${e(schedule.nextDay)}。新練習或新看過參考，都會延後對應原題的七日日期。`:'先練過一個生活場景，之後再從原題確認。這裡不會用未練的新題充數。'}</p>${primary(schedule.nextDay?'看看複習預告':'先練一個生活場景',schedule.nextDay?'life-schedule':'life-memory')}</section>`;
+ return `${back('生活記憶地圖','life-map')}${heading('七天後，還能自己想起來嗎？','每次最多三題，給學過的生活日語一次較長間隔的確認。')}${body}${note('本輪或作答前七個日期內看過本題參考，會另列提示；中途另練、時間重疊或沒有較早紀錄者不列跨日比較。這是原題回想，與自由口說、寫作及正式檢定分開。')}<nav class="resource-links"><a href="#life-check">隔天生活複習</a><a href="#life-schedule">生活複習預告</a></nav>`;
+}
+export function lifeScheduleView(ctx,time){
+ const today=studyDay(time),done=lifeDailyCompleted(ctx.state,time),forecast=lifeForecast(ctx.state,time),p=pendingLife(ctx.state);
+ return `${back('生活記憶地圖','life-map')}${heading('把下一次回想，留給適合的日子。','今天少量練，明天再想，滿七天後再確認一次。')}${p?`<section class="hero"><h2>還有一輪可以接續</h2>${primary('接續原輪生活回想','v3-practice/'+p.id)}</section>`:done?`<section class="life-day-finish"><span class="eyebrow">${e(today)} · 已完成一小步</span><h2>今天可以先收尾了。</h2><p>已在 ${e(dateLabel(done.completedAt))} 完成一輪生活回想。原紀錄會保留，當天加練不當成跨日記住。</p>${primary('查看剛完成的小結','v3-practice/'+done.id)}</section>`:''}<section class="v3-section"><h2>學過場景的最早回想日期</h2><p>每個場景顯示最早一題可檢查的日期；實際一輪仍最多三題，每課一題。日期會隨新練習與參考更新，這不是通知，也不會自動通知。</p>${forecast.entries.length?`<div class="life-forecast-list">${forecast.entries.map(row=>{const unit=unitById.get(row.unitId);return `<section class="life-forecast-card"><span class="tag">${e(unit.level==='L'?'生活起步':unit.level)} · ${e(topicName(unit.topic))}</span><h3>${e(unit.title)}</h3><dl><dt>隔天檢查最早日</dt><dd>${e(row.checkDay)}${row.checkDay<=today?' · 已到可回想日期':''}</dd><dt>七日回想最早日</dt><dd>${e(row.weekDay)}${row.weekDay<=today?' · 已到可回想日期':''}</dd></dl><a class="text-button" href="#life-memory/${e(row.unitId)}">回本課記憶</a></section>`;}).join('')}</div>${forecast.total>forecast.entries.length?`<p>先顯示6個場景，另有 ${forecast.total-forecast.entries.length} 個已練場景，可回記憶地圖選課。</p>`:''}`:`<p class="filter-empty">還沒有實際練過的生活原題。先完成一課三題，這裡就會有回想日期。</p>${primary('先選一個生活場景','life-memory')}`}</section><nav class="resource-links" aria-label="想繼續時"><a href="#life-check">隔天生活複習</a><a href="#life-week">七日生活回想</a><a href="#life-map">回地圖自行加練</a></nav>${note('預告以這個瀏覽器截至目前的真實紀錄推算，不能保證已記熟；實際結果要等下一次不看提示回想。')}`;
+}
