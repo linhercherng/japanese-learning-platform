@@ -4,15 +4,15 @@ import {initialState,exportBackup,parseBackup} from '../app/core/learning.mjs';
 import {pendingLife,memoryQuestions,startLifeMemory} from '../app/core/life-memory.mjs';
 import {lifeCueSeen} from '../app/core/life-memory-state.mjs';
 const time='2026-10-22T02:00:00.000Z';
-async function run(body){const old={document:globalThis.document,location:globalThis.location},listeners=new Map(),c={state:initialState(),session:{}},messages=[],cache={};let hash='#life-memory/L07',tick=0,counter=0,held=null,fail=false,life,v3;
+async function run(body){const old={document:globalThis.document,location:globalThis.location},listeners=new Map(),c={state:initialState(),session:{}},messages=[],cache={},focused=[];let hash='#life-memory/L07',tick=0,counter=0,held=null,fail=false,life,v3;
  globalThis.location={get hash(){return hash;},set hash(v){hash=v.startsWith('#')?v:'#'+v;}};
- globalThis.document={addEventListener:(n,f)=>listeners.set(n,[...(listeners.get(n)||[]),f]),removeEventListener:(n,f)=>listeners.set(n,(listeners.get(n)||[]).filter(x=>x!==f)),querySelector:()=>null};
+ globalThis.document={addEventListener:(n,f)=>listeners.set(n,[...(listeners.get(n)||[]),f]),removeEventListener:(n,f)=>listeners.set(n,(listeners.get(n)||[]).filter(x=>x!==f)),querySelector:selector=>selector.startsWith('[data-life-')?{focus:options=>focused.push({selector,options})}:null};
  const render=()=>{const [name,param]=hash.slice(1).split('/');v3.onRoute(name,param);(life.views[name]||v3.views[name])?.(param);life.afterRender(name,param);};
  const options={getState:()=>c.state,getContext:()=>c,update:async f=>{c.state=f(c.state);await held;if(fail)throw Error('quota');},render,toast:m=>messages.push(m),now:()=>new Date(Date.parse(time)+tick++).toISOString(),id:()=>'life-'+(++counter),cacheDraft:(k,v)=>cache[k]=v};
  const flush=()=>new Promise(r=>setImmediate(r));
  const click=async dataset=>{for(const f of listeners.get('click')||[])f({target:{closest:()=>({dataset,disabled:false,isConnected:true})}});await flush();render();await flush();};
  const emit=async(n,target)=>{for(const f of listeners.get(n)||[])f({target});await flush();};
- try{life=createLifeMemory(options);v3=createV3(options);await body({c,life,v3,messages,render,click,emit,flush,fail:()=>fail=true,hold:()=>{let release;held=new Promise(r=>release=r);return()=>{held=null;release();};}});}finally{life?.dispose();v3?.dispose();globalThis.document=old.document;globalThis.location=old.location;}
+ try{life=createLifeMemory(options);v3=createV3(options);await body({c,life,v3,messages,focused,render,click,emit,flush,fail:()=>fail=true,hold:()=>{let release;held=new Promise(r=>release=r);return()=>{held=null;release();};}});}finally{life?.dispose();v3?.dispose();globalThis.document=old.document;globalThis.location=old.location;}
 }
 const start={lifeAction:'start',lifeUnit:'L07'},card={lifeAction:'reveal',lifeUnit:'L07',lifeCard:'0'};
 test('Chinese-only cards and normal listening replay do not count as reference; reveal and phrase audio do',async()=>run(async h=>{
@@ -46,4 +46,7 @@ test('original study exposure marks only visible references; writing requires op
 }));
 test('reference shown in V2 feedback marks only that original question after its answer',async()=>run(async h=>{
  const q=memoryQuestions('L07')[0];h.c.state.practice={questionIds:[q.id],index:0,answers:{[q.id]:{value:0,correct:true,hinted:false,time}},hints:[]};location.hash='practice';h.life.afterRender('practice');await h.flush();assert.deepEqual(Object.keys(h.c.state.v3.lifeHints),[q.id]);assert(Date.parse(h.c.state.v3.lifeHints[q.id][0])>Date.parse(time));
+}));
+test('revealing and covering a card restores the same keyboard focus without scrolling',async()=>run(async h=>{
+ await h.click(card);assert(h.focused.at(-1).selector.includes('[data-life-card="0"]'));assert.deepEqual(h.focused.at(-1).options,{preventScroll:true});await h.click(card);assert(h.focused.at(-1).selector.includes('[data-life-action="reveal"]'));assert.deepEqual(h.c.session.lifeMemory.revealed,[]);
 }));

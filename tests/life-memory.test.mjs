@@ -50,3 +50,25 @@ test('daily check is once per Taipei day; actual cross-day first answers stay se
  const other=startLifeCheck(answer(initialState(),'L07-v2-q1'),{id:'other',time:today});assert.throws(()=>mergeStates(s,other),/同日|生活/);
  const malicious=structuredClone(s);malicious.v3.sessions[0].reference='2026-02-31';assert.throws(()=>validateState(malicious));
 });
+test('next-day report excludes intervening same-question practice, same-time ambiguity and reference-assisted answers',()=>{
+ const q=questionById.get('L07-v2-q1');
+ for(const kind of ['between','same-time','hint']){
+  let s=startLifeCheck(answer(initialState(),q.id),{id:'check-'+kind,time:today});
+  if(kind==='between')s=answer(s,q.id,{id:'between',time:'2026-10-22T02:01:00.000Z'});
+  if(kind==='same-time')s=answer(s,q.id,{id:'overlap',time:'2026-10-22T02:02:00.000Z'});
+  if(kind==='hint')s=recordLifeExposure(s,[q.id],'2026-10-22T02:01:00.000Z');
+  s=answerV3Session(s,{sessionId:'check-'+kind,question:q,value:q.correct,eventId:'check-answer',time:'2026-10-22T02:02:00.000Z'});
+  const r=lifeCheckReport(s,'check-'+kind);assert.equal(r.comparable,0,kind);assert.equal(r.excluded,1,kind);
+ }
+});
+test('merging earlier visible references rejects contradictory independent first answers without modifying either backup',()=>{
+ const q=memoryQuestions('L07')[0];let a=startLifeMemory(initialState(),{unitId:'L07',id:'round',time:today});a=answerV3Session(a,{sessionId:'round',question:q,value:q.correct,eventId:'a',time:'2026-10-22T02:03:00.000Z'});
+ const b=recordLifeExposure(initialState(),[q.id],'2026-10-22T02:01:00.000Z'),before=structuredClone(a);assert.throws(()=>mergeStates(a,b),/生活提示/);assert.deepEqual(a,before);
+});
+test('reference validator rejects malformed arrays, unknown question ids and noncanonical duplicate days',()=>{
+ for(const hints of [{'L07-fake':[today]},{'L07-q0':[]},{'L07-q0':[later,today]},{'L07-q0':[today,'2026-10-22T03:00:00.000Z']},{'L07-q0':['no-date']}]){const s=initialState();s.v3.lifeHints=hints;assert.throws(()=>validateState(s));}
+});
+test('clock rollback rejects contradictory reference before storage and keeps the original backup importable',()=>{
+ const q=memoryQuestions('L07')[0];let s=startLifeMemory(initialState(),{unitId:'L07',id:'round',time:today});s=answerV3Session(s,{sessionId:'round',question:q,value:q.correct,eventId:'future-answer',time:'2026-10-22T04:00:00.000Z'});
+ const before=structuredClone(s);assert.throws(()=>recordLifeExposure(s,[q.id],'2026-10-22T03:00:00.000Z'),/生活提示/);assert.deepEqual(s,before);assert.deepEqual(parseBackup(exportBackup(s)),s);
+});

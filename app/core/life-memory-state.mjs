@@ -23,5 +23,8 @@ export function recordLifeExposure(state,questionIds,time){
  requireValue(validTime(time));const addition={};for(const qid of new Set(questionIds)){requireValue(lifeQuestionUnits.has(qid));addition[qid]=[time];}
  if(!Object.keys(addition).length)return state;
  const hints=mergeLifeHints(state.v3.lifeHints,addition);if(JSON.stringify(hints)===JSON.stringify(state.v3.lifeHints))return state;
+ // Check before handing state to storage: a clock rollback must not create an
+ // invalid unsaved snapshot that cannot be exported and imported again.
+ validateLifeExposure(state.v3.sessions,hints);
  const next=structuredClone(state);next.v3.lifeHints=hints;next.revision++;return next;
 }

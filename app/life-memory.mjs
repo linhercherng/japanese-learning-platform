@@ -14,7 +14,8 @@ export function createLifeMemory({getContext,update,render,toast,now,id}){
    const card=currentCard(d);if(!card)return;
    if(d.lifeAction==='audio'){await exposeUnit(card.unit,now());return;}
    const ui=lifeMemoryLocal(getContext().session);if(ui.unit!==card.unit){ui.unit=card.unit;ui.revealed=[];}
-   ui.revealed=ui.revealed.includes(card.index)?ui.revealed.filter(i=>i!==card.index):[...ui.revealed,card.index];render(false);return;
+   ui.revealed=ui.revealed.includes(card.index)?ui.revealed.filter(i=>i!==card.index):[...ui.revealed,card.index];render(false);
+   document.querySelector(`[data-life-action="reveal"][data-life-unit="${card.unit}"][data-life-card="${card.index}"]`)?.focus({preventScroll:true});return;
   }
   const [name,unit]=route();if(saving||d.lifeAction==='start'&&(name!=='life-memory'||unit!==d.lifeUnit||!lifeUnitIds.has(unit))||d.lifeAction==='check'&&name!=='life-check'||!['start','check'].includes(d.lifeAction))return;
   saving=true;const origin=location.hash,time=now(),sessionId=id();let destination;
