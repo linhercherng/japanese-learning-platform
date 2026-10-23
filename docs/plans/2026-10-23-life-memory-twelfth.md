@@ -23,20 +23,20 @@
 
 Files: app/core/life-dictation.mjs、tests/life-sentence-navigation.test.mjs。
 
-- [ ] RED：552模式句狀態、空稿／空白／原與再想稿union、另一模式／LN／作品排除、無內容預覽與不變性。
-- [ ] RED：篩選主入口真正匹配slot1／2、全寫滿unwritten空、程度場景／非法unit；GREEN提交。
+- [x] RED：552模式句狀態、空稿／空白／原與再想稿union、另一模式／LN／作品排除、無內容預覽與不變性。
+- [x] RED：篩選主入口真正匹配slot1／2、全寫滿unwritten空、程度場景／非法unit；GREEN提交。
 
 ## Task 2：逐句清單與導航
 
 Files: app/ui/life-dictation.mjs、app/life-dictation.mjs、app/v3.css；tests/life-sentence-navigation-ui.test.mjs、tests/life-sentence-navigation-controller.test.mjs。
 
-- [ ] RED：目錄主入口／三句details、原與再稿狀態／範圍說明、無私稿／原句、empty／pending、單句aria-current與48px語意；GREEN。
-- [ ] RED：新增scope白名單／focus、跨句保持buffer與模式且route先收起、不改首答／pending／曝光；GREEN並獨立核心與UI審查。
+- [x] RED：目錄主入口／三句details、原與再稿狀態／範圍說明、無私稿／原句、empty／pending、單句aria-current與48px語意；GREEN。
+- [x] RED：新增scope白名單／focus、跨句保持buffer與模式且route先收起、不改首答／pending／曝光；GREEN並獨立核心與UI審查。
 
 ## Task 3：測試與發布
 
-- [ ] 0.33.0與README／規格／課綱／畫面／來源／驗收更新。npm test→build→check／audit，160 shell與146原音HTTP／SHA／MIME／SW。
-- [ ] 本機?qa=1從第2／3句有文字稿直接進入、空稿／再稿／兩模式篩選、導航不打斷編輯／日文emoji、pending原UUID／舊首答／線索。320／390／768／1024／1440、48px／Tab／console／截圖。
+- [x] 0.33.0與README／規格／課綱／畫面／來源／驗收更新。npm test→build→check／audit，160 shell與146原音HTTP／SHA／MIME／SW。
+- [x] 本機?qa=1從第2／3句有文字稿直接進入、空稿／再稿／兩模式篩選、導航不打斷編輯／日文emoji、pending原UUID／舊首答／線索。320／390／768／1024／1440、48px／Tab／console／截圖。
 - [ ] PR同head CI通過再合併；Pages build／deploy與正式HTTP、正常SW升級與隔離UI通過。文件證據push／遠端一致，正常入口／恢復viewport／停server。
 
 不清DB／SW／快取、不注入歷史、個人資料不提交Git。沿用276句待教師審校試用教材與原音，不新增語言教材、得分、完成或熟練度。桌面尺寸／IME事件不等於實機日文鍵盤，長期成效不由本次推論。回退先匯出JSON保留資料。

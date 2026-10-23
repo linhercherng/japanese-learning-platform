@@ -7,7 +7,7 @@ const levelName=level=>level==='L'?'生活起步':level;
 function marked(diff,side){return diff.filter(x=>x.kind!==(side==='own'?'original':'own')).map(x=>x.kind==='same'?e(x.text):`<mark class="life-dictation-${side}" aria-label="${side==='own'?'與原句不同的文字':'原句未對上的文字'}">${e(x.text)}</mark>`).join('');}
 function sentenceNavigation(unit,sentences,route,current=''){
  const title=current?'本課三句導航':'逐句練習清單';
- return `<details class="life-sentence-navigation"><summary aria-label="${title}：${e(unit.title)}">${title} · 3 句</summary><nav aria-label="${title}：${e(unit.title)}">${sentences.map(s=>`<a href="#${route}/${e(s.reference)}"${s.reference===current?' aria-current="page"':''}><strong>第 ${s.slot+1} 句${s.reference===current?' · 目前這句':''}</strong><span>${!s.written&&!s.blankWritten?'尚未留下文字':[s.written?'原稿有文字':'',s.blankWritten?'再想稿有文字':''].filter(Boolean).join(' · ')}</span></a>`).join('')}</nav></details>`;
+ return `<details class="life-sentence-navigation"><summary aria-label="${title}：${e(unit.title)}">${title} · 3 句</summary><nav aria-label="${title}：${e(unit.title)}">${sentences.map(s=>`<a href="#${route}/${e(s.reference)}"${s.reference===current?' aria-current="page"':''}><strong>第 ${s.slot+1} 句${s.reference===current?' · 目前這句':''}</strong><span>${s.reference===current?'目前這句請在上方練習':!s.written&&!s.blankWritten?'尚未留下文字':[s.written?'原稿有文字':'',s.blankWritten?'再想稿有文字':''].filter(Boolean).join(' · ')}</span></a>`).join('')}</nav></details>`;
 }
 function draftCourseCard(row,route){
  const {unit:u,draftCount:count,writtenCount,blankDraftCount,blankWrittenCount,sentences,startReference}=row,start=sentences.find(s=>s.reference===startReference);

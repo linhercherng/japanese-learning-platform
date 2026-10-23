@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "77fcf4aa1dd97e5a8268ffa61a30c46e2b607e9817aa6f0a69ab4716c6b854e5",
+  "fingerprint": "c6d377aa5a0dbd14df07c80c7d7af7ab8d3d2ee358383ee9417e1b112072602e",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -245,7 +245,7 @@
     "core/learning.mjs": "4930d46dec41cb47614f1f2968e002775af16cebc7c7f684a64968f15c2e0e54",
     "core/life-cards.mjs": "c56097856c66aff66cf79d8017a2d3f03c89542a234b03605527cd5e5102540b",
     "core/life-dictation-state.mjs": "fde7942199535201041339debc1c1cc68721f80c4e95a228c009649238c522a7",
-    "core/life-dictation.mjs": "5b89be7201d0b578bdefe71add9310db7d25339b64efc1a10e40af1a39d07852",
+    "core/life-dictation.mjs": "4bef48cd3a826ce39038254b24717bc896815356458249bd56fe88e70dfa53f5",
     "core/life-memory-state.mjs": "17a916f66360272e9f67c85a21080bf192a28dc8bcabdb05e95b1e3224175600",
     "core/life-memory.mjs": "cce2009aee94b252fa78e23df1344ed0e31950f3142b9e284f635aa7e1f5102c",
     "core/life-notes-state.mjs": "beed9e13bfbd716c0d3d22530f7924cb3f0d559257bbcc43b5989b15d4c79e43",
@@ -274,7 +274,7 @@
     "kana-sixth.mjs": "1d63a4ef970ef67947dcde0fa1da206e7da18f5d1cae6cec26c9cb7a6aa3dccb",
     "kana-studio.mjs": "76a6782a99642e70651593aa93d290adbbb092f71a575f8fe08ffa0627a2e137",
     "life-cards.mjs": "b74ad9106d5293bc39b52376bbe1738e5a856a5117ccc85edff5a613cf618dd4",
-    "life-dictation.mjs": "f420bd381b4f799d3d21d066046e360f842afe722fcdd75ccf56d142b3d56711",
+    "life-dictation.mjs": "70c640aea37365fc1d7d7bff691d2f4abae0c8ad4065025728dc6c132519109b",
     "life-memory.mjs": "a5fcf7f565e75233c2c2192e2668772fcdcab4fefe401ecb1ef744bac33aad2e",
     "life-notes.mjs": "2434a3223c0d48aaf1a4e249768169152894d90a691dba9c686c34cb6f4b964a",
     "life-retention.mjs": "edf5e681401e3be322812638d3c079022e219291cd2568346f7a681eee65f701",
@@ -303,7 +303,7 @@
     "ui/kana.mjs": "a9decb07481fedd226740423320428d582ede27336dee8da0939f0efca23c1ce",
     "ui/library.mjs": "e55c28faf715e0ce059c1f5d5e9337d8c77ee4d68d918db9afdfb96f31147d2f",
     "ui/life-cards.mjs": "ceb518639555f05c59c59c8f3c9c8dfcc1d3947aa83d6f71679cc93d6d3366db",
-    "ui/life-dictation.mjs": "fe4be7c518de360e559a86e74d671e653b815961b73588cedc6970dfe029c63a",
+    "ui/life-dictation.mjs": "3211d25cfeb1ef12d52fb70b66c5659004b3ac923d1aaa14ca9d0a9a0c9deca7",
     "ui/life-memory.mjs": "3c440e6b2c9facc2630547c71be25840522d8b2a50795292d04cf855dba7695b",
     "ui/life-notes.mjs": "ab4871ac7f20583c8c775b2e73f70edd050d18af4315e7c4008f5d625e6b9b57",
     "ui/life-retention.mjs": "48a520a428d53f552f52555b1120cd602b6305e306bd1923931988749f179728",
@@ -322,8 +322,8 @@
     "ui/writing.mjs": "7cf8774598aa5d072b29ae12cbb08917c186bd7da3cb449d806078f316686991",
     "v2.css": "16a7170fa42a4b23f5b1ba6e63d0422ab5a054dbbe4bbb5106e9ad99e1740f70",
     "v2.mjs": "ab20b6c5197601b8fec1eeceacdf8c680a80500a23dc9242c56a6808c91463d9",
-    "v3.css": "34e7d70325c62676aa343b9b4f9b6bcc345f750a5522ec959ee5490cb91314fb",
+    "v3.css": "fe296fa7db44212e8513f2caab255d6663b1c4bc93dd043d8d366cd63caf2382",
     "v3.mjs": "69c8db92cb73bee69921d8d82822a71aee69572b9e80c69af4baea5bd7d691be"
   },
-  "bytes": 8407479
+  "bytes": 8410931
 }

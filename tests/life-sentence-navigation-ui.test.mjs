@@ -14,7 +14,7 @@ test('unwritten scope has an honest status and recoverable empty state',()=>{
  const c=ctx();for(const slot of [0,1,2])c.state=storeLifeRecallDraft(c.state,'L07:'+slot,'text',time);c.session.lifeRecallFilters={level:'L',topic:'food',scope:'unwritten'};const html=view(c);assert(html.includes('還沒留下文字'));assert(html.includes('目前範圍每句都已留下文字'));assert(html.includes('改看全部課程'));assert(html.includes('不代表沒學過或不會'));assert(!html.includes('#life-recall/L07:0'));assert(!html.includes('未學會'));
 });
 test('single-sentence navigation marks current ref without showing stored text or course answers',()=>{
- const c=ctx();c.state=storeLifeRecallDraft(c.state,'L07:1','私稿秘密',time);const html=view(c,'L07:1');assert(html.includes('本課三句導航 · 3 句'));assert.match(html,/href="#life-recall\/L07:1" aria-current="page"/);assert(html.includes('第 2 句 · 目前這句'));assert(!html.includes('秘密'));assert(!html.includes(lifeDictationPhrase('L07:1').jp));assert(!html.includes(' open'));
+ const c=ctx();c.state=storeLifeRecallDraft(c.state,'L07:1','私稿秘密',time);const html=view(c,'L07:1');assert(html.includes('本課三句導航 · 3 句'));assert.match(html,/href="#life-recall\/L07:1" aria-current="page"/);assert(html.includes('第 2 句 · 目前這句'));assert(!html.match(/href="#life-recall\/L07:1" aria-current="page"[^]*?<\/a>/)[0].includes('原稿有文字'));assert(html.includes('目前這句請在上方練習'));assert(!html.includes('秘密'));assert(!html.includes(lifeDictationPhrase('L07:1').jp));assert(!html.includes(' open'));
  const ld=view(c,'L07:1',{recall:false});assert(ld.includes('href="#life-dictation/L07:2"'));assert(!ld.includes('原稿有文字'));
 });
 test('navigation survives editor rendering without exposing other drafts and pending hides every sentence link',()=>{
