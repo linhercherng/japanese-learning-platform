@@ -53,3 +53,11 @@ v0.37.0正常profile初始化／reload，保留頁面等待UI顯示「課程文�
 順序修正再經獨立唯讀審查12項UI測試、四級28題choice／listen／order／cloze，與真正questionView相同，回顧前後state與備份不變。v0.37.1完整759／759通過（本次新增40項）。
 
 v0.37.1 build→check、audit 0弱點；170 shell fingerprint `57b732a2d8c6f93c0e9014608200c6f5e292da90f7e9b8bc4b723ab3bdc8afbc`。UTC10:41:43本機170 shell SHA256／JS MIME／SW HTTP通過、0重試；音檔與索引未修改，沿用v0.37.0已完成424原音HTTP驗證，不重複抽樣。ignored記錄work/jlpt-final-local-http.json。
+
+修正PR [#50](https://github.com/linhercherng/japanese-learning-platform/pull/50) head `7dd94f2b8f5aff0e39b51aff76d347bbfbc343fb`，CI [39940977251](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39940977251) success。UTC10:43:35合併為 `ad9a0f026f2417cafd7187e163367d2417e390fd`；Pages [39941125220](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39941125220) 同merge SHA，整體／build／deploy success，UTC10:44:54部署完成。本機原N4漢字輪實際回顧順序「もどる／つづける／えらぶ」與作答畫面相同。
+
+v0.37.1正式網站UTC10:45:48以PowerShell預設TLS驗證170 shell逐檔SHA256／JS MIME／SW fingerprint通過，0重試，fingerprint `57b732a2d8c6f93c0e9014608200c6f5e292da90f7e9b8bc4b723ab3bdc8afbc`；ignored記錄work/jlpt-final-public-http.json。本次patch未改音檔／音訊索引，424原音HTTP證據沿前次正式驗證，不將0重新抽樣寫成424重驗。
+
+v0.37.1自然更新後正式原N3漢字回顧順序為「せきにん／ゆるす／きょか／まかせる」，與原作答畫面完全一致。正式八類頁面在320／390／768／1024／1440共40組，innerWidth正確、無橫溢、無缺標題，console warn/error空；結果work/jlpt-public-layout.json。正常個人庫升級前後經UI匯出並parse深比對完全相同（1首答／0稿／0作品），沒有新增或修改個人作答。正常#jlpt-path/N5顯示新路線，手機截圖work/jlpt-public-path-390.png。
+
+最後保留正常正式入口、恢復viewport並停止18124 server；本次不清DB/cache/SW，不替換原輪或注入跨日資料。發布後只補文件，文件push後以Git檢查本機與遠端HEAD一致及工作樹乾淨。教師／真人／實機與長期成效限制維持上述邊界。
