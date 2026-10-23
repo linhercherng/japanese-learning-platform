@@ -22,20 +22,20 @@
 
 Files: modify `app/core/life-dictation-state.mjs`、`app/core/life-dictation.mjs`、`app/core/learning.mjs`；create `tests/life-blank.test.mjs`。
 
-- [ ] RED：552再想key與276原句、LR／LD／LB-R／LB-D／LN／作品／首答保留，非法mode／ref／日期／欄位／長度／points，備份往返／時間merge／空稿／衝突／pending。
-- [ ] RED：兩模式再想稿目錄與原稿scope各自計數／空白不列／只讀；GREEN並提交。
+- [x] RED：552再想key與276原句、LR／LD／LB-R／LB-D／LN／作品／首答保留，非法mode／ref／日期／欄位／長度／points，備份往返／時間merge／空稿／衝突／pending。
+- [x] RED：兩模式再想稿目錄與原稿scope各自計數／空白不列／只讀；GREEN並提交。
 
 ## Task 2：空白回想與接續
 
 Files: modify `app/life-dictation.mjs`、`app/ui/life-dictation.mjs`及必要CSS；create `tests/life-blank-ui.test.mjs`、`tests/life-blank-controller.test.mjs`。
 
-- [ ] RED：空白不顯原稿／舊LB、明示最新再想稿、接續／重啟／刷新、LR中文／LD音訊、提示與比較保留新buffer、pending／目錄／編碼／焦點。
-- [ ] RED：開始不改任何稿，輸入只存本模式LB、失敗可匯出、先曝光再開、連按／stale route／新input與IME不打斷；GREEN並獨立核心／UI審查修補。
+- [x] RED：空白不顯原稿／舊LB、明示最新再想稿、接續／重啟／刷新、LR中文／LD音訊、提示與比較保留新buffer、pending／目錄／編碼／焦點。
+- [x] RED：開始不改任何稿，輸入只存本模式LB、失敗可匯出、先曝光再開、連按／stale route／新input與IME不打斷；GREEN並獨立核心／UI審查修補。
 
 ## Task 3：驗證與發布
 
-- [ ] 0.32.0與README／規格／課綱／畫面／來源／驗收，test→build→check、audit、160 shell SHA／MIME／SW與146原音HTTP。
-- [ ] 本機隔離QA空白→新稿→提示／比較→刷新接續／再開空白，原LR／LD／LN／首答保留、LB目錄真數字與空結果、pending原UUID；320／390／768／1024／1440、48px／Tab／console／截圖。只用?qa=1，不清DB／快取／SW、不注入歷史。
+- [x] 0.32.0與README／規格／課綱／畫面／來源／驗收，test→build→check、audit、160 shell SHA／MIME／SW與146原音HTTP。
+- [x] 本機隔離QA空白→新稿→提示／比較→刷新接續／再開空白，原LR／LD／LN／首答保留、LB目錄真數字與空結果、pending原UUID；320／390／768／1024／1440、48px／Tab／console／截圖。只用?qa=1，不清DB／快取／SW、不注入歷史。
 - [ ] PR同head CI、merge、Pages、正式HTTP／隔離UI、正常SW更新；證據文件push遠端一致，離開QA／停止server／恢復viewport。
 
 此為整句再想練習，不是自由翻譯／作文／口說評量。教師／真人審校、實機／OS日文鍵盤、長期效果仍未由本批推論。回退先匯出JSON、保留DB／備份，舊版可能不辨LB入口；個人資料及QA不提交Git。

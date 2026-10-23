@@ -267,3 +267,11 @@ life-recall目錄／life-recall/<unit>:<0..2>為中文到日文整句回想。�
 LR編輯器新增明示漸進提示：先看原句前1個Unicode碼點，需要更多再看最多前4字，至少保留1字不出全文。這是字面開頭，不是詞彙或文法分段；先保存本課參考曝光後才顯示，提示暫存不打分。收起提示回最新草稿；close／compare／edit／route／刷新均重設。mode／ref／epoch／busy及input version／composition保護延遲顯示，新輸入或新選字會取消舊提示，不重繪正在輸入的編輯器；失敗不揭且候選可匯出。
 
 LR／LD目錄新增scope=all／written，只依該模式既有草稿非空白text篩選，與程度／場景組合，顯示真實草稿句數及有文字句數。目錄不預覽私人文字、不記曝光、不推論弱點或熟練度；空稿仍保留刪除意圖，篩選及提示不新增schema／source／完成／評分。不影響原首答、LN／作品與既有備份。詳見[規劃](plans/2026-10-23-life-memory-tenth.md)。
+
+## 生活記憶第十一批（v0.32.0，2026-10-23）
+
+LR／LD單句新增空白再想及明示接續再想稿；從空白開始不讀出舊文字、不改任何草稿，輸入才更新該句該模式最新再想稿。原一般開始仍接續／更新原稿，介面分別說明。每句每模式只保留一份最新再想稿，不是完整歷史。獨立buffer保留提示／比較／返回的當次文字，離頁／刷新先收起，接續再想稿才恢復舊LB。
+
+schema3 drafts新增text:LB-R-<unit>:<slot>與text:LB-D-<unit>:<slot>，嚴格模式／canonical ref、300字／合法時間／欄位／空points；共用實際時間merge／同時異文拒絕／較新空稿保留。原LR／LD／LN／作品、首答及V1/V2保持。LR先保存中文參考曝光；LD空白開始不曝光，聽音／輸入／展開非空稿／對照沿用原規則；pending遮蔽全稿及中文、提示，接原UUID。mode／ref／epoch／busy／IME／latest cache及失敗可匯出保護沿用。
+
+兩目錄新增scope=blank「有文字再想稿」，只看同模式LB非空白文字；原written仍只計原稿。卡片分列原稿／再想稿真實句數、不預覽私人內容。無新語言教材、source、分數、完成／熟練度；詳見[規劃](plans/2026-10-23-life-memory-eleventh.md)。
