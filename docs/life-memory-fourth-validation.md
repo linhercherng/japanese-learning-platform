@@ -30,4 +30,12 @@
 
 ## 發布驗證進度
 
-本機HTTP UTC02:55:20通過145份shell逐檔SHA256／JS MIME／SW fingerprint及146次原音檔抽查，1次暫時連線重試。fingerprint `ba84bb13fdbc1c63344edf29635dc7943430435f7b7252b760ece1b501ce3bfa`，預設TLS驗證，紀錄ignored `work/life-fourth-local-http.json`。正式部署及UI完成後補記發布證據。
+本機HTTP UTC02:55:20通過145份shell逐檔SHA256／JS MIME／SW fingerprint及146次原音檔抽查，1次暫時連線重試。fingerprint `ba84bb13fdbc1c63344edf29635dc7943430435f7b7252b760ece1b501ce3bfa`，預設TLS驗證，紀錄ignored `work/life-fourth-local-http.json`。
+
+- [PR #37](https://github.com/linhercherng/japanese-learning-platform/pull/37) head `6df8a9891d1cfe995c2430594dbc5ddaba3c359f`，同head [CI39892303731](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39892303731) completed/success後以match-head合併。
+- merge `5d45a046cd85563b21aaf6135daa630cfce2ace9`；[Pages39892412038](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39892412038)整體completed/success，build/deploy皆success；deploy UTC02:58:56（台北10:58）完成。
+- 正式[逐句回想卡](https://linhercherng.github.io/japanese-learning-platform/#life-cards/L07)與首頁／原課入口可用。UTC03:00:11正式145份shell SHA／JS MIME／SW及146次原音HTTP通過，1次暫時連線重試，fingerprint與本機相同；紀錄ignored `work/life-fourth-public-http.json`。
+- 正式隔離QA走完中文先隱日文、第一句卡住→隔第二／第三句後重想→四次收尾。聲音方向先隱中日文／讀音，正常及慢速合成音可播、播放後保持按鈕焦點，揭開才顯原句；尾卡留到稍後，2句想起／1句稍後／3次收尾。320/390px無橫溢、新按鈕48px以上、console warn/error空。
+- 原課三題UUID `8cd30859-f695-47cd-927a-a82409f57a89`保存後開始；卡片頁遇pending全遮蔽，回同UUID完成聽解／填空「で」／選擇。每日三能力仍各1筆原首答，聽解／理解各1無提示、填空1提示；原第一輪仍3答對／2無提示／1提示，未被加練改寫。
+- ignored截圖`work/life-fourth-public-320.png`／`work/life-fourth-public-390.png`／`work/life-fourth-public-entry-390.png`。正常分頁載入至新shell下載後暫離網站，循SW正常生命週期接手，沒有清DB／快取／SW。正常庫僅驗首頁與卡片入口，未播放／揭參考／答題；所有新練習用隔離QA。QA與18124伺服器已關，正式入口保留。
+- 實機、教師／真人審校及實際長期記憶成效未由本批推論完成。

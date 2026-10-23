@@ -37,6 +37,6 @@ Files: create app/life-cards.mjs、app/ui/life-cards.mjs、tests/life-cards-ui.t
 
 - [x] 獨立核心／UI審查及必要修補；本機隔離QA兩方向、隔句重想、結尾三題、原輪保留、pending遮蔽、離頁／刷新／鍵盤／320/390px／console。
 - [x] 版本0.25.0，README／規格／課綱／畫面／來源／驗收；npm test→build→check、audit、shell SHA／JS MIME／SW及146原音HTTP。
-- [ ] PR同head CI成功合併、Pages成功、正式HTTP與隔離UI／截圖、正常SW接手、補發布證據push遠端一致；關QA／server。
+- [x] PR同head CI成功合併、Pages成功、正式HTTP與隔離UI／截圖、正常SW接手、補發布證據push遠端一致；關QA／server。
 
 真實記憶成效、實機、教師／真人語音審校保留為未完成。所有QA實際點擊，不注入虛構跨日歷史；答案／草稿／截圖留ignored work。沿用schema3／V1／V2及原首答／備份。
