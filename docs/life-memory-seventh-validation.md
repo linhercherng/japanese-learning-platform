@@ -31,4 +31,12 @@ UTC04:22:16本機156份shell逐檔SHA256／JS MIME／SW fingerprint及146次原�
 
 ## 發布驗證
 
-待同head CI、合併Pages、正式156份shell與146原音HTTP、隔離UI及正常SW驗證後補證據。
+- [PR #40](https://github.com/linhercherng/japanese-learning-platform/pull/40) head `d19c7c55ff1852e629c8bdeadab95f18a826d898`；同head [CI39900147747](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39900147747) completed/success後按match-head合併，merge `ec827f84f622832656630b56585c2d3fba102c13`。
+- [Pages39900282526](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39900282526)整體completed/success，build及deploy均success，deploy job UTC04:27:01（台北12:27）完成。
+- 正式[主題目錄](https://linhercherng.github.io/japanese-learning-platform/#life-topic)及[主題回想](https://linhercherng.github.io/japanese-learning-platform/#life-topic/shopping:L)可用。UTC04:28:19正式156份shell逐檔SHA256／JS MIME／SW與146次原音HTTP通過，0重試，fingerprint與本機相同；預設TLS驗證，紀錄ignored `work/life-seventh-public-http.json`。
+- 更新前用既有正式版隔離QA實際完成L03原輪 `51c50aed-01ae-4134-a74f-d347030204d5`（0正確／0提示）與L08原輪 `8cce05af-b065-43cc-9874-567f273d18a6`（1正確／0提示）。正常分頁重新載入下載新shell後暫離網站，依正常SW生命週期接手；不清DB／快取／SW。新版主題頁讀到2已練課，N5選擇與刷新保持shopping:N5。
+- 主題原輪 `19b591fb-2e6d-4959-854f-d1e967ae988d`：第一題提交後刷新保留禁用原選項／已提交答案；暫停主題頁遮蔽控制，只接原UUID。手機分頁同隔離QA庫接原輪第二題，完成2課2題／2正確／2提示／0無提示。結果接各原課卡片／能力／線索，逐題回顧回shopping:N5。
+- 新加練後L03原輪仍0正確／0提示；更早L07首輪 `7a5971bf-9045-4345-85b3-b80dad5bf171`仍3首答正確／2無提示／1提示。第六批L07中日文已保存線索可恢復。food:L真實1課單課文案、N2目錄20主題均正確。
+- 正式320／390px主題頁無橫溢，選單與開始均48px，Tab接開始有可見outline；console warn/error空。截圖ignored `work/life-seventh-public-390.png`。背景QA分頁的viewport override未套用時，先讀DOM確認仍1280px；改在既有可調尺寸分頁使用相同?qa=1 URL，讀DOM確認320／390px後才採計手機證據。
+- 回正常URL後只查看目錄及真實空課狀態，不寫個人答案／線索，不開參考。正常庫仍20主題／預設L／已練0課，正式入口截圖ignored `work/life-seventh-public-entry-390.png`。所有新作答與線索操作皆在?qa=1隔離庫；離開QA／關臨時QA與18124伺服器、恢復視窗尺寸，正常正式目錄保留。
+- 第一至第六批均保留並一同發布。實機／OS日文鍵盤、教師／真人審校及真實長期或新情境效果仍未由本次推論完成。

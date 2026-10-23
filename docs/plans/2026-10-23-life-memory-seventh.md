@@ -37,6 +37,8 @@ Files: create app/life-topics.mjs、app/ui/life-topics.mjs；modify main／navig
 
 - [x] 隔離QA原題作答、刷新／原UUID／草稿、舊首答／筆記保留、主題與上限／空狀態；320／390px觸控尺寸、鍵盤／路徑／console；不清資料或偽造跨日紀錄。
 - [x] 版本0.28.0與README／規格／課綱／畫面／來源／驗收；npm test→build→check、audit，逐檔shell SHA／JS MIME／SW及146原音HTTP。
-- [ ] push／PR同head CI通過／merge／Pages完成，正式HTTP與隔離UI／截圖、正常SW更新、文件證據push遠端一致，關QA／server。
+- [x] push／PR同head CI通過／merge／Pages完成，正式HTTP與隔離UI／截圖、正常SW更新、文件證據push遠端一致，關QA／server。
 
 教材／教師與真人審校、OS日文鍵盤／實機與長期記憶效果未由本次推論完成。回退先匯出JSON，舊版可能不認life-topic source；保留DB／備份，個人資料不進Git。
+
+完成：PR40、merge ec827f8、Pages39900282526，正式HTTP、隔離UI與正常更新驗收通過；詳見[第七批驗收](../life-memory-seventh-validation.md)。
