@@ -24,4 +24,10 @@ life-path重用lifeNextStep；life-guide六段路線；life-workspace從LR／LD�
 
 最終UTC09:25:21本機164 shell SHA256／JS MIME／SW及146音檔抽樣HTTP通過，0重試、PowerShell預設TLS；ignored記錄work/life-completion-local-http.json。全量素材測試不冒稱全量HTTP或真人審音。所有QA文字／截圖留ignored work，不混入正常資料。
 
-PR CI／合併／Pages、正式HTTP／正常SW及隔離UI尚待完成後補記，未提前宣告發布。
+PR [#48](https://github.com/linhercherng/japanese-learning-platform/pull/48) head `431f18233f812c0df2cad4739d3935e8525532d4`，CI [39931939209](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39931939209) success。UTC09:28:18合併為 `73716b7a872a7299212f7149f44fc12f7796faec`。Pages [39932099508](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39932099508) 同merge SHA，整體／build／deploy success，deploy UTC09:29:33完成。
+
+正式URL https://linhercherng.github.io/japanese-learning-platform/ ，UTC09:31:21預設TLS驗證164 shell逐檔SHA256／JS MIME／SW fingerprint及146音檔抽樣HTTP通過，1次暫時重試；ignored證據work/life-completion-public-http.json。正式fingerprint為上述95721e。正常profile初始化、正常reload等待SW安裝、暫離舊client後進隔離庫，實際三個新route與返回連結出現，沒有清DB/cache/SW或強制skipWaiting。
+
+正式?qa=1索引原有8筆，搜索原LB-R「コーヒーを二つ🍵」命中同句、主動接續仍同文字、返回清除恢復8筆。聽寫＋有文字再想稿篩出2筆；開原LD仍「コーヒを一つお願いします。」。搜索「午休點飲料」命中原LN，展開仍「午休點飲料，先想一杯與外帶。コーヒーを一つ。」；兩模式與線索返回練習簿均正常，沒有新增或改整句稿。N2空結果清除復原，刷新仍8筆。正式本批未新增客觀作答；舊首輪 `7a5971bf-9045-4345-85b3-b80dad5bf171`仍3正確2無提示1提示。
+
+正式練習簿320／390／768／1024／1440px無橫溢，input18px，最小控制48px；完整指南6段與刷新麵包屑保持，隔離今日路線正確顯已完成可收尾。正常資料庫練習簿仍0筆，首頁入口進今日路線為未練新場景，未填寫個人資料。console warn/error空，ignored正式正常入口截圖work/life-completion-public-path-390.png。最後保留正常life-path、恢復viewport、停止18124 server；此後只補文件，不改已發布app，文件push後以Git確認本機與遠端一致。

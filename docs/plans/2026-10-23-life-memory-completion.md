@@ -34,6 +34,6 @@ Files: app/life-workspace.mjs、app/ui/life-workspace.mjs、app/ui/life-guide.mj
 
 - [x] 完成矩陣與README／規格／課綱／畫面／來源／路線／版本0.36.0；完整npm test→build→check→audit。
 - [x] 獨立唯讀核心與UI審查，必要修補與複核；本機隔離QA搜尋／篩選／分頁／清除／雙模式舊稿／路由／pending／原資料、320／390／768／1024／1440、Tab／console／截圖；shell及原音HTTP。
-- [ ] PR同head CI成功才合併；Pages build/deploy與正式HTTP／正常SW更新／隔離UI／原資料通過；文件證據同步GitHub。恢復正常入口／viewport並停測試server。
+- [x] PR #48同head CI成功才合併；Pages build/deploy與正式HTTP／正常SW更新／隔離UI／原資料通過；文件證據同步GitHub。恢復正常入口／viewport並停測試server，詳見整合驗收。
 
 不清DB／cache／SW、不注入虛構跨日歷史；失敗沿原可匯出機制。回退先匯出JSON並保留資料，個人文字／QA與截圖不提交Git。完成後不再列下一批生活記憶程式功能。
