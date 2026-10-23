@@ -17,6 +17,10 @@ test('cutoff ignores future attempts and poisoned current reviews and summaries 
  let s=add(initialState(),'L07-q0',{correct:false});s=add(s,'L07-q0',{time:'2026-11-01T03:00:00.000Z',id:'future'});s.reviews={};const before=structuredClone(s);assert.equal(skills.lifeSkillCandidates(s,'L07','understanding',today)[0].id,'L07-q0');assert.equal(skills.lifeSkillSummary(s,'L07','understanding',today).weak,1);assert.deepEqual(s,before);
  assert.deepEqual(skills.lifeSkillCandidates(s,'bad','listening',today),[]);assert.deepEqual(skills.lifeSkillCandidates(s,'L07','bad',today),[]);
 });
+test('an unseen original keeps one slot even when at least three earlier questions are still weak',()=>{
+ let s=initialState();for(const qid of ['L07-q0','L07-q1','L07-v2-q4'])s=add(s,qid,{correct:false});
+ assert.deepEqual(skills.lifeSkillCandidates(s,'L07','understanding',today).map(q=>q.id),['L07-q0','L07-q1','L07-v2-r1']);
+});
 test('focused source preserves exact ability, backup and a single common life pending',()=>{
  const s=skills.startLifeSkill(initialState(),{unitId:'L07',skill:'productive',id:'skill',time:today}),p=pendingLife(s);assert.equal(p.source,'life-skill');assert.equal(p.reference,'L07:productive');assert.equal(p.questionIds.length,2);assert(p.questionIds.every(id=>lifeAbility(questionById.get(id))==='productive'));validateState(s);assert.deepEqual(parseBackup(exportBackup(s)),s);
  assert.equal(skills.startLifeSkill(s,{unitId:'L01',skill:'listening',id:'second',time:today}),s);assert.equal(startLifeMemory(s,{unitId:'L01',id:'other',time:today}),s);assert.equal(isLifeSource('life-skill'),true);

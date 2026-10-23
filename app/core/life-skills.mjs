@@ -10,6 +10,10 @@ function entries(state,unitId,skill,time){
  const history=lifeHistory(state,time),last=new Map(history.map(a=>[a.item,a])),reviews=recordAnswers(initialState(),history).reviews;
  return unitQuestions(unitById.get(unitId)).map(q=>questionById.get(q.id)).filter(q=>lifeAbility(q)===skill).map(q=>{const a=last.get(q.id),weak=Boolean(a&&(!a.correct||a.hinted)),due=a&&Date.parse(reviews[a.item+':'+a.dimension].due)<=Date.parse(time);return {q,a,weak,rank:weak?0:!a?1:due?2:3};});
 }
-export function lifeSkillCandidates(state,unitId,skill,time){return entries(state,unitId,skill,time).sort((a,b)=>a.rank-b.rank||(Date.parse(a.a?.time)||0)-(Date.parse(b.a?.time)||0)||a.q.id.localeCompare(b.q.id)).slice(0,3).map(r=>r.q);}
+export function lifeSkillCandidates(state,unitId,skill,time){
+ const ranked=entries(state,unitId,skill,time).sort((a,b)=>a.rank-b.rank||(Date.parse(a.a?.time)||0)-(Date.parse(b.a?.time)||0)||a.q.id.localeCompare(b.q.id)),selected=ranked.slice(0,3),unseen=ranked.find(r=>!r.a);
+ if(unseen&&!selected.some(r=>!r.a))selected[selected.length-1]=unseen;
+ return selected.map(r=>r.q);
+}
 export function lifeSkillSummary(state,unitId,skill,time){const rows=entries(state,unitId,skill,time),practiced=rows.filter(r=>r.a).length;return {total:rows.length,practiced,remaining:rows.length-practiced,weak:rows.filter(r=>r.weak).length};}
 export function startLifeSkill(state,{unitId,skill,id,time}){if(pendingLife(state))return state;const qs=lifeSkillCandidates(state,unitId,skill,time);return qs.length?beginV3Session(state,qs.map(q=>q.id),{id,time,source:'life-skill',reference:unitId+':'+skill}):state;}
