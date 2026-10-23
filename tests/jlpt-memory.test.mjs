@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {initialState,recordAnswer,exportBackup,parseBackup,mergeStates,validateState} from '../app/core/learning.mjs';
 import {units,unitQuestions,questionById,forms} from '../app/content/catalog.mjs';
 import {beginV3Session,answerV3Session,nextV3Question} from '../app/core/v3-learning.mjs';
+import {createPractice,answerPractice} from '../app/core/study.mjs';
 const core=await import('../app/core/jlpt-memory.mjs').catch(()=>({})),ids=await import('../app/content/jlpt-memory-ids.mjs').catch(()=>({})),hints=await import('../app/core/jlpt-memory-state.mjs').catch(()=>({}));
 const call=(name,...args)=>{const fn=core[name]||ids[name]||hints[name];assert.equal(typeof fn,'function',name+' missing');return fn(...args);};
 const old='2026-10-16T02:00:00.000Z',today='2026-10-23T02:00:00.000Z',later='2026-10-23T02:01:00.000Z';
@@ -47,7 +48,7 @@ test('weak reviews rank mistakes then hints, at most three distinct courses and 
  const qs=call('jlptCandidates',s,'N5','repair',today);assert.equal(qs.length,3);assert.equal(new Set(qs.map(q=>q.unitId)).size,3);assert(qs.every(q=>s.attempts.some(a=>a.item===q.id)));assert.equal(qs[0].unitId,'N5-01');
 });
 test('future attempts and references never influence current eligibility or stats',()=>{
- const q=first(),base=add(initialState(),q.id),future=call('recordJlptExposure',add(base,q.id,'2026-10-30T02:00:00.000Z',false),[q.id],'2026-10-30T02:00:00.000Z');
+ const q=first(),base=add(initialState(),q.id),future=call('recordJlptExposure',add(base,q.id,'2026-10-30T02:00:00.000Z',false),[q.id],'2026-10-30T02:00:00.001Z');
  assert.deepEqual(call('jlptCandidates',future,'N5','week',today),call('jlptCandidates',base,'N5','week',today));assert.deepEqual(call('jlptMap',future,'N5',today),call('jlptMap',base,'N5',today));
 });
 test('check and week are once per level per day; another level remains available',()=>{
@@ -71,4 +72,11 @@ test('every source and hint fixture round trips while original V1/V2/kana/life d
  const s=initialState();s.drafts['text:LR-L07:0']={text:'原生活草稿',points:[],time:old};s.drafts['text:KN-h-3042']={text:'原假名線索',points:[],time:old};const next=call('startJlptRound',s,{unitId:'N2-24',mode:'skill',ability:'reading',id:'n2',time:today});assert.deepEqual(next.drafts,s.drafts);assert.deepEqual(parseBackup(exportBackup(next)),next);assert.deepEqual(mergeStates(next,s).v3.sessions,next.v3.sessions);
 });
 test('an empty personal reminder does not claim reference exposure',()=>{const s=call('storeJlptNote',initialState(),'N5-01','',today);assert(!s.v3.jlptHints);assert.equal(s.drafts['text:JN-N5-01'].text,'');});
+test('original V2, V3 and standalone first answers reject contradictory exposure in both merge directions',()=>{
+ const q=first(),exposed=call('recordJlptExposure',initialState(),[q.id],today),states=[];
+ let v3=beginV3Session(initialState(),[q.id],{id:'original-v3',source:'concept',reference:'original',time:today});v3=answerV3Session(v3,{sessionId:'original-v3',question:q,value:q.correct,eventId:'original-answer',time:later});states.push(v3);
+ const v2=initialState();v2.practice=answerPractice(createPractice({id:'original-v2',unitId:'N5-01',questionIds:[q.id],time:today}),q,q.correct,{time:later});states.push(v2);
+ states.push(add(initialState(),q.id,later));
+ for(const state of states){const original=structuredClone(state);for(const pair of [[state,exposed],[exposed,state]])assert.throws(()=>mergeStates(...pair),/曝光.*首答衝突/);assert.throws(()=>call('recordJlptExposure',state,[q.id],today),/曝光.*首答衝突/);assert.deepEqual(state,original);const corrupt=structuredClone(state);corrupt.v3.jlptHints=exposed.v3.jlptHints;assert.throws(()=>validateState(corrupt),/曝光.*首答衝突/);assert.doesNotThrow(()=>call('recordJlptExposure',state,[q.id],'2026-10-23T02:02:00.000Z'));}
+});
 test('new rounds reject time-travel answer and completion timestamps in backup',()=>{let s=call('startJlptRound',initialState(),{unitId:'N5-01',mode:'memory',id:'chronology',time:today});s=finish(s,'chronology',later);for(const mutate of [x=>x.createdAt='2026-10-24T02:00:00.000Z',x=>x.updatedAt=old,x=>x.completedAt=old,x=>Object.values(x.answers)[0].time=old]){const broken=structuredClone(s);mutate(broken.v3.sessions[0]);assert.throws(()=>validateState(broken));}});

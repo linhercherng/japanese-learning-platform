@@ -1,4 +1,4 @@
-import {validateJlptNoteDraft} from './jlpt-memory-state.mjs';
+import {validateJlptNoteDraft,validateJlptExposure} from './jlpt-memory-state.mjs';
 import {validateLifeDictationDraft,mergeLifeDictationDraft} from './life-dictation-state.mjs';
 import {validateLifeNoteDraft,mergeLifeNoteDraft,reconcileLifeNoteDrafts} from './life-notes-state.mjs';
 import {validateStudioDraft,mergeDictationDraft,reconcileDictationDrafts,mergeNoteDraft,reconcileNoteDrafts} from './kana-studio-state.mjs';
@@ -88,7 +88,7 @@ export function validateState(s){
   requireValue(Array.isArray(s.examAttempts)&&s.examAttempts.length<=100&&new Set(s.examAttempts.map(x=>x.id)).size===s.examAttempts.length);
   s.examAttempts.forEach(exam=>{validateExamSession(exam);requireValue(exam.status!=='active');});
  }
- if(s.schema===3)validateV3(s.v3,s.artifacts);return s;
+ if(s.schema===3){validateV3(s.v3,s.artifacts);validateJlptExposure(s.v3.sessions,s.v3.jlptHints,{attempts:s.attempts,practices:[s.practice,...s.practiceHistory||[]]});}return s;
 }
 export function exportBackup(state){const upgraded=upgradeState(state);return JSON.stringify({format:'hiyori-backup',version:3,exportedAt:new Date().toISOString(),state:upgraded},null,2);}
 export function parseBackup(text){
