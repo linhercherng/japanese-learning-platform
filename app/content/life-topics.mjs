@@ -1,0 +1,5 @@
+// Shared raw metadata: backup validation must not import the catalog.
+export const topics=[['greetings','招呼與自介'],['family','家庭與人際'],['schedule','時間與行程'],['food','飲食與餐廳'],['shopping','購物與付款'],['transport','交通與問路'],['travel','住宿與旅遊'],['weather','天氣與季節'],['health','身體與就醫'],['help','緊急與求助'],['routine','日常作息'],['school','學校與學習'],['work','工作與職場'],['hobbies','興趣與休閒'],['sport','運動與活動'],['home','租屋與居家'],['mail','郵局與寄送'],['public','銀行與公共服務'],['technology','手機與網路'],['culture','文化與交流']];
+export const lifeTopicLevels=['L','N5','N4','N3','N2'];
+export const lifeIntroTopics=new Map(['greetings','greetings','shopping','schedule','home','family','food','shopping','transport','transport','travel','travel'].map((topic,i)=>['L'+String(i+1).padStart(2,'0'),topic]));
+export function parseLifeTopicRoute(param){if(!param)return {topic:null,ceiling:'L'};if(lifeTopicLevels.includes(param))return {topic:null,ceiling:param};const [topic,ceiling,...extra]=param.split(':');return !extra.length&&topics.some(([id])=>id===topic)&&lifeTopicLevels.includes(ceiling)?{topic,ceiling}:null;}

@@ -1,3 +1,5 @@
+import {topics,lifeIntroTopics} from './life-topics.mjs';
+export {topics};
 import {contrastQuestion} from './kana-contrast.mjs';
 import {rhythmQuestions} from './kana-rhythm.mjs';
 import {familyQuestions} from './kana-family.mjs';
@@ -33,7 +35,6 @@ import {readingLessons} from './support-readings.mjs';
 import {kanaDrills} from './kana-drills.mjs';
 export {v3Questions} from './practice-v3.mjs';
 export {deepLessons} from './deep-lessons.mjs';
-export const topics=[['greetings','招呼與自介'],['family','家庭與人際'],['schedule','時間與行程'],['food','飲食與餐廳'],['shopping','購物與付款'],['transport','交通與問路'],['travel','住宿與旅遊'],['weather','天氣與季節'],['health','身體與就醫'],['help','緊急與求助'],['routine','日常作息'],['school','學校與學習'],['work','工作與職場'],['hobbies','興趣與休閒'],['sport','運動與活動'],['home','租屋與居家'],['mail','郵局與寄送'],['public','銀行與公共服務'],['technology','手機與網路'],['culture','文化與交流']];
 export const levels=['N5','N4','N3','N2'];
 export const lifeLessons=[...originalLife,...additionalLifeLessons].sort((a,b)=>a.id.localeCompare(b.id));
 export const units=[...n5Units,...n4Units,...n3Units,...n2Units];
@@ -52,8 +53,7 @@ const kanjiMap=new Map();
 for(const unit of units)for(const k of unit.kanji){const old=kanjiMap.get(k.glyph);if(old){if(!old.levels.includes(unit.level))old.levels.push(unit.level);for(const word of k.words)if(!old.words.some(w=>w.jp===word.jp&&w.reading===word.reading))old.words.push(word);}else kanjiMap.set(k.glyph,{...k,id:`j-${k.glyph.codePointAt(0).toString(16)}`,levels:[unit.level],strokeCode:k.glyph.codePointAt(0).toString(16).padStart(5,'0'),script:'kanji',group:'kanji',hint:'先看筆順，從詞中的讀音理解這個字。',word:k.words[0].jp,reading:k.words[0].reading,wordReading:k.words[0].reading});}
 export const kanjiItems=[...kanjiMap.values()].map(k=>({...k,words:k.words.slice(0,6)}));
 export const grammarItems=[...units,...supportLessons.filter(u=>u.category==='grammar')].flatMap(unit=>unit.grammar.map((g,i)=>({...g,id:`g-${unit.id}-${i}`,unitId:unit.id,level:unit.level})));
-const lifeTopics=['greetings','greetings','shopping','schedule','home','family','food','shopping','transport','transport','travel','travel'];
-export const lifeUnits=lifeLessons.map((l,index)=>({id:l.id,level:'L',title:l.title,topic:lifeTopics[index],goal:l.goal,minutes:l.minutes,vocabulary:l.words.map(w=>{const ex=l.dialogue.find(d=>d.jp.includes(w.jp));return {...w,example:ex?.jp||w.jp,exampleZh:ex?.zh||w.zh};}),grammar:[{pattern:l.pattern.sample,meaning:l.goal,formation:`${l.pattern.prefix||'目標詞句'}＋${l.pattern.suffix||'完整招呼句'}`,explanation:l.hint,pitfall:'依本課情境與參考句檢查，不把所有單字任意放進句型。',contrast:l.quiz.map(q=>q.explanation).join(' '),examples:[{jp:l.sample,zh:'本課文字任務的參考；依任務資訊理解完整句子。'}]}],kanji:[],dialogue:l.dialogue,reading:{title:'再理解一次這段生活對話',jp:l.dialogue.map(d=>d.jp).join('\n'),zh:l.dialogue.map(d=>d.zh).join('\n'),questions:[]},questions:l.quiz.map((q,i)=>({id:`${l.id}-q${i}`,kind:'choice',dimension:'language',prompt:q.prompt,options:q.options,correct:q.correct,explanation:q.explanation})),writing:{prompt:l.writingPrompt,sample:l.sample,checklist:['有寫出任務要求的資訊','助詞與句型已對照本課參考','語氣適合這個生活場合']}}));
+export const lifeUnits=lifeLessons.map((l,index)=>({id:l.id,level:'L',title:l.title,topic:lifeIntroTopics.get(l.id),goal:l.goal,minutes:l.minutes,vocabulary:l.words.map(w=>{const ex=l.dialogue.find(d=>d.jp.includes(w.jp));return {...w,example:ex?.jp||w.jp,exampleZh:ex?.zh||w.zh};}),grammar:[{pattern:l.pattern.sample,meaning:l.goal,formation:`${l.pattern.prefix||'目標詞句'}＋${l.pattern.suffix||'完整招呼句'}`,explanation:l.hint,pitfall:'依本課情境與參考句檢查，不把所有單字任意放進句型。',contrast:l.quiz.map(q=>q.explanation).join(' '),examples:[{jp:l.sample,zh:'本課文字任務的參考；依任務資訊理解完整句子。'}]}],kanji:[],dialogue:l.dialogue,reading:{title:'再理解一次這段生活對話',jp:l.dialogue.map(d=>d.jp).join('\n'),zh:l.dialogue.map(d=>d.zh).join('\n'),questions:[]},questions:l.quiz.map((q,i)=>({id:`${l.id}-q${i}`,kind:'choice',dimension:'language',prompt:q.prompt,options:q.options,correct:q.correct,explanation:q.explanation})),writing:{prompt:l.writingPrompt,sample:l.sample,checklist:['有寫出任務要求的資訊','助詞與句型已對照本課參考','語氣適合這個生活場合']}}));
 for(const unit of lifeUnits){const extra=supplements[unit.id];unit.grammar=extra.grammar;unit.reading=extra.reading;unit.questions.push(...extra.additionalQuestions);unit.vocabulary.push(...extra.additionalVocabulary);unit.dialogue.push(...extra.additionalDialogue);}
 export const allUnits=[...lifeUnits,...units,...scenarios,...supportLessons,...readingLessons];
 export const unitById=new Map(allUnits.map(u=>[u.id,u]));
