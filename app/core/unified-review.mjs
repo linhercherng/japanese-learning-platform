@@ -9,14 +9,14 @@ const kanaIndex=new Map(kana.map((k,i)=>[k.id,{...k,index:i+1}]));
 const stamp=t=>Date.parse(t),ordinal=t=>Date.parse(studyDay(t))/86400000;
 const labels={recognition:'認字',listening:'聽辨',language:'詞音與拼寫',understanding:'理解',productive:'補字與重組',vocabulary:'語彙',kanji:'漢字',grammar:'文法',reading:'讀解'};
 const statuses=['review','uncertain','waiting','retained','week'];
-export const memoryStatusLabels={review:'需要再複習',uncertain:'時間重疊，待確認',waiting:'無提示答對，跨日待確認',retained:'已有跨日記憶證據',week:'已有七日記憶證據'};
+export const memoryStatusLabels={review:'需要再複習',uncertain:'紀錄待確認',waiting:'無提示答對，跨日待確認',retained:'已有跨日記憶證據',week:'已有七日記憶證據'};
 function metadata(a){
  const k=kanaIndex.get(a.item);if(k&&['recognition','listening','language'].includes(a.dimension))return {goal:'K',unitId:null,title:`${k.script==='kata'?'片假名':'平假名'} · 字表第 ${k.index} 字`,ability:a.dimension,route:'kana-map'};
  const q=resolveLearningQuestion(a.item);if(!q||q.dimension!==a.dimension||a.dimension==='writing')return null;
  const life=lifeQuestionUnits.get(a.item),unitId=life||jlptQuestionUnits.get(a.item);if(!unitId)return null;
  return {goal:life?'L':jlptUnitMeta.get(unitId).level,unitId,title:unitById.get(unitId)?.title||unitId,ability:life?lifeAbility(q):a.dimension,route:life?'life-memory/'+unitId:'jlpt-memory/'+unitId};
 }
-const emptyWeek=()=>({answers:0,dailyFirst:0,independent:0,hinted:0,ambiguous:0,retained:0,week:0,studyDays:0});
+const emptyWeek=()=>({answers:0,dailyFirst:0,independent:0,hinted:0,ambiguous:0,uncertainHistory:0,retained:0,week:0,studyDays:0});
 /** Read-only evidence. No question text, answer values, user writing, or persisted aggregate. */
 export function unifiedReview(state,time,quiz=null){
  const end=studyDay(time),endDay=ordinal(time),start=new Date((endDay-6)*86400000).toISOString().slice(0,10),visible=t=>stamp(t)<=stamp(time),inWeek=t=>visible(t)&&studyDay(t)>=start;
@@ -46,8 +46,9 @@ export function unifiedReview(state,time,quiz=null){
   list.sort((a,b)=>stamp(a.time)-stamp(b.time)||a.id.localeCompare(b.id));
   const track=tracks.find(t=>t.goal===meta.goal),first=new Map(),ties=new Map();
   for(const a of list){const day=studyDay(a.time);if(!first.has(day))first.set(day,a);ties.set(stamp(a.time),(ties.get(stamp(a.time))||0)+1);if(inWeek(a.time)){track.week.answers++;week.answers++;days.add(day);}}
+  const hint=state.v3.kanaHints?.[list[0].item]?.lastHintAt,missingHintHistory=a=>meta.goal==='K'&&hint&&visible(hint)&&stamp(hint)>stamp(a.time);
   const proof=a=>{
-   if(!a.correct||a.hinted||ties.get(stamp(a.time))!==1)return null;
+   if(!a.correct||a.hinted||ties.get(stamp(a.time))!==1||missingHintHistory(a))return null;
    const prior=list.filter(p=>stamp(p.time)<stamp(a.time)).at(-1);if(!prior||studyDay(prior.time)===studyDay(a.time))return null;
    const cues=(exposures.get(a.item)||[]).filter(t=>t<stamp(a.time));
    if((exposures.get(a.item)||[]).filter(t=>t===stamp(a.time)).length!==1)return null;
@@ -55,12 +56,12 @@ export function unifiedReview(state,time,quiz=null){
    return gap>=1?{time:a.time,days:gap}:null;
   };
   for(const a of first.values())if(inWeek(a.time)){
-   for(const target of [week,track.week]){target.dailyFirst++;if(ties.get(stamp(a.time))>1)target.ambiguous++;else{if(a.hinted)target.hinted++;if(a.correct&&!a.hinted)target.independent++;const p=proof(a);if(p){target.retained++;if(p.days>=7)target.week++;}}}
+   for(const target of [week,track.week]){target.dailyFirst++;if(ties.get(stamp(a.time))>1)target.ambiguous++;else{if(a.hinted)target.hinted++;if(a.correct&&!a.hinted){target.independent++;if(missingHintHistory(a))target.uncertainHistory++;}const p=proof(a);if(p){target.retained++;if(p.days>=7)target.week++;}}}
   }
   const last=list.at(-1),daily=first.get(studyDay(last.time)),ambiguous=ties.get(stamp(last.time))>1||ties.get(stamp(daily.time))>1;
-  const laterCue=(exposures.get(last.item)||[]).some(t=>t>stamp(last.time)),p=proof(daily);
-  const status=ambiguous?'uncertain':!last.correct||last.hinted||!daily.correct||daily.hinted||laterCue?'review':p?(p.days>=7?'week':'retained'):'waiting';
-  const item={...meta,item:last.item,dimension:last.dimension,abilityLabel:labels[meta.ability]||meta.ability,status,label:memoryStatusLabels[status],lastAt:last.time,firstAt:daily.time,days:first.size,total:list.length,proof:status==='retained'||status==='week'?p:null};
+  const cues=exposures.get(last.item)||[],lastCueAt=cues.length?new Date(Math.max(...cues)).toISOString():null,p=proof(daily),missing=missingHintHistory(daily);
+  const status=ambiguous?'uncertain':!last.correct||last.hinted||!daily.correct||daily.hinted?'review':missing?'uncertain':p?(p.days>=7?'week':'retained'):'waiting';
+  const item={...meta,item:last.item,dimension:last.dimension,abilityLabel:labels[meta.ability]||meta.ability,status,label:memoryStatusLabels[status],reason:ambiguous?'同一時間有多筆答案，需另一次清楚的首答確認。':missing?'舊五十音提示歷史只存最後時間，無法確認答前是否看過線索；先保留原首答，再於原練習確認。':null,lastCueAt,lastAt:last.time,firstAt:daily.time,days:first.size,total:list.length,proof:status==='retained'||status==='week'?p:null};
   track.items.push(item);track.current[status]++;track.current.total++;if(['week','retained'].includes(status))track.current.remembered++;
  }
  for(const t of tracks){
