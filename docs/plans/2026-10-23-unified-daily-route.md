@@ -24,18 +24,18 @@
 ## Task 1：純計算與測試
 
 Create app/core/unified-learning.mjs、tests/unified-learning.test.mjs。
-- [ ] RED：空資料六目標、三區複習／跨區排序、台北跨日、提示延後七日、當日收尾、未完成各來源／模擬／V1／聽寫／舊安排、未來資料、唯讀與備份不變。
-- [ ] GREEN：learningPending／unifiedLearning、可靠統計、穩定決策；分次提交。
+- [x] RED：空資料六目標、三區複習／跨區排序、台北跨日、提示延後七日、當日收尾、未完成各來源／模擬／V1／聽寫／舊安排、未來資料、唯讀與備份不變。
+- [x] GREEN：learningPending／unifiedLearning、可靠統計、穩定決策；分次提交。
 
 ## Task 2：首頁整合
 
 Create app/ui/unified-learning.mjs、tests/unified-learning-ui.test.mjs、tests/unified-learning-controller.test.mjs；modify app/ui/v3.mjs、app/v3.mjs、app/ui/study.mjs、app/v3.css。
-- [ ] RED→GREEN：首頁主建議／日期／原因／收折摘要、舊安排及工具保留、pending不出新建按鈕、完成頁返回、HTML編碼／無答案或私人文字曝光。
-- [ ] controller交易內pending守門、保存失敗／離頁不跳轉、刷新唯讀、偏好沿既有流程；直接驗證實際控制器。
+- [x] RED→GREEN：首頁主建議／日期／原因／收折摘要、舊安排及工具保留、pending不出新建按鈕、完成頁返回、HTML編碼／無答案或私人文字曝光。
+- [x] controller交易內pending守門、保存失敗／離頁不跳轉、刷新唯讀、偏好沿既有流程；直接驗證實際控制器。
 
 ## Task 3：整包驗收與發布
 
-- [ ] 更新README／規格／課綱／畫面／來源／路線、完成矩陣／驗收、版本0.38.0；test→build→check／audit。
+- [x] 更新README／規格／課綱／畫面／來源／路線、完成矩陣／驗收、版本0.38.0；test→build→check／audit。
 - [ ] 獨立唯讀審查核心及整合；本機隔離QA六目標、原輪續作、完成回首頁、選擇保存／刷新、舊資料、320／390／768／1024／1440、Tab／console／截圖、shell HTTP SHA。
 - [ ] 同head PR CI→merge→Pages→正式HTTP／正常PWA自然更新／隔離操作、個人與舊QA資料比對；文件證據push、遠端HEAD一致、恢復viewport／正式首頁、停server。
 

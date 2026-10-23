@@ -1,5 +1,7 @@
 # 日和｜日語學習平台
 
+v0.38.0 整合[首頁每日路線](https://linhercherng.github.io/japanese-learning-platform/#home)：五十音、生活日語與N5～N2依實際進度只推薦今天一小步，先接原輪，再七日／隔天／弱點複習，完成一輪便可休息。六區進度與原工具收折，原首答、草稿、四步安排及備份保留；推薦本身不寫入資料或自動升級。見[完整規劃](docs/unified-daily-route.md)、[驗收與發布](docs/unified-daily-validation.md)。
+
 v0.37.1 一次完成 **N5～N2共114主課的記憶與複習功能**：[今天怎麼練](https://linhercherng.github.io/japanese-learning-platform/#jlpt-path/N5)、[主課記憶目錄](https://linhercherng.github.io/japanese-learning-platform/#jlpt-memory)、[完整六段指南](https://linhercherng.github.io/japanese-learning-platform/#jlpt-guide)。先想再翻語彙／文法／漢字卡，再用三題或五能力少量原題確認；留下自己的線索，隔天、七日與弱點複習接續原輪。卡片自評、作品、提示與跨日證據分開，舊首答及草稿保留。見[完整規劃與完成矩陣](docs/jlpt-memory-completion.md)、[驗收與發布](docs/jlpt-memory-validation.md)。教師／真人／實機與長期學習成效仍另列待驗證。
 
 v0.36.0 完成生活日語記憶與複習的剩餘整合，不再分批：[今天怎麼練](https://linhercherng.github.io/japanese-learning-platform/#life-path)沿實際原輪與日期安排下一步，[我的生活練習簿](https://linhercherng.github.io/japanese-learning-platform/#life-workspace)統一找回中文／聽寫原稿、再想稿與線索，[完整六段指南](https://linhercherng.github.io/japanese-learning-platform/#life-guide)串起前十四批。搜尋只讀metadata，不預覽私人文字或增加作答；原稿／首答／備份保留。[完成矩陣](docs/life-memory-completion.md)、[驗收](docs/life-memory-completion-validation.md)。教師、真人、實機與長期成效仍需各自取得證據。
