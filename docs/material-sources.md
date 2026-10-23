@@ -124,3 +124,10 @@
 本批只串接既有kp動態題、memoryFor試用訣竅、原錯字雙卡與K字音，沒有新教材、圖片、音檔或依賴。208卡、508筆順、10947音檔索引及K包668檔不變。既有試用內容／合成音仍待獨立教師審校；個人線索、答案、QA及截圖不提交公開Git。
 
 見[規劃](plans/2026-10-23-kana-sixteenth.md)與[驗收](kana-sixteenth-validation.md)。
+
+
+## 五十音記憶剩餘整合（v0.21.0，2026-10-23）
+
+本批整合既有記憶功能與操作說明，沒有新外部教材、圖片、語音或依賴。208卡、508筆順、10947音檔索引及K包668檔不變。個人線索／草稿只存本機並隨JSON備份，不提交公開Git；既有試用教材與合成音仍待獨立教師審校。
+
+見[完成矩陣](kana-memory-completion.md)、[規劃](plans/2026-10-23-kana-memory-completion.md)與[驗收](kana-memory-completion-validation.md)。

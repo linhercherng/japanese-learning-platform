@@ -30,6 +30,7 @@ export function navigationContext(ctx,name='home',param){
   case 'study':case 'lesson':trail=unitTrail(param);break;
   case 'kana':trail=[home,courses,kana];break;
   case 'unit':trail=[home,courses,kana,item(kanaLessons.find(l=>l.id===param)?.title||'五十音單元',route)];break;
+  case 'kana-guide':section='practice-hub';trail=[home,courses,kana,item('五十音練習工坊','kana-studio'),item('完整學習指南',route)];break;
   case 'kana-pocket':section='practice-hub';trail=[home,courses,kana,item('五十音練習工坊','kana-studio'),item('看字想聲翻卡','kana-flip'),item('不熟字口袋',route)];break;
   case 'kana-pocket-review':{const s=state.v3.sessions.find(s=>s.id===param);section='practice-hub';trail=[home,courses,kana,item('五十音練習工坊','kana-studio'),item('不熟字口袋','kana-pocket'),...(s?.source==='kana-contrast'?[item('錯字雙向聽辨','kana-contrast/'+s.reference)]:[]),item('本輪逐字回顧',route)];break;}
   case 'kana-contrast':section='practice-hub';trail=[home,courses,kana,item('五十音練習工坊','kana-studio'),item('不熟字口袋','kana-pocket'),item('錯字雙向聽辨',route)];break;

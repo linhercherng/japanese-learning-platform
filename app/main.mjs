@@ -1,3 +1,5 @@
+import {kanaGuideView} from './ui/kana-guide.mjs';
+import {createKanaNotebook} from './kana-notebook.mjs';
 import {createKanaPocketReview} from './kana-pocket-review.mjs';
 import {createKanaContrast} from './kana-contrast.mjs';
 import {createKanaRow} from './kana-row.mjs';
@@ -45,6 +47,7 @@ const kanaRecall=createKanaRecall({getContext:context,update,toast,now,id});
 const kanaSixth=createKanaSixth({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaRow=createKanaRow({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaPocketReview=createKanaPocketReview({getContext:context,update,render,toast,now,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
+const kanaNotebook=createKanaNotebook({getContext:context,update,render,toast,now,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaContrast=createKanaContrast({getContext:context,update,toast,now,id});
 const kanaFamily=createKanaFamily({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const kanaBridge=createKanaBridge({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
@@ -72,7 +75,7 @@ function render(focus=true){
  v2.onRoute(name,param);
  v3.onRoute(name,param);
  if(name==='lesson'&&session.activeLesson!==param){session.activeLesson=param;session.lessonTab='對話';}
- const views={home:()=>homeView(ctx),kana:()=>kanaView(ctx),unit:()=>unitView(ctx,param),stroke:()=>strokeView(ctx,param),write:()=>writingView(ctx,param||kana[0].id),life:()=>lifeView(ctx),lesson:()=>lifeLessonView(ctx,param),review:()=>reviewView(ctx),profile:()=>profileView(ctx),quiz:quizView,exam:()=>`${heading('一步一步，走向 N3。','完整檢定課程與模擬試卷會在後續版本加入。')}<section class="self-check"><h2>現在先把基礎練穩</h2><p>這一版可練完整五十音、音韻與六個生活任務。這些課程與進度不是 JLPT 合格證明。</p>${primary('練習五十音','kana')}</section>`};
+ const views={'kana-guide':()=>kanaGuideView(),home:()=>homeView(ctx),kana:()=>kanaView(ctx),unit:()=>unitView(ctx,param),stroke:()=>strokeView(ctx,param),write:()=>writingView(ctx,param||kana[0].id),life:()=>lifeView(ctx),lesson:()=>lifeLessonView(ctx,param),review:()=>reviewView(ctx),profile:()=>profileView(ctx),quiz:quizView,exam:()=>`${heading('一步一步，走向 N3。','完整檢定課程與模擬試卷會在後續版本加入。')}<section class="self-check"><h2>現在先把基礎練穩</h2><p>這一版可練完整五十音、音韻與六個生活任務。這些課程與進度不是 JLPT 合格證明。</p>${primary('練習五十音','kana')}</section>`};
  for(const [view,renderer] of Object.entries(v2.views))views[view]=()=>renderer(param);
  views.life=()=>v2.views.level('L');views.lesson=()=>v2.views.study(param);
  for(const [view,renderer] of Object.entries(v3.views))views[view]=()=>renderer(param);
@@ -100,7 +103,7 @@ function render(focus=true){
   const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
- kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);kanaPocketReview.afterRender(name,param);v2.afterRender(name,param);v3.afterRender(name,param);
+ kanaNotebook.afterRender(name,param);kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);kanaPocketReview.afterRender(name,param);v2.afterRender(name,param);v3.afterRender(name,param);
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
 }
 function phonologyQuestions(lessonId){return (kanaPhonology.find(p=>p.lessonId===lessonId)?.questions||[]).map((q,i)=>({item:`${lessonId}-p${i}`,dimension:'language',prompt:q.prompt,options:q.choices.map((label,j)=>({value:String(j),label})),correct:q.choices.indexOf(q.answer),explanation:q.explanation}));}
