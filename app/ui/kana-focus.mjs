@@ -1,13 +1,14 @@
 import {rhythmCards,rhythmGroups} from '../content/kana-focus.mjs';
 import {selectRepairQuestions,pendingRepair} from '../core/kana-focus.mjs';
 import {pendingRhythm} from '../core/kana-rhythm.mjs';
+import {kanaNextStep} from '../core/kana-next.mjs';
 import {escapeHtml as e,heading,back,primary,note,audioButton} from './shared.mjs';
 export function beatState(session,id){
  if(session.kanaBeat?.id!==id)session.kanaBeat={id,taps:0,revealed:false};
  return session.kanaBeat;
 }
 export function pathView(ctx,time){
- const pending=pendingRepair(ctx.state),count=selectRepairQuestions(ctx.state,time).length;
+ const next=kanaNextStep(ctx.state,time);
  const paths=[
   ['剛開始，先記少量','先用三字小循環認字、聽辨，再慢慢收起圖像。',[['行段記憶導航','kana-row'],['清濁聲音家族','kana-family'],['平片互換三題','kana-bridge'],['看字想聲翻卡','kana-flip'],['一次三字','kana-mini'],['提示慢慢退場','kana-fade']]],
   ['容易混淆，找出差異','依實際錯答選練習，或回到字卡找一處記憶線索。',[['不熟字口袋','kana-pocket'],['混淆字二選一','kana-duel'],['弱點三題','kana-repair'],['混淆字專練','kana-confusions'],['寫自己的線索','kana-notes']]],
@@ -15,8 +16,8 @@ export function pathView(ctx,time){
   ['隔天再想，看看記住多少','用真正日期留下回想紀錄；沒有符合項目時不用硬補題。',[['隔天檢查','kana-check'],['七日回想','kana-week'],['回想小結','kana-recall'],['記憶地圖','kana-map']]]
  ];
  return back('練習工坊','kana-studio')+heading('今天，先練一件事。','不必每個入口都做，選最貼近你現在需要的一種。')+
- '<section class="hero"><h2>'+(pending?'先接續原來那輪。':count?'有'+count+'個字可以再想一次。':'先從三個字開始。')+'</h2>'+primary(pending?'接續弱點回想':count?'開始弱點三題':'做一輪三字',pending?'v3-practice/'+pending.id:count?'kana-repair':'kana-mini')+'</section>'+
- paths.map(([title,description,links])=>'<section class="v3-section"><h2>'+title+'</h2><p>'+description+'</p><nav class="ks-links" aria-label="'+title+'">'+links.map(([label,route])=>'<a href="#'+route+'">'+label+'</a>').join('')+'</nav></section>').join('')+note('當天看懂是進步，隔天獨立想起來再另外記錄。書寫與發音仍需分開練習。');
+ '<section class="hero"><h2>'+e(next.title)+'</h2><p>'+e(next.reason)+'</p><p>今天已有 '+next.today+' 個字留下認字／聽辨／詞語回想紀錄，不代表已熟練。</p>'+primary(next.kind==='resume'?'接續原來這輪':'走這一小步',next.route)+'</section>'+primary('不知道怎麼選？看完整學習指南','kana-guide')+primary('找回自己的記憶線索','kana-notes')+
+ '<details><summary>想自己選？展開全部練法</summary>'+paths.map(([title,description,links])=>'<section class="v3-section"><h2>'+title+'</h2><p>'+description+'</p><nav class="ks-links" aria-label="'+title+'">'+links.map(([label,route])=>'<a href="#'+route+'">'+label+'</a>').join('')+'</nav></section>').join('')+'</details>'+note('推薦只依目前保存的紀錄；不自動開題或更動口袋。當天看懂是進步，隔天獨立想起來再另外記錄。書寫與發音仍需分開練習。');
 }
 export function repairView(ctx,time){
  const pending=pendingRepair(ctx.state),questions=selectRepairQuestions(ctx.state,time),latest=ctx.state.v3.sessions.filter(s=>s.source==='kana-repair'&&s.completedAt).at(-1);
