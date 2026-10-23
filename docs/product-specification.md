@@ -188,3 +188,12 @@ kana-pocket內整合聽辨入口與最近結果，不增導覽。source=kana-poc
 kana-path依cutoff唯讀快照：最早未完成kana輪／默寫→七日→隔天→弱點→口袋→新三字或當日收尾；當日完成不重複推薦，實際字數非熟練。kana-notes索引合併保存／草稿，搜尋與script/group/scope篩選、10筆分頁、明示表單／IME守護、焦點與空結果復原。索引當頁及單字編輯頁按實際文字曝光，同步七日／默寫cache。kana-guide六段學習指南，首頁／工坊有入口。無新source或schema，原題、答案、口袋與備份不改。
 
 見[完成矩陣](kana-memory-completion.md)、[規劃](plans/2026-10-23-kana-memory-completion.md)與[驗收](kana-memory-completion-validation.md)。
+
+
+## 生活日語記憶與複習（v0.22.0，2026-10-23）
+
+life-memory依程度／20場景找到起步12課與80分級情境。每課最多三句不重複原對話：中文回想→完整合成例句／日文讀音按需展開→原題三題（聽解、填空／排序、情境理解）。life-check每天一輪、最多三題且每課一題，只挑較早日期做過、今天未作答的原題；以cutoff內attempts重建reviews，錯答／提示與到期優先。中斷可續，兩新來源共一pending，與原完整課回想分開。
+
+schema3增加optional lifeHints，每題每天最早可見參考ISO時間，合併保留最早值與不同日期，上限20000筆。本課記憶卡參考與原課可見教材、展開寫作參考、逐題提示／答後曝光另存，不回寫原首答；正常聽解題刺激音不當成額外提示。跨日比較排除提示、中途另練、同時作答及缺少較早紀錄，與同日加練及自由輸出分開。首頁、生活主題、單課、練習有入口與穩定返回／位置路徑。
+
+見[規劃](plans/2026-10-23-life-memory.md)與[驗收](life-memory-validation.md)。

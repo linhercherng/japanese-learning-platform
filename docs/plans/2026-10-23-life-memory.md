@@ -22,20 +22,20 @@ lifeHints以原qid為key、每天最早ISO曝光為value array，按台北日去
 
 Files：content/life-memory-ids.mjs、core/life-memory-state.mjs、core/life-memory.mjs、core/v3-state.mjs、core/v3-learning.mjs；tests/life-memory.test.mjs。
 
-- [ ] 先紅：92課／三題與既有音檔、三句去重、首答／提示分開、單pending、strict reference／queue、隔天三課／每日唯一／cutoff、曝光時間與合併／舊備份、原資料不變。
-- [ ] 最小核心／validators／engine整合→綠→提交。
+- [x] 先紅：92課／三題與既有音檔、三句去重、首答／提示分開、單pending、strict reference／queue、隔天三課／每日唯一／cutoff、曝光時間與合併／舊備份、原資料不變。
+- [x] 最小核心／validators／engine整合→綠→提交。
 
 ## Task 2：手機短循環與曝光
 
 Files：life-memory.mjs、ui/life-memory.mjs、main.mjs、ui/v3.mjs、ui/navigation.mjs、ui/study.mjs、ui/courses.mjs；tests/life-memory-ui.test.mjs、tests/life-memory-controller.test.mjs。
 
-- [ ] 先紅：hub分類／程度、三句中文與日文按需、正常音／三題啟動／pending遮蔽、結果與跨日小結、來源麵包屑、原課及寫作入口。
-- [ ] 控制器曝光／提示／日唯一／連按／刷新／過期／延遲／失敗匯出／原study可見內容與write參考toggle→綠，整合首頁／生活分類／單課／練習入口；提交。
+- [x] 先紅：hub分類／程度、三句中文與日文按需、正常音／三題啟動／pending遮蔽、結果與跨日小結、來源麵包屑、原課及寫作入口。
+- [x] 控制器曝光／提示／日唯一／連按／刷新／過期／延遲／失敗匯出／原study可見內容與write參考toggle→綠，整合首頁／生活分類／單課／練習入口；提交。
 
 ## Task 3：驗證與發布
 
-- [ ] 版本0.22.0，README／規格／課綱／素材／驗收；全npm test→build→check→audit。
-- [ ] requesting-code-review獨立審查，必要修補／複核。本機隔離UI三句→三題→首答／提示／刷新接續→結果、原課、隔天空狀態；320/390px、44px、鍵盤、console、HTTP shell SHA／原音檔。
+- [x] 版本0.22.0，README／規格／課綱／素材／驗收；全npm test→build→check→audit。
+- [x] requesting-code-review獨立審查，必要修補／複核。本機隔離UI三句→三題→首答／提示／刷新接續→結果、原課、隔天空狀態；320/390px、44px、鍵盤、console、HTTP shell SHA／原音檔。
 - [ ] 同head PR CI成功合併、Pages成功，正式HTTP與隔離UI／舊資料、截圖；補發布文件、push遠端一致、清理QA/server。
 
 教師／真人／實機仍依既有邊界；不把桌機尺寸當實機。回退前匯出JSON，舊版可能不識別新source／optional lifeHints，保留備份，不清DB。個人答案／草稿／QA不提交Git。
