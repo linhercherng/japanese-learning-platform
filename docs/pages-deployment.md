@@ -78,3 +78,8 @@ v0.21.0經[PR #33](https://github.com/linhercherng/japanese-learning-platform/pu
 ## 生活日語記憶與複習發布（2026-10-23，台北）
 
 v0.22.0經[PR #34](https://github.com/linhercherng/japanese-learning-platform/pull/34)同head成功CI後合併；[Pages run39882514268](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39882514268)整體completed/success，build/deploy皆success。474項測試、build→check、audit零弱點與獨立核心／UI修補複核通過；正式136份shell SHA／SW fingerprint與146次音檔HTTP抽查通過。正式隔離UI驗證三題首答、單題提示、刷新／暫停續作、參考卡遮蔽、隔天空狀態及舊五十音紀錄保留；320/390px無橫溢、新按鈕48px以上，鍵盤焦點與console通過。完整範圍、證據與實機／教師審校邊界見[生活記憶驗收](life-memory-validation.md)。
+
+
+## 生活記憶第二批發布（2026-10-23，台北）
+
+v0.23.0經[PR #35](https://github.com/linhercherng/japanese-learning-platform/pull/35)同head成功CI後合併；[Pages run39886039295](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39886039295)整體completed/success，build/deploy皆success。496項測試、build→check、audit零弱點與核心／UI獨立審查及兩次修補複核通過。正式139份shell SHA／JS MIME／SW fingerprint與146次原音檔HTTP抽查通過；正式隔離UI確認地圖原始每日首答、原輪填空回顧、弱點單題、草稿離頁／刷新／同UUID接續、pending遮蔽、原生活及五十音紀錄保留。320/390px地圖無橫溢、selector48px以上且console空。完整規劃、證據與實機／教師審校界線見[第二批驗收](life-memory-second-validation.md)。

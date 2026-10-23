@@ -29,4 +29,11 @@
 
 ## 發布證據
 
-待最後本機測試、同head CI合併、Pages成功、正式HTTP與隔離UI完成後填入。此段在完成前不表示已發布。
+- [PR #35](https://github.com/linhercherng/japanese-learning-platform/pull/35) head `66e8aec507300776ed51c7b16be9fa1697cdc973`，同head [CI run39885927201](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39885927201) completed/success後按match-head合併。
+- merge `9aa56bc403f800fae7d5167c46bd18d79e8c38d6`；[Pages run39886039295](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39886039295)整體completed/success，build/deploy皆success。deploy UTC01:49:11完成（台北09:49）。
+- 正式[生活記憶地圖](https://linhercherng.github.io/japanese-learning-platform/#life-map)及首頁／生活／練習入口可使用。
+- UTC01:51:10正式HTTP通過139份shell逐檔SHA256、JS MIME、SW fingerprint及146次原音檔抽查，fingerprint與本機一致，0重試。使用PowerShell預設TLS驗證，沒有停用憑證驗證；ignored紀錄`work/life-second-public-http.json`。
+- 正式隔離QA第一批L07原輪仍3題首答正確／2題無提示／1提示；地圖三種能力各1筆每日首答。回顧預設隱藏原值，選填空題揭開可見原「で」與原提示旗標，Enter留同按鈕焦點。弱點實際只有一課便出1題，日文草稿「で」離頁／刷新後仍保留並接續同UUID；未完成時原回顧全遮蔽。完成後只顯示弱點加練說明，沒有固定三題錯誤文案；原三題結果與每日首筆不變。
+- 正式既有五十音兩題輪仍0/2無提示、2提示，原錯答回顧／小結入口保留。正常個人資料庫未答題或改資料，所有新操作使用隔離QA。
+- 390/320px正式地圖無橫溢；320px新selector48px以上，console warn/error空。本機另驗回顧按鈕48px以上。正式截圖ignored `work/life-second-public-390.png`與`work/life-second-public-320.png`。排序／閱讀刺激與toggle以自動回歸驗證，正式手動主要走填空回顧與加練。
+- 既有正常分頁重新載入後暫離網站，讓新SW正常接手，沒有清DB／快取／SW。QA分頁與本機18124伺服器已關閉；正式分頁保留新版入口。真實隔日效果、iPhone／Android實機、教師／真人審校仍未由這批驗證完成。
