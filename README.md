@@ -1,5 +1,7 @@
 # 日和｜日語學習平台
 
+v0.25.0 生活記憶第四批新增[逐句回想卡](https://linhercherng.github.io/japanese-learning-platform/#life-memory)：92課都可選「看中文想日文」或「聽日文想意思」，一次一句，先想再揭開原句／讀音核對。想不起來時隔至少兩句再試一次；每句最多重想一次、整輪最多六次，最後接回原課三題與隔天複習。自評暫存、不增加答對數，參考曝光另存，原首答與備份保留；使用既有教材與合成音，無新素材、依賴或schema。見[規劃](docs/plans/2026-10-23-life-memory-fourth.md)與[驗收](docs/life-memory-fourth-validation.md)。
+
 v0.24.0 生活記憶第三批新增[七日生活回想](https://linhercherng.github.io/japanese-learning-platform/#life-week)、[生活複習預告](https://linhercherng.github.io/japanese-learning-platform/#life-schedule)與每日收尾。今天完成一輪便可休息；明天再想、滿七個台北日期後再確認，每輪最多三題、每課一題，只取真實練過的原題。新練習或參考會延後七日日期；原首答、提示與可比較結果分開保存，仍可主動自行加練。無新語言教材或依賴。見[規劃](docs/plans/2026-10-23-life-memory-third.md)與[驗收](docs/life-memory-third-validation.md)。
 
 

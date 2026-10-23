@@ -23,20 +23,20 @@
 
 Files: create app/core/life-cards.mjs；tests/life-cards.test.mjs。
 
-- [ ] 先紅：92課三句原值、錯誤unit/mode、先揭再評、隔兩句且最多一次重排、尾卡不連刷、最長六次、方向／重新開始隱藏、自評不改學習state。
-- [ ] 實作create/reveal/rate/summary純函式；node --test tests/life-cards.test.mjs通過，提交。
+- [x] 先紅：92課三句原值、錯誤unit/mode、先揭再評、隔兩句且最多一次重排、尾卡不連刷、最長六次、方向／重新開始隱藏、自評不改學習state。
+- [x] 實作create/reveal/rate/summary純函式；node --test tests/life-cards.test.mjs通過，提交。
 
 ## Task 2：介面、曝光與接續
 
 Files: create app/life-cards.mjs、app/ui/life-cards.mjs、tests/life-cards-ui.test.mjs、tests/life-cards-controller.test.mjs；modify app/main.mjs、app/ui/navigation.mjs、app/ui/life-memory.mjs、app/ui/life-review.mjs、app/ui/v3.mjs、app/v3.css。
 
-- [ ] 先紅：兩方向預設隱藏／原參考／音檔、pending／錯誤路徑、結尾、HTML編碼、原輪返回；曝光、刷新／離頁／舊事件、連按、失敗可匯出、共pending及三題原source測試。
-- [ ] 最小實作→生活測試全綠→提交。聲音由原media.play明示調用，成功保存曝光後才播放，避免舊事件的聲音副作用。
+- [x] 先紅：兩方向預設隱藏／原參考／音檔、pending／錯誤路徑、結尾、HTML編碼、原輪返回；曝光、刷新／離頁／舊事件、連按、失敗可匯出、共pending及三題原source測試。
+- [x] 最小實作→生活測試全綠→提交。聲音由原media.play明示調用，成功保存曝光後才播放，避免舊事件的聲音副作用。
 
 ## Task 3：驗收與發布
 
-- [ ] 獨立核心／UI審查及必要修補；本機隔離QA兩方向、隔句重想、結尾三題、原輪保留、pending遮蔽、離頁／刷新／鍵盤／320/390px／console。
-- [ ] 版本0.25.0，README／規格／課綱／畫面／來源／驗收；npm test→build→check、audit、shell SHA／JS MIME／SW及146原音HTTP。
+- [x] 獨立核心／UI審查及必要修補；本機隔離QA兩方向、隔句重想、結尾三題、原輪保留、pending遮蔽、離頁／刷新／鍵盤／320/390px／console。
+- [x] 版本0.25.0，README／規格／課綱／畫面／來源／驗收；npm test→build→check、audit、shell SHA／JS MIME／SW及146原音HTTP。
 - [ ] PR同head CI成功合併、Pages成功、正式HTTP與隔離UI／截圖、正常SW接手、補發布證據push遠端一致；關QA／server。
 
 真實記憶成效、實機、教師／真人語音審校保留為未完成。所有QA實際點擊，不注入虛構跨日歷史；答案／草稿／截圖留ignored work。沿用schema3／V1／V2及原首答／備份。
