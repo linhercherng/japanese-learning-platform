@@ -287,3 +287,11 @@ LR／LD目錄主入口依scope選真正匹配句：all第一句、written第一�
 原完整對照保留，有差異才提供一次一處視圖。沿既有Unicode LCS序列把相鄰own/original分一處，附最多4碼點共同前後定位，插入／刪除保留空側；不是詞彙／文法切分或翻譯評分。上一／下一處不越界、回完整維持原own，focus到差異標題；一處頁不另列全文／讀音／音訊，但若整句都不同，該片段可能包含全文。沒有差異不提供無效入口。
 
 所有對照（含完全相同）可收起答案從空白再想，只改暫存comparison／hint／index及blank buffer，不改任何原稿或舊LB，輸入後才更新同句同模式最新LB。未輸入退出可接續上次LB；刷新／換句收起。差異切換與重想不新增參考曝光或作答／得分，原compare已沿durable保存參考。pending／busy／ref／route epoch／IME／latest cache及失敗可匯出保持。無新保存欄位／schema／教材或依賴。見[規劃](plans/2026-10-23-life-memory-thirteenth.md)。
+
+## 生活記憶第十四批（v0.35.0，2026-10-23）
+
+僅已展開的一處差異可進「遮住這一處，自己補回」，同時遮原片段與當次整句差異，只留原共同前後最多4碼點定位。片段不是詞彙／文法切分；無共同定位時提醒該處可能含整句，可回完整對照查看。不額外顯日文全文／讀音／中文／音訊。
+
+片段input/form/IME與整句分流，300字、逐字不trim，輸入不重繪／不寫DB或latest cache，也不記曝光／作答。刷新／換句／模式／離開丟暫存，明示整句草稿保持。主動核對才揭兩側字元差異／空側，不計分；空submit禁用，但永遠提供明示「這裡不需要文字」，避免選項洩漏空答案。可再遮試一次／回同處差異／整句從空白再想；未輸入整句時不改舊LB。
+
+選字中不可核對／空答或重繪切換；pointerdown記當刻IME，防止blur先compositionend後click/submit誤啟用，本次click取消預設或submit消耗鎖，pointercancel／下一次pointerdown／route清除。原busy／epoch／ref／pending原UUID、原LR／LD／LB／LN／作品／首答與失敗可匯出維持。無新資料欄位／schema／教材／評分source；詳見[規劃](plans/2026-10-23-life-memory-fourteenth.md)。
