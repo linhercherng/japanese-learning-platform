@@ -1,3 +1,5 @@
+import {jlptCueSeen} from './jlpt-memory-state.mjs';
+import {isJlptSource} from '../content/jlpt-memory-ids.mjs';
 import {lifeCueSeen} from './life-memory-state.mjs';
 import {isLifeSource} from '../content/life-memory-ids.mjs';
 import {rhythmCueSeen} from '../content/kana-rhythm.mjs';
@@ -51,14 +53,14 @@ export function answerV3Session(state,{sessionId,question,value,eventId,time,var
  if(entry.repeat?s.corrections[s.cursor]:s.answers[question.id])return state;
  const exposure=next.v3.kanaHints?.[question.reviewItem]?.lastHintAt;
  if(s.source==='kana-week'&&exposure&&Date.parse(exposure)<=Date.parse(time)&&(Date.parse(exposure)>=Date.parse(s.createdAt)||(Date.parse(studyDay(time))-Date.parse(studyDay(exposure)))/86400000<7)&&!s.hints.includes(question.id))s.hints.push(question.id);
- const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id)||isLifeSource(s.source)&&lifeCueSeen(next.v3.lifeHints,question.id,s.createdAt,time,s.source==='life-week'?7:1)||rhythmCueSeen(next.v3.rhythmHints,question,s.createdAt,time)||['kana-duel','kana-bridge','kana-family','kana-row','kana-pocket-listen','kana-contrast'].includes(s.source)&&duelCueSeen(next.v3.kanaHints,question,s.createdAt,time),time};
+ const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id)||jlptCueSeen(next.v3.jlptHints,question.id,s.createdAt,time,s.source==='jlpt-week'?7:1)||isLifeSource(s.source)&&lifeCueSeen(next.v3.lifeHints,question.id,s.createdAt,time,s.source==='life-week'?7:1)||rhythmCueSeen(next.v3.rhythmHints,question,s.createdAt,time)||['kana-duel','kana-bridge','kana-family','kana-row','kana-pocket-listen','kana-contrast'].includes(s.source)&&duelCueSeen(next.v3.kanaHints,question,s.createdAt,time),time};
  if(entry.repeat)s.corrections[s.cursor]=a;
  else{
   s.answers[question.id]=a;
   next=recordAnswer(next,{id:eventId,item:question.reviewItem||question.id,dimension:question.dimension,correct:a.correct,hinted:a.hinted,time,...(!a.correct&&confusedKana(question,value)?{kanaConfusion:confusedKana(question,value)}:{})});s=next.v3.sessions.find(s=>s.id===sessionId);
   if(!a.correct||a.hinted){
    const following=s.queue.length-s.cursor-1;
-   const variant=(isLifeSource(s.source)?[]:variants).find(q=>q.conceptId&&q.conceptId===question.conceptId&&q.dimension===question.dimension&&!s.queue.some(entry=>entry.questionId===q.id));
+   const variant=(isLifeSource(s.source)||isJlptSource(s.source)?[]:variants).find(q=>q.conceptId&&q.conceptId===question.conceptId&&q.dimension===question.dimension&&!s.queue.some(entry=>entry.questionId===q.id));
    if(following>=2&&variant)s.queue.splice(s.cursor+3,0,{questionId:variant.id,repeat:true,sourceId:question.id});
    else s.deferred.push(question.id);
   }
