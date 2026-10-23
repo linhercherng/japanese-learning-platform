@@ -1,3 +1,4 @@
+import {validateLifeNotes,mergeLifeNotes} from './life-notes-state.mjs';
 import {validLifeReference,isLifeSource} from '../content/life-memory-ids.mjs';
 import {validateLifeHints,mergeLifeHints,validateLifeExposure} from './life-memory-state.mjs';
 import {validatePocket,mergePocket} from './kana-pocket-state.mjs';
@@ -63,7 +64,7 @@ function validateWeekExposure(sessions,hints){
  }
 }
 export function validateV3(v,artifacts=[]){
- shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'lifeHints')?['lifeHints']:[]),...(Object.hasOwn(v,'kanaPocket')?['kanaPocket']:[]),...(Object.hasOwn(v,'rhythmHints')?['rhythmHints']:[]),...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'lifeHints'))validateLifeHints(v.lifeHints);if(Object.hasOwn(v,'kanaPocket'))validatePocket(v.kanaPocket);if(Object.hasOwn(v,'rhythmHints'))requireValue(validRhythmHints(v.rhythmHints),'節奏提示紀錄不正確。');if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
+ shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'lifeNotes')?['lifeNotes']:[]),...(Object.hasOwn(v,'lifeHints')?['lifeHints']:[]),...(Object.hasOwn(v,'kanaPocket')?['kanaPocket']:[]),...(Object.hasOwn(v,'rhythmHints')?['rhythmHints']:[]),...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'lifeNotes'))validateLifeNotes(v.lifeNotes);if(Object.hasOwn(v,'lifeHints'))validateLifeHints(v.lifeHints);if(Object.hasOwn(v,'kanaPocket'))validatePocket(v.kanaPocket);if(Object.hasOwn(v,'rhythmHints'))requireValue(validRhythmHints(v.rhythmHints),'節奏提示紀錄不正確。');if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
  requireValue(Array.isArray(v.dailyPlans)&&v.dailyPlans.length<=60&&new Set(v.dailyPlans.map(p=>p.id)).size===v.dailyPlans.length);
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
@@ -113,6 +114,7 @@ export function mergeV3(a,b,{blank=false,artifacts=[]}={}){
  for(const [child,parent] of Object.entries(b.artifactParents)){if(next.artifactParents[child])requireValue(next.artifactParents[child]===parent,'作品修訂分支衝突，未匯入');next.artifactParents[child]=parent;}
  if(a.rhythmHints||b.rhythmHints){next.rhythmHints={...a.rhythmHints};for(const [key,value] of Object.entries(b.rhythmHints||{}))if(!next.rhythmHints[key]||Date.parse(value)>Date.parse(next.rhythmHints[key]))next.rhythmHints[key]=value;}
  if(a.kanaHints||b.kanaHints)next.kanaHints=mergeHintRecords(a.kanaHints,b.kanaHints);
+ if(a.lifeNotes||b.lifeNotes)next.lifeNotes=mergeLifeNotes(a.lifeNotes,b.lifeNotes);
  if(a.lifeHints||b.lifeHints)next.lifeHints=mergeLifeHints(a.lifeHints,b.lifeHints);
  if(a.kanaNotes||b.kanaNotes)next.kanaNotes=mergeKanaNotes(a.kanaNotes,b.kanaNotes);
  if(a.kanaPocket||b.kanaPocket)next.kanaPocket=mergePocket(a.kanaPocket,b.kanaPocket);

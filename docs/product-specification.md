@@ -230,3 +230,10 @@ life-skill/<unit>讓92課按聽解、自主填空／排序、字詞／情境理�
 新增life-skill來源unit:skill，1～3原qid驗證、無插入訂正，與其他生活來源共pending。原題／首答／提示／備份／schema3延續，結果說明實際能力與題數並接回顧、寫作、隔天與預告。無新教材或依賴。
 
 見[規劃](plans/2026-10-23-life-memory-fifth.md)與[驗收](life-memory-fifth-validation.md)。
+
+
+## 生活記憶第六批（v0.27.0，2026-10-23）
+
+life-notes/<unit>是個人情境線索，92課各160字，草稿與已保存文字分開。預設收起、離頁／刷新收起；任一生活pending全遮蔽並接同UUID。非空文字展開、輸入或保存，保守記本課全qid參考；空編輯器與索引不記。線索不新增作答／完成／熟練度、不改首答。life-notes索引搜尋課名與個人文字、程度／場景／已保存或草稿，10課一頁，只有狀態沒有正文預覽。
+
+schema3 optional lifeNotes（92key，text／updatedAt）與text:LN-<unit>草稿（160字，空points）。新舊線索依實際時間合併，同時異文拒絕；空文字墓碑保留移除意圖。舊草稿對消、新草稿保留，同時異文拒絕。input不中斷IME，明示保存，連按鎖／route epoch／新輸入版本保護；寫入失敗留可匯出候選及最新快取。鍵盤收起／保存／搜尋／翻頁均接續焦點，scroll margin避開目前路徑。見[規劃](plans/2026-10-23-life-memory-sixth.md)與[驗收](life-memory-sixth-validation.md)。

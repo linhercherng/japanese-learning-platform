@@ -49,6 +49,7 @@ export function navigationContext(ctx,name='home',param){
   case 'life-map':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活記憶地圖',route)];break;
   case 'life-round':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活記憶地圖','life-map'),item('本輪逐題回顧',route)];break;
   case 'life-cards':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item(unitById.get(param)?.title||'生活單元','life-memory/'+param),item('逐句回想卡',route)];break;
+  case 'life-notes':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活線索簿','life-notes'),...(param?[item(unitById.get(param)?.title||'生活單元','life-memory/'+param),item('我的生活線索',route)]:[])];break;
   case 'life-skill':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),...(param?[item(unitById.get(param)?.title||'生活單元','life-memory/'+param)]:[]),item('生活能力專練',route)];break;
   case 'life-memory':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory')];if(param)trail.push(item(unitById.get(param)?.title||'生活單元',route));break;
   case 'life-check':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('隔天生活複習',route)];break;
