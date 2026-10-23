@@ -24,7 +24,13 @@ source=kana-contrast，reference=兩個kana ID，kp動態題兩方向；strict�
 
 本機126份shell SHA-256、JS MIME與SW fingerprint一致，128次既有音檔HTTP抽查通過；2026-10-22 23:51:30 UTC（台北10/23 07:51）。fingerprint `bc45fc2a0a60ea7ea5b4622bc94057fb43c567c3eb6c70af09ecb11d7d8df5d6`，ignored work/fifteenth-local-http.json。
 
-GitHub與正式發布尚待執行，完成後補上證據。
+已經[PR #31](https://github.com/linhercherng/japanese-learning-platform/pull/31)發布。PR head `0362b82b6fd22c9477f4a79cb7d12bd1c92d087a` 的[CI run39874695588](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39874695588)整體completed/success，build的測試／建置／校驗／audit通過，PR deploy依設計略過；按同head合併為 `377b776b02698dc20d2ecfe283632d3d44132aa5`。[Pages run39874860680](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39874860680)整體completed/success，build/deploy皆success，部署完成2026-10-22 23:56:05 UTC（台北10/23 07:56）。
+
+正式HTTPS 126份shell SHA-256、JS MIME與SW fingerprint一致，128次既有音檔抽查通過；2026-10-22 23:57:11 UTC（台北10/23 07:57）。fingerprint與上述本機版本相同；ignored work/fifteenth-public-http.json保存結果。
+
+正式隔離QA從既有原錯答「パ選成ベ」展開雙卡，再進入無字音預覽入口，空白鍵起輪。先ベ、後パ，每題兩音鈕及兩選項。第一題正常／慢速播放後選ベ，顯示提示後答對；刷新保留同UUID、首答與disabled選項。第二題暫停回同字對，再回口袋只提供接續同輪；原逐字回顧深連結也遮蔽字卡與解說。從此接續仍是同UUID的2/2，明示提示後刻意選ベ錯答，完成0/2無提示首答、2題提示且沒有repeat。
+
+完成回同一字對入口可看最近結果；口袋仍3字。原回顧仍為パ、原選字ベ、首答答錯／用過提示，原輪結果仍0/3無提示首答、3題提示。正式320/390px共9個入口／題目／刷新回饋／pending／原回顧遮蔽／錯答／結果狀態無橫溢，main button/select/primary至少44px，console warn/error空。ignored work/fifteenth-qa/public-layout.json與public-390-listen.jpg保存測量和正式頁截圖；QA分頁關閉、尺寸重置，正常個人資料未寫入，正式網站分頁保留。本機server已停止，QA資料及截圖未提交公開Git。
 
 ## 邊界與回退
 

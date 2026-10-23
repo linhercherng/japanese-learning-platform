@@ -60,3 +60,7 @@ v0.17.0經[PR #29](https://github.com/linhercherng/japanese-learning-platform/pu
 ## 五十音第十四批發布（2026-10-23，台北）
 
 v0.18.0經[PR #30](https://github.com/linhercherng/japanese-learning-platform/pull/30)按必要build成功的同一head合併；[Pages run39818239248](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39818239248)整體completed/success、build/deploy皆success。396項測試、build/check/audit、獨立審查與修補複核通過；正式122份shell雜湊與128次音檔HTTP相符，隔離瀏覽器確認原錯答雙卡、兩字音、遮住／核對、刷新及原統計保留。PR workflow總狀態仍in_progress，與已完成必要檢查分開記錄；完整證據與邊界見[第十四批驗收](kana-fourteenth-validation.md)。
+
+## 五十音第十五批發布（2026-10-23，台北）
+
+v0.19.0「錯字雙向聽辨」經[PR #31](https://github.com/linhercherng/japanese-learning-platform/pull/31)同head合併；PR CI整體completed/success，[Pages run39874860680](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39874860680)整體completed/success、build/deploy皆success。415項測試、build/check/audit、獨立審查與共用pending複核通過。正式126份shell雜湊、SW fingerprint及128次音檔HTTP相符；正式隔離瀏覽器從パ／ベ原錯答進入兩題，驗證刷新、暫停續作、單一未完成輪、提示分列與原首答保留，320/390px無橫溢且主要觸控目標至少44px。完整證據、截圖位置與實機／教師審校邊界見[第十五批驗收](kana-fifteenth-validation.md)。

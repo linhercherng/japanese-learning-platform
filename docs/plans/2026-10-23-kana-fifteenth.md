@@ -38,6 +38,6 @@ Files：app/ui/kana-contrast.mjs、app/kana-contrast.mjs、app/main.mjs、app/ui
 
 - [x] 隔離真實瀏覽器原錯答→雙卡→兩題→刷新／暫停接續→結果，原首答與自評不變；320/390px、44px、焦點與console。
 - [x] requesting-code-review獨立審查，必要修補及重驗；本機shell SHA/MIME/SW與既有音檔HTTP通過。
-- [ ] PR必要檢查成功、同head合併、Pages成功；正式HTTP／隔離瀏覽器／截圖，補發布文件push與remote同步；清理QA及server。
+- [x] PR必要檢查成功、同head合併、Pages成功；正式HTTP／隔離瀏覽器／截圖，補發布文件push與remote同步；清理QA及server。證據見[第十五批驗收](../kana-fifteenth-validation.md)。
 
 沿用208卡、508筆順、10947音檔索引與K包668檔，既有試用訣竅／合成音仍待獨立教師審校。實機依先前決定略過；個人線索／答案與QA不提交公開Git。
