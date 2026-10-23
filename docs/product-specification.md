@@ -253,3 +253,10 @@ life-dictation目錄以程度／場景篩選92課，僅課名／草稿句數，�
 預設不在DOM顯示個人草稿或原句，主動開始才出300字textarea；刷新／離頁／換句收起但各句草稿保留。任一life pending全遮蔽並接原UUID；聽音、非空稿展開／輸入、原句對照保守記本課全部qid參考，舊首答保持。schema3 drafts加text:LD-<unit>:<slot>（0..2），text／time／空points嚴格驗證，實際時間合併、同時異文拒絕、空稿保留移除意圖，原寫作／LN／作品不覆寫。
 
 input先cache後串行寫入，不重繪；route epoch／busy／ref保護與IME組字版本失效，延遲對照遇新input或新compositionstart均不重繪。失敗候選及最新輸入可匯出，曝光保存成功才揭原句／播音。焦點於對照標題／回編輯／收起按鈕間接續，48px控制項及目前路徑延續。詳見[規劃](plans/2026-10-23-life-memory-eighth.md)與[驗收](life-memory-eighth-validation.md)。
+
+
+## 生活記憶第九批（v0.30.0，2026-10-23）
+
+life-recall目錄／life-recall/<unit>:<0..2>為中文到日文整句回想。沿用92課276句原中文意思，主動開始且參考曝光保存成功後才顯中文與300字編輯器；對照前不提供原日文、讀音或音訊。明示對照後用原有Unicode序列差異、唯讀雙文及合成原音／0.75慢速核對，收起回中文與最新草稿重想。同一意思可能有其他說法，差異不判自由翻譯、文法自然度或得分。
+
+獨立text:LR-<unit>:<slot>草稿與LD聽寫／LN／原課寫作／作品共存；共用300字／合法ref／欄位／時間／空points驗證，實際時間較新者勝、同時異文拒絕、較新空稿不復活。schema3與V1/V2保持，沒有新作答source、完成或熟練度。開始即保守記本課全部原qid參考，後續原題另列提示，舊首答不變；pending全遮蔽並接原UUID。共用控制器保留mode／route epoch／ref／busy／IME／latest cache與失敗可匯出；換模式、句子、刷新均收起。見[規劃](plans/2026-10-23-life-memory-ninth.md)與[驗收](life-memory-ninth-validation.md)。

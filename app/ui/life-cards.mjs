@@ -12,7 +12,7 @@ export function lifeCardsView(ctx,unitId){
  if(p)return `${top}<section class="hero"><h2>先接續未完成的生活回想</h2><p>原句與自評卡先收起，完成原輪後再對照。</p>${primary('接續原輪生活回想','v3-practice/'+p.id)}</section>`;
  const attrs=`data-life-cards-unit="${e(unitId)}" data-life-cards-run="${ui.run}"${round?` data-life-cards-cursor="${round.cursor}"`:''}`;
  const button=(label,action,extra='',style='secondary')=>`<button class="${style}" data-life-cards-action="${action}" ${attrs} ${extra}>${label}</button>`;
- const dictationLink=`<nav class="resource-links"><a href="#life-dictation/${e(unitId)}:0">聽一句，自己寫出整句日文</a></nav>`;
+ const dictationLink=`<nav class="resource-links"><a href="#life-recall/${e(unitId)}:0">看中文，想一句日文</a><a href="#life-dictation/${e(unitId)}:0">聽一句，自己寫出整句日文</a></nav>`;
  const guidance=note('這是暫存自評，不增加答對數或課程完成。離頁、刷新或換方向會收起並重新開始；實際看過或聽過的本課參考仍會保存，今日作答另列提示。');
  if(!round)return `${top}<section class="self-check"><h2>今天選一個方向就好</h2><p>每次只看一句。先自己想，再揭開核對；這裡使用原課三句與合成音。</p><div class="life-card-directions">${button('看中文，想日文','start','data-life-cards-mode="meaning"','primary')}${button('聽日文，想意思','start','data-life-cards-mode="sound"')}</div><p>想不起來時，隔至少兩句再試一次；間隔不足就留到稍後。每句最多重想一次，整輪最多六次。</p></section>${dictationLink}${guidance}`;
  const summary=lifeCardSummary(round);

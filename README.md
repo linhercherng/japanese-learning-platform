@@ -1,5 +1,7 @@
 # 日和｜日語學習平台
 
+v0.30.0 生活記憶第九批新增[看中文，想一句日文](https://linhercherng.github.io/japanese-learning-platform/#life-recall)：92課共276句，先看原課中文意思，自己想日文並打字，再對照文字差異、收起原句重想。中文回想與聽寫各自保存300字草稿；對照前不出日文／讀音／音訊。不是唯一翻譯正解或作文評分，保留原首答與提示、線索及備份。見[規劃](docs/plans/2026-10-23-life-memory-ninth.md)與[驗收](docs/life-memory-ninth-validation.md)。
+
 v0.29.0 生活記憶第八批新增[一次一句生活聽寫](https://linhercherng.github.io/japanese-learning-platform/#life-dictation)：92課共276句原課日文，聽原音或慢速後先自己打字，再展開原句查看字元差異。每句300字草稿分開保存，刷新與換句先收起；文字差異不判同義句或作文自然度，不加入答對數。沿用原首答、提示與個人線索，無新教材／音檔／依賴。見[規劃](docs/plans/2026-10-23-life-memory-eighth.md)與[驗收](docs/life-memory-eighth-validation.md)。
 
 v0.28.0 生活記憶第七批新增[同主題，換場景回想](https://linhercherng.github.io/japanese-learning-platform/#life-topic)：20主題可設L～N2程度上限，只從實際練過的原題挑最多三個不同單元、一課一題。錯答／提示優先，再到期及其他已練；沒有歷史不塞新題，只有一課也清楚說明。程度與主題留在網址，原輪續作、提示、首答、個人線索及跨日規則保留。見[規劃](docs/plans/2026-10-23-life-memory-seventh.md)與[驗收](docs/life-memory-seventh-validation.md)。
