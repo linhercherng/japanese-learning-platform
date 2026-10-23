@@ -22,18 +22,18 @@
 ## Task 1：介面與狀態契約
 
 Files: tests/life-fragment-ui.test.mjs、tests/life-fragment-controller.test.mjs。
-- [ ] RED：按需入口、遮原／己片段、上下文／空側／編碼／無差異／pending、暫存說明與揭露後核對；controller空選／IME／300字／零寫入／路由及原稿保留。
+- [x] RED：按需入口、遮原／己片段、上下文／空側／編碼／無差異／pending、暫存說明與揭露後核對；controller空選／IME／300字／零寫入／路由及原稿保留。
 
 ## Task 2：實作與審查
 
 Files: app/ui/life-dictation.mjs、app/life-dictation.mjs、app/v3.css。
-- [ ] GREEN：共用既有difference與字元比較，不新增core保存資料；暫存fragment input／form及composition分流，不重繪input。
-- [ ] GREEN：合法狀態／pending／route／busy／IME保護、回一處／重試／整句空白再想，獨立UI與保存／邊界審查。
+- [x] GREEN：共用既有difference與字元比較，不新增core保存資料；暫存fragment input／form及composition分流，不重繪input。
+- [x] GREEN：合法狀態／pending／route／busy／IME保護、回一處／重試／整句空白再想，獨立UI與保存／邊界審查。
 
 ## Task 3：驗證與發布
 
-- [ ] 0.35.0與README／規格／課綱／畫面／來源／驗收，完整npm test→build→check／audit、160 shell SHA／MIME／SW與146原音HTTP。
-- [ ] 本機?qa=1遮一處→輸入→核對／再試→整句空白再想→舊LB仍在，空原片段／明示空答、雙模式／刷新／原輪UUID／舊首答線索；五種寬度／48px／Tab／console／截圖。
+- [x] 0.35.0與README／規格／課綱／畫面／來源／驗收，完整npm test→build→check／audit、160 shell SHA／MIME／SW與146原音HTTP。
+- [x] 本機?qa=1遮一處→輸入→核對／再試→整句空白再想→舊LB仍在，空原片段／明示空答、雙模式／刷新／原輪UUID／舊首答線索；五種寬度／48px／Tab／console／截圖。
 - [ ] PR同head CI再合併，Pages整體／build／deploy成功，正式HTTP／正常SW與隔離UI通過，文件證據push遠端一致；回正常入口、恢復viewport、停server。
 
 片段為當次回想，不評自由翻譯／文法／口說或跨日記憶。無新語言教材，教師／真人審校、實機OS日文鍵盤與長期效果仍另列未驗證。不清DB／快取／SW、不注入歷史，個人資料及QA不提交Git，回退先匯出JSON保留資料。

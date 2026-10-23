@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "9af18b876fd610d9b2329debb1bae6e1e20ec059c8ae90b0ec825458989afb53",
+  "fingerprint": "f41750c08143511c0f8067051da2c95cc65ba6c59349f6a27c3b8f50590b55b2",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -274,7 +274,7 @@
     "kana-sixth.mjs": "1d63a4ef970ef67947dcde0fa1da206e7da18f5d1cae6cec26c9cb7a6aa3dccb",
     "kana-studio.mjs": "76a6782a99642e70651593aa93d290adbbb092f71a575f8fe08ffa0627a2e137",
     "life-cards.mjs": "b74ad9106d5293bc39b52376bbe1738e5a856a5117ccc85edff5a613cf618dd4",
-    "life-dictation.mjs": "8866c1228ed0204e986694bf28871cf8b638bdd2632074229827de2f05658d40",
+    "life-dictation.mjs": "068d9791abc8bc55898c4fb76c5a91228b8b9327596a18f3f694a5eec38abbfd",
     "life-memory.mjs": "a5fcf7f565e75233c2c2192e2668772fcdcab4fefe401ecb1ef744bac33aad2e",
     "life-notes.mjs": "2434a3223c0d48aaf1a4e249768169152894d90a691dba9c686c34cb6f4b964a",
     "life-retention.mjs": "edf5e681401e3be322812638d3c079022e219291cd2568346f7a681eee65f701",
@@ -303,7 +303,7 @@
     "ui/kana.mjs": "a9decb07481fedd226740423320428d582ede27336dee8da0939f0efca23c1ce",
     "ui/library.mjs": "e55c28faf715e0ce059c1f5d5e9337d8c77ee4d68d918db9afdfb96f31147d2f",
     "ui/life-cards.mjs": "ceb518639555f05c59c59c8f3c9c8dfcc1d3947aa83d6f71679cc93d6d3366db",
-    "ui/life-dictation.mjs": "7eb890d565333e9a4734d90fc1e5134b353010e8b695411c31a80b196ce3c567",
+    "ui/life-dictation.mjs": "a9ce530e78dd9aeba174f1dee6bfc5bb24c4feb4313115cb11a498d102918ffd",
     "ui/life-memory.mjs": "3c440e6b2c9facc2630547c71be25840522d8b2a50795292d04cf855dba7695b",
     "ui/life-notes.mjs": "ab4871ac7f20583c8c775b2e73f70edd050d18af4315e7c4008f5d625e6b9b57",
     "ui/life-retention.mjs": "48a520a428d53f552f52555b1120cd602b6305e306bd1923931988749f179728",
@@ -322,8 +322,8 @@
     "ui/writing.mjs": "7cf8774598aa5d072b29ae12cbb08917c186bd7da3cb449d806078f316686991",
     "v2.css": "16a7170fa42a4b23f5b1ba6e63d0422ab5a054dbbe4bbb5106e9ad99e1740f70",
     "v2.mjs": "ab20b6c5197601b8fec1eeceacdf8c680a80500a23dc9242c56a6808c91463d9",
-    "v3.css": "d17db046d8848455301ba3ac2fb8f4f4fa5cd93cc75ae750c71bf33d70076dc0",
+    "v3.css": "69eacd1a35f1928d82747af5048d20de4484dbda61ab85baf8dfc975d480b887",
     "v3.mjs": "69c8db92cb73bee69921d8d82822a71aee69572b9e80c69af4baea5bd7d691be"
   },
-  "bytes": 8414076
+  "bytes": 8418923
 }
