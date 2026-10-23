@@ -32,7 +32,7 @@ export function createLifeCardsController({getContext,update,render,toast,now,id
    if(kind==='audio')await play(line.jp,Number(d.lifeCardsRate));else{ui.round=revealLifeCard(original);render(false);focus();}
   }finally{busy=false;}
  }
- function click(event){const b=event.target.closest('button');if(!b?.dataset.lifeCardsAction)return;b.disabled=true;action({...b.dataset}).catch(error=>toast(error.message)).finally(()=>{if(b.isConnected)b.disabled=false;});}
+ function click(event){const b=event.target.closest('button');if(!b?.dataset.lifeCardsAction)return;const focused=document.activeElement===b;b.disabled=true;action({...b.dataset}).catch(error=>toast(error.message)).finally(()=>{if(b.isConnected){b.disabled=false;if(focused&&document.activeElement===document.body)b.focus({preventScroll:true});}});}
  function afterRender(name,param){if(name!=='life-cards')return;const ui=lifeCardsLocal(getContext().session);if(ui.unitId===param&&ui.round?.revealed&&!pendingLife(getContext().state))exposure(param,now()).catch(error=>toast(error.message));}
  document.addEventListener('click',click);
  return {views:{'life-cards':unit=>lifeCardsView(getContext(),unit)},onRoute,afterRender,dispose(){disposed=true;document.removeEventListener('click',click);}};

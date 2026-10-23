@@ -3,9 +3,9 @@ import * as controller from '../app/life-cards.mjs';
 import {initialState,exportBackup,parseBackup} from '../app/core/learning.mjs';import {pendingLife,startLifeMemory,memoryPhrases} from '../app/core/life-memory.mjs';import {memoryQuestionIds} from '../app/content/life-memory-ids.mjs';
 const time='2026-10-23T03:00:00.000Z';
 async function run(body){const prev={document:globalThis.document,location:globalThis.location},listeners=new Map(),c={state:initialState(),session:{}},messages=[],plays=[];let hash='#life-cards/L07',held=null,fail=false,cards;
- globalThis.location={get hash(){return hash;},set hash(v){hash=v.startsWith('#')?v:'#'+v;}};globalThis.document={addEventListener:(n,f)=>listeners.set(n,f),removeEventListener:n=>listeners.delete(n),querySelector:()=>({focus(){}})};
+ globalThis.location={get hash(){return hash;},set hash(v){hash=v.startsWith('#')?v:'#'+v;}};globalThis.document={body:{},activeElement:null,addEventListener:(n,f)=>listeners.set(n,f),removeEventListener:n=>listeners.delete(n),querySelector:()=>({focus(){document.activeElement={heading:true};}})};
  const flush=()=>new Promise(r=>setImmediate(r));const render=()=>{const [name,param]=hash.slice(1).split('/');cards.onRoute(name,param);cards.views[name]?.(param);cards.afterRender(name,param);};
- const click=async extra=>{const local=c.session.lifeCards||{},dataset={lifeCardsUnit:'L07',lifeCardsRun:String(local.run),lifeCardsCursor:String(local.round?.cursor),...extra};listeners.get('click')?.({target:{closest:()=>({dataset,isConnected:true,disabled:false})}});await flush();};
+ const click=async extra=>{const local=c.session.lifeCards||{},dataset={lifeCardsUnit:'L07',lifeCardsRun:String(local.run),lifeCardsCursor:String(local.round?.cursor),...extra},b={dataset,isConnected:true,focus(){document.activeElement=b;},set disabled(value){if(value&&document.activeElement===b)document.activeElement=document.body;}};document.activeElement=b;listeners.get('click')?.({target:{closest:()=>b}});await flush();};
  try{assert.equal(typeof controller.createLifeCardsController,'function');cards=controller.createLifeCardsController({getContext:()=>c,update:async f=>{c.state=f(c.state);await held;if(fail)throw Error('quota');},render,toast:m=>messages.push(m),now:()=>time,id:()=>'three-original',play:async(text,rate)=>plays.push({text,rate})});render();await body({c,cards,render,click,flush,messages,plays,fail:()=>fail=true,hold:()=>{let release;held=new Promise(r=>release=r);return()=>{held=null;release();};}});}finally{cards?.dispose();globalThis.document=prev.document;globalThis.location=prev.location;}
 }
 const start=h=>h.click({lifeCardsAction:'start',lifeCardsMode:'meaning'});
@@ -47,4 +47,7 @@ test('failed or stale delayed sound exposure cannot start playback',async()=>run
 }));
 test('rapid reveal and rating while exposure is saving do not advance the card',async()=>run(async h=>{
  await start(h);const release=h.hold();await reveal(h);await rate(h);await reveal(h);assert.equal(h.c.session.lifeCards.round.cursor,0);assert.equal(h.c.session.lifeCards.round.revealed,false);release();await h.flush();assert.equal(h.c.session.lifeCards.round.revealed,true);assert.equal(h.c.state.attempts.length,0);
+}));
+test('the audio button regains keyboard focus after saving and playback complete',async()=>run(async h=>{
+ await h.click({lifeCardsAction:'start',lifeCardsMode:'sound'});await h.click({lifeCardsAction:'audio',lifeCardsRate:'1'});assert.equal(document.activeElement?.dataset?.lifeCardsAction,'audio');
 }));
