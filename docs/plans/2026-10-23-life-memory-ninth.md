@@ -23,21 +23,21 @@
 
 Files: modify `app/core/life-dictation-state.mjs`、`app/core/life-dictation.mjs`、`app/core/learning.mjs`；create `tests/life-recall.test.mjs`。
 
-- [ ] RED：276合法LR ref、獨立LD／LR／LN／作品與首答，300字／非法欄位／時間／points，備份往返／時間合併／空稿／同時衝突／pending。
-- [ ] GREEN並提交；沿用原276句，不加新教材。
+- [x] RED：276合法LR ref、獨立LD／LR／LN／作品與首答，300字／非法欄位／時間／points，備份往返／時間合併／空稿／同時衝突／pending。
+- [x] GREEN並提交；沿用原276句，不加新教材。
 
 ## Task 2：中文提示、回想與整合
 
 Files: modify `app/life-dictation.mjs`、`app/ui/life-dictation.mjs`、navigation／life-memory／life-cards／life-skills／life-notes／courses；create `tests/life-recall-ui.test.mjs` and `tests/life-recall-controller.test.mjs`。
 
-- [ ] RED：預設隱藏／中文先提示／日文與audio對照前不在DOM、空字禁用、差異唯讀／收起／跨模式／篩選／pending／入口路徑。
-- [ ] RED：曝光成功後才顯中文、quota與可匯出草稿、模式／ref隔離、延遲離頁／連按／IME不中斷與新input失效。
-- [ ] GREEN，核心及UI獨立審查，必要修補。
+- [x] RED：預設隱藏／中文先提示／日文與audio對照前不在DOM、空字禁用、差異唯讀／收起／跨模式／篩選／pending／入口路徑。
+- [x] RED：曝光成功後才顯中文、quota與可匯出草稿、模式／ref隔離、延遲離頁／連按／IME不中斷與新input失效。
+- [x] GREEN，核心及UI獨立審查，必要修補。
 
 ## Task 3：驗證與發布
 
-- [ ] 版本0.30.0、README／規格／課綱／畫面／來源／驗收同步；完整test→build→check、audit、shell逐檔SHA／JS MIME／SW與146原音HTTP。
-- [ ] 隔離QA中文回想→日文草稿→刷新／獨立聽寫→對照→收起，空場景、pending原UUID、舊首答／線索保留；320／390／768／1024／1440、48px／鍵盤／console／截圖。只用?qa=1，不清DB／快取／SW、不注入跨日歷史。
+- [x] 版本0.30.0、README／規格／課綱／畫面／來源／驗收同步；完整test→build→check、audit、shell逐檔SHA／JS MIME／SW與146原音HTTP。
+- [x] 隔離QA中文回想→日文草稿→刷新／獨立聽寫→對照→收起，空場景、pending原UUID、舊首答／線索保留；320／390／768／1024／1440、48px／鍵盤／console／截圖。只用?qa=1，不清DB／快取／SW、不注入跨日歷史。
 - [ ] PR同head CI、merge、Pages成功，正式HTTP與隔離UI、正常SW更新；證據文件push遠端一致，離開QA、停止server、復原viewport。
 
 本批不是自由翻譯／作文／口說評量。教材仍原創試用待教師審校；實機／OS日文鍵盤及長期效果不由本批推論。回退先匯出JSON、保留DB與備份，舊版可能不辨LR入口；個人文字與QA不提交Git。
