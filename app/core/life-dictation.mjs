@@ -7,7 +7,18 @@ export {parseLifeDictationRef,lifeDictationKey,lifeRecallKey,lifeBlankKey};
 export function lifeDictationPhrase(ref){const parsed=parseLifeDictationRef(ref);if(!parsed)return null;const line=memoryPhrases(parsed.unitId)[parsed.slot];return line?{...line,...parsed}:null;}
 // Literal opening cues, not vocabulary or grammar segmentation.
 export function lifeRecallHint(ref,level){const p=lifeDictationPhrase(ref);if(!p||![1,2].includes(level))return null;const chars=Array.from(p.jp);return chars.length>1?chars.slice(0,Math.min(level===1?1:4,chars.length-1)).join(''):null;}
-export function lifeTextDraftRows(state,{level='L',topic='all',scope='all'}={},recall=false){const keyFor=recall?lifeRecallKey:lifeDictationKey;return lifeMemoryUnits.filter(u=>(level==='all'||u.level===level)&&(topic==='all'||u.topic===topic)).map(unit=>{const drafts=[0,1,2].map(slot=>state.drafts[keyFor(unit.id+':'+slot)]),blankDrafts=[0,1,2].map(slot=>state.drafts[lifeBlankKey(unit.id+':'+slot,recall)]);return {unit,draftCount:drafts.filter(Boolean).length,writtenCount:drafts.filter(d=>d?.text.trim()).length,blankDraftCount:blankDrafts.filter(Boolean).length,blankWrittenCount:blankDrafts.filter(d=>d?.text.trim()).length};}).filter(row=>scope==='blank'?row.blankWrittenCount>0:scope!=='written'||row.writtenCount>0);}
+export function lifeTextDraftSentences(state,unitId,recall=false){
+ if(!lifeMemoryUnits.some(u=>u.id===unitId))return [];
+ const keyFor=recall?lifeRecallKey:lifeDictationKey;
+ return [0,1,2].map(slot=>{const reference=unitId+':'+slot,draft=state.drafts[keyFor(reference)],retry=state.drafts[lifeBlankKey(reference,recall)];return {reference,slot,hasDraft:!!draft,written:!!draft?.text.trim(),hasBlankDraft:!!retry,blankWritten:!!retry?.text.trim()};});
+}
+export function lifeTextDraftRows(state,{level='L',topic='all',scope='all'}={},recall=false){
+ const matches=sentence=>scope==='written'?sentence.written:scope==='blank'?sentence.blankWritten:scope==='unwritten'?!sentence.written&&!sentence.blankWritten:true;
+ return lifeMemoryUnits.filter(u=>(level==='all'||u.level===level)&&(topic==='all'||u.topic===topic)).map(unit=>{
+  const sentences=lifeTextDraftSentences(state,unit.id,recall);
+  return {unit,sentences,startReference:sentences.find(matches)?.reference,draftCount:sentences.filter(x=>x.hasDraft).length,writtenCount:sentences.filter(x=>x.written).length,blankDraftCount:sentences.filter(x=>x.hasBlankDraft).length,blankWrittenCount:sentences.filter(x=>x.blankWritten).length,unwrittenCount:sentences.filter(x=>!x.written&&!x.blankWritten).length};
+ }).filter(row=>row.startReference);
+}
 function storeLifeTextDraft(state,ref,text,time,keyFor){const p=parseLifeDictationRef(ref);if(!p)throw Error('找不到這句生活練習。');if(pendingLife(state))throw Error('請先完成原輪生活回想，再寫生活句子。');const key=keyFor(p.reference),draft={text,points:[],time};validateLifeDictationDraft(key,draft);const next=structuredClone(state);next.drafts[key]=draft;next.revision++;return validateState(next);}
 export const storeLifeDictationDraft=(state,ref,text,time)=>storeLifeTextDraft(state,ref,text,time,lifeDictationKey);
 export const storeLifeRecallDraft=(state,ref,text,time)=>storeLifeTextDraft(state,ref,text,time,lifeRecallKey);
