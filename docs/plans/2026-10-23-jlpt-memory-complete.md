@@ -31,17 +31,17 @@
 ## Task 1：原題、狀態與排程
 
 Files: app/content/jlpt-memory-ids.mjs、app/core/jlpt-memory-state.mjs、app/core/jlpt-memory.mjs、app/core/v3-state.mjs、app/core/v3-learning.mjs、app/core/learning.mjs；tests/jlpt-memory.test.mjs。
-- [ ] RED→GREEN：114課／1139原題、五能力、固定三題、strict來源與hint／note／backup、cutoff／跨日／七日／弱點／每日唯一／pending／原首答不變，分次提交。
+- [x] RED→GREEN：114課／1139原題、五能力、固定三題、strict來源與hint／note／backup、cutoff／跨日／七日／弱點／每日唯一／pending／原首答不變，分次提交。
 
 ## Task 2：完整路線與記憶介面
 
 Files: app/jlpt-memory.mjs、app/ui/jlpt-memory.mjs、app/ui/jlpt-guide.mjs、app/main.mjs、app/ui/navigation.mjs、app/ui/v3.mjs、app/ui/study.mjs、app/v2.mjs、app/ui/courses.mjs、app/ui/exam.mjs、app/v3.css；tests/jlpt-memory-ui.test.mjs、tests/jlpt-memory-controller.test.mjs。
-- [ ] RED→GREEN：六種路線／級別搜尋／地圖／卡組／個人線索／原輪回顧、IME／延遲保存與失敗／ref與epoch／雙擊、V2/V3提示與原study曝光、48px控制／18px輸入／focus／HTML安全／返回與刷新。
+- [x] RED→GREEN：六種路線／級別搜尋／地圖／卡組／個人線索／原輪回顧、IME／延遲保存與失敗／ref與epoch／雙擊、V2/V3提示與原study曝光、48px控制／18px輸入／focus／HTML安全／返回與刷新。
 
 ## Task 3：整包驗收與發布
 
-- [ ] 完成矩陣、README／規格／課綱／畫面／來源／路線與0.37.0；完整test→build→check／audit。
-- [ ] 獨立唯讀核心與UI審查，必要修補複核；本機隔離QA四級、三題／五能力／卡組／線索／回顧／pending同UUID／舊資料／備份，320／390／768／1024／1440、Tab／console／截圖；HTTP shell SHA及原音抽樣。
+- [x] 完成矩陣、README／規格／課綱／畫面／來源／路線與0.37.0；完整test→build→check／audit。
+- [x] 獨立唯讀核心與UI審查，必要修補複核；本機隔離QA四級、三題／五能力／卡組／線索／回顧／pending同UUID／舊資料／備份，320／390／768／1024／1440、Tab／console／截圖；HTTP shell SHA及原音抽樣。
 - [ ] 同head PR CI→merge→Pages build/deploy→正式HTTP／正常SW與隔離UI／原資料；記錄證據並push遠端一致，恢復正常入口／viewport／停server。
 
 不清DB／cache／SW、不注入瀏覽器歷史或虛構跨日作答。回退先匯出JSON，舊版可能不識新source／hint／note，保留資料。教師／真人／實機OS鍵盤與跨日真人學習成效另需外部證據；本版不改正式檢定規則或新增未審校教材。
