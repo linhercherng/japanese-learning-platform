@@ -1,5 +1,7 @@
 # 日和｜日語學習平台
 
+v0.33.0 生活記憶第十二批新增「逐句練習清單」：[中文回想](https://linhercherng.github.io/japanese-learning-platform/#life-recall)／[聽寫](https://linhercherng.github.io/japanese-learning-platform/#life-dictation)的有稿篩選會直接帶到真正有文字的句子，也可展開同課三句選擇。新增「還沒留下文字」，每次挑一句小步練習；草稿狀態不代表學會程度，目錄不露答案或私人文字。見[規劃](docs/plans/2026-10-23-life-memory-twelfth.md)與[驗收](docs/life-memory-twelfth-validation.md)。
+
 v0.32.0 生活記憶第十一批新增「不看舊稿，從空白再想」：[中文回想](https://linhercherng.github.io/japanese-learning-platform/#life-recall)與[聽寫](https://linhercherng.github.io/japanese-learning-platform/#life-dictation)都能先收起舊文字，重新想一句。輸入另存該句最新再想稿，原草稿保留；可主動接續上次再想稿，目錄也能只找有文字再想稿。兩種模式分開保存，不新增分數或記住推論。見[規劃](docs/plans/2026-10-23-life-memory-eleventh.md)與[驗收](docs/life-memory-eleventh-validation.md)。
 
 v0.31.0 生活記憶第十批新增漸進提示與草稿篩選：[中文回想](https://linhercherng.github.io/japanese-learning-platform/#life-recall)卡住時先看一字，再按需看原句開頭，收起後繼續自己想；不直接送出完整答案或評分。[聽寫](https://linhercherng.github.io/japanese-learning-platform/#life-dictation)與中文回想目錄都能只找有文字草稿，各自計數、不預覽私人內容。沿用276原句、原首答與備份。見[規劃](docs/plans/2026-10-23-life-memory-tenth.md)與[驗收](docs/life-memory-tenth-validation.md)。

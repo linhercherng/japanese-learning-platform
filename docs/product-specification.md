@@ -275,3 +275,9 @@ LR／LD單句新增空白再想及明示接續再想稿；從空白開始不讀�
 schema3 drafts新增text:LB-R-<unit>:<slot>與text:LB-D-<unit>:<slot>，嚴格模式／canonical ref、300字／合法時間／欄位／空points；共用實際時間merge／同時異文拒絕／較新空稿保留。原LR／LD／LN／作品、首答及V1/V2保持。LR先保存中文參考曝光；LD空白開始不曝光，聽音／輸入／展開非空稿／對照沿用原規則；pending遮蔽全稿及中文、提示，接原UUID。mode／ref／epoch／busy／IME／latest cache及失敗可匯出保護沿用。
 
 兩目錄新增scope=blank「有文字再想稿」，只看同模式LB非空白文字；原written仍只計原稿。卡片分列原稿／再想稿真實句數、不預覽私人內容。無新語言教材、source、分數、完成／熟練度；詳見[規劃](plans/2026-10-23-life-memory-eleventh.md)。
+
+## 生活記憶第十二批（v0.33.0，2026-10-23）
+
+LR／LD目錄主入口依scope選真正匹配句：all第一句、written第一句原稿有文字、blank第一句再想稿有文字、unwritten第一句原稿與再想稿皆無文字，沒有匹配不列課。空稿／空白字不算有文字，兩模式與LN／作品獨立。新增純衍生三句ref／slot／boolean狀態與未留文字句數，無schema／資料寫入或曝光。
+
+課卡article內主連結與原生details同層；逐句清單只顯序號／文字存在狀態，所有三句可選。單句導航以aria-current標目前句，目前句不重複易過時的文字狀態，其他句仍列狀態。展開不重繪編輯器或記曝光；換句沿用route收起／pending原UUID。unwritten只表示本模式沒有留下文字，不代表未學／不會；全有文字與無課空結果分開。48px控制／focus／sticky避讓保持，無新教材／得分／完成。見[規劃](plans/2026-10-23-life-memory-twelfth.md)。
