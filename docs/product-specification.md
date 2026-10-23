@@ -281,3 +281,9 @@ schema3 drafts新增text:LB-R-<unit>:<slot>與text:LB-D-<unit>:<slot>，嚴格�
 LR／LD目錄主入口依scope選真正匹配句：all第一句、written第一句原稿有文字、blank第一句再想稿有文字、unwritten第一句原稿與再想稿皆無文字，沒有匹配不列課。空稿／空白字不算有文字，兩模式與LN／作品獨立。新增純衍生三句ref／slot／boolean狀態與未留文字句數，無schema／資料寫入或曝光。
 
 課卡article內主連結與原生details同層；逐句清單只顯序號／文字存在狀態，所有三句可選。單句導航以aria-current標目前句，目前句不重複易過時的文字狀態，其他句仍列狀態。展開不重繪編輯器或記曝光；換句沿用route收起／pending原UUID。unwritten只表示本模式沒有留下文字，不代表未學／不會；全有文字與無課空結果分開。48px控制／focus／sticky避讓保持，無新教材／得分／完成。見[規劃](plans/2026-10-23-life-memory-twelfth.md)。
+
+## 生活記憶第十三批（v0.34.0，2026-10-23）
+
+原完整對照保留，有差異才提供一次一處視圖。沿既有Unicode LCS序列把相鄰own/original分一處，附最多4碼點共同前後定位，插入／刪除保留空側；不是詞彙／文法切分或翻譯評分。上一／下一處不越界、回完整維持原own，focus到差異標題；一處頁不另列全文／讀音／音訊，但若整句都不同，該片段可能包含全文。沒有差異不提供無效入口。
+
+所有對照（含完全相同）可收起答案從空白再想，只改暫存comparison／hint／index及blank buffer，不改任何原稿或舊LB，輸入後才更新同句同模式最新LB。未輸入退出可接續上次LB；刷新／換句收起。差異切換與重想不新增參考曝光或作答／得分，原compare已沿durable保存參考。pending／busy／ref／route epoch／IME／latest cache及失敗可匯出保持。無新保存欄位／schema／教材或依賴。見[規劃](plans/2026-10-23-life-memory-thirteenth.md)。

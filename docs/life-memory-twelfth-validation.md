@@ -24,4 +24,12 @@ unwritten/shopping主入口指向L03:0；health無此課範圍為可復原空結
 
 ## 發布
 
-待同head CI／合併／Pages、正式HTTP與UI驗收完成後補記；尚非發布完成宣告。
+- [PR #45](https://github.com/linhercherng/japanese-learning-platform/pull/45) head `1ac987a8e93411d240163ccf8ee9c6e034a00320`，同head [CI39919534414](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39919534414) completed/success後按match-head合併，merge `b3bae68f141b5fe08a956ec033dc3bdadee1ea9e`。
+- [Pages39919708025](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39919708025)整體／build／deploy均success，deploy UTC07:45:42（台北15:45）完成。
+- 最終fingerprint `c6d377aa5a0dbd14df07c80c7d7af7ab8d3d2ee358383ee9417e1b112072602e`。本機UTC07:41:39、正式UTC07:47:55的160份shell SHA256／JS MIME／SW與146原音HTTP皆通過，分別1／0重試，預設TLS驗證。紀錄為ignored work/life-twelfth-local-http.json及life-twelfth-public-http.json；276句全量音檔索引／檔案驗證屬自動測試，不宣稱全部做HTTP。
+- 本機舊首輪仍2正確／3提示／0無提示，第六批L07線索保持，截圖work/life-twelfth-local-390.png。
+
+- 正常正式分頁reload下載新版，暫離後依SW正常生命週期接手，未清DB／快取／SW或強制啟用。所有新文字／作答只在正式?qa=1。LR L03第三句新LB使blank/shopping主入口指L03:2，點進主動接續恢復原字；單句details展開不重繪input／不中斷日文emoji，目前句固定導引與aria-current正確。LD L03第二句新LB使其主入口指slot1，與LR分開。
+- 正式unwritten/food顯全有文字，health無課可回復，未預覽私人文。展開目錄320／390／768／1024／1440px無溢出，summary48px、links73.75px。console warn/error空。
+- 正式未完成輪 `254f0a1e-25bc-403a-b771-ad047783d479` 全遮蔽新scope／清單，接同UUID，完成1題／1正確／1提示／0無提示；舊首輪仍3正確／2無提示／1提示，第六批L07線索保持。
+- 回正常單句頁只讀展開導航，沒有混入QA草稿；截圖work/life-twelfth-public-entry-390.png。第十三批依使用者接續指示開發中，兩批共用本輪18124測試服務與viewport，待第十三批交付時統一恢復／停止；本批發布證據隨第十三批PR同步提交。
