@@ -17,3 +17,6 @@ test('covered review includes original options and stable shuffled order tokens,
  let html=lifeRoundView(c,'varied',time);for(const token of questionById.get(ids[0]).tokens)assert(html.includes(token));assert.doesNotMatch(html,/data-study-token|參考答案：/);assert.equal(lifeRoundView(c,'varied',time),html);
  c.session.lifeReview={round:'varied',index:1,revealed:false};html=lifeRoundView(c,'varied',time);assert.match(html,/data-life-review-passage="varied"/);assert.match(html,/先讀原題短文/);assert(html.includes(questionById.get(ids[1]).passage));for(const option of questionById.get(ids[1]).options)assert(html.includes(option));assert.doesNotMatch(html,/參考答案：|<details[^>]* open/);
 });
+test('single-question repair result describes actual weak practice rather than a fixed three-question lesson',()=>{
+ const c=ctx(),q=questionById.get('L07-v2-q1');c.state=beginV3Session(c.state,[q.id],{id:'one',source:'life-repair',reference:'2026-10-23',time});c.state=answerV3Session(c.state,{sessionId:'one',question:q,value:q.correct,eventId:'one-answer',time});c.state=nextV3Question(c.state,'one',time);const html=practiceV3View(c,'one',id=>questionById.get(id),time);assert.match(html,/1 \/ 1 無提示首答正確/);assert.match(html,/弱點加練/);assert.doesNotMatch(html,/這是三題少量加練/);
+});

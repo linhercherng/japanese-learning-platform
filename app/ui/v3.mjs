@@ -62,7 +62,7 @@ export function practiceV3View(ctx,sessionId,resolveQuestion,time=new Date().toI
 }
 function lifeResult(state,s){
  const unit=s.source==='life-memory'?s.reference:null,r=lifeCheckReport(state,s.id);
- return `${primary('逐題回顧原首答與差異','life-round/'+s.id)}${primary('生活記憶地圖','life-map')}${s.source==='life-repair'?note('這是弱點加練，使用原題且不改寫之前的答案；同日練對仍需隔天確認。'):''}${s.source==='life-check'?note(`跨日可比較首答：${r.retained} / ${r.comparable} 答對；${r.excluded} 題另列，其中 ${r.hinted} 題使用提示。中途另練、時間重疊與缺少較早紀錄者不列比較。`):note('這是三題少量加練。看過本課參考的作答另列使用提示；明天收起參考再回想，才能確認跨日記憶。')}${unit?`<a class="primary lesson-footer" href="#study/${e(unit)}" data-open-writing>回原課，寫自己的生活句子</a>`:''}${primary('隔天再確認','life-check')}${note('選擇與填空只反映這些題目的表現，不代表已會自由口說、手寫或取得檢定能力。')}`;
+ return `${primary('逐題回顧原首答與差異','life-round/'+s.id)}${primary('生活記憶地圖','life-map')}${s.source==='life-repair'?note('這是弱點加練，使用原題且不改寫之前的答案；同日練對仍需隔天確認。'):''}${s.source==='life-check'?note(`跨日可比較首答：${r.retained} / ${r.comparable} 答對；${r.excluded} 題另列，其中 ${r.hinted} 題使用提示。中途另練、時間重疊與缺少較早紀錄者不列比較。`):s.source==='life-memory'?note('這是三題少量加練。看過本課參考的作答另列使用提示；明天收起參考再回想，才能確認跨日記憶。'):''}${unit?`<a class="primary lesson-footer" href="#study/${e(unit)}" data-open-writing>回原課，寫自己的生活句子</a>`:''}${primary('隔天再確認','life-check')}${note('選擇與填空只反映這些題目的表現，不代表已會自由口說、手寫或取得檢定能力。')}`;
 }
 export function weaknessesView(ctx){
  const progress=conceptProgress(ctx.state,concepts,v3Questions),observed=progress.filter(p=>p.total),weak=observed.filter(p=>p.weak);
