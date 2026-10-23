@@ -28,7 +28,15 @@
 
 ## GitHub與正式發布
 
-待CI／PR／Pages及正式HTTP與隔離瀏覽器驗收後補上。
+已經[PR #33](https://github.com/linhercherng/japanese-learning-platform/pull/33)發布。head `3cd663bc9934d1874d132fb06bc83dd8b0583c12` 的[CI run39879186673](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39879186673)整體completed/success，測試／build／check／audit通過，PR deploy依設計略過。同head合併為 `6c40290587313f2e226aeb1b029aa3fcaa26990d`（2026-10-23 00:38:10 UTC，台北08:38）；[Pages run39879287506](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39879287506)整體completed/success，build/deploy皆success，deploy job於00:39:22 UTC（台北08:39）完成。
+
+正式HTTPS 131份shell SHA-256、JS MIME及SW fingerprint一致，128次既有音檔抽查通過，2026-10-23 00:40:32 UTC（台北08:40），fingerprint與本機相同；ignored work/completion-public-http.json。正常重載觸發離線更新後，同站分頁導離、再重開取得新版，沒有刪SW／cache／DB。
+
+正式隔離QA的較早未完成詞語輪（1/3）由今日推薦接續同UUID，刷新仍同輪，不新增作答；原路線先前僅推薦弱點三題。指南與首頁三入口存在。線索簿原為空，用可見UI保存あ線索，搜尋自身文字／口袋範圍可找回；切片假名得空結果，清除復原。ガ只寫草稿，索引及只看草稿正確，刷新後文字保留且篩選重置；接續原編輯按保存後標為已保存，筆順連結進入該字4筆示範。
+
+原第十五批兩題仍0/2無提示首答、2題提示；原三題仍0/3、3題提示，未被新線索或導覽改寫。正式390px推薦／指南／空簿／搜尋／草稿篩選、320px刷新索引／草稿保存／指南，共8個量測狀態，無橫溢，主要控制項至少44px，console warn/error空。ignored work/completion-qa/public-layout.json與public-390-path.jpg保存量測及正式頁截圖。實際跨頁操作另由本機11筆驗收，IME及儲存失敗由Node真控制器驗證，不冒稱實機系統輸入測試。
+
+本機server已停止，QA分頁關閉、尺寸重置；正常個人資料未寫入，正式新版kana-path分頁保留。QA、HTTP明細及截圖未提交公開Git。
 
 ## 邊界與回退
 

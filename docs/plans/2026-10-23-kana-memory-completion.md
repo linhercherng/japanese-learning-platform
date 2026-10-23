@@ -41,7 +41,7 @@ Files：app/ui/kana-guide.mjs、app/main.mjs、app/ui/navigation.mjs、app/ui/ka
 
 - [x] 全npm test→build→check→audit；依requesting-code-review獨立審查，必要修補重驗。
 - [x] 本機隔離UI：空白推薦→起輪→接續、線索保存／草稿→搜尋／篩選→空結果／復原、指南連結、原編輯與既有筆順／練習路由；320/390px、44px、鍵盤、console、HTTP shell SHA／音檔；IME事件由Node控制器驗證。
-- [ ] PR同head CI通過後合併，Pages成功；正式HTTP／隔離瀏覽器、舊資料及新入口、截圖；補驗收及發布文件push、遠端一致、清理QA/server。
+- [x] PR同head CI通過後合併，Pages成功；正式HTTP／隔離瀏覽器、舊資料及新入口、截圖；補驗收及發布文件push、遠端一致、清理QA/server。見[本批驗收](../kana-memory-completion-validation.md)。
 
 ## 共同邊界
 

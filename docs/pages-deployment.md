@@ -68,3 +68,8 @@ v0.19.0「錯字雙向聽辨」經[PR #31](https://github.com/linhercherng/japan
 ## 五十音第十六批發布（2026-10-23，台北）
 
 v0.20.0「雙向聽辨後逐字回顧」經[PR #32](https://github.com/linhercherng/japanese-learning-platform/pull/32)同head成功CI後合併；[Pages run39876749540](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39876749540)整體completed/success、build/deploy皆success。428項測試、build/check/audit與獨立94項相關審查通過；正式126份shell雜湊及128次音檔HTTP相符。正式隔離UI確認既有第十五批兩題可回顧、單目標訣竅、主動留下、錯答雙卡遮住／揭開、刷新與原新舊首答統計保留，320/390px無橫溢。已開舊離線分頁正常重開後取得新版，沒有清資料。完整證據與實機／教師審校邊界見[第十六批驗收](kana-sixteenth-validation.md)。
+
+
+## 五十音記憶剩餘整合發布（2026-10-23，台北）
+
+v0.21.0經[PR #33](https://github.com/linhercherng/japanese-learning-platform/pull/33)同head成功CI後合併；[Pages run39879287506](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39879287506)整體completed/success，build/deploy皆success。452項測試、build/check/audit及獨立審查／修補複核通過；正式131份shell雜湊及128次音檔HTTP相符。正式隔離UI驗證今日推薦接續較早原輪、六段指南、線索保存／搜尋／口袋篩選／空結果／草稿刷新續寫／筆順與舊首答統計，320/390px無橫溢。完成矩陣見[完整規劃](kana-memory-completion.md)，證據與外部驗證邊界見[整合驗收](kana-memory-completion-validation.md)。
