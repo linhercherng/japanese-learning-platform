@@ -33,7 +33,7 @@ export function createKanaLab({getContext,update,render,toast,now,id,cacheDraft}
   if(name==='kana-notes')items=noteEditorExposure(context.state,item);
   if(name==='kana-mini'&&!pendingMini(context.state,miniFilter(context.session)))items=selectMiniCards(context.state,{...miniFilter(context.session),time}).map(k=>k.id);
   if(!items.length)return;
-  update(s=>{const next=recordKanaExposure(s,items,time);for(const id of items){const active=readDictation(next,id);if(active)cacheDraft(active.key,next.drafts[active.key]);}return next;}).catch(error=>toast(error.message));
+  update(s=>{const next=recordKanaExposure(s,items,time,{kind:'reference',ref:'kana-lab'});for(const id of items){const active=readDictation(next,id);if(active)cacheDraft(active.key,next.drafts[active.key]);}return next;}).catch(error=>toast(error.message));
  }
  document.addEventListener('click',click);document.addEventListener('input',input);document.addEventListener('change',change);
  return {views:{'kana-mini':()=>miniView(ctx(),now()),'kana-notes':item=>notesView(ctx(),item),'kana-build':item=>buildView(ctx(),item)},afterRender,validateCatalog(s){for(const p of s.v3.sessions)if(['kana-mini','kana-build'].includes(p.source)&&(!validLabReference(p.source,p.reference,p.questionIds,words)||p.queue.some(q=>!p.questionIds.includes(q.questionId))))throw Error('備份含不一致的三字／拼詞練習。');},dispose(){document.removeEventListener('click',click);document.removeEventListener('input',input);document.removeEventListener('change',change);}};

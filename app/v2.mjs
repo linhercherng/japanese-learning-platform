@@ -1,3 +1,6 @@
+import {isKanaItem,kanaCueSeen} from './core/kana-history-state.mjs';
+import {recordKanaExposure} from './core/kana-studio.mjs';
+import {extraKanaExposure} from './content/kana-recall.mjs';
 import {jlptCueSeen} from './core/jlpt-memory-state.mjs';
 import {rhythmCueSeen,rhythmQuestion} from './content/kana-rhythm.mjs';
 import {rhythmCards,exposedRhythmItems} from './content/kana-focus.mjs';
@@ -37,7 +40,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(location.hash==='#exam-session'){
    await update(s=>({...s,activeExam:answerExam(s.activeExam,forms.find(f=>f.id===s.activeExam.formId),q.id,value,now()),revision:s.revision+1}));render(false);return;
   }
-  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const time=now(),nextPractice=answerPractice(p,q,value,{time,hinted:jlptCueSeen(s.v3.jlptHints,q.id,p.startedAt,time)||rhythmCueSeen(s.v3.rhythmHints,q,p.startedAt,time)});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
+  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const time=now(),nextPractice=answerPractice(p,q,value,{time,hinted:isKanaItem(q.reviewItem)&&kanaCueSeen(s,[q.reviewItem,...extraKanaExposure(q.id)],p.startedAt,time)||jlptCueSeen(s.v3.jlptHints,q.id,p.startedAt,time)||rhythmCueSeen(s.v3.rhythmHints,q,p.startedAt,time)});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
  }
  async function nextExamSection({submit=false,abandon=false}={}){
   const exam=state().activeExam;if(!exam)return;
@@ -101,7 +104,13 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(seconds===0){examTimerBusy=true;try{await nextExamSection();}catch(error){toast(error.message);}finally{examTimerBusy=false;}}
  },1000);
  document.addEventListener('click',handleClick);document.addEventListener('input',handleInput);document.addEventListener('change',handleChange);document.addEventListener('submit',handleSubmit);
- function afterRender(name){if(name!=='practice')return;const p=state().practice,q=p&&rhythmQuestion(p.questionIds[p.index]),answer=q&&p.answers[q.id];if(!q||!answer&&!(p.hints||[]).includes(q.id))return;const time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString();update(s=>{const next=recordRhythmExposure(s,q.rhythmCard,time);for(const item of exposedRhythmItems(rhythmCards.find(c=>c.id===q.rhythmCard))){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));}
+ function afterRender(name){
+  if(name!=='practice')return;const p=state().practice,q=p&&resolveQuestion(p.questionIds[p.index]),rhythm=q&&rhythmQuestion(q.id),answer=q&&p.answers[q.id];
+  if(!q||!rhythm&&!isKanaItem(q.reviewItem)||!answer&&!(p.hints||[]).includes(q.id))return;
+  const time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString(),context={kind:answer?'feedback':'hint',ref:'v2:'+p.id+':'+q.id},items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[q.reviewItem,...extraKanaExposure(q.id)];
+  update(s=>{const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time,context):recordKanaExposure(s,items,time,context);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));
+ }
+
  return {
   afterRender,
   async startReview(reviews){

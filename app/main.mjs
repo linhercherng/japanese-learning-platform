@@ -1,3 +1,6 @@
+import {kanaCueSeen} from './core/kana-history-state.mjs';
+import {visibleKanaReference} from './core/kana-reference.mjs';
+import {recordKanaExposure} from './core/kana-studio.mjs';
 import {createJlptMemory} from './jlpt-memory.mjs';
 import {jlptUnitMeta} from './content/jlpt-memory-ids.mjs';
 import {createLifeWorkspace} from './life-workspace.mjs';
@@ -135,6 +138,7 @@ function render(focus=true){
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
  jlptMemory.afterRender(name,param);lifeCards.afterRender(name,param);lifeReview.afterRender(name,param);lifeMemory.afterRender(name,param);kanaNotebook.afterRender(name,param);kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);kanaPocketReview.afterRender(name,param);v2.afterRender(name,param);v3.afterRender(name,param);
+ const shownKana=visibleKanaReference(name,main.innerText);if(shownKana.length)update(s=>recordKanaExposure(s,shownKana,now(),{kind:'reference',ref:'page:'+name})).catch(error=>toast(error.message));
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
 }
 function phonologyQuestions(lessonId){return (kanaPhonology.find(p=>p.lessonId===lessonId)?.questions||[]).map((q,i)=>({item:`${lessonId}-p${i}`,dimension:'language',prompt:q.prompt,options:q.choices.map((label,j)=>({value:String(j),label})),correct:q.choices.indexOf(q.answer),explanation:q.explanation}));}
@@ -155,13 +159,14 @@ function quizView(){
 async function submitQuiz(choice){
  const quiz=session.quiz;if(!quiz||quiz.answered)return;quiz.answered=true;const q=quiz.questions[quiz.index],correct=Number(choice)===Number(q.correct);
  const confusion=!correct?confusedKana({kind:'choice',correct:q.correct,options:q.options.map(o=>kana.find(k=>k.id===o.value)?.glyph||o.label)},Number(choice)):null;
- try{await update(s=>recordAnswer(s,{id:`${quiz.started}-${quiz.index}`,item:q.item,dimension:q.dimension,correct,hinted:quiz.hinted,time:now(),...(confusion?{kanaConfusion:confusion}:{})}));}
+ try{await update(s=>recordAnswer(s,{id:`${quiz.started}-${quiz.index}`,item:q.item,dimension:q.dimension,correct,hinted:quiz.hinted||kanaCueSeen(s,[q.item],now(),now()),time:now(),...(confusion?{kanaConfusion:confusion}:{})}));}
  catch{quiz.answered=false;return;}
- quiz.results.push({correct,hinted:quiz.hinted});
+ quiz.hinted=state.attempts.find(a=>a.id===quiz.started+'-'+quiz.index)?.hinted||quiz.hinted;quiz.results.push({correct,hinted:quiz.hinted});
  if(session.quiz!==quiz||route().name!=='quiz')return;
  document.querySelectorAll('[data-quiz-answer]').forEach(b=>{b.disabled=true;if(Number(b.dataset.quizAnswer)===Number(q.correct))b.classList.add('selected');});
  const feedback=document.querySelector('#quiz-feedback'),nextButton=document.querySelector('[data-action="quiz-next"]');
  if(feedback)feedback.innerHTML=`<div class="feedback ${correct?'':'error'}">${correct?'想對了！':'再記住這個差異。'} ${e(q.explanation)}</div>`;if(nextButton)nextButton.disabled=false;
+ if(kana.some(k=>k.id===q.item)){const a=state.attempts.find(a=>a.id===quiz.started+'-'+quiz.index),time=new Date(Math.max(Date.parse(now()),Date.parse(a.time)+1)).toISOString();await update(s=>recordKanaExposure(s,[q.item],time,{kind:'feedback',ref:'v1:'+quiz.started+':'+quiz.index}));}
 }
 async function nextQuestion(){const q=session.quiz;if(!q?.answered)return;q.index++;q.answered=false;q.hinted=false;if(q.index>=q.questions.length&&q.lesson){const lesson=kanaLessons.find(l=>l.id===q.lesson);const allItems=lesson.items.every(item=>['recognition','listening'].every(d=>state.attempts.some(a=>a.item===item&&a.dimension===d)));const allPhonology=phonologyQuestions(q.lesson).every(p=>state.attempts.some(a=>a.item===p.item));if(allItems&&allPhonology)await update(s=>completeLesson(s,q.lesson,now()));}render(false);window.scrollTo(0,0);}
 async function startReview(){
@@ -233,7 +238,7 @@ document.addEventListener('click',event=>{
   if(d.strokeStep!==undefined)await animateStrokes(Number(d.strokeStep));
   if(d.mode){session.guide=d.mode==='trace';const board=document.querySelector('#writing-board');board.classList.toggle('no-guide',!session.guide);board.classList.remove('compare');const item=allWritingItems.find(k=>k.id===route().param)||kana[0];document.querySelector('#writing-title').textContent=session.guide?`寫一次 ${item.glyph}，再回想。`:'先聽聲音，再自己寫。';document.querySelector('#writing-label').textContent=session.guide?`${item.glyph} · 字跡草稿自動保存`:'默寫草稿自動保存';document.querySelectorAll('[data-mode]').forEach(b=>{const active=(b.dataset.mode==='trace')===session.guide;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});}
   if(d.deleteArtifact){await update(s=>{if(Object.values(s.v3.artifactParents).includes(d.deleteArtifact))throw new Error('這份原稿還有修改稿，請先移除修改稿再整理原稿。');const next={...s,artifacts:s.artifacts.filter(a=>a.id!==d.deleteArtifact),v3:{...s.v3,artifactParents:{...s.v3.artifactParents}}};delete next.v3.artifactParents[d.deleteArtifact];delete next.drafts[`text:${d.deleteArtifact}`];return next;});toast('作品已移除。其他進度保留，可由先前備份恢復。');render(false);}
-  const actions={undo:()=>canvas?.undo(),clear:()=>canvas?.clear(),compare:()=>{const board=document.querySelector('#writing-board');board.classList.toggle('compare');board.classList.toggle('no-guide',!board.classList.contains('compare')&&!session.guide);},'animate-strokes':()=>animateStrokes(),'start-review':startReview,'quiz-next':nextQuestion,'quiz-hint':()=>{if(!session.quiz?.answered){session.quiz.hinted=true;const q=session.quiz.questions[session.quiz.index];toast(q.explanation);}},'export-backup':exportFile,'import-backup':()=>document.querySelector('#backup-file').click(),'cancel-import':()=>{pendingImport=null;document.querySelector('#import-dialog').close();},'confirm-import':async()=>{if(!pendingImport)return;await update(s=>mergeStates(s,pendingImport));session.latestDrafts={};pendingImport=null;document.querySelector('#import-dialog').close();toast('備份已合併，既有紀錄保留。');render(false);},record:()=>media.toggleRecord(document.querySelector('#recording-playback'),button)};
+  const actions={undo:()=>canvas?.undo(),clear:()=>canvas?.clear(),compare:()=>{const board=document.querySelector('#writing-board');board.classList.toggle('compare');board.classList.toggle('no-guide',!board.classList.contains('compare')&&!session.guide);},'animate-strokes':()=>animateStrokes(),'start-review':startReview,'quiz-next':nextQuestion,'quiz-hint':async()=>{const quiz=session.quiz;if(quiz&&!quiz.answered){const q=quiz.questions[quiz.index];if(kana.some(k=>k.id===q.item))await update(s=>recordKanaExposure(s,[q.item],now(),{kind:'hint',ref:'v1:'+quiz.started+':'+quiz.index}));if(session.quiz!==quiz||quiz.answered)return;quiz.hinted=true;toast(q.explanation);}},'export-backup':exportFile,'import-backup':()=>document.querySelector('#backup-file').click(),'cancel-import':()=>{pendingImport=null;document.querySelector('#import-dialog').close();},'confirm-import':async()=>{if(!pendingImport)return;await update(s=>mergeStates(s,pendingImport));session.latestDrafts={};pendingImport=null;document.querySelector('#import-dialog').close();toast('備份已合併，既有紀錄保留。');render(false);},record:()=>media.toggleRecord(document.querySelector('#recording-playback'),button)};
   if(actions[d.action])await actions[d.action]();
  };
  task().catch(error=>toast(error.message)).finally(()=>{if(locks&&button.isConnected)button.disabled=false;});

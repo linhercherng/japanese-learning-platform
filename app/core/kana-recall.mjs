@@ -1,3 +1,4 @@
+import {kanaEvents,kanaCueSeen,legacyKanaUnknown} from './kana-history-state.mjs';
 import {extraKanaExposure} from '../content/kana-recall.mjs';
 import {kana} from '../content/kana.mjs';
 import {coachQuestion} from '../content/kana-coach.mjs';
@@ -10,10 +11,10 @@ function history(state,time){
  for(const list of map.values())list.sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id));return map;
 }
 export function weekSchedule(state,time){
- const today=ordinal(time),histories=history(state,time),eligible=[],upcoming=[];
+ const today=ordinal(time),histories=history(state,time),eligible=[],upcoming=[],hints=new Map();for(const e of kanaEvents(state,null,time))if(e.kind!=='answer')hints.set(e.item,e.time);
  for(const k of kana)for(const dimension of ['recognition','listening']){
   const last=histories.get(k.id+':'+dimension)?.at(-1);if(!last)continue;
-  const hint=state.v3.kanaHints?.[k.id]?.lastHintAt,hintDay=hint&&Date.parse(hint)<=Date.parse(time)?ordinal(hint):-Infinity,ready=Math.max(ordinal(last.time),hintDay)+7;
+  const hint=hints.get(k.id),hintDay=hint&&Date.parse(hint)<=Date.parse(time)?ordinal(hint):-Infinity,ready=Math.max(ordinal(last.time),hintDay)+7;
   if(ready>today){upcoming.push(ready);continue;}
   eligible.push({q:coachQuestion('kc:check:'+k.id+':'+(dimension==='recognition'?'pair':'listen')),weak:!last.correct||last.hinted,time:last.time});
  }
@@ -32,7 +33,7 @@ export function weekEvidence(state,session){
   if(a.hinted){result.hinted++;result.excluded++;continue;}
   const list=histories.get(q.reviewItem+':'+q.dimension)||[],before=list.filter(h=>Date.parse(h.time)<Date.parse(session.createdAt)),last=before.at(-1);
   const cardHistory=state.attempts.filter(h=>h.item===q.reviewItem),between=cardHistory.some(h=>Date.parse(h.time)>=Date.parse(session.createdAt)&&Date.parse(h.time)<Date.parse(a.time)),sameTime=cardHistory.filter(h=>Date.parse(h.time)===Date.parse(a.time));
-  const hint=state.v3.kanaHints?.[q.reviewItem]?.lastHintAt,recentBefore=hint&&Date.parse(hint)<Date.parse(session.createdAt)&&Date.parse(hint)<=Date.parse(a.time)&&ordinal(a.time)-ordinal(hint)<7;
+  const original=cardHistory.find(h=>h.dimension===q.dimension&&Date.parse(h.time)===Date.parse(a.time)),recentBefore=kanaCueSeen(state,[q.reviewItem],session.createdAt,a.time,7)||original&&legacyKanaUnknown(state,original,session.updatedAt);
   const priorPair=pairCues.some(c=>c.item===q.reviewItem&&c.time>=Date.parse(session.createdAt)&&c.time<Date.parse(a.time));
   if(!last||ordinal(a.time)-ordinal(last.time)<7||recentBefore||between||priorPair||sameTime.length!==1){result.excluded++;continue;}
   result.total++;if(a.hinted)result.hinted++;if(a.correct&&!a.hinted)result.correct++;

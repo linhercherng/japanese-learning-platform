@@ -1,3 +1,4 @@
+import {kanaCueSeen,legacyKanaUnknown} from './kana-history-state.mjs';
 import {kana} from '../content/kana.mjs';
 import {coachQuestion,confusedKana} from '../content/kana-coach.mjs';
 import {resolveLearningQuestion} from '../content/catalog.mjs';
@@ -54,7 +55,7 @@ export function checkEvidence(state,session){
  for(const [qid,a] of Object.entries(session.answers)){
   const q=coachQuestion(qid);if(!q)continue;const history=map.get(`${q.reviewItem}:${q.dimension}`)||[],day=studyDay(a.time);
   const first=history.find(h=>studyDay(h.time)===day),sameTime=history.filter(h=>h.time===a.time);
-  if(!history.some(h=>studyDay(h.time)<day)||first?.time!==a.time||sameTime.length!==1){result.excluded++;continue;}
+  if(!history.some(h=>studyDay(h.time)<day)||first?.time!==a.time||sameTime.length!==1||!a.hinted&&kanaCueSeen(state,[q.reviewItem],session.createdAt,a.time)||first&&legacyKanaUnknown(state,first,session.updatedAt)){result.excluded++;continue;}
   result.total++;if(a.correct&&!a.hinted)result.correct++;if(a.hinted)result.hinted++;
  }return result;
 }

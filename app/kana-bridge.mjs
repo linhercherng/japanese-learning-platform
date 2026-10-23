@@ -11,7 +11,7 @@ export function createKanaBridge({getContext,update,render,toast,now,id,cacheDra
  function change(event){if(event.target.dataset.bridgeFamily!==undefined&&location.hash.startsWith('#kana-bridge')&&kana.some(k=>k.id===event.target.value))location.hash='kana-bridge/'+event.target.value;}
  function afterRender(name,param){
   const ctx=getContext(),item=param||'h-3042';if(name!=='kana-bridge'||ctx.session.bridgeCompare!==item||pendingBridge(ctx.state,item))return;const items=bridgeCueItems(item);if(!items.length)return;
-  const time=now();update(s=>{const next=recordKanaExposure(s,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));
+  const time=now();update(s=>{const next=recordKanaExposure(s,items,time,{kind:'reference',ref:'kana-bridge'});for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));
  }
  document.addEventListener('click',click);document.addEventListener('change',change);
  return {views:{'kana-bridge':item=>bridgeView(getContext(),item)},afterRender,validateCatalog(state){for(const s of state.v3.sessions)if(s.source==='kana-bridge'&&(!validBridgeReference(s.reference,s.questionIds)||s.queue.some(q=>!s.questionIds.includes(q.questionId))))throw Error('備份含不一致的平片互換。');},dispose(){document.removeEventListener('click',click);document.removeEventListener('change',change);}};
