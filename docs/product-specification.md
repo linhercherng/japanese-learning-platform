@@ -181,3 +181,10 @@ kana-pocket內整合聽辨入口與最近結果，不增導覽。source=kana-poc
 已完成kana-contrast結果接至既有kana-pocket-review，以contrastQuestion解析原kp題與首答，保留原題序／選項／狀態。逐字線索只重用目標memoryFor.tip，使用者線索編碼；錯答沿用雙卡遮住／揭開。從未加入與已移出分開說明，只有明示keep才更新單字口袋，不新增attempt或改寫首答。兩種pending均遮蔽回顧，切字／刷新關閉線索，曝光依實際文字同步七日／默寫及cache；麵包屑保留原雙向輪入口，不含答案。沿用schema3與舊source，不新增題目或儲存欄位。
 
 見[規劃](plans/2026-10-23-kana-sixteenth.md)與[驗收](kana-sixteenth-validation.md)。
+
+
+## 五十音記憶剩餘整合（v0.21.0，2026-10-23）
+
+kana-path依cutoff唯讀快照：最早未完成kana輪／默寫→七日→隔天→弱點→口袋→新三字或當日收尾；當日完成不重複推薦，實際字數非熟練。kana-notes索引合併保存／草稿，搜尋與script/group/scope篩選、10筆分頁、明示表單／IME守護、焦點與空結果復原。索引當頁及單字編輯頁按實際文字曝光，同步七日／默寫cache。kana-guide六段學習指南，首頁／工坊有入口。無新source或schema，原題、答案、口袋與備份不改。
+
+見[完成矩陣](kana-memory-completion.md)、[規劃](plans/2026-10-23-kana-memory-completion.md)與[驗收](kana-memory-completion-validation.md)。
