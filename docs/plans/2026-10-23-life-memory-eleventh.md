@@ -36,6 +36,6 @@ Files: modify `app/life-dictation.mjs`、`app/ui/life-dictation.mjs`及必要CSS
 
 - [x] 0.32.0與README／規格／課綱／畫面／來源／驗收，test→build→check、audit、160 shell SHA／MIME／SW與146原音HTTP。
 - [x] 本機隔離QA空白→新稿→提示／比較→刷新接續／再開空白，原LR／LD／LN／首答保留、LB目錄真數字與空結果、pending原UUID；320／390／768／1024／1440、48px／Tab／console／截圖。只用?qa=1，不清DB／快取／SW、不注入歷史。
-- [ ] PR同head CI、merge、Pages、正式HTTP／隔離UI、正常SW更新；證據文件push遠端一致，離開QA／停止server／恢復viewport。
+- [x] PR同head CI、merge、Pages、正式HTTP／隔離UI、正常SW更新；證據文件push遠端一致，離開QA／停止server／恢復viewport。
 
 此為整句再想練習，不是自由翻譯／作文／口說評量。教師／真人審校、實機／OS日文鍵盤、長期效果仍未由本批推論。回退先匯出JSON、保留DB／備份，舊版可能不辨LB入口；個人資料及QA不提交Git。

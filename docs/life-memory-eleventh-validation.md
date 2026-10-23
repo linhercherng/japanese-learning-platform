@@ -31,4 +31,15 @@ UI審查發現一項P2：收起頁共用「原草稿保留」說明，可能誤�
 
 ## 發布驗證
 
-本機驗收完成，待同head CI／合併／Pages成功與正式HTTP／隔離UI驗證後補記；此段不是已發布宣告。
+- [PR #44](https://github.com/linhercherng/japanese-learning-platform/pull/44) head `fee4f6ed373823b4d4e6f6f668e42f571bf7bb8f`；同head [CI39914463639](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39914463639) completed/success後按match-head合併，merge `2866a8b750488278ed337670c741ee44ca7b826e`。
+- [Pages39914584747](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39914584747)整體completed/success，build與deploy均success；deploy UTC06:57:52（台北14:57）完成。
+- UTC06:59:30正式160份shell逐檔SHA256／JS MIME／SW及146次原音HTTP通過，1次暫時連線重試；fingerprint與本機相同，預設TLS驗證，ignored紀錄 `work/life-eleventh-public-http.json`。276句全量索引／檔案通過屬自動測試，不宣稱276皆做正式HTTP。
+
+- 更新前展開正式隔離LR原稿作比對。正常分頁reload下載新版shell，暫離釋放舊client後依正常SW生命週期接手；序列160檔下載期間保持完整舊版，完成後出現空白再想與新scope。沒有清DB／快取／SW、強制啟用或注入歷史；所有新輸入／提示／作答仍僅?qa=1。
+- 正式LR空白開始無舊稿，輸入日文／emoji→一字／開頭提示→收起→比較→返回維持當次buffer與編輯器焦點；刷新先收起。再開空白仍空，不輸入收起後接續恢復先前LB，原LR與升級前完全相同。LD原草稿缺少長音的原文字亦保持，空白無hint控制，原音可播，新LB-D刷新接續正確，與LB-R獨立。
+- 正式LB篩選LR／LD各L07一課1句再想稿、1句有文字；原LR仍3稿3有文字、LD仍2稿2有文字。scope焦點保留，不預覽私人文字，health組合0課可換全部。
+- 正式未完成輪 `9d7f1bd7-17bf-4fe5-8e3b-cadda7b53b9d` 全遮蔽中文、原／再想稿及控制，只接原UUID；完成1題／1正確／1提示／0無提示。舊首輪 `7a5971bf-9045-4345-85b3-b80dad5bf171`仍3正確／2無提示／1提示，第六批L07中日文生活線索保持。
+- 正式再想編輯器及收起入口320／390／768／1024／1440px無橫溢，主要控制最小48px；Tab到提示有solid outline。console warn/error空，ignored隔離截圖 `work/life-eleventh-public-390.png`。
+- 回正常正式目錄只讀，12課原稿皆0且沒有LB，新增scope可見，沒有混入QA文字／答案。正常單句收起頁截圖 `work/life-eleventh-public-entry-390.png`；保留正式分頁、離開QA、恢復viewport，18124本輪伺服器已停止。第一至第十批一同保留；實機／OS日文鍵盤、教師／真人審校與長期成效仍未由本批推論完成。
+
+發布後僅補文件，採skip-ci提交；app與已驗證Pages fingerprint保持相同。
