@@ -51,7 +51,7 @@ export function answerV3Session(state,{sessionId,question,value,eventId,time,var
  if(entry.repeat?s.corrections[s.cursor]:s.answers[question.id])return state;
  const exposure=next.v3.kanaHints?.[question.reviewItem]?.lastHintAt;
  if(s.source==='kana-week'&&exposure&&Date.parse(exposure)<=Date.parse(time)&&(Date.parse(exposure)>=Date.parse(s.createdAt)||(Date.parse(studyDay(time))-Date.parse(studyDay(exposure)))/86400000<7)&&!s.hints.includes(question.id))s.hints.push(question.id);
- const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id)||isLifeSource(s.source)&&lifeCueSeen(next.v3.lifeHints,question.id,s.createdAt,time)||rhythmCueSeen(next.v3.rhythmHints,question,s.createdAt,time)||['kana-duel','kana-bridge','kana-family','kana-row','kana-pocket-listen','kana-contrast'].includes(s.source)&&duelCueSeen(next.v3.kanaHints,question,s.createdAt,time),time};
+ const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id)||isLifeSource(s.source)&&lifeCueSeen(next.v3.lifeHints,question.id,s.createdAt,time,s.source==='life-week'?7:1)||rhythmCueSeen(next.v3.rhythmHints,question,s.createdAt,time)||['kana-duel','kana-bridge','kana-family','kana-row','kana-pocket-listen','kana-contrast'].includes(s.source)&&duelCueSeen(next.v3.kanaHints,question,s.createdAt,time),time};
  if(entry.repeat)s.corrections[s.cursor]=a;
  else{
   s.answers[question.id]=a;

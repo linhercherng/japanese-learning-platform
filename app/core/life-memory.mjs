@@ -17,12 +17,12 @@ export function lifeCheckCandidates(state,time){
 }
 export function startLifeCheck(state,{id,time}){if(pendingLife(state)||state.v3.sessions.some(s=>s.source==='life-check'&&s.reference===studyDay(time)))return state;const qs=lifeCheckCandidates(state,time);return qs.length?beginV3Session(state,qs.map(q=>q.id),{id,time,source:'life-check',reference:studyDay(time)}):state;}
 export function lifeCheckReport(state,sessionId){
- const s=state.v3.sessions.find(s=>s.id===sessionId&&s.source==='life-check'),r={total:0,independent:0,hinted:0,comparable:0,retained:0,excluded:0};if(!s)return r;
+ const s=state.v3.sessions.find(s=>s.id===sessionId&&['life-check','life-week'].includes(s.source)),r={total:0,independent:0,hinted:0,comparable:0,retained:0,excluded:0};if(!s)return r;
  for(const [qid,a] of Object.entries(s.answers)){
   r.total++;if(a.hinted)r.hinted++;if(a.correct&&!a.hinted)r.independent++;
   const all=lifeHistory(state,a.time).filter(h=>h.item===qid),prior=all.filter(h=>Date.parse(h.time)<Date.parse(s.createdAt)).at(-1);
   const between=all.some(h=>Date.parse(h.time)>=Date.parse(s.createdAt)&&Date.parse(h.time)<Date.parse(a.time)),sameTime=all.filter(h=>Date.parse(h.time)===Date.parse(a.time));
-  if(a.hinted||!prior||studyDay(prior.time)>=studyDay(a.time)||between||sameTime.length!==1){r.excluded++;continue;}
+  if(a.hinted||!prior||(Date.parse(studyDay(a.time))-Date.parse(studyDay(prior.time)))/86400000<(s.source==='life-week'?7:1)||between||sameTime.length!==1){r.excluded++;continue;}
   r.comparable++;if(a.correct)r.retained++;
  }return r;
 }
