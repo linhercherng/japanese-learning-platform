@@ -34,6 +34,6 @@ Files: app/ui/life-dictation.mjs、app/life-dictation.mjs、app/v3.css。
 
 - [x] 0.35.0與README／規格／課綱／畫面／來源／驗收，完整npm test→build→check／audit、160 shell SHA／MIME／SW與146原音HTTP。
 - [x] 本機?qa=1遮一處→輸入→核對／再試→整句空白再想→舊LB仍在，空原片段／明示空答、雙模式／刷新／原輪UUID／舊首答線索；五種寬度／48px／Tab／console／截圖。
-- [ ] PR同head CI再合併，Pages整體／build／deploy成功，正式HTTP／正常SW與隔離UI通過，文件證據push遠端一致；回正常入口、恢復viewport、停server。
+- [x] PR #47同head CI再合併，Pages整體／build／deploy成功，正式HTTP／正常SW與隔離UI通過，文件證據push遠端一致；回正常入口、恢復viewport、停server。詳見驗收文件。
 
 片段為當次回想，不評自由翻譯／文法／口說或跨日記憶。無新語言教材，教師／真人審校、實機OS日文鍵盤與長期效果仍另列未驗證。不清DB／快取／SW、不注入歷史，個人資料及QA不提交Git，回退先匯出JSON保留資料。

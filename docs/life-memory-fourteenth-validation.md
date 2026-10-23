@@ -30,4 +30,10 @@
 
 ## 發布
 
-待同head CI／合併／Pages、正式HTTP／正常SW與隔離UI通過後補記；尚非發布完成宣告。
+PR [#47](https://github.com/linhercherng/japanese-learning-platform/pull/47) head `b38adaf15916b38b260f32cbe6a0de1240424cb5`，CI [39926078461](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39926078461) success。UTC08:39:45合併為 `26a357243e8c24f86fdf10e4a18138d749ef2d44`；Pages [39926231708](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39926231708) 同merge SHA，整體／build／deploy均success，deploy UTC08:41:07完成。
+
+正式URL https://linhercherng.github.io/japanese-learning-platform/ ，UTC08:42:44以PowerShell預設TLS逐檔驗證160 shell SHA256／JS MIME／SW fingerprint及146音檔抽樣HTTP通過，1次暫時重試；ignored證據work/life-fourteenth-public-http.json。正式shell為上述f41750 fingerprint。正常profile初始化並等待SW安裝，離開舊client後再進隔離庫，實際一處差異已出現本批遮住入口；沒有清DB／cache／SW或強制skipWaiting。
+
+正式?qa=1用原有LB-R「コーヒーを二つ🍵」驗證遮住兩側→二核對顯不同→再遮→一核對顯相同、返回仍第1/2處、接整句空白。片段填一🍵後刷新收起，重接原LB-R文字保持；原LR「コーヒーを一つお願いします。」與LD「コーヒを一つお願いします。」保持。聽寫沿原LD少ー的一處驗證明示空答顯空側／不同、一個空白不被trim、補ー核對相同。生活線索「午休點飲料，先想一杯與外帶。コーヒーを一つ。」保持。本批正式QA未新增客觀作答或改整句草稿。
+
+正式補練320／390／768／1024／1440px實際innerWidth確認、無橫溢，textarea18px、核對48px、空答及返回49px；console warn/error空。ignored正式隔離截圖work/life-fourteenth-public-fragment-390.png。正常庫12課中文回想與聽寫均仍0句草稿，未填個人資料；最後留正常中文回想入口、恢復viewport、停止本批18124測試server。此後只補文件，不改已發布app或fingerprint；文件提交遠端一致另由Git確認。
