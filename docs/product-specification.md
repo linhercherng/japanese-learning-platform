@@ -237,3 +237,10 @@ life-skill/<unit>讓92課按聽解、自主填空／排序、字詞／情境理�
 life-notes/<unit>是個人情境線索，92課各160字，草稿與已保存文字分開。預設收起、離頁／刷新收起；任一生活pending全遮蔽並接同UUID。非空文字展開、輸入或保存，保守記本課全qid參考；空編輯器與索引不記。線索不新增作答／完成／熟練度、不改首答。life-notes索引搜尋課名與個人文字、程度／場景／已保存或草稿，10課一頁，只有狀態沒有正文預覽。
 
 schema3 optional lifeNotes（92key，text／updatedAt）與text:LN-<unit>草稿（160字，空points）。新舊線索依實際時間合併，同時異文拒絕；空文字墓碑保留移除意圖。舊草稿對消、新草稿保留，同時異文拒絕。input不中斷IME，明示保存，連按鎖／route epoch／新輸入版本保護；寫入失敗留可匯出候選及最新快取。鍵盤收起／保存／搜尋／翻頁均接續焦點，scroll margin避開目前路徑。見[規劃](plans/2026-10-23-life-memory-sixth.md)與[驗收](life-memory-sixth-validation.md)。
+
+
+## 生活記憶第七批（v0.28.0，2026-10-23）
+
+life-topic及life-topic/<ceiling>為20主題目錄，life-topic/<topic>:<ceiling>為同主題回想。程度上限L→N5→N4→N3→N2，預設L，選擇留URL；主頁顯示範圍內總課、真實練過課及這次最多題數，無答案或筆記預覽／曝光。只選cutoff內有效attempts，重建reviews，依最近錯答／提示→到期→其他已練、較早作答／qid排序；同主題不超上限，最多三個不同unit、一課一題。沒有歷史顯示空，僅一課明示單課。
+
+新source life-topic，reference=topic:ceiling，1～3唯一qid／不同unit／同主題／程度內／queue只含原題。raw metadata與catalog共用life-topics對照，schema3與V1/V2資料不改。共同life pending、lifeHints、原首答、回顧、地圖及每日收尾沿用；結果標實際課題數、接回本輪原課／逐句卡／能力／線索與原topic URL。同日加練不等於跨日記住，也不是新情境／自由口說評量。連按／stale reference／epoch／寫入失敗可匯出與手機48px／鍵盤沿用。見[規劃](plans/2026-10-23-life-memory-seventh.md)。
