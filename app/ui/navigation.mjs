@@ -1,3 +1,4 @@
+import {parseLifeDictationRef} from '../core/life-dictation-state.mjs';
 import {parseLifeTopicRoute} from '../content/life-topics.mjs';
 import {rowRoundById} from '../content/kana-row.mjs';
 import {escapeHtml as e} from './shared.mjs';
@@ -50,6 +51,7 @@ export function navigationContext(ctx,name='home',param){
   case 'life-map':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活記憶地圖',route)];break;
   case 'life-round':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活記憶地圖','life-map'),item('本輪逐題回顧',route)];break;
   case 'life-cards':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item(unitById.get(param)?.title||'生活單元','life-memory/'+param),item('逐句回想卡',route)];break;
+  case 'life-dictation':{const p=parseLifeDictationRef(param);section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活聽寫目錄','life-dictation'),...(p?[item(unitById.get(p.unitId)?.title||'生活單元','life-memory/'+p.unitId),item('生活原句聽寫',route)]:[])];break;}
   case 'life-topic':{const r=parseLifeTopicRoute(param);section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活主題回想',r?'life-topic/'+r.ceiling:'life-topic'),...(r?.topic?[item(topics.find(([id])=>id===r.topic)?.[1]||'生活主題',route)]:[])];break;}
   case 'life-notes':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('生活線索簿','life-notes'),...(param?[item(unitById.get(param)?.title||'生活單元','life-memory/'+param),item('我的生活線索',route)]:[])];break;
   case 'life-skill':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),...(param?[item(unitById.get(param)?.title||'生活單元','life-memory/'+param)]:[]),item('生活能力專練',route)];break;
