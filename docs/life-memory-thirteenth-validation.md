@@ -28,4 +28,16 @@ build→check完成，audit **0弱點**；208卡／508筆順／10947音檔索引
 
 ## 發布
 
-待同head CI／合併／Pages、正式HTTP／正常SW及隔離UI通過後補記；尚非發布完成宣告。
+- [PR #46](https://github.com/linhercherng/japanese-learning-platform/pull/46) head `d6e6674bf94796556e0d2f534dfca975ef5031fc`，同head [CI39921148080](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39921148080) completed/success後按match-head合併，merge `dcf7a058f39e937d364f3b195edbbaade81bfc78`。
+
+- [Pages39921304671](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39921304671)整體、build與deploy均completed/success，deploy UTC07:59:24（台北15:59）完成。
+- UTC08:00:45正式160份shell逐檔SHA256／JS MIME／SW與146次原音HTTP通過，0重試，預設TLS驗證；fingerprint與本機相同。ignored紀錄work/life-thirteenth-public-http.json。
+
+- 正常正式分頁reload下載新版。首次瀏覽器控制出現CDP逾時，重新觀察後可正常操作，未清任何資料；先讓正常profile初始化完成、顯示離線已準備，再暫離釋放舊client，依正常SW生命週期接手。舊版保持完整可操作，切換前寫的LB也在新版保留。沒有清DB／快取／SW或強制啟用，所有新輸入／作答仍只?qa=1。
+- 正式LR有4處差異，先看一處→下一／上一處→回完整，原文字保持、焦點至差異標題；空側／短定位正確。收起答案回空textarea、無舊文字或答案；未輸入退出接續仍回舊LB。重新輸入日文／emoji→保存→刷新→主動接續恢復，原LR與更新前完全相同。
+- 正式LD原稿保留原缺長音字串，一處視圖正確為1處；空白再想後新input只更新LB-D。輸入與原句相同文字時無一處入口，仍提供空白再想，與LR分開。
+- 正式未完成輪 `a47889d5-ee32-4d74-8554-ca30089c5c69` 全遮蔽差異／稿，接同UUID，完成1題／1正確／1提示／0無提示；舊首輪仍3正確／2無提示／1提示，第六批L07中日文線索保持。第十二批blank/shopping仍指L03:2，兩批整合保持。
+- 正式一處頁320／390／768／1024／1440px無橫溢，主要控制最小48px、差異標題焦點保持；console warn/error空。ignored驗收截圖work/life-thirteenth-public-difference-390.png，使用隔離測試文字。
+- 回正常目錄只讀，12課皆0原稿且沒有LB，未混入QA資料；正常入口截圖work/life-thirteenth-public-entry-390.png。保留正常正式分頁、離開QA、恢復viewport，18124本輪伺服器已停止。第一至第十二批與資料持續保留；實機／OS日文鍵盤、教師／真人與長期成效仍未由本批推論完成。
+
+發布後僅補文件，以skip-ci提交；app與已驗證Pages fingerprint保持一致。

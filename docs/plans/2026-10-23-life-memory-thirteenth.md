@@ -33,6 +33,6 @@ Files: app/ui/life-dictation.mjs、app/life-dictation.mjs、app/v3.css（必要�
 
 - [x] 0.34.0及規格／課綱／畫面／來源／README／驗收。完整test→build→check／audit、160shell及146原音HTTP／SHA／MIME／SW。
 - [x] 本機隔離QA多處差異→下一處→回完整→收起從空白再想→未輸入舊LB保留→輸入／刷新接續；雙模式／pending原UUID／舊首答線索、320／390／768／1024／1440、48px／Tab／console／截圖。
-- [ ] PR同headCI通過後合併、Pages build／deploy成功、正式HTTP／隔離UI／正常SW更新，文件證據push／遠端一致，正常入口／viewport／停server。
+- [x] PR同headCI通過後合併、Pages build／deploy成功、正式HTTP／隔離UI／正常SW更新，文件證據push／遠端一致，正常入口／viewport／停server。
 
 個人資料／QA不提交Git，不清DB／快取／SW或注入歷史。教師／真人／實機日文鍵盤及長期成效另列未驗證，回退先匯出JSON保留資料。
