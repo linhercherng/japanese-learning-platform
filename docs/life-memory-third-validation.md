@@ -31,4 +31,12 @@ requesting-code-review獨立核心與介面審查均通過，沒有阻擋項。�
 
 ## 發布證據
 
-建置、HTTP及正式發布驗證完成後補入本節。
+- [PR #36](https://github.com/linhercherng/japanese-learning-platform/pull/36) head `44d36cba36ebee7e03b0ef5699a5dfa603ed4bbf`，同head [CI run39889858674](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39889858674) completed/success後按match-head合併。
+- merge `4a213e9a4e7efb41cd752f7ba4bfad5e23201943`；[Pages run39889975056](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39889975056)整體completed/success，build/deploy皆success，deploy UTC02:32:09（台北10:32）完成。
+- 正式[生活複習預告](https://linhercherng.github.io/japanese-learning-platform/#life-schedule)、[七日生活回想](https://linhercherng.github.io/japanese-learning-platform/#life-week)及首頁入口可使用。
+- UTC02:33:35正式HTTP逐檔校驗142份shell SHA256／JS MIME／SW fingerprint及146次原音檔，0重試；fingerprint與本機相同，預設TLS驗證，ignored紀錄`work/life-third-public-http.json`。
+- 正式隔離QA沿用前兩批L07：原輪仍3題答對／2無提示／1提示，三種能力每日首筆仍各1筆（聽解／理解各1無提示，自主填空1提示）。地圖顯示今日完成與自行加練，預告僅L07、日期2026-10-24／2026-10-30；七日未到期不建立輪次。
+- 從收尾頁自行加練原填空1題，暫停地圖優先接續同UUID `2dbee698-0da6-4872-ae91-013f689d4fe0`；填「で」完成仍另列提示，結果接預告。完成後每日首答統計不變，原三題小結仍2/3無提示，原輪回顧預設收起。
+- 正式320/390px無橫溢，七日／預告主內容連結44～58px，Tab焦點可見、main聚焦、console warn/error空。截圖ignored `work/life-third-public-390.png`、`work/life-third-public-dates-390.png`及`work/life-third-public-320.png`。七日可開始／結果使用自動固定時間測試，本日手動驗證未到期分支。
+- 正常分頁保持開啟至新離線shell下載後暫離網站，再重新開啟，由正常SW生命週期接手；沒有清DB／快取／SW。QA分頁與18124本機伺服器已關閉。正常個人資料庫僅驗首頁新連結與空歷史預告、未答題或改資料；正式入口已保留。
+- 實際七日成效、iPhone／Android實機與教師／真人語音審校，未由本批驗證推論完成。

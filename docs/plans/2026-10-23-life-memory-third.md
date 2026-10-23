@@ -37,6 +37,6 @@ Files: `app/life-retention.mjs`、`app/ui/life-retention.mjs`、main／navigatio
 
 - [x] 版本0.24.0、README／規格／課綱／畫面／來源／驗收；npm test→build→check，audit零high。
 - [x] requesting-code-review獨立核心／UI審查及修補複核；本機隔離QA收尾／預告／七日未到期／既有回顧與加練、320/390px／44px／鍵盤／console／原紀錄。
-- [ ] 同head CI成功合併、Pages成功，正式shell SHA／JS MIME／SW與146次原音HTTP、隔離UI與截圖；補證據push、遠端一致、關QA／server。
+- [x] 同head CI成功合併、Pages成功，正式shell SHA／JS MIME／SW與146次原音HTTP、隔離UI與截圖；補證據push、遠端一致、關QA／server。
 
 七日／跨日規則用固定時間自動測試，不注入虛構瀏覽器歷史或改時鐘，不把當日QA說成實際追蹤七天。實機與教師／真人審校另列；回退先匯出JSON，舊版可能不認life-week，勿清DB。個人答案／草稿／QA不進Git。
