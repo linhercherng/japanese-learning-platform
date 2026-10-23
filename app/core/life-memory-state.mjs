@@ -15,9 +15,9 @@ export function mergeLifeHints(a={},b={}){
   out[qid]=[...dates.values()].sort((x,y)=>Date.parse(x)-Date.parse(y));
  }return validateLifeHints(out);
 }
-export function lifeCueSeen(hints,qid,start,end){return Boolean(hints?.[qid]?.some(t=>Date.parse(t)<=Date.parse(end)&&day(t)>=day(start)&&day(t)<=day(end)));}
+export function lifeCueSeen(hints,qid,start,end,windowDays=1){const earliest=Math.min(Date.parse(day(start)),Date.parse(day(end))-(windowDays-1)*86400000);return Boolean(hints?.[qid]?.some(t=>Date.parse(t)<=Date.parse(end)&&Date.parse(day(t))>=earliest));}
 export function validateLifeExposure(sessions,hints){
- for(const s of sessions)if(isLifeSource(s.source))for(const [qid,a] of Object.entries(s.answers))requireValue(a.hinted||!lifeCueSeen(hints,qid,s.createdAt,a.time),'生活提示曝光與原首答衝突，未合併，請保留備份。');
+ for(const s of sessions)if(isLifeSource(s.source))for(const [qid,a] of Object.entries(s.answers))requireValue(a.hinted||!lifeCueSeen(hints,qid,s.createdAt,a.time,s.source==='life-week'?7:1),'生活提示曝光與原首答衝突，未合併，請保留備份。');
 }
 export function recordLifeExposure(state,questionIds,time){
  requireValue(validTime(time));const addition={};for(const qid of new Set(questionIds)){requireValue(lifeQuestionUnits.has(qid));addition[qid]=[time];}

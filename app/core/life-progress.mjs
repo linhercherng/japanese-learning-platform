@@ -1,3 +1,4 @@
+import {lifeDailyCompleted,lifeWeekSchedule} from './life-retention.mjs';
 import {questionById,unitQuestions,unitById} from '../content/catalog.mjs';
 import {isLifeSource} from '../content/life-memory-ids.mjs';
 import {lifeMemoryUnits,lifeHistory,lifeCheckCandidates,pendingLife} from './life-memory.mjs';
@@ -27,9 +28,11 @@ export function lifeProgressReport(state,time){
 }
 export function lifeNextStep(state,time){
  const p=pendingLife(state);if(p)return {kind:'pending',title:'接續未完成的生活回想',detail:'先完成原輪，首答與提示會保留。',route:'v3-practice/'+p.id};
+ if(lifeDailyCompleted(state,time))return {kind:'done',title:'今天的一小步，完成了。',detail:'今天已完成一輪；先把原紀錄留給明天確認，需要時仍可自行加練。',route:'life-schedule'};
+ if(!state.v3.sessions.some(s=>s.source==='life-week'&&s.reference===studyDay(time))&&lifeWeekSchedule(state,time).questions.length)return {kind:'week',title:'先確認七天後還記不記得',detail:'只回想距離練習與參考都已滿七天的原題。',route:'life-week'};
  if(!state.v3.sessions.some(s=>s.source==='life-check'&&s.reference===studyDay(time))&&lifeCheckCandidates(state,time).length)return {kind:'check',title:'先做隔天生活複習',detail:'較早日期做過的題目，先不看參考想一次。',route:'life-check'};
  if(lifeWeakQuestions(state,time).length)return {kind:'repair',title:'先練最多三題弱點',detail:'從最近錯答或用過提示的原題中，每課挑一題。',route:null};
- const unit=lifeMemoryMap(state,time).find(u=>u.status==='new');return unit?{kind:'new',title:'學一個還沒練過的場景',detail:unit.unit.title,route:'life-memory/'+unit.id}:{kind:'done',title:'今天可以先收尾了',detail:'練過不代表熟練。隔天再確認，也能回原課寫自己的句子。',route:'life-check'};
+ const unit=lifeMemoryMap(state,time).find(u=>u.status==='new');return unit?{kind:'new',title:'學一個還沒練過的場景',detail:unit.unit.title,route:'life-memory/'+unit.id}:{kind:'done',title:'今天可以先收尾了',detail:'練過不代表熟練。隔天再確認，也能回原課寫自己的句子。',route:'life-schedule'};
 }
 export function startLifeRepair(state,{id,time}){if(pendingLife(state))return state;const qs=lifeWeakQuestions(state,time);return qs.length?beginV3Session(state,qs.map(q=>q.id),{id,time,source:'life-repair',reference:studyDay(time)}):state;}
 export function lifeRoundReview(state,sessionId,time){
