@@ -23,20 +23,20 @@
 
 Files: create app/content/life-topics.mjs、app/core/life-topics.mjs；modify app/content/catalog.mjs、app/content/life-memory-ids.mjs、app/core/v3-state.mjs；tests/life-topics.test.mjs。
 
-- [ ] RED：92課raw/catalog一致、20主題×5程度、cutoff／review重建、弱點→到期順序、不同unit最多3、沒歷史／未知值／空集合、一課少量、來源qid／topic／ceiling／queue驗證、共同pending、備份／衝突／原首答／提示／每日收尾。
-- [ ] 最小實作，測試GREEN並提交。
+- [x] RED：92課raw/catalog一致、20主題×5程度、cutoff／review重建、弱點→到期順序、不同unit最多3、沒歷史／未知值／空集合、一課少量、來源qid／topic／ceiling／queue驗證、共同pending、備份／衝突／原首答／提示／每日收尾。
+- [x] 最小實作，測試GREEN並提交。
 
 ## Task 2：手機主題回想與流程整合
 
 Files: create app/life-topics.mjs、app/ui/life-topics.mjs；modify main／navigation／v3結果、life-memory／life-review／life-skills／courses入口、v3.css；tests/life-topics-ui.test.mjs、tests/life-topics-controller.test.mjs。
 
-- [ ] RED：目錄真數字、上限／topic URL、無正文曝光、pending／未知／空狀態、單課與跨課文案、結果與原輪、HTML、連按／失敗候選／延遲離頁／舊reference／select路由。
-- [ ] GREEN，獨立核心及UI審查；必要修補先RED再GREEN。
+- [x] RED：目錄真數字、上限／topic URL、無正文曝光、pending／未知／空狀態、單課與跨課文案、結果與原輪、HTML、連按／失敗候選／延遲離頁／舊reference／select路由。
+- [x] GREEN，獨立核心及UI審查；必要修補先RED再GREEN。
 
 ## Task 3：驗收與發布
 
-- [ ] 隔離QA原題作答、刷新／原UUID／草稿、舊首答／筆記保留、主題與上限／空狀態；320／390px觸控尺寸、鍵盤／路徑／console；不清資料或偽造跨日紀錄。
-- [ ] 版本0.28.0與README／規格／課綱／畫面／來源／驗收；npm test→build→check、audit，逐檔shell SHA／JS MIME／SW及146原音HTTP。
+- [x] 隔離QA原題作答、刷新／原UUID／草稿、舊首答／筆記保留、主題與上限／空狀態；320／390px觸控尺寸、鍵盤／路徑／console；不清資料或偽造跨日紀錄。
+- [x] 版本0.28.0與README／規格／課綱／畫面／來源／驗收；npm test→build→check、audit，逐檔shell SHA／JS MIME／SW及146原音HTTP。
 - [ ] push／PR同head CI通過／merge／Pages完成，正式HTTP與隔離UI／截圖、正常SW更新、文件證據push遠端一致，關QA／server。
 
 教材／教師與真人審校、OS日文鍵盤／實機與長期記憶效果未由本次推論完成。回退先匯出JSON，舊版可能不認life-topic source；保留DB／備份，個人資料不進Git。
