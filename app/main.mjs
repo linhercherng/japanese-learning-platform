@@ -1,3 +1,4 @@
+import {createLifeCardsController} from './life-cards.mjs';
 import {createLifeRetention} from './life-retention.mjs';
 import {createLifeReview} from './life-review.mjs';
 import {createLifeMemory} from './life-memory.mjs';
@@ -58,6 +59,7 @@ const kanaFocus=createKanaFocus({getContext:context,update,render,toast,now,id,c
 const lifeMemory=createLifeMemory({getContext:context,update,render,toast,now,id});
 const lifeReview=createLifeReview({getContext:context,update,render,toast,now,id});
 const lifeRetention=createLifeRetention({getContext:context,update,render,toast,now,id});
+const lifeCards=createLifeCardsController({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate)});
 function context(){const displayed={...(unsaved||state),drafts:{...(unsaved||state).drafts,...session.latestDrafts}};return {state:displayed,unsaved,session,kana,kanaLessons,kanaPhonology,lifeLessons,strokes,audioIndex,due:dueReviews(state),...v2.contextExtras()};}
 function update(fn){
  pendingWrites++;status.textContent='保存中…';
@@ -79,7 +81,7 @@ function render(focus=true){
  canvas?.dispose();canvas=null;animationSequence++;document.getAnimations().forEach(a=>a.cancel());
  const {name,param}=route(),ctx=context();
  v2.onRoute(name,param);
- v3.onRoute(name,param);lifeReview.onRoute(name,param);
+ v3.onRoute(name,param);lifeReview.onRoute(name,param);lifeCards.onRoute(name,param);
  if(name==='lesson'&&session.activeLesson!==param){session.activeLesson=param;session.lessonTab='對話';}
  const views={'kana-guide':()=>kanaGuideView(),home:()=>homeView(ctx),kana:()=>kanaView(ctx),unit:()=>unitView(ctx,param),stroke:()=>strokeView(ctx,param),write:()=>writingView(ctx,param||kana[0].id),life:()=>lifeView(ctx),lesson:()=>lifeLessonView(ctx,param),review:()=>reviewView(ctx),profile:()=>profileView(ctx),quiz:quizView,exam:()=>`${heading('一步一步，走向 N3。','完整檢定課程與模擬試卷會在後續版本加入。')}<section class="self-check"><h2>現在先把基礎練穩</h2><p>這一版可練完整五十音、音韻與六個生活任務。這些課程與進度不是 JLPT 合格證明。</p>${primary('練習五十音','kana')}</section>`};
  for(const [view,renderer] of Object.entries(v2.views))views[view]=()=>renderer(param);
@@ -99,6 +101,7 @@ function render(focus=true){
  for(const [view,renderer] of Object.entries(lifeMemory.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(lifeReview.views))views[view]=()=>renderer(param);
  for(const [view,renderer] of Object.entries(lifeRetention.views))views[view]=()=>renderer(param);
+ for(const [view,renderer] of Object.entries(lifeCards.views))views[view]=()=>renderer(param);
  main.innerHTML=(views[name]||views.home)();main.dataset.screen=name;
  const navigation=navigationContext(ctx,name,param);
  locationContext.innerHTML=navigationView(navigation);
@@ -112,7 +115,7 @@ function render(focus=true){
   const item=allWritingItems.find(k=>k.id===param)||kana[0];const key=`write:${item.id}`;
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
- lifeReview.afterRender(name,param);lifeMemory.afterRender(name,param);kanaNotebook.afterRender(name,param);kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);kanaPocketReview.afterRender(name,param);v2.afterRender(name,param);v3.afterRender(name,param);
+ lifeCards.afterRender(name,param);lifeReview.afterRender(name,param);lifeMemory.afterRender(name,param);kanaNotebook.afterRender(name,param);kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);kanaPocketReview.afterRender(name,param);v2.afterRender(name,param);v3.afterRender(name,param);
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
 }
 function phonologyQuestions(lessonId){return (kanaPhonology.find(p=>p.lessonId===lessonId)?.questions||[]).map((q,i)=>({item:`${lessonId}-p${i}`,dimension:'language',prompt:q.prompt,options:q.choices.map((label,j)=>({value:String(j),label})),correct:q.choices.indexOf(q.answer),explanation:q.explanation}));}
