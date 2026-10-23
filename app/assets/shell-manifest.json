@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "fff84599c4c805555cbefe71b2449494255376c168728932590f1f8fb85262ea",
+  "fingerprint": "57b732a2d8c6f93c0e9014608200c6f5e292da90f7e9b8bc4b723ab3bdc8afbc",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -303,7 +303,7 @@
     "ui/courses.mjs": "7c8737bd2185bafcb3130e71040958e8e72d624133f3ed4fae01078cdfa6d8a8",
     "ui/exam.mjs": "bd2162b181d246ec73d271101c109d358cbe0906d6c68605b6c54d4419ba7786",
     "ui/jlpt-guide.mjs": "d8362d97a191fafecb6e72c5d0f8ffcf5ccc61e2d5173835ec683624f2c63837",
-    "ui/jlpt-memory.mjs": "b7af19bcb4baf2a3c00b2ea3014b50eae44b398f84559be090a60674a41a0706",
+    "ui/jlpt-memory.mjs": "549706b517462136e0e77bc3350776ca06b0fae6d2aea71a9c5a56bbfcb518fd",
     "ui/kana-bridge.mjs": "22e82990db3c1fdb5cfe9802eec23c0298b9646c076999bef7dd989064b8ec9f",
     "ui/kana-coach.mjs": "a20e8a7fd7b097de0b30f32b10d83d692821f2339721170f9bd5244733529abe",
     "ui/kana-contrast.mjs": "e5a7573aecbd255c106b765ea1899d36069adb18b4c997078ed88a36ea8d0b06",
@@ -345,5 +345,5 @@
     "v3.css": "4f6f3e5aa2d9649fe498c2f3f170cb343dc2cae420fc2ea4d8f60506aa9f3f99",
     "v3.mjs": "69c8db92cb73bee69921d8d82822a71aee69572b9e80c69af4baea5bd7d691be"
   },
-  "bytes": 8489081
+  "bytes": 8489139
 }

@@ -1,4 +1,4 @@
-# N5～N2 檢定課程記憶與複習驗收（v0.37.0）
+# N5～N2 檢定課程記憶與複習驗收（v0.37.1）
 
 2026-10-23，Asia/Taipei。[完成矩陣](jlpt-memory-completion.md)、[執行計畫](plans/2026-10-23-jlpt-memory-complete.md)。四級主課一次交付，不另分批。
 
@@ -35,3 +35,21 @@ N5-01個人線索實際輸入「自我介紹先想身分，再想對方。私は
 ## 驗證限制
 
 教師審校、真人音訊評估、iPhone／Android實機OS鍵盤與手勢、真人長期學習效果仍未驗證。桌面瀏覽器的手機尺寸與合成事件測試不取代實機；原題原始正確率不是JLPT換算分數或合格機率。回退先匯出JSON，舊版未必識別新source／hint／note；不刪資料回退。
+
+## GitHub 與正式發布
+
+PR [#49](https://github.com/linhercherng/japanese-learning-platform/pull/49) head `80808934184c675cb53db9056905c848437960fa`，CI [39939444776](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39939444776) success。UTC10:31:00合併為 `fa568ee3c569760d691378d6f10040bd20515cea`。Pages [39939662208](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39939662208) 同merge SHA，整體／build／deploy success，deploy UTC10:32:39完成。
+
+正式URL https://linhercherng.github.io/japanese-learning-platform/ ，UTC10:35:02以PowerShell預設TLS驗證170 shell逐檔SHA256／JS MIME／SW fingerprint與424音檔抽樣HTTP通過，0重試；fingerprint為上述fff84599。ignored證據work/jlpt-public-http.json。原音抽樣不是全量真人音質驗證。
+
+## 正式回顧順序修正（v0.37.1）
+
+v0.37.0正式操作發現回顧選項／詞塊雖同原題，隨機呈現seed卻不同於原作答畫面。改用與questionView相同的原輪ID＋qid seed，詞塊含tokens後綴；填空不額外顯示原作答未展示的raw options。首答、值、原題與曝光規則不變。新增一項RED→GREEN，用真正已完成文法輪的cloze／order／choice及questionView畫面作基線比較，12項UI測試通過；後續重新全測、建置與部署。
+
+v0.37.0正常profile初始化／reload，保留頁面等待UI顯示「課程文字與筆順已準備離線使用」，再暫離舊client，正式新route出現；沒有清DB/cache/SW或強制skipWaiting。正式隔離庫三類卡、原音、間隔再想正常；新JN「介紹自己先想人，再想身分。私は学生です。🍵」收起、刷新與展開保持。N3漢字輪f901e9cd-dea4-428a-ac77-425eb1c98631轉N2線索只顯原輪接續，刷新續答後1正確／0提示，逐題回顧原值保持。
+
+升級前後UI匯出JSON比較：原44筆attempts、9份drafts、27輪sessions、作品、模擬、settings及lifeNotes逐筆深比對相同；新增1次N3漢字作答與1份JN稿。新備份parse/export往返相同。個人正式資料仍與?qa=1分離。
+
+順序修正再經獨立唯讀審查12項UI測試、四級28題choice／listen／order／cloze，與真正questionView相同，回顧前後state與備份不變。v0.37.1完整759／759通過（本次新增40項）。
+
+v0.37.1 build→check、audit 0弱點；170 shell fingerprint `57b732a2d8c6f93c0e9014608200c6f5e292da90f7e9b8bc4b723ab3bdc8afbc`。UTC10:41:43本機170 shell SHA256／JS MIME／SW HTTP通過、0重試；音檔與索引未修改，沿用v0.37.0已完成424原音HTTP驗證，不重複抽樣。ignored記錄work/jlpt-final-local-http.json。
