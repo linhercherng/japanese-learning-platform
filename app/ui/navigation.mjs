@@ -69,7 +69,8 @@ export function navigationContext(ctx,name='home',param){
    section='practice-hub';const id=state.practice?.unitId;
    trail=unitById.has(id)?[...unitTrail(id),item('課內回想',route)]:id==='library-words'?[home,courses,item('詞彙與例句','library/words'),item('詞卡回想',route)]:id==='review-set'?[home,practice,item('到期複習與錯題','review'),item('複習回想',route)]:[home,practice,item('能力回想',route)];break;
   }
-  case 'review':case 'weaknesses':section='practice-hub';trail=[home,practice,item(name==='review'?'到期複習與錯題':'概念與能力紀錄',route)];break;
+  case 'review':section='practice-hub';trail=[home,practice,item('到期複習與錯題',route)];break;
+  case 'weaknesses':{section='practice-hub';trail=[home,practice,item('六區記憶與弱點','weaknesses')];if(param){const g=param.split(':')[0],label=({K:'五十音',L:'生活日語',N5:'N5',N4:'N4',N3:'N3',N2:'N2'})[g]||'全部六區';trail.push(item(label+' · 篩選明細',route));}break;}
   case 'library':trail=[home,courses,item(({words:'詞彙與例句',kanji:'漢字與筆順',grammar:'句型與文法'})[param]||'學習資料庫',route)];break;
   case 'deep':trail=[home,courses,deep];if(param)trail.push(item(deepLessons.find(u=>u.id===param)?.title||'深化單元',route));break;
   case 'confusion':section='practice-hub';trail=[home,practice,pairs];if(param)trail.push(item('相似字對照',route));break;
