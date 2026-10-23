@@ -260,3 +260,10 @@ input先cache後串行寫入，不重繪；route epoch／busy／ref保護與IME�
 life-recall目錄／life-recall/<unit>:<0..2>為中文到日文整句回想。沿用92課276句原中文意思，主動開始且參考曝光保存成功後才顯中文與300字編輯器；對照前不提供原日文、讀音或音訊。明示對照後用原有Unicode序列差異、唯讀雙文及合成原音／0.75慢速核對，收起回中文與最新草稿重想。同一意思可能有其他說法，差異不判自由翻譯、文法自然度或得分。
 
 獨立text:LR-<unit>:<slot>草稿與LD聽寫／LN／原課寫作／作品共存；共用300字／合法ref／欄位／時間／空points驗證，實際時間較新者勝、同時異文拒絕、較新空稿不復活。schema3與V1/V2保持，沒有新作答source、完成或熟練度。開始即保守記本課全部原qid參考，後續原題另列提示，舊首答不變；pending全遮蔽並接原UUID。共用控制器保留mode／route epoch／ref／busy／IME／latest cache與失敗可匯出；換模式、句子、刷新均收起。見[規劃](plans/2026-10-23-life-memory-ninth.md)與[驗收](life-memory-ninth-validation.md)。
+
+
+## 生活記憶第十批（v0.31.0，2026-10-23）
+
+LR編輯器新增明示漸進提示：先看原句前1個Unicode碼點，需要更多再看最多前4字，至少保留1字不出全文。這是字面開頭，不是詞彙或文法分段；先保存本課參考曝光後才顯示，提示暫存不打分。收起提示回最新草稿；close／compare／edit／route／刷新均重設。mode／ref／epoch／busy及input version／composition保護延遲顯示，新輸入或新選字會取消舊提示，不重繪正在輸入的編輯器；失敗不揭且候選可匯出。
+
+LR／LD目錄新增scope=all／written，只依該模式既有草稿非空白text篩選，與程度／場景組合，顯示真實草稿句數及有文字句數。目錄不預覽私人文字、不記曝光、不推論弱點或熟練度；空稿仍保留刪除意圖，篩選及提示不新增schema／source／完成／評分。不影響原首答、LN／作品與既有備份。詳見[規劃](plans/2026-10-23-life-memory-tenth.md)。

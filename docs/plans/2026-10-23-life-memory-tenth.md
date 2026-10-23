@@ -22,21 +22,21 @@
 
 Files: modify `app/core/life-dictation.mjs`；create `tests/life-hints.test.mjs`。
 
-- [ ] RED：276句開頭同源、1／4字階段不出全文，非法ref／level拒絕；LR／LD／LN獨立篩選、空稿／空白／無稿、程度場景、只讀不曝光。
-- [ ] GREEN，原文／備份／首答不改；提交。
+- [x] RED：276句開頭同源、1／4字階段不出全文，非法ref／level拒絕；LR／LD／LN獨立篩選、空稿／空白／無稿、程度場景、只讀不曝光。
+- [x] GREEN，原文／備份／首答不改；提交。
 
 ## Task 2：漸進提示、退場與篩選
 
 Files: modify `app/life-dictation.mjs`、`app/ui/life-dictation.mjs`、`app/v3.css`；create `tests/life-hints-ui.test.mjs`、`tests/life-hints-controller.test.mjs`。
 
-- [ ] RED：預設無提示、主動1→4字、收起／刷新／換句模式不殘留、對照無提示控制、LD無提示、空結果與篩選焦點、pending與編碼。
-- [ ] RED：先保存曝光才提示、quota不揭、連按不跳階、較新input／IME使延遲顯示失效、stale route不拉回、收起不改草稿／首答。
-- [ ] GREEN，獨立核心與UI審查並修補。
+- [x] RED：預設無提示、主動1→4字、收起／刷新／換句模式不殘留、對照無提示控制、LD無提示、空結果與篩選焦點、pending與編碼。
+- [x] RED：先保存曝光才提示、quota不揭、連按不跳階、較新input／IME使延遲顯示失效、stale route不拉回、收起不改草稿／首答。
+- [x] GREEN，獨立核心與UI審查並修補。
 
 ## Task 3：驗證與發布
 
-- [ ] 0.31.0、README／規格／課綱／畫面／來源／驗收；test→build→check、audit、160 shell逐檔SHA／MIME／SW及146原音HTTP。
-- [ ] 本機隔離QA提示1→4→退場、日文草稿刷新／切模式保留、文字草稿篩選／空結果、pending同UUID、舊首答／線索；320／390／768／1024／1440、48px／Tab／console／截圖。只用?qa=1，不清DB／快取／SW、不注入歷史。
+- [x] 0.31.0、README／規格／課綱／畫面／來源／驗收；test→build→check、audit、160 shell逐檔SHA／MIME／SW及146原音HTTP。
+- [x] 本機隔離QA提示1→4→退場、日文草稿刷新／切模式保留、文字草稿篩選／空結果、pending同UUID、舊首答／線索；320／390／768／1024／1440、48px／Tab／console／截圖。只用?qa=1，不清DB／快取／SW、不注入歷史。
 - [ ] PR同head CI、merge、Pages、正式HTTP與隔離UI、正常SW更新，發布證據push遠端一致，離開QA／停止server／恢復viewport。
 
 提示不是無提示記住或翻譯評量。教材仍待教師／真人審校，實機／OS日文鍵盤及長期效果不由本批推論。回退前匯出JSON並保留DB／備份；個人資料與QA不提交Git。
