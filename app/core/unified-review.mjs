@@ -11,7 +11,7 @@ const labels={recognition:'認字',listening:'聽辨',language:'詞音與拼寫'
 const statuses=['review','uncertain','waiting','retained','week'];
 export const memoryStatusLabels={review:'需要再複習',uncertain:'紀錄待確認',waiting:'無提示答對，跨日待確認',retained:'已有跨日記憶證據',week:'已有七日記憶證據'};
 function metadata(a){
- const k=kanaIndex.get(a.item);if(k&&['recognition','listening','language'].includes(a.dimension))return {goal:'K',unitId:null,title:`${k.script==='kata'?'片假名':'平假名'} · 字表第 ${k.index} 字`,ability:a.dimension,route:'kana-map'};
+ const k=kanaIndex.get(a.item);if(k&&['recognition','listening','language'].includes(a.dimension))return {goal:'K',unitId:null,title:`${k.script==='kata'?'片假名':'平假名'} · 字表第 ${k.index} 字`,ability:a.dimension,route:'kana-map/'+k.id};
  const q=resolveLearningQuestion(a.item);if(!q||q.dimension!==a.dimension||a.dimension==='writing')return null;
  const life=lifeQuestionUnits.get(a.item),unitId=life||jlptQuestionUnits.get(a.item);if(!unitId)return null;
  return {goal:life?'L':jlptUnitMeta.get(unitId).level,unitId,title:unitById.get(unitId)?.title||unitId,ability:life?lifeAbility(q):a.dimension,route:life?'life-memory/'+unitId:'jlpt-memory/'+unitId};

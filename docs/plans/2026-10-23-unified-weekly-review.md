@@ -21,19 +21,21 @@
 ## Task 1：核心
 
 Create app/core/unified-review.mjs and tests/unified-review.test.mjs.
-- [ ] RED：六區空資料、各能力、跨日／七日、同日訂正、提示與比較字曝光、時間重疊、未來、台北午夜、目前與本週分離、手寫／作品分開、舊紀錄、pending及唯讀備份。
-- [ ] GREEN：純計算、可追溯項目與可靠分母；提交。
+- [x] RED：六區空資料、各能力、跨日／七日、同日訂正、提示與比較字曝光、時間重疊、未來、台北午夜、目前與本週分離、手寫／作品分開、舊紀錄、pending及唯讀備份。
+- [x] GREEN：純計算、可追溯項目與可靠分母；提交。
 
 ## Task 2：UI與整合
 
 Create app/ui/unified-review.mjs and tests/unified-review-ui.test.mjs; modify app/ui/v3.mjs, app/v3.mjs, app/ui/unified-learning.mjs, app/ui/navigation.mjs, app/v3.css.
-- [ ] RED→GREEN：六區周摘要／能力、狀態與分頁、下一步、pending保護、空資料、編碼／不洩題、舊工具保留、首頁明顯入口與breadcrumbs。
-- [ ] 同步README／規格／課綱／畫面／來源／roadmap，v0.39.0與驗收矩陣。
+- [x] RED→GREEN：六區周摘要／能力、狀態與分頁、下一步、pending保護、空資料、編碼／不洩題、舊工具保留、首頁明顯入口與breadcrumbs。
+- [x] 同步README／規格／課綱／畫面／來源／roadmap，v0.39.0與驗收矩陣。
 
 ## Task 3：驗收發布
 
-- [ ] 獨立唯讀核心與UI審查；全站test→build→check／audit，修正回歸。
-- [ ] 本機QA UI匯出前後整份state不變、原輪續作與深連結、五寬320／390／768／1024／1440、Tab／大字／console、HTTP shell SHA與原音抽樣。
+- [x] 獨立唯讀核心與UI審查；全站test→build→check／audit，修正回歸。
+- [x] 本機QA UI匯出前後整份state不變、原輪續作與深連結、五寬320／390／768／1024／1440、Tab／大字／console、HTTP shell SHA與原音抽樣。
 - [ ] PR同head CI→merge→Pages→正式HTTP／PWA自然更新／正常與QA備份深比對，截圖、恢復viewport／停server、文件推送與遠端HEAD一致。
 
 不清DB／cache／SW。新增日語教材／真人審音／實機OS鍵盤／長期成效不在本輪；部署失敗保留資料與原發布，可回退程式但先匯出備份。
+
+審查修正：答後回饋不抹去生活／檢定已有首答證據；五十音只存最後提示，晚於首答而無法還原時改列紀錄待確認，並獨立uncertainHistory，不當成同時碰撞。
