@@ -47,10 +47,14 @@ function progress(state,goal){
  const rows=state.attempts.filter(a=>goal==='K'?kanaIds.has(a.item)&&['recognition','listening','language'].includes(a.dimension):goal==='L'?lifeQuestionUnits.has(a.item)&&resolveLearningQuestion(a.item)?.dimension===a.dimension:jlptUnitMeta.get(jlptQuestionUnits.get(a.item))?.level===goal&&resolveLearningQuestion(a.item)?.dimension===a.dimension);
  return {practiced:new Set(rows.map(a=>a.item)).size,lastAt:rows.length?rows.reduce((last,a)=>stamp(a.time)>stamp(last)?a.time:last,rows[0].time):null};
 }
-function completedToday(state,time){
+function completedToday(state,time,quiz){
  const before=t=>stamp(t)<=stamp(time),day=studyDay(time),rows=[];
+ if(quiz?.started&&quiz.questions?.length&&quiz.index===quiz.questions.length&&quiz.results?.length===quiz.questions.length){
+  const answers=quiz.questions.map((q,i)=>state.attempts.find(a=>a.id===quiz.started+'-'+i&&a.item===q.item&&a.dimension===q.dimension&&a.correct===quiz.results[i].correct&&a.hinted===quiz.results[i].hinted&&before(a.time)));
+  if(answers.every(Boolean)){const last=answers.map(a=>a.time).sort((a,b)=>stamp(b)-stamp(a))[0];if(studyDay(last)===day)rows.push({goal:'K',route:'quiz',time:last});}
+ }
  for(const s of state.v3.sessions)if(s.completedAt&&Object.keys(s.answers).length&&before(s.createdAt)&&before(s.completedAt)&&Object.values(s.answers).every(a=>before(a.time))&&studyDay(s.completedAt)===day)rows.push({goal:sessionGoal(state,s),route:'v3-practice/'+s.id,time:s.completedAt});
- for(const p of [state.practice,...state.practiceHistory||[]].filter(Boolean))if(p.index===p.questionIds.length&&p.questionIds.every(id=>p.answers[id])&&before(p.updatedAt)&&Object.values(p.answers).every(a=>before(a.time))&&studyDay(p.updatedAt)===day)rows.push({goal:jlptUnitMeta.get(p.unitId)?.level||(p.unitId.startsWith('L')||p.unitId.startsWith('S-')?'L':null),route:p.id===state.practice?.id?'practice':'review',time:p.updatedAt});
+ for(const p of [state.practice,...state.practiceHistory||[]].filter(Boolean))if(p.index===p.questionIds.length&&p.questionIds.every(id=>p.answers[id])&&before(p.updatedAt)&&Object.values(p.answers).every(a=>before(a.time))&&studyDay(p.updatedAt)===day)rows.push({goal:jlptUnitMeta.get(p.unitId)?.level||(p.unitId.startsWith('L')||p.unitId.startsWith('S-')?'L':null),route:p.id===state.practice?.id?'practice':'practice-hub',time:p.updatedAt});
  for(const p of state.v3.dailyPlans)if(!unfinished(p)&&p.steps.every(s=>before(s.completedAt))){const last=p.steps.map(s=>s.completedAt).sort((a,b)=>stamp(b)-stamp(a))[0];if(studyDay(last)===day)rows.push({goal:p.goal,route:'daily/'+p.id,time:last});}
  return rows.sort(latest)[0]||null;
 }
@@ -61,7 +65,7 @@ function questionCount(state,goal,kind,time){
 }
 /** A read-only recommendation, never a new schedule, question, answer, or mastery claim. */
 export function unifiedLearning(state,time,quiz=null){
- const snapshot=visibleState(state,time),pending=learningPending(state,time,quiz),finishedToday=completedToday(state,time),goal=state.v3.goal;
+ const snapshot=visibleState(state,time),pending=learningPending(state,time,quiz),finishedToday=completedToday(state,time,quiz),goal=state.v3.goal;
  const tracks=learningTracks.map(([id,label,route])=>{
   const step=id==='K'?kanaNextStep(snapshot,time):id==='L'?lifeNextStep(snapshot,time):jlptNextStep(snapshot,id,time),kind=['done','finish'].includes(step.kind)?'rest':['resume','pending'].includes(step.kind)?'pending':step.kind;
   return {goal:id,label,overview:route,kind,route:step.route||(id==='L'?'life-map':route),title:step.title,detail:step.detail||step.reason,...progress(snapshot,id),questions:questionCount(snapshot,id,kind,time)};
