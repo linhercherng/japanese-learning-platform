@@ -31,6 +31,6 @@ Files：tests/kana-contrast-review-controller.test.mjs；必要時app/kana-pocke
 ## Task 3：瀏覽器與發布
 
 - [x] 本機隔離UI：合法字對入口→兩題→新回顧→線索／雙卡遮住揭開→切字／刷新→主動留回→原結果／原首答不變；320/390px無溢出、44px、焦點、console；HTTP雜湊／音檔。原錯答入口沿用第十五批，正式站再驗既有原輪。
-- [ ] PR同head CI成功後合併，Pages成功，正式HTTP及隔離UI／截圖驗證。補發布證據、push遠端同步、清理QA/server。
+- [x] PR同head CI成功後合併，Pages成功，正式HTTP及隔離UI／截圖驗證。補發布證據、push遠端同步、清理QA/server。見[第十六批驗收](../kana-sixteenth-validation.md)。
 
 沿用208卡、508筆順、10947音檔索引及K包668檔。既有試用訣竅／合成音仍待獨立教師審校，實機依先前決定略過。個人資料、QA、截圖不提交公開Git；無schema變更，回退前仍先匯出JSON。

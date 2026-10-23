@@ -26,7 +26,15 @@ schema3、舊source／ID、口袋與備份格式不變；沒有新素材、依�
 
 ## GitHub與正式發布
 
-待PR／CI／Pages與正式HTTP及隔離瀏覽器驗收後補入。
+已經[PR #32](https://github.com/linhercherng/japanese-learning-platform/pull/32)發布。head `ffcb3cb8491edfc46460ad301643a768c392ba3f` 的[CI run39876635874](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39876635874)整體completed/success，測試／build／check／audit皆通過，PR deploy依設計略過；同head合併為 `ade003dc89dfa177d06395bf2a94120fd72639e3`（2026-10-23 00:12:49 UTC，台北08:12）。[Pages run39876749540](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39876749540)整體completed/success，build/deploy皆success，deploy job於00:13:56 UTC完成（台北08:13）。
+
+正式HTTPS 126份shell SHA-256、JS MIME及SW fingerprint相符，128次既有音檔抽查通過，2026-10-23 00:15:10 UTC（台北08:15），fingerprint與本機相同；ignored work/sixteenth-public-http.json。已開分頁先仍沿用舊離線版本；正常載入後把同站分頁導離再重開，完成waiting lifecycle切換，不刪SW／cache／DB。重開後既有第十五批兩題結果直接出現新回顧入口，資料未重建。
+
+正式隔離QA沿用原パ／ベ雙向輪：第一字ベ仍提示後答對、第二字パ仍首答選ベ答錯，結果仍0/2無提示首答、2題提示。展開ベ僅該字訣竅／音鈕，空白鍵操作正常；原未加入口袋文字正確，明示keep後焦點回選字器，ベ保存且其他字不異動。切字收起線索；パ／ベ雙卡可展開、遮住再想與空白鍵揭開。刷新回第一字、線索及對照收起，ベ仍保留。
+
+原口袋三題輪仍0/3無提示首答、3題提示，パ仍原選字ベ且首答答錯；最終口袋由3字增至4字，只有明示新增ベ。正式390px單字／線索／keep／雙卡／刷新，以及實際320px另開分頁的回顧／雙卡／遮住，均無橫溢，main button/select/primary至少44px，console warn/error空。尺寸override曾未套用原分頁，採另開分頁並讀DOM實際innerWidth=320確認，不把請求尺寸當成驗收尺寸。ignored work/sixteenth-qa/public-layout.json保存實際尺寸，public-390-review.jpg為正式手機截圖。
+
+QA分頁已關閉、尺寸重置、本機server停止，正常個人資料未寫入，正式網站分頁保留；QA、HTTP明細與截圖不提交公開Git。
 
 ## 邊界與回退
 

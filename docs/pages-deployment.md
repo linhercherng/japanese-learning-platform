@@ -64,3 +64,7 @@ v0.18.0經[PR #30](https://github.com/linhercherng/japanese-learning-platform/pu
 ## 五十音第十五批發布（2026-10-23，台北）
 
 v0.19.0「錯字雙向聽辨」經[PR #31](https://github.com/linhercherng/japanese-learning-platform/pull/31)同head合併；PR CI整體completed/success，[Pages run39874860680](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39874860680)整體completed/success、build/deploy皆success。415項測試、build/check/audit、獨立審查與共用pending複核通過。正式126份shell雜湊、SW fingerprint及128次音檔HTTP相符；正式隔離瀏覽器從パ／ベ原錯答進入兩題，驗證刷新、暫停續作、單一未完成輪、提示分列與原首答保留，320/390px無橫溢且主要觸控目標至少44px。完整證據、截圖位置與實機／教師審校邊界見[第十五批驗收](kana-fifteenth-validation.md)。
+
+## 五十音第十六批發布（2026-10-23，台北）
+
+v0.20.0「雙向聽辨後逐字回顧」經[PR #32](https://github.com/linhercherng/japanese-learning-platform/pull/32)同head成功CI後合併；[Pages run39876749540](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39876749540)整體completed/success、build/deploy皆success。428項測試、build/check/audit與獨立94項相關審查通過；正式126份shell雜湊及128次音檔HTTP相符。正式隔離UI確認既有第十五批兩題可回顧、單目標訣竅、主動留下、錯答雙卡遮住／揭開、刷新與原新舊首答統計保留，320/390px無橫溢。已開舊離線分頁正常重開後取得新版，沒有清資料。完整證據與實機／教師審校邊界見[第十六批驗收](kana-sixteenth-validation.md)。
