@@ -40,6 +40,6 @@ Files: create app/life-dictation.mjs、app/ui/life-dictation.mjs；modify main�
 
 - [x] 隔離QA日文／繁中輸入、草稿刷新／換句、空與非空開始、原音／慢速／文字差異／收起、pending原UUID、舊首答／線索保留；320／390及桌面、48px／鍵盤／console。所有新輸入只用?qa=1，不清DB／快取／SW、不偽造跨日歷史。
 - [x] 版本0.29.0與README／規格／課綱／畫面／來源／驗收；npm test→build→check、audit、shell逐檔SHA／JS MIME／SW及146原音HTTP。
-- [ ] PR同head CI、merge、Pages成功，正式HTTP／隔離UI與截圖、正常SW更新；文件證據push遠端一致，關QA與server、復原viewport。
+- [x] PR同head CI、merge、Pages成功，正式HTTP／隔離UI與截圖、正常SW更新；文件證據push遠端一致，離開QA與停止server、復原viewport。發布細節見[驗收紀錄](../life-memory-eighth-validation.md)。
 
 原句對照不是聽寫評分、自由作文／手寫／口說或JLPT能力；實機／OS日文鍵盤、教師／真人審校及長期效果未由本批驗證。回退前匯出JSON、保留DB，舊版可能不辨新草稿key；個人內容與QA不提交Git。

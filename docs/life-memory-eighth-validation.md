@@ -37,4 +37,12 @@ UTC05:05:38本機160份shell逐檔SHA256／JS MIME／SW及146原音HTTP通過，
 
 ## 發布驗證
 
-待同head CI、合併Pages、正式160份shell／146原音HTTP、隔離UI與正常更新後補證據。
+- [PR #41](https://github.com/linhercherng/japanese-learning-platform/pull/41) head `09603a88e0852858c9addcd320b2c3a43da44e72`；同head [CI39904011033](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39904011033) completed/success後按match-head合併，merge `19e64c40571c4aba5a24972418c885d6184cc5df`。
+- [Pages39904256403](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39904256403)整體completed/success，build及deploy均success；deploy UTC05:11:24（台北13:11）完成。正式[生活聽寫目錄](https://linhercherng.github.io/japanese-learning-platform/#life-dictation)已可用。
+- UTC05:12:34正式160份shell逐檔SHA256／JS MIME／SW及146次原音HTTP通過，0重試，fingerprint與本機相同；預設TLS驗證，紀錄ignored `work/life-eighth-public-http.json`。276句音檔的全量索引／實體檔案驗證另由自動測試完成，並非276句皆做正式HTTP測試。
+- 正常正式分頁reload下載新shell後暫離網站，依正常SW生命週期接手；沒有清DB／快取／SW。所有新輸入／音訊／作答皆只在 `?qa=1` 隔離庫；目錄初始12課各0草稿，新單句頁空字不能對照。
+- 正式原音與0.75慢速實際回報播放日語合成語音；日文輸入→刷新先收起→開始恢復原稿，少一個長音的稿對照僅標「ー」，唯讀時沒有textarea，焦點至對照標題，收起回原稿與textarea焦點。下一句中日文／emoji獨立保存，回前句原稿仍在；目錄真實顯示2句草稿。N2／food為1課，L／health為0課可換篩選。
+- 正式隔離原輪 `c6a8a375-a0e4-45bf-af05-c62c704a43a8` 未完成時，聽寫頁完全遮蔽草稿／原句／編輯及音訊，只接同UUID；完成1題／1正確／1提示／0無提示，使用過參考的分類正確。
+- 舊L07首輪 `7a5971bf-9045-4345-85b3-b80dad5bf171`仍3首答正確／2無提示／1提示；第七批主題原輪 `19b591fb-2e6d-4959-854f-d1e967ae988d`仍2正確／2提示／0無提示；第六批已保存L07中日文線索可展開恢復，未修改個人文字。
+- 正式編輯器320／390／768／1024／1440px及唯讀對照320／390px無橫溢，音訊及主要操作48px、收起49px；Tab接對照按鈕有可見outline，console warn/error空。截圖ignored `work/life-eighth-public-390.png`。
+- 最後回正常正式URL只查看目錄，12課草稿仍皆0，沒有寫個人答案或線索；正常入口截圖ignored `work/life-eighth-public-entry-390.png`。離開QA、停止18124伺服器、恢復viewport，正式目錄保留。第一至第七批一同保留發布；實機／OS日文鍵盤、教師／真人審校、長期效果仍未由本批推論完成。
