@@ -8,13 +8,13 @@ import {parseDictation} from './kana-studio-state.mjs';
 const ids=new Set(kana.map(k=>k.id)),isKana=s=>s.source==='kana'||s.source.startsWith('kana-');
 export function kanaNextStep(state,time){
  const cutoff=Date.parse(time),day=studyDay(time),visible=t=>Date.parse(t)<=cutoff;
- const attempts=state.attempts.filter(a=>visible(a.time)),sessions=state.v3.sessions.filter(s=>visible(s.createdAt)&&visible(s.updatedAt));
+ const attempts=state.attempts.filter(a=>visible(a.time)),sessions=state.v3.sessions.filter(s=>visible(s.createdAt)).map(s=>({...s,completedAt:s.completedAt&&visible(s.completedAt)?s.completedAt:null}));
  const snapshot={...state,attempts,reviews:recordAnswers(initialState(),attempts).reviews,v3:{...state.v3,sessions}};
  const today=new Set(attempts.filter(a=>ids.has(a.item)&&['recognition','listening','language'].includes(a.dimension)&&studyDay(a.time)===day).map(a=>a.item)).size;
  const result=(kind,route,title,reason)=>({kind,route,title,reason,today});
  const pending=sessions.filter(s=>isKana(s)&&!s.completedAt).map(s=>({time:s.createdAt,key:s.id,route:'v3-practice/'+s.id,reason:'原題、首答與提示已保存，先完成這輪，再選新練習。'}));
- for(const [key,draft] of Object.entries(state.drafts))if(key.startsWith('write:KS-')&&visible(draft.time)){
-  const m=parseDictation(key,draft);if(visible(m.createdAt)&&!attempts.some(a=>a.id==='ksw-'+m.id))pending.push({time:m.createdAt,key:m.id,route:'kana-dictation/'+m.item,reason:m.stage==='locked'?'原字跡已鎖定，接著對照並保存自評。':'原字跡草稿仍保留，接著寫就好。'});
+ for(const [key,draft] of Object.entries(state.drafts))if(key.startsWith('write:KS-')){
+  const m=parseDictation(key,draft);if(visible(m.createdAt)&&!attempts.some(a=>a.id==='ksw-'+m.id))pending.push({time:m.createdAt,key:m.id,route:'kana-dictation/'+m.item,reason:m.lockedAt&&visible(m.lockedAt)?'原字跡已鎖定，接著對照並保存自評。':'原字跡草稿仍保留，接著寫就好。'});
  }
  pending.sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.key.localeCompare(b.key));
  if(pending.length)return result('resume',pending[0].route,'接續未完成的一小步',pending[0].reason);
