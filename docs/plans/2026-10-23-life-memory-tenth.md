@@ -37,6 +37,6 @@ Files: modify `app/life-dictation.mjs`、`app/ui/life-dictation.mjs`、`app/v3.c
 
 - [x] 0.31.0、README／規格／課綱／畫面／來源／驗收；test→build→check、audit、160 shell逐檔SHA／MIME／SW及146原音HTTP。
 - [x] 本機隔離QA提示1→4→退場、日文草稿刷新／切模式保留、文字草稿篩選／空結果、pending同UUID、舊首答／線索；320／390／768／1024／1440、48px／Tab／console／截圖。只用?qa=1，不清DB／快取／SW、不注入歷史。
-- [ ] PR同head CI、merge、Pages、正式HTTP與隔離UI、正常SW更新，發布證據push遠端一致，離開QA／停止server／恢復viewport。
+- [x] PR同head CI、merge、Pages、正式HTTP與隔離UI、正常SW更新，發布證據push遠端一致，離開QA／停止server／恢復viewport。詳見[驗收紀錄](../life-memory-tenth-validation.md)。
 
 提示不是無提示記住或翻譯評量。教材仍待教師／真人審校，實機／OS日文鍵盤及長期效果不由本批推論。回退前匯出JSON並保留DB／備份；個人資料與QA不提交Git。
