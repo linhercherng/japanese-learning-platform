@@ -23,7 +23,7 @@ const fixed=new Map(entries.map(([unit,qs])=>[unit,selectMemoryQuestions(qs).map
 export const memoryQuestionIds=unit=>fixed.get(unit)||[];
 export const isLifeSource=source=>['life-memory','life-check','life-repair','life-week','life-skill'].includes(source);
 export function validLifeReference(source,reference,ids){
- if(!Array.isArray(ids)||ids.some(id=>!lifeQuestionUnits.has(id)))return false;
+ if(typeof reference!=='string'||!Array.isArray(ids)||ids.some(id=>!lifeQuestionUnits.has(id)))return false;
  if(source==='life-memory')return lifeUnitIds.has(reference)&&JSON.stringify(ids)===JSON.stringify(memoryQuestionIds(reference));
  if(source==='life-skill'){const [unit,skill,...extra]=reference.split(':');return !extra.length&&lifeUnitIds.has(unit)&&['listening','productive','understanding'].includes(skill)&&ids.length>=1&&ids.length<=3&&new Set(ids).size===ids.length&&ids.every(id=>lifeQuestionUnits.get(id)===unit&&abilities.get(id)===skill);}
  if(['life-check','life-repair','life-week'].includes(source))return /^\d{4}-\d\d-\d\d$/.test(reference)&&Number.isFinite(Date.parse(reference))&&new Date(reference).toISOString().slice(0,10)===reference&&ids.length>=1&&ids.length<=3&&new Set(ids.map(id=>lifeQuestionUnits.get(id))).size===ids.length;

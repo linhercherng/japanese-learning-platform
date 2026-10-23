@@ -20,11 +20,13 @@ test('cutoff ignores future attempts and poisoned current reviews and summaries 
 test('focused source preserves exact ability, backup and a single common life pending',()=>{
  const s=skills.startLifeSkill(initialState(),{unitId:'L07',skill:'productive',id:'skill',time:today}),p=pendingLife(s);assert.equal(p.source,'life-skill');assert.equal(p.reference,'L07:productive');assert.equal(p.questionIds.length,2);assert(p.questionIds.every(id=>lifeAbility(questionById.get(id))==='productive'));validateState(s);assert.deepEqual(parseBackup(exportBackup(s)),s);
  assert.equal(skills.startLifeSkill(s,{unitId:'L01',skill:'listening',id:'second',time:today}),s);assert.equal(startLifeMemory(s,{unitId:'L01',id:'other',time:today}),s);assert.equal(isLifeSource('life-skill'),true);
+ const other=startLifeMemory(initialState(),{unitId:'L01',id:'other',time:today});assert.throws(()=>mergeStates(s,other),/生活/);
 });
 test('source validation rejects wrong unit, mixed ability, duplicate ids, too many questions and inserted repeats',()=>{
  assert(validLifeReference('life-skill','L07:productive',['L07-v2-q2','L07-v2-q3']));for(const [ref,ids] of [['L01:productive',['L07-v2-q2']],['L07:bad',['L07-q0']],['L07:productive',['L07-v2-q2','L07-q0']],['L07:productive',['L07-v2-q2','L07-v2-q2']],['L07:understanding',['L07-q0','L07-q1','L07-v2-r1','L07-v2-r2']]])assert(!validLifeReference('life-skill',ref,ids));
  const s=skills.startLifeSkill(initialState(),{unitId:'L07',skill:'productive',id:'skill',time:today}),bad=structuredClone(s);bad.v3.sessions[0].queue.push({questionId:'L07-v2-q2',repeat:true,sourceId:'L07-v2-q2'});assert.throws(()=>validateState(bad),/生活/);
  assert.throws(()=>beginV3Session(initialState(),['L07-q0'],{id:'bad',source:'life-skill',reference:'L07:productive',time:today}),/生活/);
+ assert(!validLifeReference('life-skill',null,['L07-v2-q2']));
 });
 test('original answers and hint grading survive completion, merge and daily closure without variants',()=>{
  let s=recordLifeExposure(initialState(),['L07-v2-q1'],'2026-10-23T02:00:00.000Z');s=skills.startLifeSkill(s,{unitId:'L07',skill:'listening',id:'skill',time:today});const before=structuredClone(s),q=questionById.get('L07-v2-q1');s=answerV3Session(s,{sessionId:'skill',question:q,value:q.correct,eventId:'a',time:today,variants:[{...q,id:'other',conceptId:q.conceptId}]});s=nextV3Question(s,'skill',today);
