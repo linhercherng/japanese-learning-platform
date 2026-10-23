@@ -8,9 +8,9 @@ export const memoryQuestions=unitId=>memoryQuestionIds(unitId).map(id=>questionB
 export function memoryPhrases(unitId){const seen=new Set();return (unitById.get(unitId)?.dialogue||[]).filter(p=>{if(seen.has(p.jp))return false;seen.add(p.jp);return true;}).slice(0,3);}
 export const pendingLife=state=>state.v3.sessions.find(s=>isLifeSource(s.source)&&!s.completedAt);
 export function startLifeMemory(state,{unitId,id,time}){if(pendingLife(state))return state;const qs=memoryQuestionIds(unitId);return qs.length?beginV3Session(state,qs,{id,time,source:'life-memory',reference:unitId}):state;}
-function history(state,time){return state.attempts.filter(a=>lifeQuestionUnits.has(a.item)&&questionById.get(a.item)?.dimension===a.dimension&&a.dimension!=='writing'&&Date.parse(a.time)<=Date.parse(time)).sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id));}
+export function lifeHistory(state,time){return state.attempts.filter(a=>lifeQuestionUnits.has(a.item)&&questionById.get(a.item)?.dimension===a.dimension&&a.dimension!=='writing'&&Date.parse(a.time)<=Date.parse(time)).sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id));}
 export function lifeCheckCandidates(state,time){
- const attempts=history(state,time),reviews=recordAnswers(initialState(),attempts).reviews,latest=new Map();for(const a of attempts)latest.set(a.item,a);
+ const attempts=lifeHistory(state,time),reviews=recordAnswers(initialState(),attempts).reviews,latest=new Map();for(const a of attempts)latest.set(a.item,a);
  const ranked=[...latest.values()].filter(a=>studyDay(a.time)<studyDay(time)).map(a=>({q:questionById.get(a.item),a,due:Date.parse(reviews[a.item+':'+a.dimension].due)<=Date.parse(time)}));
  ranked.sort((a,b)=>Number(!b.a.correct||b.a.hinted)-Number(!a.a.correct||a.a.hinted)||Number(b.due)-Number(a.due)||Date.parse(a.a.time)-Date.parse(b.a.time)||a.q.id.localeCompare(b.q.id));
  const units=new Set(),out=[];for(const {q} of ranked)if(!units.has(q.unitId)){units.add(q.unitId);out.push(q);if(out.length===3)break;}return out;
@@ -20,7 +20,7 @@ export function lifeCheckReport(state,sessionId){
  const s=state.v3.sessions.find(s=>s.id===sessionId&&s.source==='life-check'),r={total:0,independent:0,hinted:0,comparable:0,retained:0,excluded:0};if(!s)return r;
  for(const [qid,a] of Object.entries(s.answers)){
   r.total++;if(a.hinted)r.hinted++;if(a.correct&&!a.hinted)r.independent++;
-  const all=history(state,a.time).filter(h=>h.item===qid),prior=all.filter(h=>Date.parse(h.time)<Date.parse(s.createdAt)).at(-1);
+  const all=lifeHistory(state,a.time).filter(h=>h.item===qid),prior=all.filter(h=>Date.parse(h.time)<Date.parse(s.createdAt)).at(-1);
   const between=all.some(h=>Date.parse(h.time)>=Date.parse(s.createdAt)&&Date.parse(h.time)<Date.parse(a.time)),sameTime=all.filter(h=>Date.parse(h.time)===Date.parse(a.time));
   if(a.hinted||!prior||studyDay(prior.time)>=studyDay(a.time)||between||sameTime.length!==1){r.excluded++;continue;}
   r.comparable++;if(a.correct)r.retained++;
