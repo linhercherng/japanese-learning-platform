@@ -1,6 +1,6 @@
 # N5～N2 檢定課程記憶與複習完整規劃與完成矩陣
 
-v0.37.0，2026-10-23，Asia/Taipei。延續容易學、容易記，一次交付四級主課的完整記憶循環。[執行計畫](plans/2026-10-23-jlpt-memory-complete.md)、[測試與發布證據](jlpt-memory-validation.md)。
+v0.37.1，2026-10-23，Asia/Taipei。延續容易學、容易記，一次交付四級主課的完整記憶循環。[執行計畫](plans/2026-10-23-jlpt-memory-complete.md)、[測試與發布證據](jlpt-memory-validation.md)。
 
 ## 學習路線
 

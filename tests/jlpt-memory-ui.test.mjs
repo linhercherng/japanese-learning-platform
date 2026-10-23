@@ -3,6 +3,8 @@ import {initialState,recordAnswer} from '../app/core/learning.mjs';
 import {units,questionById} from '../app/content/catalog.mjs';
 import {startJlptRound,storeJlptNote,jlptMemoryQuestions} from '../app/core/jlpt-memory.mjs';
 import {navigationContext} from '../app/ui/navigation.mjs';
+import {questionView} from '../app/ui/study.mjs';
+import {answerV3Session,nextV3Question} from '../app/core/v3-learning.mjs';
 const mod=await import('../app/ui/jlpt-memory.mjs').catch(()=>({})),guide=await import('../app/ui/jlpt-guide.mjs').catch(()=>({}));
 const t='2026-10-23T02:00:00.000Z',c=()=>({state:initialState(),session:{},audioIndex:{'私':true}});
 const view=(name,...args)=>{assert.equal(typeof mod[name],'function',name+' missing');return mod[name](...args);};
@@ -18,3 +20,9 @@ test('guide explains recall, memory cues, five abilities and comparable delayed 
 test('new routes and original round breadcrumbs preserve level, unit and current step',()=>{const ctx=c();for(const [name,param] of [['jlpt-path','N2'],['jlpt-memory','N4-01'],['jlpt-cards','N3-01'],['jlpt-note','N5-01'],['jlpt-map','N2'],['jlpt-review','N4:week'],['jlpt-guide',undefined]]){const n=navigationContext(ctx,name,param);assert.equal(n.section,'practice-hub');assert(n.trail.some(x=>x.route==='jlpt-memory'));assert.notEqual(n.trail.at(-1).label,'今日學習');}});
 
 test('JLPT breadcrumbs contain each location once, including original practice after refresh',()=>{const ctx=c();ctx.state=startJlptRound(ctx.state,{unitId:'N5-01',mode:'memory',id:'unique',time:t});for(const [name,param] of [['jlpt-memory',undefined],['jlpt-memory','N5-01'],['jlpt-path','N5'],['v3-practice','unique']]){const trail=navigationContext(ctx,name,param).trail;assert.equal(new Set(trail.map(x=>x.route)).size,trail.length);}});
+
+test('original-round review keeps the exact choice and token order shown during that practice',()=>{
+ const ctx=c(),id='original-order';ctx.state=startJlptRound(ctx.state,{unitId:'N5-01',mode:'skill',ability:'grammar',id,time:t});
+ for(const qid of ctx.state.v3.sessions[0].questionIds){const q=questionById.get(qid),value=q.kind==='cloze'?q.accepted[0]:q.kind==='order'?q.answerOrder:q.correct;ctx.state=answerV3Session(ctx.state,{sessionId:id,question:q,value,eventId:'answer-'+qid,time:t});ctx.state=nextV3Question(ctx.state,id,t);}
+ for(const [roundIndex,qid] of ctx.state.v3.sessions[0].questionIds.entries()){const q=questionById.get(qid);if(!q.options&&!q.tokens)continue;const original=questionView(q,{seed:id}),review=view('jlptRoundView',ctx,id,t,{roundIndex});if(q.options){const expected=[...original.matchAll(/data-study-choice="(\d+)"/g)].map(m=>q.options[Number(m[1])]);assert.deepEqual([...review.matchAll(/<li>(.*?)<\/li>/g)].map(m=>m[1]),expected);}else{const expected=[...original.matchAll(/data-study-token="(\d+)"/g)].map(m=>q.tokens[Number(m[1])]).join(' ／ ');assert(review.includes(expected));}}
+});
