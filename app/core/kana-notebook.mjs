@@ -11,3 +11,4 @@ export function notebookPage(state,raw={}){
  return {filters,entries:all.slice(page*10,page*10+10),total:all.length,page,pages};
 }
 export function notebookExposure(page){const text=page.entries.map(n=>n.glyph+n.text).join('');return kana.filter(k=>text.includes(k.glyph)).map(k=>k.id);}
+export function noteEditorExposure(state,item){const k=kana.find(k=>k.id===item);if(!k)return [];const text=k.glyph+memoryFor(item).tip+(state.drafts[noteKey(item)]?.text??state.v3.kanaNotes?.[item]?.text??'');return kana.filter(k=>text.includes(k.glyph)).map(k=>k.id);}

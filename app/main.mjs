@@ -1,3 +1,4 @@
+import {kanaGuideView} from './ui/kana-guide.mjs';
 import {createKanaNotebook} from './kana-notebook.mjs';
 import {createKanaPocketReview} from './kana-pocket-review.mjs';
 import {createKanaContrast} from './kana-contrast.mjs';
@@ -74,7 +75,7 @@ function render(focus=true){
  v2.onRoute(name,param);
  v3.onRoute(name,param);
  if(name==='lesson'&&session.activeLesson!==param){session.activeLesson=param;session.lessonTab='對話';}
- const views={home:()=>homeView(ctx),kana:()=>kanaView(ctx),unit:()=>unitView(ctx,param),stroke:()=>strokeView(ctx,param),write:()=>writingView(ctx,param||kana[0].id),life:()=>lifeView(ctx),lesson:()=>lifeLessonView(ctx,param),review:()=>reviewView(ctx),profile:()=>profileView(ctx),quiz:quizView,exam:()=>`${heading('一步一步，走向 N3。','完整檢定課程與模擬試卷會在後續版本加入。')}<section class="self-check"><h2>現在先把基礎練穩</h2><p>這一版可練完整五十音、音韻與六個生活任務。這些課程與進度不是 JLPT 合格證明。</p>${primary('練習五十音','kana')}</section>`};
+ const views={'kana-guide':()=>kanaGuideView(),home:()=>homeView(ctx),kana:()=>kanaView(ctx),unit:()=>unitView(ctx,param),stroke:()=>strokeView(ctx,param),write:()=>writingView(ctx,param||kana[0].id),life:()=>lifeView(ctx),lesson:()=>lifeLessonView(ctx,param),review:()=>reviewView(ctx),profile:()=>profileView(ctx),quiz:quizView,exam:()=>`${heading('一步一步，走向 N3。','完整檢定課程與模擬試卷會在後續版本加入。')}<section class="self-check"><h2>現在先把基礎練穩</h2><p>這一版可練完整五十音、音韻與六個生活任務。這些課程與進度不是 JLPT 合格證明。</p>${primary('練習五十音','kana')}</section>`};
  for(const [view,renderer] of Object.entries(v2.views))views[view]=()=>renderer(param);
  views.life=()=>v2.views.level('L');views.lesson=()=>v2.views.study(param);
  for(const [view,renderer] of Object.entries(v3.views))views[view]=()=>renderer(param);

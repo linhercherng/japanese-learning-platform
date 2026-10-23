@@ -1,4 +1,5 @@
 import {words} from './content/catalog.mjs';
+import {noteEditorExposure} from './core/kana-notebook.mjs';
 import {kana} from './content/kana.mjs';
 import {buildExamples,miniQuestions,validLabReference} from './content/kana-lab.mjs';
 import {saveKanaNote,storeNoteDraft,noteKey,selectMiniCards,pendingMini} from './core/kana-lab.mjs';
@@ -29,7 +30,7 @@ export function createKanaLab({getContext,update,render,toast,now,id,cacheDraft}
  function change(event){const key=event.target.dataset.labFilter;if(!['script','group'].includes(key))return;ctx().session.kanaMini={...miniFilter(ctx().session),[key]:event.target.value};render(false);}
  function afterRender(name,item){
   const context=ctx(),time=now();let items=[];
-  if(name==='kana-notes')items=valid(item)?[item]:[];
+  if(name==='kana-notes')items=noteEditorExposure(context.state,item);
   if(name==='kana-mini'&&!pendingMini(context.state,miniFilter(context.session)))items=selectMiniCards(context.state,{...miniFilter(context.session),time}).map(k=>k.id);
   if(!items.length)return;
   update(s=>{const next=recordKanaExposure(s,items,time);for(const id of items){const active=readDictation(next,id);if(active)cacheDraft(active.key,next.drafts[active.key]);}return next;}).catch(error=>toast(error.message));
