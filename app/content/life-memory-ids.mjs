@@ -19,10 +19,10 @@ export function selectMemoryQuestions(questions){
 }
 const fixed=new Map(entries.map(([unit,qs])=>[unit,selectMemoryQuestions(qs).map(q=>q.id)]));
 export const memoryQuestionIds=unit=>fixed.get(unit)||[];
-export const isLifeSource=source=>['life-memory','life-check'].includes(source);
+export const isLifeSource=source=>['life-memory','life-check','life-repair'].includes(source);
 export function validLifeReference(source,reference,ids){
  if(!Array.isArray(ids)||ids.some(id=>!lifeQuestionUnits.has(id)))return false;
  if(source==='life-memory')return lifeUnitIds.has(reference)&&JSON.stringify(ids)===JSON.stringify(memoryQuestionIds(reference));
- if(source==='life-check')return /^\d{4}-\d\d-\d\d$/.test(reference)&&Number.isFinite(Date.parse(reference))&&new Date(reference).toISOString().slice(0,10)===reference&&ids.length>=1&&ids.length<=3&&new Set(ids.map(id=>lifeQuestionUnits.get(id))).size===ids.length;
+ if(['life-check','life-repair'].includes(source))return /^\d{4}-\d\d-\d\d$/.test(reference)&&Number.isFinite(Date.parse(reference))&&new Date(reference).toISOString().slice(0,10)===reference&&ids.length>=1&&ids.length<=3&&new Set(ids.map(id=>lifeQuestionUnits.get(id))).size===ids.length;
  return false;
 }

@@ -1,6 +1,9 @@
 # 日和｜日語學習平台
 
 
+v0.23.0 生活記憶第二批新增[生活記憶地圖](https://linhercherng.github.io/japanese-learning-platform/#life-map)、原輪逐題回顧與弱點最多三題。地圖依實際首答顯示題數／日期／弱點及下一步；回顧保留原選項／詞塊與可獨立展開的短文，正解與原首答按需揭開。弱點只取已做過的原題、每課一題，不湊新題；與第一批共用一個未完成輪次。原首答／提示／跨日分開，無新增素材或依賴。見[規劃](docs/plans/2026-10-23-life-memory-second.md)與[驗收](docs/life-memory-second-validation.md)。
+
+
 v0.22.0 新增[生活記憶](https://linhercherng.github.io/japanese-learning-platform/#life-memory)與[隔天生活複習](https://linhercherng.github.io/japanese-learning-platform/#life-check)：起步12課＋N5～N2各20個情境，依程度與場景選課。每課三句中文提示、按需展開原日文／聽完整合成例句，再收起參考做聽解、填空／排序與情境三題。隔天最多三題、每課一題，只用較早日期做過的題；原首答、提示與可比較跨日結果分開。進度、日文草稿與舊資料保留。見[規劃](docs/plans/2026-10-23-life-memory.md)與[驗收](docs/life-memory-validation.md)。
 
 繁體中文、手機優先的日語學習平台，從五十音到生活日語，再循序練習 N5、N4、N3、N2。每課先理解、聽讀，收起提示回想，最後寫自己的句子。

@@ -23,7 +23,7 @@ const uniqueIds=items=>Array.isArray(items)&&items.every(safe)&&new Set(items).s
 function answer(a){shape(a,['value','correct','hinted','time']);requireValue(validAnswerValue(a.value)&&typeof a.correct==='boolean'&&typeof a.hinted==='boolean'&&time(a.time));}
 export function validateSession(s){
  shape(s,['id','source','reference','questionIds','queue','cursor','answers','hints','corrections','deferred','createdAt','updatedAt','completedAt']);
- requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel','kana-bridge','kana-family','kana-row','kana-rhythm','kana-pocket-listen','kana-contrast','life-memory','life-check'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
+ requireValue(safe(s.id)&&['daily','concept','lesson','confusion','kana','kana-check','kana-confusion','kana-map','kana-words','kana-mini','kana-build','kana-type','kana-week','kana-repair','kana-duel','kana-bridge','kana-family','kana-row','kana-rhythm','kana-pocket-listen','kana-contrast','life-memory','life-check','life-repair'].includes(s.source)&&safe(s.reference)&&uniqueIds(s.questionIds)&&s.questionIds.length>0&&s.questionIds.length<=60);
  if(isLifeSource(s.source))requireValue(validLifeReference(s.source,s.reference,s.questionIds)&&s.queue?.length===s.questionIds.length,'生活記憶題目與來源不一致。');
  if(s.source==='kana-pocket-listen')requireValue(validPocketListenReference(s.reference,s.questionIds)&&s.queue?.length===s.questionIds.length,'口袋聽辨題目與原字卡不一致。');
  if(s.source==='kana-contrast')requireValue(validContrastReference(s.reference,s.questionIds)&&s.queue?.length===2,'錯字雙向聽辨與原字對不一致。');
@@ -43,7 +43,7 @@ export function validateSession(s){
  s.queue.forEach((q,index)=>{if(!q.repeat)return;const source=s.queue.findIndex(x=>!x.repeat&&x.questionId===q.sourceId),first=s.answers[q.sourceId];requireValue(!repeated.has(q.sourceId)&&index-source>=3&&first&&(!first.correct||first.hinted),'訂正需隔兩題且每題最多一次');repeated.add(q.sourceId);});
  for(const [key,a] of Object.entries(s.corrections)){requireValue(/^\d+$/.test(key)&&s.queue[Number(key)]?.repeat);answer(a);}
  for(let i=0;i<s.cursor;i++)requireValue(s.queue[i].repeat?Boolean(s.corrections[i]):Boolean(s.answers[s.queue[i].questionId]),'回想中斷點超過已保存答案');
- if(s.source==='life-check')requireValue(s.reference===studyDay(s.createdAt),'生活複習日期與建立時間不一致。');
+ if(['life-check','life-repair'].includes(s.source))requireValue(s.reference===studyDay(s.createdAt),'生活複習日期與建立時間不一致。');
  requireValue(time(s.createdAt)&&time(s.updatedAt)&&(s.completedAt===null?s.cursor<s.queue.length:time(s.completedAt)&&s.cursor===s.queue.length));
  return s;
 }
