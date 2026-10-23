@@ -43,6 +43,7 @@ export function validateSession(s){
  s.queue.forEach((q,index)=>{if(!q.repeat)return;const source=s.queue.findIndex(x=>!x.repeat&&x.questionId===q.sourceId),first=s.answers[q.sourceId];requireValue(!repeated.has(q.sourceId)&&index-source>=3&&first&&(!first.correct||first.hinted),'訂正需隔兩題且每題最多一次');repeated.add(q.sourceId);});
  for(const [key,a] of Object.entries(s.corrections)){requireValue(/^\d+$/.test(key)&&s.queue[Number(key)]?.repeat);answer(a);}
  for(let i=0;i<s.cursor;i++)requireValue(s.queue[i].repeat?Boolean(s.corrections[i]):Boolean(s.answers[s.queue[i].questionId]),'回想中斷點超過已保存答案');
+ if(s.source==='life-check')requireValue(s.reference===studyDay(s.createdAt),'生活複習日期與建立時間不一致。');
  requireValue(time(s.createdAt)&&time(s.updatedAt)&&(s.completedAt===null?s.cursor<s.queue.length:time(s.completedAt)&&s.cursor===s.queue.length));
  return s;
 }
