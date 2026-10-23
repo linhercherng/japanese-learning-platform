@@ -23,20 +23,20 @@
 
 Files: create app/core/life-notes-state.mjs、app/core/life-notes.mjs；modify app/core/learning.mjs、app/core/v3-state.mjs；tests/life-notes.test.mjs。
 
-- [ ] 先紅：92合法unit、長度／時間／欄位／草稿驗證、明示保存／空墓碑、舊備份／新合併／同時衝突、草稿對消／新草稿、保存不改首答／提示與pending守護、索引搜尋／篩選／10筆／空草稿／不曝光。
-- [ ] 實作純函式與原備份接合，測試綠後提交。
+- [x] 先紅：92合法unit、長度／時間／欄位／草稿驗證、明示保存／空墓碑、舊備份／新合併／同時衝突、草稿對消／新草稿、保存不改首答／提示與pending守護、索引搜尋／篩選／10筆／空草稿／不曝光。
+- [x] 實作純函式與原備份接合，測試綠後提交。
 
 ## Task 2：提示退場與手機操作
 
 Files: create app/life-notes.mjs、app/ui/life-notes.mjs；modify main、navigation、life-memory／life-review／life-cards／life-skills UI；tests/life-notes-ui.test.mjs、tests/life-notes-controller.test.mjs。
 
-- [ ] 先紅：正文預設隱藏、pending全遮蔽、原課返回、HTML編碼、真實狀態與空結果、輸入／IME／保存／延遲離頁／連按／失敗匯出／新草稿保留、索引不曝光與表單翻頁。
-- [ ] 實作、生活測試通過，獨立核心／介面審查及必要修補。
+- [x] 先紅：正文預設隱藏、pending全遮蔽、原課返回、HTML編碼、真實狀態與空結果、輸入／IME／保存／延遲離頁／連按／失敗匯出／新草稿保留、索引不曝光與表單翻頁。
+- [x] 實作、生活測試通過，獨立核心／介面審查及必要修補。
 
 ## Task 3：驗收與發布
 
-- [ ] 隔離QA中文／日文線索、草稿刷新／保存、收起／提示與原輪、索引搜尋篩選、pending／原首答、320/390px／鍵盤／console；保留原資料。
-- [ ] 版本0.27.0及README／規格／課綱／畫面／來源／驗收，npm test→build→check、audit、shell SHA／JS MIME／SW與146原音HTTP。
+- [x] 隔離QA中文／日文線索、草稿刷新／保存、收起／提示與原輪、索引搜尋篩選、pending／原首答、320/390px／鍵盤／console；保留原資料。
+- [x] 版本0.27.0及README／規格／課綱／畫面／來源／驗收，npm test→build→check、audit、shell SHA／JS MIME／SW與146原音HTTP。
 - [ ] 同head CI成功合併、Pages成功、正式HTTP／隔離UI及截圖、正常SW更新；補證據push遠端一致、關QA／server。
 
 不清DB／快取／SW。回退先匯出JSON，舊版可能不認lifeNotes，保留原備份；個人線索／答案／草稿／QA不進公開Git。實機、真人／教師審校及長期記憶效果另列未驗證。
