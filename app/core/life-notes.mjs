@@ -1,0 +1,12 @@
+import {lifeUnitIds} from '../content/life-memory-ids.mjs';
+import {unitById,unitQuestions} from '../content/catalog.mjs';
+import {validateState} from './learning.mjs';
+import {pendingLife} from './life-memory.mjs';
+import {recordLifeExposure} from './life-memory-state.mjs';
+import {lifeNoteKey,validateLifeNotes,validateLifeNoteDraft} from './life-notes-state.mjs';
+export {lifeNoteKey};
+function editable(state,id,text){if(!lifeUnitIds.has(id)||typeof text!=='string'||text.length>160)throw new Error('生活線索請限制在 160 字內。');if(pendingLife(state))throw new Error('請先完成原輪生活回想，再編輯線索。');}
+export function storeLifeNoteDraft(state,id,text,time){editable(state,id,text);const next=structuredClone(state),key=lifeNoteKey(id),d={text,points:[],time};validateLifeNoteDraft(key,d);next.drafts[key]=d;next.revision++;return validateState(next);}
+export function saveLifeNote(state,id,text,time){editable(state,id,text);const next=structuredClone(state);next.v3.lifeNotes??={};next.v3.lifeNotes[id]={text:text.trim(),updatedAt:time};validateLifeNotes(next.v3.lifeNotes);const key=lifeNoteKey(id),d=next.drafts[key];if(d&&(Date.parse(d.time)<Date.parse(time)||d.time===time&&d.text===text))delete next.drafts[key];next.revision++;return validateState(next);}
+export function exposeLifeNote(state,id,time){if(!lifeUnitIds.has(id)||pendingLife(state))return state;const text=state.drafts[lifeNoteKey(id)]?.text??state.v3.lifeNotes?.[id]?.text;if(!text?.trim())return state;return recordLifeExposure(state,unitQuestions(unitById.get(id)).map(q=>q.id),time);}
+export function lifeNoteIndex(state,{query='',level='all',topic='all',scope='all',page=1}={}){const search=String(query).trim().toLocaleLowerCase(),rows=[...lifeUnitIds].map(id=>{const unit=unitById.get(id),n=state.v3.lifeNotes?.[id],d=state.drafts[lifeNoteKey(id)];return {id,unit,saved:Boolean(n?.text),draft:Boolean(d),updatedAt:d?.time||n?.updatedAt,text:(n?.text||'')+' '+(d?.text||'')};}).filter(r=>(r.saved||r.draft)&&(level==='all'||r.unit.level===level)&&(topic==='all'||r.unit.topic===topic)&&(scope==='all'||scope==='saved'&&r.saved||scope==='drafts'&&r.draft)&&(!search||(r.unit.title+' '+r.text).toLocaleLowerCase().includes(search))).sort((a,b)=>Date.parse(b.updatedAt)-Date.parse(a.updatedAt)||a.id.localeCompare(b.id));const pages=Math.max(1,Math.ceil(rows.length/10)),current=Math.min(pages,Math.max(1,Number.isInteger(page)?page:1));return {total:rows.length,pages,page:current,rows:rows.slice((current-1)*10,current*10).map(({text,...r})=>r)};}
