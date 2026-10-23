@@ -45,6 +45,8 @@ export function navigationContext(ctx,name='home',param){
    trail=[home,courses,parent,item(name==='stroke'?'筆順示範':'手寫練習',route)];break;
   }
   case 'quiz':section='practice-hub';trail=[home,courses,kana];if(ctx.session?.quiz?.lesson)trail.push(item('五十音單元',`unit/${ctx.session.quiz.lesson}`));trail.push(item('五十音回想',route));break;
+  case 'life-memory':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory')];if(param)trail.push(item(unitById.get(param)?.title||'生活單元',route));break;
+  case 'life-check':section='practice-hub';trail=[home,courses,item('生活記憶','life-memory'),item('隔天生活複習',route)];break;
   case 'practice-hub':section='practice-hub';trail=[home,practice];break;
   case 'practice':{
    section='practice-hub';const id=state.practice?.unitId;
@@ -57,7 +59,7 @@ export function navigationContext(ctx,name='home',param){
   case 'daily':section='home';trail=[home,item('每日安排',route)];break;
   case 'v3-practice':{
    section='practice-hub';const s=state.v3.sessions.find(s=>s.id===param);
-   const origin=s?.source==='kana-contrast'?['kana-contrast',s.reference]:s?.source==='kana-pocket-listen'?['kana-pocket']:s?.source==='kana-rhythm'?['kana-beats',s.reference]:s?.source==='kana-row'?['kana-row',rowRoundById.get(s.reference)?.rowId]:s?.source==='kana-family'?['kana-family',s.reference]:s?.source==='kana-bridge'?['kana-bridge',s.reference]:s?.source==='kana-duel'?['kana-duel',s.reference]:s?.source==='kana-repair'?['kana-repair']:s?.source==='kana-type'?['kana-type',s.reference]:s?.source==='kana-week'?['kana-week']:s?.source==='kana-mini'?['kana-mini']:s?.source==='kana-build'?['kana-build',s.reference]:s?.source==='kana-words'?['kana-words',s.reference]:s?.source==='kana-map'?['kana-map']:s?.source==='kana-check'?['kana-check']:s?.source==='kana-confusion'?['kana-confusions']:s?.source==='daily'?['daily',s.reference]:s?.source==='lesson'?['deep',s.reference]:s?.source==='confusion'?['confusion',s.reference]:s?.source==='kana'?['kana-memory']:['weaknesses'];
+   const origin=s?.source==='life-memory'?['life-memory',s.reference]:s?.source==='life-check'?['life-check']:s?.source==='kana-contrast'?['kana-contrast',s.reference]:s?.source==='kana-pocket-listen'?['kana-pocket']:s?.source==='kana-rhythm'?['kana-beats',s.reference]:s?.source==='kana-row'?['kana-row',rowRoundById.get(s.reference)?.rowId]:s?.source==='kana-family'?['kana-family',s.reference]:s?.source==='kana-bridge'?['kana-bridge',s.reference]:s?.source==='kana-duel'?['kana-duel',s.reference]:s?.source==='kana-repair'?['kana-repair']:s?.source==='kana-type'?['kana-type',s.reference]:s?.source==='kana-week'?['kana-week']:s?.source==='kana-mini'?['kana-mini']:s?.source==='kana-build'?['kana-build',s.reference]:s?.source==='kana-words'?['kana-words',s.reference]:s?.source==='kana-map'?['kana-map']:s?.source==='kana-check'?['kana-check']:s?.source==='kana-confusion'?['kana-confusions']:s?.source==='daily'?['daily',s.reference]:s?.source==='lesson'?['deep',s.reference]:s?.source==='confusion'?['confusion',s.reference]:s?.source==='kana'?['kana-memory']:['weaknesses'];
    trail=[...navigationContext(ctx,...origin).trail,item('回想練習',route)];break;
   }
   case 'exam':section='exam';trail=[home,exam];break;
@@ -69,7 +71,7 @@ export function navigationContext(ctx,name='home',param){
   case 'weekly':case 'revise':section='profile';trail=[home,profile,weekly];if(name==='revise')trail.push(item('作品修訂',route));break;
   default:section='home';trail=[home];
  }
- if(['practice','v3-practice'].includes(name))trail=trail.map(c=>{const [source,id]=c.route.split('/');return id&&['study','deep','unit'].includes(source)?item(id,c.route):c;});
+ if(['practice','v3-practice'].includes(name))trail=trail.map(c=>{const [source,id]=c.route.split('/');return id&&['study','deep','unit','life-memory'].includes(source)?item(id,c.route):c;});
  const rail=trail.some(c=>c.route.startsWith('topics'))?'topics':name==='review'?'review':section==='courses'?'courses':section==='profile'?'profile':section==='home'?'home':null;
  return {trail,section,rail};
 }
