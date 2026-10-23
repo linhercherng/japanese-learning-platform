@@ -244,3 +244,12 @@ schema3 optional lifeNotes（92key，text／updatedAt）與text:LN-<unit>草稿�
 life-topic及life-topic/<ceiling>為20主題目錄，life-topic/<topic>:<ceiling>為同主題回想。程度上限L→N5→N4→N3→N2，預設L，選擇留URL；主頁顯示範圍內總課、真實練過課及這次最多題數，無答案或筆記預覽／曝光。只選cutoff內有效attempts，重建reviews，依最近錯答／提示→到期→其他已練、較早作答／qid排序；同主題不超上限，最多三個不同unit、一課一題。沒有歷史顯示空，僅一課明示單課。
 
 新source life-topic，reference=topic:ceiling，1～3唯一qid／不同unit／同主題／程度內／queue只含原題。raw metadata與catalog共用life-topics對照，schema3與V1/V2資料不改。共同life pending、lifeHints、原首答、回顧、地圖及每日收尾沿用；結果標實際課題數、接回本輪原課／逐句卡／能力／線索與原topic URL。同日加練不等於跨日記住，也不是新情境／自由口說評量。連按／stale reference／epoch／寫入失敗可匯出與手機48px／鍵盤沿用。見[規劃](plans/2026-10-23-life-memory-seventh.md)。
+
+
+## 生活記憶第八批（v0.29.0，2026-10-23）
+
+life-dictation目錄以程度／場景篩選92課，僅課名／草稿句數，無正文預覽或曝光；life-dictation/<unit>:<slot>沿用每課前三句memoryPhrases（276句），一次一句原音／0.75慢速→自己打字→明示唯讀原句對照→收起再回想。原音、文字參考沿用，字元LCS保留原文字形／空白／標點與Unicode，不判同義句、自然度、聽寫分數或完成；相同原文僅敘述相同，不新增attempts／source／schema欄位。
+
+預設不在DOM顯示個人草稿或原句，主動開始才出300字textarea；刷新／離頁／換句收起但各句草稿保留。任一life pending全遮蔽並接原UUID；聽音、非空稿展開／輸入、原句對照保守記本課全部qid參考，舊首答保持。schema3 drafts加text:LD-<unit>:<slot>（0..2），text／time／空points嚴格驗證，實際時間合併、同時異文拒絕、空稿保留移除意圖，原寫作／LN／作品不覆寫。
+
+input先cache後串行寫入，不重繪；route epoch／busy／ref保護與IME組字版本失效，延遲對照遇新input或新compositionstart均不重繪。失敗候選及最新輸入可匯出，曝光保存成功才揭原句／播音。焦點於對照標題／回編輯／收起按鈕間接續，48px控制項及目前路徑延續。詳見[規劃](plans/2026-10-23-life-memory-eighth.md)與[驗收](life-memory-eighth-validation.md)。
