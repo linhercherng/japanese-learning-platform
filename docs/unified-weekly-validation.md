@@ -30,6 +30,15 @@ UI匯出前後parseBackup整份state完全一致（work/weekly-local-before.json
 
 最終174 shell fingerprint `9d550c4fcb77cf13afcf976f5dbabf691b00287397276e89ebb09988ae34ddf0`；本機174逐檔SHA256／JS MIME／SW與10原音HTTP抽樣以PowerShell預設TLS通過，見ignored work/weekly-local-http.json。音檔未改，抽樣涵蓋K／L及四級原詞與聽解，不是全量音訊HTTP。
 
-## 待完成發布證據
+## 正式發布
 
-正式PR CI、merge／Pages與正式URL驗證完成後補記。教師／實機OS鍵盤及長期學習成效仍需獨立證據；本次只驗證程式邏輯、桌面瀏覽器與指定尺寸。回退前匯出備份，保留新舊資料。
+PR [#52](https://github.com/linhercherng/japanese-learning-platform/pull/52) head `1421d1c960398614094e9db2c3b8f2225af145e3`，CI [39958688220](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39958688220) success（build通過、PR deploy依規則略過）。UTC13:09:22合併為 `14ec56badffa3186a6bc9de99d3b50b5d5849c2e`，Pages [39958884299](https://github.com/linhercherng/japanese-learning-platform/actions/runs/39958884299) 沿該merge SHA發布，build／deploy及整體均success，deploy於UTC13:10:30完成。教師／實機OS鍵盤及長期學習成效仍需獨立證據；本次只驗證程式邏輯、桌面瀏覽器與指定尺寸。回退前匯出備份，保留新舊資料。
+
+
+正式URL https://linhercherng.github.io/japanese-learning-platform/ ，UTC13:11:52以PowerShell預設TLS核對174 shell SHA256／JS MIME／SW及10原音HTTP抽樣通過，0重試，fingerprint與本機9d550c4f一致（work/weekly-public-http.json）。正常PWA自然準備離線資源後重新開頁，讀到新六區回顧；沒有清DB／cache／SW。
+
+正式QA回顧顯3天／42筆六區原題首答／25每日原題能力首答；另3筆舊題在分開紀錄，45筆總作答完整保留。六區目前K15／L8／N5 0／N4 0／N3 1／N2 0項；點主要按鈕仍接原909b78fa-54ee-48a8-b9e0-8ebaa3502d02第2／3題、輸入空白，沒有作答或看提示。K:uncertain深連結正確列3項及提示歷史不足原因，未假稱碰撞或記住。weekly／weaknesses正式五寬共10組無橫溢、main h1為1；console warn／error空（work/weekly-public-layout.json）。
+
+正式升級前後UI匯出、parseBackup整份state深比對完全一致：QA45作答／28輪／10草稿，正常個人庫1作答／1輪／0草稿。正常回顧仍連原0e1aef73-23a9-4da6-a47f-d8f7f7acfec5，未進入或操作個人原題；沒有新增答案、提示、偏好或草稿。ignored證據work/weekly-public-qa-before.json／after與work/weekly-normal-before.json／after。
+
+正常正式390×844截圖work/weekly-public-390.png；已恢復viewport、保留正式weekly頁。本機18124 server已停止且無Listen。最後僅以[skip ci]補推驗收文件、勾選計畫；正式網站部署仍為上述已驗證merge SHA，遠端main與本機文件提交核對一致。

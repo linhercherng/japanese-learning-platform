@@ -34,7 +34,7 @@ Create app/ui/unified-review.mjs and tests/unified-review-ui.test.mjs; modify ap
 
 - [x] 獨立唯讀核心與UI審查；全站test→build→check／audit，修正回歸。
 - [x] 本機QA UI匯出前後整份state不變、原輪續作與深連結、五寬320／390／768／1024／1440、Tab／大字／console、HTTP shell SHA與原音抽樣。
-- [ ] PR同head CI→merge→Pages→正式HTTP／PWA自然更新／正常與QA備份深比對，截圖、恢復viewport／停server、文件推送與遠端HEAD一致。
+- [x] PR同head CI→merge→Pages→正式HTTP／PWA自然更新／正常與QA備份深比對，截圖、恢復viewport／停server、文件推送與遠端HEAD一致。
 
 不清DB／cache／SW。新增日語教材／真人審音／實機OS鍵盤／長期成效不在本輪；部署失敗保留資料與原發布，可回退程式但先匯出備份。
 
