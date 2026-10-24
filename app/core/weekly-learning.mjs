@@ -1,5 +1,7 @@
 import {memoryEvidence,emptyRecent,memoryTiming,weeklyFocusScore} from './memory-evidence.mjs';
-import {resolveLearningQuestion} from '../content/catalog.mjs';
+import {resolveLearningQuestion,words} from '../content/catalog.mjs';
+import {wordExamples} from '../content/kana-words.mjs';
+import {memoryFor,kanaRows,kanaGroups} from '../content/kana-memory.mjs';
 import {studyDay} from './v3-state.mjs';
 import {dailyMemory} from './daily-memory.mjs';
 const stamp=t=>Date.parse(t),day=n=>new Date(n*86400000).toISOString().slice(0,10),ordinal=t=>Date.parse(studyDay(t))/86400000;
@@ -10,7 +12,7 @@ const severity=r=>r.status==='review'?3:r.status==='uncertain'?2:r.status==='wai
 export function weeklyFocusParam(param=''){const [goal,ability,...extra]=String(param).split(':'),allowed=goal==='K'?['recognition','listening','language']:goal==='L'?['listening','productive','understanding']:['vocabulary','grammar','kanji','reading','listening'];return goals.includes(goal)&&allowed.includes(ability)&&!extra.length?{goal,ability}:null;}
 export function weeklyFocusQueue(state,param,time,options={}){
  const p=weeklyFocusParam(param);if(!p)return null;const evidence=options.evidence||memoryEvidence(state,time),r=dailyMemory(state,p.goal,time,{...options,evidence,ability:p.ability});
- if(p.goal==='K'&&p.ability==='language'){const rows=evidence.tracks[0].items.filter(i=>i.ability==='language').sort((a,b)=>severity(b)-severity(a)||weeklyFocusScore(b)-weeklyFocusScore(a)||stamp(a.lastAt)-stamp(b.lastAt)||a.item.localeCompare(b.item));return {...r,mode:rows.length?'manual':null,manualRoute:rows.length?'kana-words/'+rows[0].item:null};}
+ if(p.goal==='K'&&p.ability==='language'){const rows=evidence.tracks[0].items.filter(i=>i.ability==='language').sort((a,b)=>severity(b)-severity(a)||weeklyFocusScore(b)-weeklyFocusScore(a)||stamp(a.lastAt)-stamp(b.lastAt)||a.item.localeCompare(b.item));const item=rows[0]?.item,natural=item&&wordExamples(item,words).length,m=item&&memoryFor(item);return {...r,mode:item?'manual':null,manualKind:natural?'words':'cloze',manualRoute:item?(natural?'kana-words/'+item:'kana-memory'):null,manualGuide:item&&!natural?`請選「${item.startsWith('h-')?'平':'片'}假名」→「${kanaGroups.find(g=>g.id===m.group).title}」→「${kanaRows.find(r=>r.id===m.row).title}」→「詞中補字」，每輪最多5題。`:null};}
  return r.mode==='repair'?{...r,mode:'wait',questionIds:[],items:[],priority:0}:r;
 }
 function outcomes(state,time,start){
