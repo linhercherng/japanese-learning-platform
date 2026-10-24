@@ -1,4 +1,4 @@
-import {kanaCueSeen,legacyKanaUnknown} from './kana-history-state.mjs';
+import {kanaEvents,kanaCueSeen,legacyKanaUnknown} from './kana-history-state.mjs';
 import {kana} from '../content/kana.mjs';
 import {coachQuestion,confusedKana} from '../content/kana-coach.mjs';
 import {resolveLearningQuestion} from '../content/catalog.mjs';
@@ -9,18 +9,25 @@ function histories(state,time){
  const map=new Map();for(const a of state.attempts){if(!ids.has(a.item)||!dimensions.includes(a.dimension)||Date.parse(a.time)>Date.parse(time))continue;const key=`${a.item}:${a.dimension}`;if(!map.has(key))map.set(key,[]);map.get(key).push(a);}
  for(const list of map.values())list.sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id));return map;
 }
-function ability(state,list=[],dimension,time){
- const first=new Map();for(const a of list)if(!first.has(studyDay(a.time)))first.set(studyDay(a.time),a);
- const hinted=a=>a.hinted||dimension!=='writing'&&kanaCueSeen(state,[a.item],a.time,a.time),uncertain=a=>dimension!=='writing'&&legacyKanaUnknown(state,a,time);
- const independentDays=[...first.values()].filter(a=>a.correct&&!hinted(a)&&!uncertain(a)&&list.filter(h=>Date.parse(h.time)===Date.parse(a.time)).length===1).length,last=list.at(-1);
+// Index once per map render: long histories must not be sorted for every answer.
+function cueIndex(state,time){
+ const byItem=new Map();for(const e of kanaEvents(state,null,time)){
+  if(!byItem.has(e.item))byItem.set(e.item,{days:new Map(),checkpoints:new Map(),legacy:0});const c=byItem.get(e.item),stamp=Date.parse(e.time);
+  if(e.kind==='answer')c.checkpoints.set(e.ref,stamp);else{const day=studyDay(e.time);if(!c.days.has(day))c.days.set(day,stamp);if(e.kind==='legacy')c.legacy=Math.max(c.legacy,stamp);}
+ }return byItem;
+}
+function ability(list=[],dimension,cues){
+ const first=new Map(),counts=new Map();for(const a of list){const day=studyDay(a.time),stamp=Date.parse(a.time);if(!first.has(day))first.set(day,a);counts.set(stamp,(counts.get(stamp)||0)+1);}
+ const hinted=a=>a.hinted||dimension!=='writing'&&(cues?.days.get(studyDay(a.time))??Infinity)<=Date.parse(a.time),uncertain=a=>dimension!=='writing'&&cues?.checkpoints.get(a.id)!==Date.parse(a.time)&&(cues?.legacy||0)>Date.parse(a.time);
+ const independentDays=[...first.values()].filter(a=>a.correct&&!hinted(a)&&!uncertain(a)&&counts.get(Date.parse(a.time))===1).length,last=list.at(-1);
  const latestFirst=[...first.values()].at(-1);
- const ambiguous=last&&(list.filter(h=>Date.parse(h.time)===Date.parse(last.time)).length>1||list.filter(h=>Date.parse(h.time)===Date.parse(latestFirst.time)).length>1),unknown=last&&uncertain(latestFirst);
+ const ambiguous=last&&(counts.get(Date.parse(last.time))>1||counts.get(Date.parse(latestFirst.time))>1),unknown=last&&uncertain(latestFirst);
  const weak=last&&(!last.correct||hinted(last)||!latestFirst.correct||hinted(latestFirst)||ambiguous||unknown);
  const label=dimension==='writing'?(last?(weak?'自評需再對照':'已有手寫自評'):'未留下自評'):!last?'未練習':ambiguous||unknown?'紀錄待確認':weak?'需要複習':independentDays>=2?'已有跨日回想':'已獨立答對';
  return {label,total:list.length,days:first.size,independentDays,weak:Boolean(weak),lastTime:last?.time||null};
 }
 export function kanaMemoryMap(state,time=new Date().toISOString()){
- const map=histories(state,time);return kana.map(k=>({...k,...Object.fromEntries(dimensions.map(d=>[d,{...ability(state,map.get(`${k.id}:${d}`),d,time),due:Boolean(state.reviews[`${k.id}:${d}`]&&Date.parse(state.reviews[`${k.id}:${d}`].due)<=Date.parse(time))}]))}));
+ const map=histories(state,time),cues=cueIndex(state,time);return kana.map(k=>({...k,...Object.fromEntries(dimensions.map(d=>[d,{...ability(map.get(`${k.id}:${d}`),d,cues.get(k.id)),due:Boolean(state.reviews[`${k.id}:${d}`]&&Date.parse(state.reviews[`${k.id}:${d}`].due)<=Date.parse(time))}]))}));
 }
 export function kanaConfusions(state){
  const events=new Map();
