@@ -21,10 +21,10 @@
 
 ## Tasks
 
-- [ ] 1. RED→GREEN：tests/weekly-learning.test.mjs、memory-evidence 跨日失敗與首答摘要，app/core/weekly-learning.mjs 原輪核對／本週成果／下週重點，舊證據回歸後提交。
-- [ ] 2. RED→GREEN：每日挑題優先、週報與 weekly-focus 頁、開始流程測試；app/core/daily-memory.mjs、app/core/unified-review.mjs、app/ui/unified-review.mjs、app/ui/weekly-learning.mjs、app/v3.mjs、app/ui/navigation.mjs。覆蓋到期／未到期／原輪／失敗／排隊改變與午夜，提交。
-- [ ] 3. 依 code review 技能獨立審查，修正重要問題。完整test／build／check／audit；維護規格、課綱、畫面、路線、來源及版本。
-- [ ] 4. IAB本機QA備份匯入與唯讀比對、原輪結果／下一步實際操作、五寬／大字／Tab／44px／console及全shell HTTP；私人與測試資料只放忽略work。
+- [x] 1. RED→GREEN：tests/weekly-learning.test.mjs、memory-evidence 跨日失敗與首答摘要，app/core/weekly-learning.mjs 原輪核對／本週成果／下週重點，舊證據回歸後提交。
+- [x] 2. RED→GREEN：每日挑題優先、週報與 weekly-focus 頁、開始流程測試；app/core/daily-memory.mjs、app/core/unified-review.mjs、app/ui/unified-review.mjs、app/ui/weekly-learning.mjs、app/v3.mjs、app/ui/navigation.mjs。覆蓋到期／未到期／原輪／失敗／排隊改變與午夜，提交。
+- [x] 3. 依 code review 技能獨立審查，修正重要問題。完整test／build／check／audit；維護規格、課綱、畫面、路線、來源及版本。
+- [x] 4. IAB本機QA備份匯入與唯讀比對、原輪結果／下一步實際操作、五寬／大字／Tab／44px／console及全shell HTTP；私人與測試資料只放忽略work。
 - [ ] 5. 正常與QA正式升級前備份；PR同head CI → 合併 → Pages → 正式HTTP、自然SW升級、畫面與完整state比對。文件、截圖與遠端一致，恢復viewport並停server。
 
 沿用既有原創試用教材與自評／客觀證據邊界；不宣稱教師、實機、長期學習或官方檢定成效驗收。
