@@ -2,7 +2,8 @@ import {courseHistoryView} from './ui/course-history.mjs';
 import {dailyMemoryView} from './ui/daily-memory.mjs';
 import {dailyMemoryParam,startDailyMemory} from './core/daily-memory.mjs';
 import {weeklyFocusView} from './ui/weekly-learning.mjs';
-import {weeklyFocusParam,weeklyFocusQueue} from './core/weekly-learning.mjs';
+import {saveWeeklyFocus} from './core/weekly-focus-progress.mjs';
+import {weeklyLearning,weeklyFocusParam,weeklyFocusQueue} from './core/weekly-learning.mjs';
 import {courseGoal} from './core/course-history-state.mjs';
 import {recordLifeExposure} from './core/life-memory-state.mjs';
 import {recordJlptExposure} from './core/jlpt-memory-state.mjs';
@@ -48,6 +49,11 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
   const planId=id(),time=now(),origin=location.hash,ticket=routeEpoch;let destination;
   await update(s=>{const pending=learningPending(s,time,ctx().session.quiz)[0];if(pending){destination=pending.route;return s;}const existing=todayPlan(s,time);if(existing&&!allowNew){destination='daily/'+existing.id;return s;}const plan=makeDailyPlan(s,{concepts,questions:v3Questions,units,resolveQuestion:resolve,time,id:planId,allowNew});destination='daily/'+plan.id;return storeDailyPlan(s,plan);});
   if(!disposed&&ticket===routeEpoch&&location.hash===origin)location.hash=destination;
+ }
+ async function trackWeeklyFocus(d){
+  if(route()[0]!=='weekly')return;const origin=location.hash,ticket=routeEpoch;let saved=false;
+  await update(s=>{const time=now(),w=weeklyLearning(s,time);if(w.tracking.latest?.active)return s;if(studyDay(time)!==d.v3FocusDay||w.tracking.key!==d.v3FocusKey)throw Error('日期或原題重點已更新，請重新確認後再追蹤。');const next=saveWeeklyFocus(s,w.focus,time);saved=next!==s;return next;});
+  if(!disposed&&ticket===routeEpoch&&location.hash===origin){toast(saved?'七天重點已保存；原答案與草稿保持。':'這組重點仍保留，依原題慢慢練。');render(false);}
  }
  async function startTodayReview(param,focus=false){
   const parsed=focus?weeklyFocusParam(param):dailyMemoryParam(param),origin=location.hash,ticket=routeEpoch,sessionId=id();
@@ -126,6 +132,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
    case 'refresh-home':break;
    case 'start-today-review':return startTodayReview(d.v3Review);
    case 'start-weekly-focus':return startTodayReview(d.v3Focus,true);
+   case 'track-weekly-focus':return trackWeeklyFocus(d);
    case 'extra-plan':return createPlan(true);
    case 'start-step':return startStep(d.v3Plan,d.v3Step);
    case 'finish-step':await update(s=>completeDailyStep(s,d.v3Plan,d.v3Step,now()));break;

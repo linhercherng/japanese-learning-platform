@@ -1,3 +1,5 @@
+import {weeklyFocusPriority} from './weekly-focus-progress.mjs';
+import {focusTargetKey} from './weekly-focus-state.mjs';
 import {memoryEvidence,memoryTiming,weeklyFocusScore} from './memory-evidence.mjs';
 import {resolveLearningQuestion} from '../content/catalog.mjs';
 import {coachQuestion} from '../content/kana-coach.mjs';
@@ -13,6 +15,7 @@ export function dailyMemoryParam(param=''){const [goal,mode,...extra]=param.spli
 /** Never persist a recommendation or treat viewing this result as a learning event. */
 export function dailyMemory(state,goal,time,{mode=null,ability=null,evidence=memoryEvidence(state,time)}={}){
  const track=evidence.tracks.find(t=>t.goal===goal);if(!track)throw Error('找不到這個學習方向。');
+ const focusKeys=new Set(weeklyFocusPriority(state,time,evidence).map(focusTargetKey));
  const today=ordinal(time),rows=track.items.filter(r=>(!ability||r.ability===ability)&&(goal!=='K'||['recognition','listening'].includes(r.dimension))).map(r=>{
   const {next,week}=memoryTiming(r);
   return {...r,next,week,q:goal==='K'?coachQuestion('kc:check:'+r.item+':'+(r.dimension==='recognition'?'pair':'listen')):resolveLearningQuestion(r.item)};
@@ -23,7 +26,7 @@ export function dailyMemory(state,goal,time,{mode=null,ability=null,evidence=mem
  const select=m=>{
   if(conflict||done(m))return [];
   const eligible=rows.filter(r=>m==='repair'?rank[r.status]>0&&r.next>today:m==='week'?r.week<=today:r.next<=today);
-  eligible.sort((a,b)=>rank[b.status]-rank[a.status]||weeklyFocusScore(b)-weeklyFocusScore(a)||Date.parse(a.lastAt)-Date.parse(b.lastAt)||a.item.localeCompare(b.item)||a.dimension.localeCompare(b.dimension));
+  eligible.sort((a,b)=>rank[b.status]-rank[a.status]||Number(focusKeys.has(focusTargetKey(b)))-Number(focusKeys.has(focusTargetKey(a)))||weeklyFocusScore(b)-weeklyFocusScore(a)||Date.parse(a.lastAt)-Date.parse(b.lastAt)||a.item.localeCompare(b.item)||a.dimension.localeCompare(b.dimension));
   const seen=new Set(),out=[];for(const r of eligible){const key=goal==='K'?r.item:r.unitId;if(seen.has(key))continue;seen.add(key);out.push(r);if(out.length===(state.settings.dailyMinutes===5?1:3))break;}return out;
  };
  let chosen=mode,items=[];if(chosen&&modes.includes(chosen))items=select(chosen);else for(const m of modes){items=select(m);if(items.length){chosen=m;break;}}
@@ -31,7 +34,7 @@ export function dailyMemory(state,goal,time,{mode=null,ability=null,evidence=mem
  const upcoming=rows.filter(r=>r.next>today),history=Object.fromEntries(['hint','feedback','reference','legacy','answer'].map(k=>[k,track.items.reduce((n,r)=>n+r.history[k],0)]));
  // Kana abilities share one glyph timeline, so count a timeline once per item.
  if(goal==='K'){const unique=new Map(track.items.map(r=>[r.item,r.history]));for(const k of Object.keys(history))history[k]=[...unique.values()].reduce((n,h)=>n+h[k],0);}
- return {goal,mode:chosen,conflict:conflict?{route:'v3-practice/'+conflict.id,time:conflict.updatedAt}:null,questionIds:items.map(r=>r.q.id),items:items.map(({q,next,week,...r})=>({...r,nextDay:day(next),weekDay:day(week)})),summary:{...track.current},history,priority:items.reduce((n,r)=>Math.max(n,rank[r.status]),0),waiting:upcoming.length,nextDay:upcoming.length?day(Math.min(...upcoming.map(r=>r.next))):null,weekDay:rows.length?day(Math.min(...rows.map(r=>r.week))):null};
+ return {goal,mode:chosen,focusPending:items.filter(r=>focusKeys.has(focusTargetKey(r))).length,conflict:conflict?{route:'v3-practice/'+conflict.id,time:conflict.updatedAt}:null,questionIds:items.map(r=>r.q.id),items:items.map(({q,next,week,...r})=>({...r,nextDay:day(next),weekDay:day(week)})),summary:{...track.current},history,priority:items.reduce((n,r)=>Math.max(n,rank[r.status]),0),waiting:upcoming.length,nextDay:upcoming.length?day(Math.min(...upcoming.map(r=>r.next))):null,weekDay:rows.length?day(Math.min(...rows.map(r=>r.week))):null};
 }
 
 /** Called inside the existing storage transaction, after protecting pending work. */

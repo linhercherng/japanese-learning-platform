@@ -1,3 +1,4 @@
+import {validateWeeklyFocusPlans,mergeWeeklyFocusPlans} from './weekly-focus-state.mjs';
 import {validateCourseHistory,mergeCourseHistory} from './course-history-state.mjs';
 import {validateKanaHistory,mergeKanaHistory} from './kana-history-state.mjs';
 import {isJlptSource,validJlptReference} from '../content/jlpt-memory-ids.mjs';
@@ -71,7 +72,7 @@ function validateWeekExposure(sessions,hints){
  }
 }
 export function validateV3(v,artifacts=[]){
- shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'jlptHints')?['jlptHints']:[]),...(Object.hasOwn(v,'lifeNotes')?['lifeNotes']:[]),...(Object.hasOwn(v,'lifeHints')?['lifeHints']:[]),...(Object.hasOwn(v,'kanaPocket')?['kanaPocket']:[]),...(Object.hasOwn(v,'rhythmHints')?['rhythmHints']:[]),...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'courseHistory')?['courseHistory']:[]),...(Object.hasOwn(v,'kanaHistory')?['kanaHistory']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'jlptHints'))validateJlptHints(v.jlptHints);if(Object.hasOwn(v,'lifeNotes'))validateLifeNotes(v.lifeNotes);if(Object.hasOwn(v,'lifeHints'))validateLifeHints(v.lifeHints);if(Object.hasOwn(v,'kanaPocket'))validatePocket(v.kanaPocket);if(Object.hasOwn(v,'rhythmHints'))requireValue(validRhythmHints(v.rhythmHints),'節奏提示紀錄不正確。');if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'courseHistory'))validateCourseHistory(v.courseHistory);if(Object.hasOwn(v,'kanaHistory'))validateKanaHistory(v.kanaHistory);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
+ shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'weeklyFocusPlans')?['weeklyFocusPlans']:[]),...(Object.hasOwn(v,'jlptHints')?['jlptHints']:[]),...(Object.hasOwn(v,'lifeNotes')?['lifeNotes']:[]),...(Object.hasOwn(v,'lifeHints')?['lifeHints']:[]),...(Object.hasOwn(v,'kanaPocket')?['kanaPocket']:[]),...(Object.hasOwn(v,'rhythmHints')?['rhythmHints']:[]),...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'courseHistory')?['courseHistory']:[]),...(Object.hasOwn(v,'kanaHistory')?['kanaHistory']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'weeklyFocusPlans'))validateWeeklyFocusPlans(v.weeklyFocusPlans);if(Object.hasOwn(v,'jlptHints'))validateJlptHints(v.jlptHints);if(Object.hasOwn(v,'lifeNotes'))validateLifeNotes(v.lifeNotes);if(Object.hasOwn(v,'lifeHints'))validateLifeHints(v.lifeHints);if(Object.hasOwn(v,'kanaPocket'))validatePocket(v.kanaPocket);if(Object.hasOwn(v,'rhythmHints'))requireValue(validRhythmHints(v.rhythmHints),'節奏提示紀錄不正確。');if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'courseHistory'))validateCourseHistory(v.courseHistory);if(Object.hasOwn(v,'kanaHistory'))validateKanaHistory(v.kanaHistory);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
  requireValue(Array.isArray(v.dailyPlans)&&v.dailyPlans.length<=60&&new Set(v.dailyPlans.map(p=>p.id)).size===v.dailyPlans.length);
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
@@ -131,5 +132,6 @@ export function mergeV3(a,b,{blank=false,artifacts=[]}={}){
  if(a.lifeHints||b.lifeHints)next.lifeHints=mergeLifeHints(a.lifeHints,b.lifeHints);
  if(a.kanaNotes||b.kanaNotes)next.kanaNotes=mergeKanaNotes(a.kanaNotes,b.kanaNotes);
  if(a.kanaPocket||b.kanaPocket)next.kanaPocket=mergePocket(a.kanaPocket,b.kanaPocket);
+ if(a.weeklyFocusPlans||b.weeklyFocusPlans)next.weeklyFocusPlans=mergeWeeklyFocusPlans(a.weeklyFocusPlans,b.weeklyFocusPlans);
  return validateV3(next,artifacts);
 }
