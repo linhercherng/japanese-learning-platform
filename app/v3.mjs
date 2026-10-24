@@ -1,4 +1,6 @@
 import {courseHistoryView} from './ui/course-history.mjs';
+import {dailyMemoryView} from './ui/daily-memory.mjs';
+import {dailyMemoryParam,startDailyMemory} from './core/daily-memory.mjs';
 import {courseGoal} from './core/course-history-state.mjs';
 import {recordLifeExposure} from './core/life-memory-state.mjs';
 import {recordJlptExposure} from './core/jlpt-memory-state.mjs';
@@ -18,7 +20,7 @@ import {confusionPairs} from './content/confusions.mjs';
 import {kanaDrills,selectKanaDrills,validKanaReference} from './content/kana-drills.mjs';
 import {kanaMemoryView,kanaMemorySelection} from './ui/kana-memory.mjs';
 import {makeDailyPlan} from './core/daily-plan.mjs';
-import {learningPending} from './core/unified-learning.mjs';
+import {learningPending,unifiedLearning} from './core/unified-learning.mjs';
 import {setLearningGoal,storeDailyPlan,startDailyStep,completeDailyStep,adjustDailyPlan,beginV3Session,hintV3Question,answerV3Session,nextV3Question,markDeepStep,saveDailyWriting,saveTextRevision,saveDeepWriting,organizeV3} from './core/v3-learning.mjs';
 import {exportBackup} from './core/learning.mjs';
 import {profileView} from './ui/profile.mjs';
@@ -44,6 +46,13 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
   const planId=id(),time=now(),origin=location.hash,ticket=routeEpoch;let destination;
   await update(s=>{const pending=learningPending(s,time,ctx().session.quiz)[0];if(pending){destination=pending.route;return s;}const existing=todayPlan(s,time);if(existing&&!allowNew){destination='daily/'+existing.id;return s;}const plan=makeDailyPlan(s,{concepts,questions:v3Questions,units,resolveQuestion:resolve,time,id:planId,allowNew});destination='daily/'+plan.id;return storeDailyPlan(s,plan);});
   if(!disposed&&ticket===routeEpoch&&location.hash===origin)location.hash=destination;
+ }
+ async function startTodayReview(param){
+  const parsed=dailyMemoryParam(param),origin=location.hash,ticket=routeEpoch,sessionId=id();
+  if(!parsed||route()[0]!=='today-review'||route()[1]!==param)return;
+  let destination='home';
+  await update(s=>{const time=now(),pending=learningPending(s,time,ctx().session.quiz)[0];if(pending){destination=pending.route;return s;}if(unifiedLearning(s,time,ctx().session.quiz).finishedToday)return s;const next=startDailyMemory(s,{...parsed,id:sessionId,time});if(next!==s)destination='v3-practice/'+sessionId;return next;});
+  if(!disposed&&ticket===routeEpoch&&location.hash===origin){local().order=[];location.hash=destination;}
  }
  async function begin(questions,{source,reference,planId=null,stepId=null}){
   const questionIds=questions.map(q=>q.id),sessionId=id(),time=now();let destination;
@@ -113,6 +122,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
    case 'kana-hide':kanaMemorySelection(ctx().session).hidden=!kanaMemorySelection(ctx().session).hidden;break;
    case 'create-plan':return createPlan();
    case 'refresh-home':break;
+   case 'start-today-review':return startTodayReview(d.v3Review);
    case 'extra-plan':return createPlan(true);
    case 'start-step':return startStep(d.v3Plan,d.v3Step);
    case 'finish-step':await update(s=>completeDailyStep(s,d.v3Plan,d.v3Step,now()));break;
@@ -158,7 +168,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  document.addEventListener('pointerdown',pointerDown);document.addEventListener('compositionstart',compositionStart);document.addEventListener('compositionend',compositionEnd);
  document.addEventListener('click',click);document.addEventListener('input',input);document.addEventListener('change',change);
  return {
-  views:{'course-history':param=>courseHistoryView(ctx(),param,now()),'kana-history':param=>kanaHistoryView(ctx(),param,now()),home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:filter=>weaknessesView(ctx(),now(),filter),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
+  views:{'today-review':param=>dailyMemoryView(ctx(),param,now()),'course-history':param=>courseHistoryView(ctx(),param,now()),'kana-history':param=>kanaHistoryView(ctx(),param,now()),home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:filter=>weaknessesView(ctx(),now(),filter),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
   afterRender,
   onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){routeEpoch++;composingInput=null;compositionSubmitBlocked=false;ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}prepareKanaCue(name,param);},
   validateCatalog(s){

@@ -69,6 +69,7 @@ export function navigationContext(ctx,name='home',param){
    section='practice-hub';const id=state.practice?.unitId;
    trail=unitById.has(id)?[...unitTrail(id),item('課內回想',route)]:id==='library-words'?[home,courses,item('詞彙與例句','library/words'),item('詞卡回想',route)]:id==='review-set'?[home,practice,item('到期複習與錯題','review'),item('複習回想',route)]:[home,practice,item('能力回想',route)];break;
   }
+  case 'today-review':section='home';trail=[home,item('今日原題複習',route)];break;
   case 'course-history':section='practice-hub';trail=[home,practice,item('六區記憶與弱點','weaknesses'),item('生活與檢定提示與回饋',route)];break;
   case 'kana-history':section='practice-hub';trail=[home,practice,item('五十音記憶與弱點','weaknesses/K:all:1'),item('提示與回饋時間線',route)];break;
   case 'review':section='practice-hub';trail=[home,practice,item('到期複習與錯題',route)];break;
