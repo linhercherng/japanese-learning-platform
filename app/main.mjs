@@ -1,3 +1,4 @@
+import {lifeUnitIds} from './content/life-memory-ids.mjs';
 import {kanaCueSeen} from './core/kana-history-state.mjs';
 import {createKanaReference} from './kana-reference.mjs';
 import {recordKanaExposure} from './core/kana-studio.mjs';
@@ -208,7 +209,7 @@ async function saveLife(lessonId){
 }
 function exportFile(){const blob=new Blob([exportBackup(context().state)],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`hiyori-backup-${new Date().toISOString().slice(0,10)}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('備份已匯出，包含進度、草稿與作品。');}
 function validateCatalog(s){
- const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...[...jlptUnitMeta.keys()].map(uid=>'JN-'+uid),...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
+ const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...[...lifeUnitIds].flatMap(id=>[`LN-${id}`,...[0,1,2].flatMap(slot=>[`LD-${id}:${slot}`,`LR-${id}:${slot}`,`LB-R-${id}:${slot}`,`LB-D-${id}:${slot}`])]),...[...jlptUnitMeta.keys()].map(uid=>'JN-'+uid),...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
  if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!draftIds.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
  lifeMemory.validateCatalog(s);v2.validateCatalog(s);
  v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);kanaLab.validateCatalog(s);kanaRecall.validateCatalog(s);kanaFocus.validateCatalog(s);kanaSixth.validateCatalog(s);kanaBridge.validateCatalog(s);kanaFamily.validateCatalog(s);kanaRow.validateCatalog(s);
