@@ -25,6 +25,8 @@
 - [x] 2. RED→GREEN：每日原題優先、跨區同mode挑選、五十音詞音手動接續；app/core/daily-memory.mjs與app/core/unified-learning.mjs，保留全域原輪與休息。加入UI與控制器測試，再實作週報追蹤／首頁摘要／開始交易，提交。
 - [x] 3. 依review技能獨立覆核保存、證據、整合與資料保留；修正P1／P2，再完整test/build/check/audit。同步README、規格、課綱、畫面、路線、來源與v0.44.0。
 - [x] 4. IAB隔離QA備份匯入、保存追蹤與重整、實際原輪回週報／首頁、舊state唯讀與備份往返、五寬／大字／Tab／44px／console及shell HTTP。
-- [ ] 5. 正式正常／QA先備份，PR同head CI成功後合併、Pages成功、正式HTTP與自然SW升級；新舊state保持、畫面驗證、驗收文件、遠端一致、恢復viewport／停server。
+- [x] 5. 正式正常／QA先備份，PR同head CI成功後合併、Pages成功、正式HTTP與自然SW升級；新舊state保持、畫面驗證、驗收文件、遠端一致、恢復viewport／停server。
 
 桌面尺寸與合成QA證據不冒充實機或真人長期學習效果；不新增未審定教材。
+
+發布後修正：v0.44.1未練總數改為total-practiced，新增第59項回歸；最終1,154測試、兩次CI／Pages、正式修正版畫面與原資料保持驗證完成，詳驗收文件。
