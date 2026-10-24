@@ -1,5 +1,7 @@
 # 日和｜日語學習平台
 
+v0.43.0 [每週回顧](https://linhercherng.github.io/japanese-learning-platform/#weekly)整合每日原工具的學習與複習成果，依答前提示、跨日回想與仍需鞏固的能力，建議接下來七天最多三項重點（5分鐘一項）。從重點接今天到期原題，未到期保留間隔；新作答後重新調整，原首答、進度與草稿保持。見[完整規劃](docs/weekly-learning-focus.md)、[驗收](docs/weekly-learning-focus-validation.md)。
+
 v0.42.0 [每日學習推薦](https://linhercherng.github.io/japanese-learning-platform/#home)整合五十音、生活日語與 N5～N2 提示歷史：答前提示與答後回饋分開，依跨日證據安排1／3／7日間隔。每次最多三道原題、5分鐘一題，顯示原因與下次日期；原輪、答案、進度與草稿保持。見[完整規劃](docs/daily-memory-history.md)、[驗收](docs/daily-memory-validation.md)。
 
 v0.41.0 新增[生活與 N5～N2 提示時間線](https://linhercherng.github.io/japanese-learning-platform/#course-history)：答前提示、答後回饋與參考分開，跨日／七日與原輪小結依可追溯事件分析；原首答、續作及草稿保留，舊階段不明仍待確認。回饋與專屬參考音訊先保存再揭示／播放，失敗保留重試。見[完整規劃](docs/course-hint-history.md)、[驗收](docs/course-hint-history-validation.md)。

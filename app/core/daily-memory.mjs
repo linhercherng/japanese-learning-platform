@@ -1,4 +1,4 @@
-import {memoryEvidence} from './memory-evidence.mjs';
+import {memoryEvidence,memoryTiming,weeklyFocusScore} from './memory-evidence.mjs';
 import {resolveLearningQuestion} from '../content/catalog.mjs';
 import {coachQuestion} from '../content/kana-coach.mjs';
 import {studyDay} from './v3-state.mjs';
@@ -11,11 +11,10 @@ export const dailyMemorySource=(goal,mode)=>(goal==='K'?'kana':goal==='L'?'life'
 export function dailyMemoryParam(param=''){const [goal,mode,...extra]=param.split(':');return goals.includes(goal)&&modes.includes(mode)&&!extra.length?{goal,mode}:null;}
 
 /** Never persist a recommendation or treat viewing this result as a learning event. */
-export function dailyMemory(state,goal,time,{mode=null,evidence=memoryEvidence(state,time)}={}){
+export function dailyMemory(state,goal,time,{mode=null,ability=null,evidence=memoryEvidence(state,time)}={}){
  const track=evidence.tracks.find(t=>t.goal===goal);if(!track)throw Error('找不到這個學習方向。');
- const today=ordinal(time),rows=track.items.filter(r=>goal!=='K'||['recognition','listening'].includes(r.dimension)).map(r=>{
-  const last=Math.max(Date.parse(r.lastAt),Date.parse(r.lastCueAt||r.lastAt));
-  const base=ordinal(new Date(last).toISOString()),next=base+(r.status==='week'?7:r.status==='retained'?3:1),week=base+7;
+ const today=ordinal(time),rows=track.items.filter(r=>(!ability||r.ability===ability)&&(goal!=='K'||['recognition','listening'].includes(r.dimension))).map(r=>{
+  const {next,week}=memoryTiming(r);
   return {...r,next,week,q:goal==='K'?coachQuestion('kc:check:'+r.item+':'+(r.dimension==='recognition'?'pair':'listen')):resolveLearningQuestion(r.item)};
  }).filter(r=>r.q);
  const visible=t=>Date.parse(t)<=Date.parse(time);
@@ -24,7 +23,7 @@ export function dailyMemory(state,goal,time,{mode=null,evidence=memoryEvidence(s
  const select=m=>{
   if(conflict||done(m))return [];
   const eligible=rows.filter(r=>m==='repair'?rank[r.status]>0&&r.next>today:m==='week'?r.week<=today:r.next<=today);
-  eligible.sort((a,b)=>rank[b.status]-rank[a.status]||Date.parse(a.lastAt)-Date.parse(b.lastAt)||a.item.localeCompare(b.item)||a.dimension.localeCompare(b.dimension));
+  eligible.sort((a,b)=>rank[b.status]-rank[a.status]||weeklyFocusScore(b)-weeklyFocusScore(a)||Date.parse(a.lastAt)-Date.parse(b.lastAt)||a.item.localeCompare(b.item)||a.dimension.localeCompare(b.dimension));
   const seen=new Set(),out=[];for(const r of eligible){const key=goal==='K'?r.item:r.unitId;if(seen.has(key))continue;seen.add(key);out.push(r);if(out.length===(state.settings.dailyMinutes===5?1:3))break;}return out;
  };
  let chosen=mode,items=[];if(chosen&&modes.includes(chosen))items=select(chosen);else for(const m of modes){items=select(m);if(items.length){chosen=m;break;}}
@@ -36,9 +35,9 @@ export function dailyMemory(state,goal,time,{mode=null,evidence=memoryEvidence(s
 }
 
 /** Called inside the existing storage transaction, after protecting pending work. */
-export function startDailyMemory(state,{goal,mode,id,time}){
+export function startDailyMemory(state,{goal,mode,ability=null,id,time}){
  if(!goals.includes(goal)||!modes.includes(mode))return state;
- const r=dailyMemory(state,goal,time,{mode});if(r.mode!==mode||!r.questionIds.length)return state;
+ const r=dailyMemory(state,goal,time,{mode,ability});if(r.mode!==mode||!r.questionIds.length)return state;
  return beginV3Session(state,r.questionIds,{id,time,source:dailyMemorySource(goal,mode),reference:goal==='K'&&mode==='repair'?r.items.map(r=>r.item).join(':'):dailyMemoryReference(goal,mode,time)});
 }
 

@@ -1,0 +1,39 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {initialState,recordAnswer,exportBackup,parseBackup} from '../app/core/learning.mjs';
+import {memoryEvidence} from '../app/core/memory-evidence.mjs';
+import {startDailyMemory} from '../app/core/daily-memory.mjs';
+import {beginV3Session,answerV3Session,nextV3Question} from '../app/core/v3-learning.mjs';
+import {startLifeMemory} from '../app/core/life-memory.mjs';
+import {recordKanaExposure} from '../app/core/kana-studio.mjs';
+import {recordLifeExposure} from '../app/core/life-memory-state.mjs';
+import {recordJlptExposure} from '../app/core/jlpt-memory-state.mjs';
+import {resolveLearningQuestion} from '../app/content/catalog.mjs';
+import {lifeQuestionUnits} from '../app/content/life-memory-ids.mjs';
+import {jlptQuestionUnits,jlptUnitMeta} from '../app/content/jlpt-memory-ids.mjs';
+const mod=await import('../app/core/weekly-learning.mjs').catch(()=>({}));
+const old='2026-10-10T01:00:00Z',at='2026-10-23T01:00:00Z',now='2026-10-24T02:00:00Z';
+const goals=['K','L','N5','N4','N3','N2'];let seq=0;
+const item=g=>g==='K'?'h-3042':g==='L'?[...lifeQuestionUnits.keys()][0]:[...jlptQuestionUnits].find(([,u])=>jlptUnitMeta.get(u).level===g)[0];
+const add=(s,g,time=at,correct=true,hinted=false)=>recordAnswer(s,{id:'w-'+(++seq),item:item(g),dimension:g==='K'?'recognition':resolveLearningQuestion(item(g)).dimension,correct,hinted,time});
+const expose=(s,g,time,kind='feedback')=>(g==='K'?recordKanaExposure:g==='L'?recordLifeExposure:recordJlptExposure)(s,[item(g)],time,{kind,ref:'weekly:test'});
+const report=(s,t=now)=>{assert.equal(typeof mod.weeklyLearning,'function');return mod.weeklyLearning(s,t);};
+const recent=(s,g,t=now)=>memoryEvidence(s,t).tracks.find(x=>x.goal===g).items.find(x=>x.item===item(g)).recent;
+function finish(s,id,time=at){for(const qid of s.v3.sessions.find(x=>x.id===id).questionIds){const q=resolveLearningQuestion(qid);s=answerV3Session(s,{sessionId:id,question:q,value:q.kind==='cloze'?q.accepted[0]:q.kind==='order'?q.answerOrder:q.correct,eventId:'finish-'+(++seq),time});s=nextV3Question(s,id,time);}return s;}
+
+for(const g of goals){
+ test(g+' delayed failure is counted only with comparable unhinted first evidence',()=>{const s=add(add(initialState(),g,old),g,at,false),r=recent(s,g);assert.equal(r.delayedFailed,1);assert.equal(r.comparable,1);assert.equal(r.needsHelp,1);assert.equal(r.retained,0);});
+ test(g+' before-answer help is not mislabeled as forgetting and later feedback does not taint proof',()=>{let s=add(initialState(),g,old);s=expose(s,g,'2026-10-23T00:30:00Z','hint');s=add(s,g,at,false);assert.equal(recent(s,g).delayedFailed,0);assert.equal(recent(s,g).hinted,1);let p=add(add(initialState(),g,old),g);p=expose(p,g,'2026-10-23T01:00:00.001Z');assert.equal(recent(p,g).week,1);assert.equal(recent(p,g).hinted,0);});
+ test(g+' same-day correction does not erase daily failure and is not counted twice',()=>{let s=add(add(initialState(),g,old),g,at,false);s=add(s,g,'2026-10-23T01:01:00Z');const r=recent(s,g);assert.equal(r.dailyFirst,1);assert.equal(r.wrong,1);assert.equal(r.delayedFailed,1);});
+ test(g+' next-week focus carries original metadata, reasons and real due dates',()=>{const s=add(add(initialState(),g,old),g,at,false),r=report(s),f=r.focus.find(x=>x.goal===g);assert(f);assert.equal(r.nextStart,'2026-10-25');assert.equal(r.nextEnd,'2026-10-31');assert.equal(f.metrics.delayedFailed,1);assert(f.route.startsWith('weekly-focus/'+g+':'));assert(f.items.every(i=>i.item===item(g)));assert.equal(r.policy.kind,'consolidate');});
+}
+test('empty week is honest, gives a small selected-goal starting point and creates no plan',()=>{const s=initialState(),r=report(s);assert.equal(r.period.dailyFirst,0);assert.deepEqual(r.focus,[]);assert.equal(r.policy.kind,'observe');assert.equal(r.policy.route,'kana-mini');assert.equal(r.outcomes.learn.completed,0);assert.equal(r.outcomes.review.completed,0);assert.equal(s.v3.dailyPlans.length,0);});
+test('completed learning and review rounds are linked to original saved answers and separately counted',()=>{let s=startLifeMemory(initialState(),{unitId:'L07',id:'learn',time:at});s=finish(s,'learn');s=add(s,'N2',old,false);s=startDailyMemory(s,{goal:'N2',mode:'week',id:'review',time:at});s=finish(s,'review');const r=report(s);assert.equal(r.outcomes.learn.completed,1);assert.equal(r.outcomes.learn.answers,3);assert.equal(r.outcomes.review.completed,1);assert.equal(r.outcomes.review.answers,1);assert.equal(r.outcomes.uncertain,0);});
+test('an unfinished round stays pending and an unmatched completed round stays uncertain',()=>{let s=startLifeMemory(initialState(),{unitId:'L07',id:'pending',time:at});assert.equal(report(s).outcomes.pending,1);s=finish(s,'pending');s.attempts=s.attempts.filter(a=>a.id!==s.attempts[0].id);assert.equal(report(s).outcomes.learn.completed,0);assert.equal(report(s).outcomes.uncertain,1);});
+test('future completion never appears as a completed achievement in this week',()=>{let s=startLifeMemory(initialState(),{unitId:'L07',id:'future',time:at});s=finish(s,'future','2026-10-30T01:00:00Z');assert.equal(report(s).outcomes.learn.completed,0);});
+test('a cross-week original with this-week answers and future completion is explicitly uncertain',()=>{let s=startLifeMemory(initialState(),{unitId:'L07',id:'span-future',time:'2026-10-17T01:00:00Z'});s=finish(s,'span-future',at);s.v3.sessions[0].updatedAt=s.v3.sessions[0].completedAt='2026-10-30T01:00:00Z';assert.equal(report(s).outcomes.uncertain,1);assert.equal(report(s).outcomes.learn.completed,0);assert.equal(report(s).period.dailyFirst,3);});
+test('two rounds claiming one original answer are not double-counted as achievements',()=>{let s=startLifeMemory(initialState(),{unitId:'L07',id:'one',time:at});s=finish(s,'one');const two=structuredClone(s.v3.sessions[0]);two.id='two';s.v3.sessions.push(two);const r=report(s);assert.equal(r.outcomes.learn.completed,0);assert.equal(r.outcomes.uncertain,2);});
+test('a round spanning weeks uses actual completion and answer dates without moving answers',()=>{let s=startLifeMemory(initialState(),{unitId:'L07',id:'span',time:'2026-10-17T01:00:00Z'});s=finish(s,'span','2026-10-17T01:01:00Z');s.v3.sessions[0].updatedAt=s.v3.sessions[0].completedAt=at;const r=report(s);assert.equal(r.outcomes.learn.completed,1);assert.equal(r.outcomes.learn.answers,0);assert.equal(r.period.dailyFirst,0);});
+test('six goals are capped at three focus abilities, and five minutes caps at one',()=>{let s=initialState();for(const g of goals)s=add(s,g,at,false);assert.equal(report(s).focus.length,3);s.settings.dailyMinutes=5;assert.equal(report(s).focus.length,1);});
+test('reliable seven-day evidence allows a little new content while weak memories consolidate',()=>{let s=add(add(initialState(),'N2',old),'N2');s.v3.goal='N2';const r=report(s);assert.equal(r.policy.kind,'balanced');assert.equal(r.focus[0].kind,'maintain');assert.equal(r.focus[0].items[0].nextDay,'2026-10-30');});
+test('future answers, legacy unknown phases and collisions cannot manufacture forgetting',()=>{let s=add(add(initialState(),'N2',old),'N2',at,false);s=add(s,'N2',at);assert.equal(recent(s,'N2').delayedFailed,0);assert.equal(recent(s,'N2').ambiguous,1);s=add(initialState(),'N2',old);s=add(s,'N2','2026-10-30T01:00:00Z',false);assert.equal(recent(s,'N2').dailyFirst,0);});
+test('report and mutated result preserve the entire old state, answers, drafts and backup',()=>{let s=add(add(initialState(),'N2',old),'N2',at,false);s.drafts['text:JN-N2-01']={text:'private-weekly🍵',points:[],time:at};const before=structuredClone(s),r=report(s);assert(!JSON.stringify(r).includes('private-weekly'));r.focus[0].items[0].title='changed';assert.deepEqual(s,before);assert.deepEqual(parseBackup(exportBackup(s)),s);});
