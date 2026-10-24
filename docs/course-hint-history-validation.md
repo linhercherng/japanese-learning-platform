@@ -24,4 +24,12 @@
 
 ## 正式發布
 
-已經網站匯出正常與QA升級前備份。PR／CI／Pages／正式HTTP及升級後完整資料核對待發布後補入實際證據；尚未完成前不宣稱已發布。
+PR [#54](https://github.com/linhercherng/japanese-learning-platform/pull/54) head `ac121cc8703c402f2a8520ccc0e486ce8ac6f68f`，CI [40048443278](https://github.com/linhercherng/japanese-learning-platform/actions/runs/40048443278) build／整體success，PR deploy依規則略過。UTC01:10:32合併為 `85ae7f07c4d4ac0bce87ce35538d9e2139759dc0`，tree與已測head完全一致。Pages [40048579628](https://github.com/linhercherng/japanese-learning-platform/actions/runs/40048579628) 同merge SHA的build／deploy／整體success，deploy於UTC01:12:38完成。
+
+正式URL https://linhercherng.github.io/japanese-learning-platform/ ，UTC01:14:04經PowerShell預設TLS驗180 shell逐檔SHA256／JS MIME／SW與10原音HTTP抽樣通過，1次暫時錯誤重試後成功，fingerprint與本機4ef32728一致（work/course-public-http.json）。未變更TLS驗證或依賴設定。
+
+正常PWA先沿舊完整shell下載新版本，暫離舊頁後自然啟用course-history；未清DB／cache／SW。正式正常庫生活／檢定時間線空白，QA28筆legacy皆明示階段未分；舊作答不補寫checkpoint。單題深連結、N5過濾及第2／2頁可達；weekly有新分類摘要，N3:uncertain精確列N3-01-q2及舊每日時間無法還原階段的原因，並連原題時間線。正常與QA的接續按鈕仍指向原未完成輪，沒有進入個人原題或新增測試作答。
+
+正式course-history／weekly／N3:uncertain三頁×五寬15組無橫溢、main h1各1、所有可見主內容控制至少44px，console warn/error空。由UI分別匯出升級後備份，parseBackup整份state與before深比較完全一致：正常1作答／1輪／0草稿，QA45作答／28輪／10草稿，連optional courseHistory都未因唯讀而持久化。證據留ignored work/course-normal-before.json／after、course-public-qa-before.json／after與course-public-layouts.json。
+
+正式截圖work/course-public.png及390px版；已還原viewport、保留正常正式course-history頁。本機18128驗收server停止，未清學習資料。最後僅以[skip ci]補推文件與勾選計畫；正式網站仍為上述已驗證merge SHA，本機與遠端文件main另核對一致。教師、真人／實機OS及長期效果仍待外部證據；回退前保留完整新版備份。

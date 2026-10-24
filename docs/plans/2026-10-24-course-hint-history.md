@@ -31,6 +31,6 @@ hint為主動答前提示；feedback為當次答後解釋；reference為教材�
 - [x] 完整規劃／README／規格／課綱／畫面／來源／roadmap及v0.41.0。
 - [x] 獨立唯讀核心與整合審查，修正重要問題再複核。全站test→build→check、audit，記錄最終hash。
 - [x] 新port隔離QA由UI匯入舊備份；實際生活與N5～N2提示／作答／回饋、原輪／草稿保留、歷史／weekly零寫入、五寬／Tab／大字／console及shell HTTP。無真實庫測試寫入或腳本注入。
-- [ ] 正式前備份，PR同head CI→merge→Pages→正式HTTP／自然PWA升級／畫面／正常與QA全state比對。保留正式頁、截圖，還原viewport、停server，文件推送與遠端一致。
+- [x] 正式前備份，PR同head CI→merge→Pages→正式HTTP／自然PWA升級／畫面／正常與QA全state比對。保留正式頁、截圖，還原viewport、停server，文件推送與遠端一致。
 
 不清DB／cache／SW，不假造跨日學習、實機或教師審校證據。只用原教材，非官方熟練或檢定分數。
