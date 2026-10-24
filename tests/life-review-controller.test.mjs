@@ -23,3 +23,5 @@ test('closed reading context is not exposure; opening actual original passage ma
  await h.emit('toggle',{open:false,dataset:{lifeReviewPassage:'reading',lifeReviewQuestion:q.id}});assert.equal(h.c.state.v3.lifeHints,undefined);await h.emit('toggle',{open:true,dataset:{lifeReviewPassage:'old',lifeReviewQuestion:q.id}});assert.equal(h.c.state.v3.lifeHints,undefined);
  const first=structuredClone(h.c.state.attempts);await h.emit('toggle',{open:true,dataset:{lifeReviewPassage:'reading',lifeReviewQuestion:q.id}});assert(h.c.state.v3.lifeHints[q.id]);assert.deepEqual(h.c.state.attempts,first);assert.equal(h.c.session.lifeReview.revealed,false);
 }));
+
+test('failed original-round reference does not reveal the saved answer',async()=>run(async h=>{const before=structuredClone(h.c.state.attempts);h.fail();await h.click(reveal);assert.equal(h.c.session.lifeReview.revealed,false);assert.deepEqual(h.c.state.attempts,before);}));

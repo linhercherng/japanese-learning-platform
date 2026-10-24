@@ -12,7 +12,7 @@ export function createJlptMemory({getContext,update,render,toast,now,id,play,cac
  const fresh=(ticket,origin)=>!disposed&&ticket===epoch&&location.hash===origin;
  function pack(unit,kind='words',offset=0){const pool=jlptCardItems(unit,kind);return {kind,offset,queue:[offset,offset+1,offset+2].filter(i=>pool[i]),cursor:0,run:++run,open:false,retried:[],deferred:[]};}
  function onRoute(name,param){const key=name+'/'+(param||'');if(key===lastRoute)return;lastRoute=key;epoch++;composing=false;pointerBlocked=false;const ui=local();ui.noteOpen=false;ui.roundIndex=0;ui.roundRevealed=false;ui.roundPassage=false;ui.cards=name==='jlpt-cards'&&jlptUnitMeta.has(param)?pack(param):null;}
- const expose=(unit,time)=>update(s=>recordJlptExposure(s,jlptUnitQuestionIds(unit),time));
+ const expose=(unit,time)=>update(s=>recordJlptExposure(s,jlptUnitQuestionIds(unit),time,{kind:'reference',ref:'page:'+route()[0]+':'+unit}));
  function currentCard(d){const [name,unit]=route(),card=local().cards;return name==='jlpt-cards'&&unit===d.jlptUnit&&card&&String(card.run)===d.jlptRun&&String(card.cursor)===d.jlptCursor?{unit,card}:null;}
  async function action(d){
   const [name,param]=route();if(disposed||busy||composing||!name.startsWith('jlpt-')||jlptBlocker(getContext().state))return;
@@ -49,7 +49,7 @@ export function createJlptMemory({getContext,update,render,toast,now,id,play,cac
    if(action==='round-passage'&&ui.roundPassage){ui.roundPassage=false;render(false);focus('[data-jlpt-action="round-passage"]');return;}
    if(action==='round-audio'&&entry.q.kind!=='listen'||action==='round-passage'&&!entry.q.passage)return;
    busy=true;const time=new Date(Math.max(Date.parse(now()),Date.parse(entry.answer.time)+1)).toISOString();
-   try{await update(s=>recordJlptExposure(s,[entry.q.id],time));if(!fresh(ticket,origin)||jlptBlocker(getContext().state))return;if(action==='round-audio')await play(entry.q.transcript,1);else{if(action==='round-reveal')ui.roundRevealed=true;else ui.roundPassage=true;render(false);focus('#jlpt-round-heading');}}finally{busy=false;}
+   try{await update(s=>recordJlptExposure(s,[entry.q.id],time,{kind:'reference',ref:'jlpt:round:'+param+':'+action}));if(!fresh(ticket,origin)||jlptBlocker(getContext().state))return;if(action==='round-audio')await play(entry.q.transcript,1);else{if(action==='round-reveal')ui.roundRevealed=true;else ui.roundPassage=true;render(false);focus('#jlpt-round-heading');}}finally{busy=false;}
   }
  }
  function click(event){const b=event.target.closest('button');if(!b)return;if(pointerBlocked){pointerBlocked=false;event.preventDefault();return;}if(!b.dataset.jlptAction)return;b.disabled=true;action({...b.dataset}).catch(error=>toast(error.message)).finally(()=>{if(b.isConnected)b.disabled=false;});}

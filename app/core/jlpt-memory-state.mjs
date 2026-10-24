@@ -21,7 +21,7 @@ export function validateJlptExposure(sessions,records,{attempts=[],practices=[],
 }
 export function recordJlptExposure(state,ids,time,{kind='reference',ref='jlpt:reference'}={}){
  requireValue(validTime(time));const additions={};for(const id of new Set(ids)){requireValue(jlptQuestionUnits.has(id));additions[id]=[time];}if(!Object.keys(additions).length)return state;
- const records=mergeJlptHints(state.v3.jlptHints,additions);validateJlptExposure(state.v3.sessions,records,{attempts:state.attempts,practices:[state.practice,...state.practiceHistory||[]],history:state.v3.courseHistory});const next=structuredClone(state);next.v3.courseHistory=appendCourseHistory(state,Object.keys(additions).map(item=>({item,time,kind,ref})));next.v3.jlptHints=records;next.revision++;return next;
+ const records=mergeJlptHints(state.v3.jlptHints,additions);validateJlptExposure(state.v3.sessions,additions,{attempts:state.attempts,practices:[state.practice,...state.practiceHistory||[]]});const next=structuredClone(state);next.v3.courseHistory=appendCourseHistory(state,Object.keys(additions).map(item=>({item,time,kind,ref})));next.v3.jlptHints=records;next.revision++;return next;
 }
 export const jlptNoteKey=unit=>'text:JN-'+unit;
 export function validateJlptNoteDraft(key,draft){if(!key.startsWith('text:JN-'))return;requireValue(jlptUnitMeta.has(key.slice(8))&&draft&&typeof draft.text==='string'&&draft.text.length<=160&&validTime(draft.time)&&Array.isArray(draft.points)&&draft.points.length===0,'檢定個人線索請限制在160字內，並保留原稿。');}

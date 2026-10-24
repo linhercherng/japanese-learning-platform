@@ -27,6 +27,6 @@ export function recordLifeExposure(state,questionIds,time,{kind='reference',ref=
  const hints=mergeLifeHints(state.v3.lifeHints,addition);
  // Check before handing state to storage: a clock rollback must not create an
  // invalid unsaved snapshot that cannot be exported and imported again.
- validateLifeExposure(state.v3.sessions,hints,state.v3.courseHistory);
+ validateLifeExposure(state.v3.sessions,addition);
  const next=structuredClone(state);next.v3.courseHistory=appendCourseHistory(state,Object.keys(addition).map(item=>({item,time,kind,ref})));next.v3.lifeHints=hints;next.revision++;return next;
 }

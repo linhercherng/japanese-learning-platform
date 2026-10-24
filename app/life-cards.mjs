@@ -12,7 +12,7 @@ export function createLifeCardsController({getContext,update,render,toast,now,id
  function current(d){const [name,unitId]=route(),ctx=getContext(),ui=lifeCardsLocal(ctx.session);if(disposed||name!=='life-cards'||!lifeUnitIds.has(unitId)||ui.unitId!==unitId||d.lifeCardsUnit!==unitId||d.lifeCardsRun!==String(ui.run))return null;return {ctx,ui,unitId};}
  const sameCard=(d,c)=>current(d)?.ui.round===c.ui.round&&d.lifeCardsCursor===String(c.ui.round?.cursor)&&!pendingLife(getContext().state);
  const focus=()=>document.querySelector('#life-card-heading')?.focus();
- const exposure=(unit,time)=>update(s=>pendingLife(s)?s:recordLifeExposure(s,unitQuestions(unitById.get(unit)).map(q=>q.id),time));
+ const exposure=(unit,time)=>update(s=>pendingLife(s)?s:recordLifeExposure(s,unitQuestions(unitById.get(unit)).map(q=>q.id),time,{kind:'reference',ref:'life:cards:'+unit}));
  async function action(d){
   const c=current(d);if(!c||busy)return;const {ui,unitId}=c,kind=d.lifeCardsAction;
   if(kind==='practice'){

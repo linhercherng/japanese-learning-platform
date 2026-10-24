@@ -6,14 +6,15 @@ import {lifeMemoryView,lifeCheckView,lifeMemoryLocal} from './ui/life-memory.mjs
 export function createLifeMemory({getContext,update,render,toast,now,id}){
  let saving=false;
  const route=()=>location.hash.slice(1).split('/');
- const expose=(qids,time)=>update(s=>recordLifeExposure(s,qids,time)).catch(error=>toast(error.message));
- const exposeUnit=(unit,time)=>expose(unitQuestions(unitById.get(unit)).map(q=>q.id),time);
+ const expose=(qids,time,ref='life:cards')=>update(s=>recordLifeExposure(s,qids,time,{kind:'reference',ref}));
+ const exposeUnit=(unit,time,ref='life:cards:'+unit)=>expose(unitQuestions(unitById.get(unit)).map(q=>q.id),time,ref);
  function currentCard(d){const [name,unit]=route();return name==='life-memory'&&unit===d.lifeUnit&&lifeUnitIds.has(unit)&&!pendingLife(getContext().state)&&/^\d+$/.test(d.lifeCard||'')&&memoryPhrases(unit)[Number(d.lifeCard)]?{unit,index:Number(d.lifeCard)}:null;}
  async function action(d){
   if(['audio','reveal'].includes(d.lifeAction)){
    const card=currentCard(d);if(!card)return;
    if(d.lifeAction==='audio'){await exposeUnit(card.unit,now());return;}
    const ui=lifeMemoryLocal(getContext().session);if(ui.unit!==card.unit){ui.unit=card.unit;ui.revealed=[];}
+   const origin=location.hash;if(!ui.revealed.includes(card.index)){await exposeUnit(card.unit,now());if(location.hash!==origin||!currentCard(d))return;}
    ui.revealed=ui.revealed.includes(card.index)?ui.revealed.filter(i=>i!==card.index):[...ui.revealed,card.index];render(false);
    document.querySelector(`[data-life-action="reveal"][data-life-unit="${card.unit}"][data-life-card="${card.index}"]`)?.focus({preventScroll:true});return;
   }
@@ -30,11 +31,10 @@ export function createLifeMemory({getContext,update,render,toast,now,id}){
   if(Object.hasOwn(d,'lifeTopic')&&(value==='all'||topics.some(([id])=>id===value))){ui.topic=value;selector='[data-life-topic]';}
   if(selector){render(false);document.querySelector(selector)?.focus();}
  }
- function toggle(event){const el=event.target,[name,unit]=route();if(el.open&&['study','lesson'].includes(name)&&el.dataset?.lifeReference===unit&&lifeUnitIds.has(unit))exposeUnit(unit,now());}
+ function toggle(event){const el=event.target,[name,unit]=route();if(el.open&&['study','lesson'].includes(name)&&el.dataset?.lifeReference===unit&&lifeUnitIds.has(unit))exposeUnit(unit,now(),'page:details:'+unit).catch(error=>toast(error.message));}
  function afterRender(name,param){
   const ctx=getContext(),time=now();
-  if(name==='life-memory'&&lifeUnitIds.has(param)&&!pendingLife(ctx.state)){const ui=lifeMemoryLocal(ctx.session);if(ui.unit===param&&ui.revealed?.length)exposeUnit(param,time);}
-  if(['study','lesson'].includes(name)&&lifeUnitIds.has(param)){const tab=ctx.session.studyTab||'learn';if(['words','read'].includes(tab)||tab==='learn'&&unitById.get(param).grammar.length)exposeUnit(param,time);}
+  if(['study','lesson'].includes(name)&&lifeUnitIds.has(param)){const tab=ctx.session.studyTab||'learn';if(['words','read'].includes(tab)||tab==='learn'&&unitById.get(param).grammar.length)exposeUnit(param,time,'page:'+name+':'+param).catch(error=>toast(error.message));}
 
  }
  document.addEventListener('click',click);document.addEventListener('change',change);document.addEventListener('toggle',toggle,true);
