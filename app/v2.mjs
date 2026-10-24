@@ -1,3 +1,4 @@
+import {studyDay} from './core/v3-state.mjs';
 import {isKanaItem,kanaCueSeen} from './core/kana-history-state.mjs';
 import {recordKanaExposure} from './core/kana-studio.mjs';
 import {extraKanaExposure} from './content/kana-recall.mjs';
@@ -19,7 +20,7 @@ import {examsView,examSessionView,examResultView} from './ui/exam.mjs';
 import {supportView} from './ui/support.mjs';
 import {createOffline} from './ui/offline.mjs';
 export function createV2({getState,getContext,update,toast,render,now,id,cacheDraft}){
- let examTimerBusy=false;
+ let examTimerBusy=false,cueVisit=0,cueRoute='';
  const offline=createOffline({render,toast});
  const ctx=()=>getContext(),state=()=>getState(),session=()=>ctx().session;
  const practiceQuestions=()=>state().practice?.questionIds.map(resolveQuestion).filter(Boolean)||[];
@@ -75,8 +76,9 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
    if(d.examQuestion!==undefined){session().examQuestion=Number(d.examQuestion);session().order=[];render(false);}
    const actions={
     'submit-text':()=>submit(document.querySelector('#practice-answer').value.trim()),'submit-order':()=>submit(session().order||[]),
+    'retry-feedback':()=>{session().v2KanaFeedbackError=null;render(false);},
     hint:async()=>{const q=question();if(!state().practice.answers[q.id]){await update(s=>({...s,practice:hintPractice(s.practice,q.id,now()),revision:s.revision+1}));render(false);}},
-    next:async()=>{await update(s=>{if(!s.practice.answers[s.practice.questionIds[s.practice.index]])return s;return {...s,practice:{...s.practice,index:s.practice.index+1,updatedAt:now()},revision:s.revision+1};});session().order=[];session().hinted=false;render();},
+    next:async()=>{if(session().v2KanaFeedbackPending)throw Error('請先保存提示／回饋紀錄，原答案已保留。');await update(s=>{if(!s.practice.answers[s.practice.questionIds[s.practice.index]])return s;return {...s,practice:{...s.practice,index:s.practice.index+1,updatedAt:now()},revision:s.revision+1};});session().order=[];session().hinted=false;render();},
     'practice-library':()=>beginPractice('library-words',libraryItems(session(),state().bookmarks).slice(0,10).flatMap(w=>[resolveQuestion(`${w.id}-read`),resolveQuestion(`${w.id}-meaning`)]).filter(Boolean)),
     'skill-practice':()=>{const pool=practicePool({level:session().practiceLevel||'all',dimension:session().practiceDimension||'all'});return beginPractice('skill-set',presentationOrder(pool.length,id()).slice(0,10).map(i=>pool[i]));},
     'organize-practice':()=>{const data=exportBackup(state()),url=URL.createObjectURL(new Blob([data],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download=`hiyori-before-organize-${now().slice(0,10)}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),30000);session().practiceBackupRevision=state().revision;session().practiceBackupConfirmed=false;toast('請確認備份檔已成功下載，再勾選完成整理。');render(false);},
@@ -104,11 +106,16 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(seconds===0){examTimerBusy=true;try{await nextExamSection();}catch(error){toast(error.message);}finally{examTimerBusy=false;}}
  },1000);
  document.addEventListener('click',handleClick);document.addEventListener('input',handleInput);document.addEventListener('change',handleChange);document.addEventListener('submit',handleSubmit);
+ function prepareKanaCue(name){
+  const ui=session(),p=state().practice,q=p&&resolveQuestion(p.questionIds[p.index]),rhythm=q&&rhythmQuestion(q.id),answer=q&&p.answers[q.id];
+  const needed=name==='practice'&&q&&(rhythm||isKanaItem(q.reviewItem))&&(answer||(p.hints||[]).includes(q.id)),key=needed?cueVisit+':'+p.id+':'+q.id+':'+studyDay(now())+':'+(answer?'feedback':'hint'):null;
+  if(ui.v2KanaCueKey!==key){ui.v2KanaCueKey=key;ui.v2KanaCueReady=false;ui.v2KanaFeedbackError=null;ui.v2KanaCueBusy=null;}
+  ui.v2KanaFeedbackPending=Boolean(needed&&!ui.v2KanaCueReady);return {ui,p,q,rhythm,answer,key};
+ }
  function afterRender(name){
-  if(name!=='practice')return;const p=state().practice,q=p&&resolveQuestion(p.questionIds[p.index]),rhythm=q&&rhythmQuestion(q.id),answer=q&&p.answers[q.id];
-  if(!q||!rhythm&&!isKanaItem(q.reviewItem)||!answer&&!(p.hints||[]).includes(q.id))return;
-  const time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString(),context={kind:answer?'feedback':'hint',ref:'v2:'+p.id+':'+q.id},items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[q.reviewItem,...extraKanaExposure(q.id)];
-  update(s=>{const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time,context):recordKanaExposure(s,items,time,context);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));
+  const {ui,p,q,rhythm,answer,key}=prepareKanaCue(name);if(!key||ui.v2KanaCueReady||ui.v2KanaFeedbackError||ui.v2KanaCueBusy===key)return;
+  const origin=location.hash,ticket=cueVisit,time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString(),context={kind:answer?'feedback':'hint',ref:'v2:'+p.id+':'+q.id},items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[q.reviewItem,...extraKanaExposure(q.id)];ui.v2KanaCueBusy=key;
+  update(s=>{const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time,context):recordKanaExposure(s,items,time,context);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).then(()=>{if(ticket!==cueVisit||location.hash!==origin||ui.v2KanaCueKey!==key)return;ui.v2KanaCueReady=true;ui.v2KanaFeedbackPending=false;ui.v2KanaCueBusy=null;render(false);}).catch(error=>{toast(error.message);if(ticket!==cueVisit||location.hash!==origin||ui.v2KanaCueKey!==key)return;ui.v2KanaFeedbackError=error.message;ui.v2KanaCueBusy=null;render(false);});
  }
 
  return {
@@ -119,7 +126,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   },
   views:{support:param=>supportView(ctx(),param),courses:()=>coursesView(ctx()),level:param=>levelView(ctx(),param),topics:()=>topicsView(ctx()),study:param=>studyView(ctx(),param),practice:()=>practiceView({...ctx(),practiceQuestions:practiceQuestions()},now()),'practice-hub':()=>practiceHubView(ctx()),library:param=>libraryView(ctx(),param),exam:()=>examsView(ctx()),'exam-session':()=>examSessionView(ctx()),'exam-result':param=>examResultView(ctx(),param)},
   contextExtras:()=>({units,scenarios,allUnits,wordCount:words.length,kanjiCount:kanjiItems.length,grammarCount:grammarItems.length,forms,writingItems:allWritingItems,lifeLessons,offlineHtml:offline.view()}),
-  onRoute(name,param){if(name==='topics'&&topics.some(([id])=>id===param))session().topic=param;if(name==='study'&&session().studyUnit!==param){session().studyUnit=param;session().studyTab='learn';}if(['practice','exam-session'].includes(name)&&session().lastV2Route!==`${name}/${param||''}`)session().order=[];session().lastV2Route=`${name}/${param||''}`;},
+  onRoute(name,param){const route=name+'/'+(param||'');if(route!==cueRoute){cueRoute=route;cueVisit++;}prepareKanaCue(name);if(name==='topics'&&topics.some(([id])=>id===param))session().topic=param;if(name==='study'&&session().studyUnit!==param){session().studyUnit=param;session().studyTab='learn';}if(['practice','exam-session'].includes(name)&&session().lastV2Route!==`${name}/${param||''}`)session().order=[];session().lastV2Route=`${name}/${param||''}`;},
   validateCatalog(s){
    const bookmarks=new Set([...words,...kanjiItems,...grammarItems].map(x=>x.id));
    if(s.bookmarks.some(id=>!bookmarks.has(id)))throw new Error('備份包含未知收藏項目');

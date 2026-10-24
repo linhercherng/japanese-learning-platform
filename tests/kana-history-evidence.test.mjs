@@ -1,3 +1,5 @@
+import {kanaMemoryMap} from '../app/core/kana-coach.mjs';
+import {startDictation,revealDictationHint} from '../app/core/kana-studio.mjs';
 import test from 'node:test';import assert from 'node:assert/strict';
 import {initialState,recordAnswer,exportBackup,parseBackup,mergeStates} from '../app/core/learning.mjs';
 import {recordKanaExposure} from '../app/core/kana-studio.mjs';
@@ -21,3 +23,7 @@ test('reference exactly at answer time is conservative rather than independent',
 test('backup and later unrelated viewing cannot rewrite new answer checkpoints or their historical proof',()=>{let s=startKanaCheck(add(initialState()),{id:'check',time:start});s=answer(s,'check');s=recordKanaExposure(s,[k],feedbackAt,{kind:'feedback',ref:'v3:check:0'});const before=structuredClone(s.attempts);s=parseBackup(exportBackup(s));s=recordKanaExposure(s,[k],later,{kind:'reference',ref:'stroke'});assert.deepEqual(s.attempts,before);assert.equal(rows(s)[0].status,'week');});
 
 test('newly merged before-answer reference affects analysis while the original hinted flag stays immutable',()=>{let s=startKanaCheck(add(initialState()),{id:'check',time:start});s=answer(s,'check');s=mergeStates(s,recordKanaExposure(initialState(),[k],'2026-10-24T00:30:00.000Z',{kind:'reference',ref:'other-branch'}));assert.equal(s.attempts.at(-1).hinted,false);assert.equal(rows(s)[0].status,'review');assert.equal(unifiedReview(s,later).week.independent,0);});
+
+test('map and weekly agree that a merged before-answer reference needs review without rewriting answers',()=>{let s=startKanaCheck(add(initialState()),{id:'check',time:start});s=answer(s,'check');s=mergeStates(s,recordKanaExposure(initialState(),[k],'2026-10-24T00:30:00.000Z'));const map=kanaMemoryMap(s,later).find(x=>x.id===k).recognition;assert.equal(map.weak,true);assert.equal(map.independentDays,1);assert.equal(s.attempts.at(-1).hinted,false);});
+test('map does not claim recall for legacy history that weekly marks uncertain',()=>{let s=add(initialState());delete s.v3.kanaHistory;s.v3.kanaHints={[k]:{stage:0,lastHintAt:start,updatedAt:start}};const map=kanaMemoryMap(s,later).find(x=>x.id===k).recognition;assert.equal(map.label,'紀錄待確認');assert.equal(map.weak,true);});
+test('dictation reveal is an explicit before-answer hint tied to its original round',()=>{let s=startDictation(initialState(),{item:k,id:'ink',time:start});s=revealDictationHint(s,k,answerAt);assert(s.v3.kanaHistory.events.some(e=>e.kind==='hint'&&e.ref==='dictation:ink'));assert.equal(s.attempts.length,0);});
