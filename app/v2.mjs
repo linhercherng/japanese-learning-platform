@@ -1,3 +1,6 @@
+import {courseGoal} from './core/course-history-state.mjs';
+import {recordLifeExposure,lifeCueSeen} from './core/life-memory-state.mjs';
+import {recordJlptExposure} from './core/jlpt-memory-state.mjs';
 import {studyDay} from './core/v3-state.mjs';
 import {isKanaItem,kanaCueSeen} from './core/kana-history-state.mjs';
 import {recordKanaExposure} from './core/kana-studio.mjs';
@@ -41,7 +44,7 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
   if(location.hash==='#exam-session'){
    await update(s=>({...s,activeExam:answerExam(s.activeExam,forms.find(f=>f.id===s.activeExam.formId),q.id,value,now()),revision:s.revision+1}));render(false);return;
   }
-  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const time=now(),nextPractice=answerPractice(p,q,value,{time,hinted:isKanaItem(q.reviewItem)&&kanaCueSeen(s,[q.reviewItem,...extraKanaExposure(q.id)],p.startedAt,time)||jlptCueSeen(s.v3.jlptHints,q.id,p.startedAt,time)||rhythmCueSeen(s.v3.rhythmHints,q,p.startedAt,time)});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
+  await update(s=>{const p=s.practice;if(p.answers[q.id])return s;const time=now(),nextPractice=answerPractice(p,q,value,{time,hinted:isKanaItem(q.reviewItem)&&kanaCueSeen(s,[q.reviewItem,...extraKanaExposure(q.id)],p.startedAt,time)||lifeCueSeen(s,q.id,p.startedAt,time)||jlptCueSeen(s,q.id,p.startedAt,time)||rhythmCueSeen(s.v3.rhythmHints,q,p.startedAt,time)});const answer=nextPractice.answers[q.id];let next=recordAnswer(s,{id:`${p.id}-${q.id}`,item:q.reviewItem||q.id,dimension:q.dimension,correct:answer.correct,hinted:answer.hinted,time:answer.time,...(!answer.correct&&confusedKana(q,value)?{kanaConfusion:confusedKana(q,value)}:{})});next.practice=nextPractice;return next;});render(false);
  }
  async function nextExamSection({submit=false,abandon=false}={}){
   const exam=state().activeExam;if(!exam)return;
@@ -108,14 +111,14 @@ export function createV2({getState,getContext,update,toast,render,now,id,cacheDr
  document.addEventListener('click',handleClick);document.addEventListener('input',handleInput);document.addEventListener('change',handleChange);document.addEventListener('submit',handleSubmit);
  function prepareKanaCue(name){
   const ui=session(),p=state().practice,q=p&&resolveQuestion(p.questionIds[p.index]),rhythm=q&&rhythmQuestion(q.id),answer=q&&p.answers[q.id];
-  const needed=name==='practice'&&q&&(rhythm||isKanaItem(q.reviewItem))&&(answer||(p.hints||[]).includes(q.id)),key=needed?cueVisit+':'+p.id+':'+q.id+':'+studyDay(now())+':'+(answer?'feedback':'hint'):null;
+  const needed=name==='practice'&&q&&(courseGoal(q.id)||rhythm||isKanaItem(q.reviewItem))&&(answer||(p.hints||[]).includes(q.id)),key=needed?cueVisit+':'+p.id+':'+q.id+':'+studyDay(now())+':'+(answer?'feedback':'hint'):null;
   if(ui.v2KanaCueKey!==key){ui.v2KanaCueKey=key;ui.v2KanaCueReady=false;ui.v2KanaFeedbackError=null;ui.v2KanaCueBusy=null;}
   ui.v2KanaFeedbackPending=Boolean(needed&&!ui.v2KanaCueReady);return {ui,p,q,rhythm,answer,key};
  }
  function afterRender(name){
   const {ui,p,q,rhythm,answer,key}=prepareKanaCue(name);if(!key||ui.v2KanaCueReady||ui.v2KanaFeedbackError||ui.v2KanaCueBusy===key)return;
   const origin=location.hash,ticket=cueVisit,time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString(),context={kind:answer?'feedback':'hint',ref:'v2:'+p.id+':'+q.id},items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[q.reviewItem,...extraKanaExposure(q.id)];ui.v2KanaCueBusy=key;
-  update(s=>{const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time,context):recordKanaExposure(s,items,time,context);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).then(()=>{if(ticket!==cueVisit||location.hash!==origin||ui.v2KanaCueKey!==key)return;ui.v2KanaCueReady=true;ui.v2KanaFeedbackPending=false;ui.v2KanaCueBusy=null;render(false);}).catch(error=>{toast(error.message);if(ticket!==cueVisit||location.hash!==origin||ui.v2KanaCueKey!==key)return;ui.v2KanaFeedbackError=error.message;ui.v2KanaCueBusy=null;render(false);});
+  update(s=>{const next=courseGoal(q.id)?(courseGoal(q.id)==='L'?recordLifeExposure:recordJlptExposure)(s,[q.id],time,context):rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time,context):recordKanaExposure(s,items,time,context);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).then(()=>{if(ticket!==cueVisit||location.hash!==origin||ui.v2KanaCueKey!==key)return;ui.v2KanaCueReady=true;ui.v2KanaFeedbackPending=false;ui.v2KanaCueBusy=null;render(false);}).catch(error=>{toast(error.message);if(ticket!==cueVisit||location.hash!==origin||ui.v2KanaCueKey!==key)return;ui.v2KanaFeedbackError=error.message;ui.v2KanaCueBusy=null;render(false);});
  }
 
  return {

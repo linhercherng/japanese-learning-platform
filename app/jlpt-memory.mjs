@@ -74,10 +74,7 @@ export function createJlptMemory({getContext,update,render,toast,now,id,play,cac
  function afterRender(name,param){
   if(disposed)return;const ctx=getContext(),time=now();
   if(['study','lesson'].includes(name)&&jlptUnitMeta.has(param)&&['learn','words','read'].includes(ctx.session.studyTab||'learn'))expose(param,time).catch(error=>toast(error.message));
-  let qid,answer,hints=[];
-  if(name==='v3-practice'){const s=ctx.state.v3.sessions.find(s=>s.id===param);if(s&&!s.completedAt){const entry=s.queue[s.cursor];qid=entry?.questionId;answer=s.answers[qid];hints=s.hints;}}
-  if(name==='practice'){const p=ctx.state.practice;if(p&&p.index<p.questionIds.length){qid=p.questionIds[p.index];answer=p.answers[qid];hints=p.hints||[];}}
-  if(jlptQuestionUnits.has(qid)&&(answer||hints.includes(qid)))update(s=>recordJlptExposure(s,[qid],answer?new Date(Math.max(Date.parse(time),Date.parse(answer.time)+1)).toISOString():time)).catch(error=>toast(error.message));
+
  }
  const listeners={click,pointerdown,pointercancel,compositionstart,compositionend,input,submit,change};for(const [name,fn] of Object.entries(listeners))document.addEventListener(name,fn);document.addEventListener('toggle',toggle,true);
  return {views:{'jlpt-path':level=>jlptPathView(getContext(),level,now()),'jlpt-memory':param=>jlptHubView(getContext(),param,now(),local().filters),'jlpt-map':level=>jlptMapView(getContext(),level,now()),'jlpt-review':ref=>jlptReviewView(getContext(),ref,now()),'jlpt-cards':unit=>jlptCardsView(getContext(),unit,local().cards||{}),'jlpt-note':unit=>jlptNoteView(getContext(),unit,local().noteOpen),'jlpt-round':sid=>jlptRoundView(getContext(),sid,now(),local()),'jlpt-guide':jlptGuideView},onRoute,afterRender,dispose(){disposed=true;for(const [name,fn] of Object.entries(listeners))document.removeEventListener(name,fn);document.removeEventListener('toggle',toggle,true);}};

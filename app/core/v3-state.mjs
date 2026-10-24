@@ -1,3 +1,4 @@
+import {validateCourseHistory,mergeCourseHistory} from './course-history-state.mjs';
 import {validateKanaHistory,mergeKanaHistory} from './kana-history-state.mjs';
 import {isJlptSource,validJlptReference} from '../content/jlpt-memory-ids.mjs';
 import {validateJlptHints,mergeJlptHints,validateJlptExposure} from './jlpt-memory-state.mjs';
@@ -70,15 +71,15 @@ function validateWeekExposure(sessions,hints){
  }
 }
 export function validateV3(v,artifacts=[]){
- shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'jlptHints')?['jlptHints']:[]),...(Object.hasOwn(v,'lifeNotes')?['lifeNotes']:[]),...(Object.hasOwn(v,'lifeHints')?['lifeHints']:[]),...(Object.hasOwn(v,'kanaPocket')?['kanaPocket']:[]),...(Object.hasOwn(v,'rhythmHints')?['rhythmHints']:[]),...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'kanaHistory')?['kanaHistory']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'jlptHints'))validateJlptHints(v.jlptHints);if(Object.hasOwn(v,'lifeNotes'))validateLifeNotes(v.lifeNotes);if(Object.hasOwn(v,'lifeHints'))validateLifeHints(v.lifeHints);if(Object.hasOwn(v,'kanaPocket'))validatePocket(v.kanaPocket);if(Object.hasOwn(v,'rhythmHints'))requireValue(validRhythmHints(v.rhythmHints),'節奏提示紀錄不正確。');if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'kanaHistory'))validateKanaHistory(v.kanaHistory);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
+ shape(v,['goal','dailyPlans','sessions','lessonSteps','artifactParents',...(Object.hasOwn(v,'jlptHints')?['jlptHints']:[]),...(Object.hasOwn(v,'lifeNotes')?['lifeNotes']:[]),...(Object.hasOwn(v,'lifeHints')?['lifeHints']:[]),...(Object.hasOwn(v,'kanaPocket')?['kanaPocket']:[]),...(Object.hasOwn(v,'rhythmHints')?['rhythmHints']:[]),...(Object.hasOwn(v,'kanaHints')?['kanaHints']:[]),...(Object.hasOwn(v,'courseHistory')?['courseHistory']:[]),...(Object.hasOwn(v,'kanaHistory')?['kanaHistory']:[]),...(Object.hasOwn(v,'kanaNotes')?['kanaNotes']:[])]);if(Object.hasOwn(v,'jlptHints'))validateJlptHints(v.jlptHints);if(Object.hasOwn(v,'lifeNotes'))validateLifeNotes(v.lifeNotes);if(Object.hasOwn(v,'lifeHints'))validateLifeHints(v.lifeHints);if(Object.hasOwn(v,'kanaPocket'))validatePocket(v.kanaPocket);if(Object.hasOwn(v,'rhythmHints'))requireValue(validRhythmHints(v.rhythmHints),'節奏提示紀錄不正確。');if(Object.hasOwn(v,'kanaHints'))validateHintRecords(v.kanaHints);if(Object.hasOwn(v,'courseHistory'))validateCourseHistory(v.courseHistory);if(Object.hasOwn(v,'kanaHistory'))validateKanaHistory(v.kanaHistory);if(Object.hasOwn(v,'kanaNotes'))validateKanaNotes(v.kanaNotes);requireValue(learningGoals.includes(v.goal));
  requireValue(Array.isArray(v.dailyPlans)&&v.dailyPlans.length<=60&&new Set(v.dailyPlans.map(p=>p.id)).size===v.dailyPlans.length);
  requireValue(Array.isArray(v.sessions)&&v.sessions.length<=500&&new Set(v.sessions.map(s=>s.id)).size===v.sessions.length);
  v.dailyPlans.forEach(validateDailyPlan);v.sessions.forEach(validateSession);
  requireValue(v.sessions.filter(s=>['kana-pocket-listen','kana-contrast'].includes(s.source)&&!s.completedAt).length<=1,'口袋聽辨有不同未完成輪次，請先完成目前輪次並保留備份。');
  requireValue(v.sessions.filter(s=>isLifeSource(s.source)&&!s.completedAt).length<=1,'生活記憶有不同未完成輪次，請保留備份。');
  requireValue(v.sessions.filter(s=>isJlptSource(s.source)&&!s.completedAt).length<=1,'檢定記憶有不同未完成輪次，請保留備份。');
- validateJlptExposure(v.sessions,v.jlptHints);
- validateLifeExposure(v.sessions,v.lifeHints);
+ validateJlptExposure(v.sessions,v.jlptHints,{history:v.courseHistory});
+ validateLifeExposure(v.sessions,v.lifeHints,v.courseHistory);
  validateWeekExposure(v.sessions,v.kanaHints);
  const checks=v.sessions.filter(s=>['kana-check','kana-week','life-check','life-week','jlpt-check','jlpt-week'].includes(s.source));requireValue(new Set(checks.map(s=>s.source+':'+s.reference)).size===checks.length,'同日隔天檢查有不同輪次，請保留備份並先完成目前輪次。');
  for(const p of v.dailyPlans)for(const step of p.steps)if(step.sessionId!==null)requireValue(v.sessions.some(s=>s.id===step.sessionId&&s.source==='daily'&&s.reference===p.id&&JSON.stringify(s.questionIds)===JSON.stringify(step.questionIds)),'每日安排與回想輪次不一致');
@@ -106,8 +107,8 @@ function mergeSession(a,b){
  return validateSession(next);
 }
 export function mergeV3(a,b,{blank=false,artifacts=[]}={}){
- validateJlptExposure(a.sessions,b.jlptHints);validateJlptExposure(b.sessions,a.jlptHints);
- validateLifeExposure(a.sessions,b.lifeHints);validateLifeExposure(b.sessions,a.lifeHints);
+ validateJlptExposure(a.sessions,b.jlptHints,{history:a.courseHistory});validateJlptExposure(b.sessions,a.jlptHints,{history:b.courseHistory});
+ validateLifeExposure(a.sessions,b.lifeHints,a.courseHistory);validateLifeExposure(b.sessions,a.lifeHints,b.courseHistory);
  validateWeekExposure(a.sessions,b.kanaHints);validateWeekExposure(b.sessions,a.kanaHints);
  const next=structuredClone(a);if(blank)next.goal=b.goal;
  const sessions=new Map(a.sessions.map(s=>[s.id,structuredClone(s)]));
@@ -122,6 +123,7 @@ export function mergeV3(a,b,{blank=false,artifacts=[]}={}){
  for(const [id,steps] of Object.entries(b.lessonSteps))next.lessonSteps[id]={...steps,...next.lessonSteps[id]};
  for(const [child,parent] of Object.entries(b.artifactParents)){if(next.artifactParents[child])requireValue(next.artifactParents[child]===parent,'作品修訂分支衝突，未匯入');next.artifactParents[child]=parent;}
  if(a.rhythmHints||b.rhythmHints){next.rhythmHints={...a.rhythmHints};for(const [key,value] of Object.entries(b.rhythmHints||{}))if(!next.rhythmHints[key]||Date.parse(value)>Date.parse(next.rhythmHints[key]))next.rhythmHints[key]=value;}
+ if(a.courseHistory||b.courseHistory)next.courseHistory=mergeCourseHistory(a,b);
  if(a.kanaHistory||b.kanaHistory)next.kanaHistory=mergeKanaHistory(a,b);
  if(a.kanaHints||b.kanaHints)next.kanaHints=mergeHintRecords(a.kanaHints,b.kanaHints);
  if(a.lifeNotes||b.lifeNotes)next.lifeNotes=mergeLifeNotes(a.lifeNotes,b.lifeNotes);

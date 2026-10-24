@@ -1,3 +1,4 @@
+import {courseGoal,appendCourseHistory,validateCourseCheckpoints} from './course-history-state.mjs';
 import {isKanaItem,appendKanaHistory,validateKanaCheckpoints} from './kana-history-state.mjs';
 import {validateJlptNoteDraft,validateJlptExposure} from './jlpt-memory-state.mjs';
 import {validateLifeDictationDraft,mergeLifeDictationDraft} from './life-dictation-state.mjs';
@@ -40,6 +41,7 @@ export function recordAnswer(state,attempt){
  requireValue(state.attempts.length<20000,'作答紀錄已達上限，請先匯出備份');
  const next=structuredClone(state);next.attempts.push({...attempt});applyReview(next.reviews,attempt);next.revision++;
  if(next.schema===3&&isKanaItem(attempt.item))next.v3.kanaHistory=appendKanaHistory(next,[{item:attempt.item,time:attempt.time,kind:'answer',ref:attempt.id}]);
+ if(next.schema===3&&courseGoal(attempt.item))next.v3.courseHistory=appendCourseHistory(next,[{item:attempt.item,time:attempt.time,kind:'answer',ref:attempt.id}]);
  return next;
 }
 export function recordAnswers(state,attempts){
@@ -90,7 +92,7 @@ export function validateState(s){
   requireValue(Array.isArray(s.examAttempts)&&s.examAttempts.length<=100&&new Set(s.examAttempts.map(x=>x.id)).size===s.examAttempts.length);
   s.examAttempts.forEach(exam=>{validateExamSession(exam);requireValue(exam.status!=='active');});
  }
- if(s.schema===3){validateV3(s.v3,s.artifacts);validateKanaCheckpoints(s.v3.kanaHistory,s.attempts);validateJlptExposure(s.v3.sessions,s.v3.jlptHints,{attempts:s.attempts,practices:[s.practice,...s.practiceHistory||[]]});}return s;
+ if(s.schema===3){validateV3(s.v3,s.artifacts);validateKanaCheckpoints(s.v3.kanaHistory,s.attempts);validateCourseCheckpoints(s.v3.courseHistory,s.attempts);validateJlptExposure(s.v3.sessions,s.v3.jlptHints,{attempts:s.attempts,practices:[s.practice,...s.practiceHistory||[]],history:s.v3.courseHistory});}return s;
 }
 export function exportBackup(state){const upgraded=upgradeState(state);return JSON.stringify({format:'hiyori-backup',version:3,exportedAt:new Date().toISOString(),state:upgraded},null,2);}
 export function parseBackup(text){

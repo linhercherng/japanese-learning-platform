@@ -35,10 +35,7 @@ export function createLifeMemory({getContext,update,render,toast,now,id}){
   const ctx=getContext(),time=now();
   if(name==='life-memory'&&lifeUnitIds.has(param)&&!pendingLife(ctx.state)){const ui=lifeMemoryLocal(ctx.session);if(ui.unit===param&&ui.revealed?.length)exposeUnit(param,time);}
   if(['study','lesson'].includes(name)&&lifeUnitIds.has(param)){const tab=ctx.session.studyTab||'learn';if(['words','read'].includes(tab)||tab==='learn'&&unitById.get(param).grammar.length)exposeUnit(param,time);}
-  let qid,answer,hints=[];
-  if(name==='v3-practice'){const s=ctx.state.v3.sessions.find(s=>s.id===param);if(s&&!s.completedAt){const entry=s.queue[s.cursor];qid=entry?.questionId;answer=entry?.repeat?s.corrections[s.cursor]:s.answers[qid];hints=s.hints;}}
-  if(name==='practice'){const p=ctx.state.practice;if(p&&p.index<p.questionIds.length){qid=p.questionIds[p.index];answer=p.answers[qid];hints=p.hints||[];}}
-  if(lifeQuestionUnits.has(qid)&&(answer||hints.includes(qid)))expose([qid],answer?new Date(Math.max(Date.parse(time),Date.parse(answer.time)+1)).toISOString():time);
+
  }
  document.addEventListener('click',click);document.addEventListener('change',change);document.addEventListener('toggle',toggle,true);
  return {views:{'life-memory':unit=>lifeMemoryView(getContext(),unit,now()),'life-check':()=>lifeCheckView(getContext(),now())},afterRender,validateCatalog:validateLifeCatalog,dispose(){document.removeEventListener('click',click);document.removeEventListener('change',change);document.removeEventListener('toggle',toggle,true);}};

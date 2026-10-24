@@ -1,3 +1,6 @@
+import {courseGoal} from './core/course-history-state.mjs';
+import {recordLifeExposure} from './core/life-memory-state.mjs';
+import {recordJlptExposure} from './core/jlpt-memory-state.mjs';
 import {studyDay} from './core/v3-state.mjs';
 import {kanaHistoryView} from './ui/kana-history.mjs';
 import {rhythmQuestion} from './content/kana-rhythm.mjs';
@@ -48,13 +51,14 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  }
  function currentQuestion(){const [name,sid]=route(),s=state().v3.sessions.find(s=>s.id===sid);if(name!=='v3-practice'||!s||s.completedAt)return null;const entry=s.queue[s.cursor],q=resolve(entry?.questionId);return q?{sid,cursor:s.cursor,q}:null;}
  function expose(s,q,time,shownItems=[],context={}){
+  if(courseGoal(q.id))return (courseGoal(q.id)==='L'?recordLifeExposure:recordJlptExposure)(s,[q.id],time,context);
   const rhythm=rhythmQuestion(q.id);if(!rhythm&&!kana.some(k=>k.id===q.reviewItem))return s;
   const items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[...new Set([q.reviewItem,...extraKanaExposure(q.id),...shownItems])];
   const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time,context):recordKanaExposure(s,items,time,context);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;
  }
  function prepareKanaCue(name,sid){
   const ui=local(),session=ctx().state.v3.sessions.find(s=>s.id===sid),entry=session?.queue[session.cursor],q=resolve(entry?.questionId),answer=entry?.repeat?session?.corrections[session.cursor]:session?.answers[entry?.questionId];
-  const needed=name==='v3-practice'&&session&&!session.completedAt&&q&&(rhythmQuestion(q.id)||kana.some(k=>k.id===q.reviewItem))&&(answer||session.hints.includes(q.id));
+  const needed=name==='v3-practice'&&session&&!session.completedAt&&q&&(courseGoal(q.id)||rhythmQuestion(q.id)||kana.some(k=>k.id===q.reviewItem))&&(answer||session.hints.includes(q.id));
   const key=needed?routeEpoch+':'+sid+':'+session.cursor+':'+studyDay(now())+':'+(answer?'feedback':'hint'):null;
   if(ui.kanaCueKey!==key){ui.kanaCueKey=key;ui.kanaCueReady=false;ui.kanaFeedbackError=null;ui.kanaCueBusy=null;}
   ui.kanaFeedbackPending=Boolean(needed&&!ui.kanaCueReady);return {ui,session,entry,q,answer,key};
