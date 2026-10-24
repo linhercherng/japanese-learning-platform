@@ -14,7 +14,7 @@ export const memoryStatusLabels={review:'需要再複習',uncertain:'紀錄待�
 export const emptyRecent=()=>({dailyFirst:0,independent:0,hinted:0,wrong:0,needsHelp:0,ambiguous:0,uncertain:0,comparable:0,delayedFailed:0,retained:0,week:0});
 export const weeklyFocusScore=r=>(r.recent?.delayedFailed||0)*10+(r.recent?.needsHelp||0)*3+(r.recent?.uncertain||0);
 export function memoryTiming(r){const last=Math.max(stamp(r.lastAt),stamp(r.lastCueAt||r.lastAt)),base=ordinal(new Date(last).toISOString()),interval=r.status==='week'?7:r.status==='retained'?3:1;return {next:base+interval,week:base+7,interval};}
-function metadata(a){
+export function memoryTarget(a){
  const k=kanaIndex.get(a.item);if(k&&['recognition','listening','language'].includes(a.dimension))return {goal:'K',unitId:null,title:`${k.script==='kata'?'片假名':'平假名'} · 字表第 ${k.index} 字`,ability:a.dimension,route:'kana-map/'+k.id};
  const q=resolveLearningQuestion(a.item);if(!q||q.dimension!==a.dimension||a.dimension==='writing')return null;
  const life=lifeQuestionUnits.get(a.item),unitId=life||jlptQuestionUnits.get(a.item);if(!unitId)return null;
@@ -30,7 +30,7 @@ export function memoryEvidence(state,time){
   if(!visible(a.time))continue;
   if(kanaIndex.has(a.item))expose(a.item,a.time);
   if(a.dimension==='writing'){if(inWeek(a.time))separate.writing++;continue;}
-  const meta=metadata(a);if(!meta){if(inWeek(a.time))separate.other++;continue;}
+  const meta=memoryTarget(a);if(!meta){if(inWeek(a.time))separate.other++;continue;}
   if(meta.goal!=='K')expose(a.item,a.time);
   const key=a.item+':'+a.dimension;if(!histories.has(key))histories.set(key,{meta,list:[]});histories.get(key).list.push(a);
  }
