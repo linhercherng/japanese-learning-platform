@@ -1,11 +1,14 @@
 import {memoryEvidence,emptyRecent,memoryTiming,weeklyFocusScore} from './memory-evidence.mjs';
 import {resolveLearningQuestion} from '../content/catalog.mjs';
 import {studyDay} from './v3-state.mjs';
+import {dailyMemory} from './daily-memory.mjs';
 const stamp=t=>Date.parse(t),day=n=>new Date(n*86400000).toISOString().slice(0,10),ordinal=t=>Date.parse(studyDay(t))/86400000;
 const goals=['K','L','N5','N4','N3','N2'],labels={K:'五十音',L:'生活日語',N5:'N5',N4:'N4',N3:'N3',N2:'N2'};
 const role=s=>['kana-mini','life-memory','jlpt-memory'].includes(s.source)?'learn':/^(kana|life|jlpt)-(check|week|repair)$/.test(s.source)?'review':null;
 const answerKey=(item,dimension,time)=>JSON.stringify([item,dimension,stamp(time)]);
 const severity=r=>r.status==='review'?3:r.status==='uncertain'?2:r.status==='waiting'?1:0;
+export function weeklyFocusParam(param=''){const [goal,ability,...extra]=String(param).split(':'),allowed=goal==='K'?['recognition','listening','language']:goal==='L'?['listening','productive','understanding']:['vocabulary','grammar','kanji','reading','listening'];return goals.includes(goal)&&allowed.includes(ability)&&!extra.length?{goal,ability}:null;}
+export function weeklyFocusQueue(state,param,time,options={}){const p=weeklyFocusParam(param);return p?dailyMemory(state,p.goal,time,{...options,ability:p.ability}):null;}
 function outcomes(state,time,start){
  const visible=t=>stamp(t)<=stamp(time),inside=t=>visible(t)&&studyDay(t)>=start;
  const out={learn:{completed:0,answers:0},review:{completed:0,answers:0},pending:0,uncertain:0,rounds:[],legacyPlans:{completed:0,steps:0,writing:0}},byAnswer=new Map(),claims=new Map();
