@@ -1,6 +1,6 @@
 # 日和｜日語學習平台
 
-v0.44.0 [七天重點追蹤](https://linhercherng.github.io/japanese-learning-platform/#weekly)：一鍵保存固定原題，分開看已練習、弱點已改善、維持想起與仍需確認；跨日證據和提示使用會調整[首頁](https://linhercherng.github.io/japanese-learning-platform/#home)同類到期原題優先。原輪、首答、草稿與舊備份保持。見[完整規劃](docs/weekly-focus-progress.md)、[驗收](docs/weekly-focus-progress-validation.md)。
+v0.44.1 [七天重點追蹤](https://linhercherng.github.io/japanese-learning-platform/#weekly)：一鍵保存固定原題，分開看已練習、弱點已改善、維持想起與仍需確認；跨日證據和提示使用會調整[首頁](https://linhercherng.github.io/japanese-learning-platform/#home)同類到期原題優先。尚未練總數與記憶狀態分開呈現，弱題未練也計入；原輪、首答、草稿與舊備份保持。見[完整規劃](docs/weekly-focus-progress.md)、[驗收](docs/weekly-focus-progress-validation.md)。
 
 v0.43.0 [每週回顧](https://linhercherng.github.io/japanese-learning-platform/#weekly)整合每日原工具的學習與複習成果，依答前提示、跨日回想與仍需鞏固的能力，建議接下來七天最多三項重點（5分鐘一項）。從重點接今天到期原題，未到期保留間隔；新作答後重新調整，原首答、進度與草稿保持。見[完整規劃](docs/weekly-learning-focus.md)、[驗收](docs/weekly-learning-focus-validation.md)。
 
