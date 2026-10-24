@@ -19,7 +19,7 @@ export function dailyMemory(state,goal,time,{mode=null,evidence=memoryEvidence(s
   return {...r,next,week,q:goal==='K'?coachQuestion('kc:check:'+r.item+':'+(r.dimension==='recognition'?'pair':'listen')):resolveLearningQuestion(r.item)};
  }).filter(r=>r.q);
  const visible=t=>Date.parse(t)<=Date.parse(time);
- const conflict=state.v3.sessions.find(s=>modes.some(m=>s.source===dailyMemorySource(goal,m)&&s.reference===dailyMemoryReference(goal,m,time))&&visible(s.createdAt)&&(!visible(s.updatedAt)||s.completedAt&&!visible(s.completedAt)||Object.values(s.answers).some(a=>!visible(a.time))));
+ const conflict=state.v3.sessions.find(s=>modes.some(m=>s.source===dailyMemorySource(goal,m)&&s.reference===dailyMemoryReference(goal,m,time))&&(!visible(s.createdAt)||!visible(s.updatedAt)||s.completedAt&&!visible(s.completedAt)||Object.values(s.answers).some(a=>!visible(a.time))));
  const done=m=>m!=='repair'&&state.v3.sessions.some(s=>s.source===dailyMemorySource(goal,m)&&s.reference===dailyMemoryReference(goal,m,time)&&visible(s.createdAt));
  const select=m=>{
   if(conflict||done(m))return [];

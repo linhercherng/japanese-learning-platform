@@ -66,7 +66,7 @@ export function unifiedLearning(state,time,quiz=null,evidence=memoryEvidence(sta
  const ranks={week:0,check:1,repair:2,pocket:3};
  const review=tracks.filter(t=>Object.hasOwn(ranks,t.kind)).sort((a,b)=>ranks[a.kind]-ranks[b.kind]||(b.memory?.priority||0)-(a.memory?.priority||0)||Number(b.goal===goal)-Number(a.goal===goal)||stamp(a.lastAt)-stamp(b.lastAt)||learningTracks.findIndex(x=>x[0]===a.goal)-learningTracks.findIndex(x=>x[0]===b.goal));
  let main=pending[0]|| (finishedToday?{...finishedToday,kind:'rest',title:'今天已完成一小輪，可以先休息。',detail:'原結果已保存；明天再回首頁，依新日期確認記憶。今天答對不代表已長期記住。'}:review[0]||tracks.find(t=>t.goal===goal));
- main={...main,label:learningTracks.find(t=>t[0]===main.goal)?.[1]||'接續原活動'};
+ main={...main,label:learningTracks.find(t=>t[0]===main.goal)?.[1]||'接續原活動',memory:main.memory||tracks.find(t=>t.goal===main.goal)?.memory};
  const legacyPlans=state.v3.dailyPlans.filter(p=>unfinished(p)&&stamp(p.createdAt)<=stamp(time)).map(p=>({route:'daily/'+p.id,goal:p.goal,day:p.day,completed:p.steps.filter(s=>s.completedAt&&stamp(s.completedAt)<=stamp(time)).length,total:p.steps.length})).sort((a,b)=>b.day.localeCompare(a.day)||a.route.localeCompare(b.route));
  return {day:studyDay(time),goal,minutes:state.settings.dailyMinutes,main,tracks,pending,finishedToday,legacyPlans};
 }
