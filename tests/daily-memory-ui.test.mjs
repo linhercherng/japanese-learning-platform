@@ -1,0 +1,16 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {initialState,recordAnswer} from '../app/core/learning.mjs';
+import {recordJlptExposure} from '../app/core/jlpt-memory-state.mjs';
+import {unifiedLearning} from '../app/core/unified-learning.mjs';
+import {unifiedReview} from '../app/core/unified-review.mjs';
+import {unifiedRecommendationView} from '../app/ui/unified-learning.mjs';
+import {navigationContext} from '../app/ui/navigation.mjs';
+const mod=await import('../app/ui/daily-memory.mjs').catch(()=>({}));
+const time='2026-10-24T02:00:00Z',old='2026-10-23T01:00:00Z';
+const add=(s,item='N2-01-q1',correct=false)=>recordAnswer(s,{id:'old-'+item,item,dimension:item==='N2-01-q1'?'vocabulary':'recognition',correct,hinted:false,time:old});
+test('home recommendation contains explainable phase counts and a small original-question route',()=>{const s=add(initialState()),r=unifiedLearning(s,time);assert.equal(r.main.route,'today-review/N2:check');assert.equal(r.main.memory.summary.review,1);const html=unifiedRecommendationView(r);assert.match(html,/答前提示/);assert.match(html,/答後回饋/);assert.match(html,/href="#course-history\/N2"/);assert.doesNotMatch(html,/ラーメン|q1.*correct/);});
+test('same-day feedback does not invite a delayed recall round and gives a next date',()=>{let s=add(initialState(),'N2-01-q1',true);s.v3.goal='N2';s=recordJlptExposure(s,['N2-01-q1'],'2026-10-24T01:00:00Z',{kind:'feedback',ref:'v3:old:0'});const r=unifiedLearning(s,time);assert.equal(r.main.kind,'wait');assert.equal(r.main.memory.nextDay,'2026-10-25');assert.match(unifiedRecommendationView(r),/2026-10-25/);});
+test('daily and weekly use identical evidence and pending activities still win',()=>{let s=add(initialState());const r=unifiedLearning(s,time),w=unifiedReview(s,time);assert.deepEqual(r.main.memory.summary,w.tracks.find(t=>t.goal==='N2').current);s.activeExam={id:'exam'};assert.equal(unifiedLearning(s,time).main.route,'exam-session');});
+test('the confirmation page reveals only metadata, not question answers, drafts or cues',()=>{const s=add(initialState());s.drafts['text:keep']={text:'private-draft',points:[],time:old};assert.equal(typeof mod.dailyMemoryView,'function');const html=mod.dailyMemoryView({state:s,session:{}},'N2:check',time);assert.match(html,/data-v3-action="start-today-review"/);assert.match(html,/最多|1 題/);assert.doesNotMatch(html,/private-draft|ラーメン|data-audio|正解/);assert.match(html,/#home/);});
+test('empty, invalid and stale daily links stay understandable and never show a start action',()=>{assert.equal(typeof mod.dailyMemoryView,'function');for(const param of ['N2:check','N1:check','N2:wrong','N2:check:extra']){const html=mod.dailyMemoryView({state:initialState(),session:{}},param,time);assert.doesNotMatch(html,/data-v3-action="start-today-review"/);assert.match(html,/#home/);}});
+test('daily review page has a named breadcrumb back to the homepage',()=>{const nav=navigationContext({state:initialState(),session:{}},'today-review','N2:check');assert.equal(nav.trail.at(-1).label,'今日原題複習');assert(nav.trail.some(t=>t.route==='home'));});

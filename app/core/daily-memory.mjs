@@ -15,7 +15,7 @@ export function dailyMemory(state,goal,time,{mode=null,evidence=memoryEvidence(s
  const track=evidence.tracks.find(t=>t.goal===goal);if(!track)throw Error('找不到這個學習方向。');
  const today=ordinal(time),rows=track.items.filter(r=>goal!=='K'||['recognition','listening'].includes(r.dimension)).map(r=>{
   const last=Math.max(Date.parse(r.lastAt),Date.parse(r.lastCueAt||r.lastAt));
-  const next=ordinal(new Date(last).toISOString())+1,week=next+6;
+  const base=ordinal(new Date(last).toISOString()),next=base+(r.status==='week'?7:r.status==='retained'?3:1),week=base+7;
   return {...r,next,week,q:goal==='K'?coachQuestion('kc:check:'+r.item+':'+(r.dimension==='recognition'?'pair':'listen')):resolveLearningQuestion(r.item)};
  }).filter(r=>r.q);
  const done=m=>m!=='repair'&&state.v3.sessions.some(s=>s.source===dailyMemorySource(goal,m)&&s.reference===dailyMemoryReference(goal,m,time)&&Date.parse(s.createdAt)<=Date.parse(time));
@@ -38,4 +38,11 @@ export function startDailyMemory(state,{goal,mode,id,time}){
  if(!goals.includes(goal)||!modes.includes(mode))return state;
  const r=dailyMemory(state,goal,time,{mode});if(r.mode!==mode||!r.questionIds.length)return state;
  return beginV3Session(state,r.questionIds,{id,time,source:dailyMemorySource(goal,mode),reference:goal==='K'&&mode==='repair'?r.items.map(r=>r.item).join(':'):dailyMemoryReference(goal,mode,time)});
+}
+
+export function dailyMemoryReason(r){
+ if(r.mode==='wait')return `依目前記憶結果，先留一點間隔。最早 ${r.nextDay} 再收起提示回想；不用今天一直重做。`;
+ const weak=r.items.filter(i=>i.status==='review').length,unknown=r.items.filter(i=>i.status==='uncertain').length;
+ const basis=[weak?`${weak} 題的當日首答需要提示或仍不穩`:null,unknown?`${unknown} 題的舊紀錄或時間需要再確認`:null].filter(Boolean).join('，');
+ return `${basis?basis+'，優先用原題再想一次。':'沿用實際做過的原題，再確認能否自己想起來。'}${r.mode==='repair'?'這次是同日補強，跨日結果留到之後確認。':r.mode==='week'?'距離最後練習、回饋或參考已滿七個台北日期。':'距離最後練習、回饋或參考已跨日。'}首次或需幫忙隔天再想，已有跨日證據隔三天，七日證據隔七天。每次最多三題，5 分鐘只取一題。`;
 }
