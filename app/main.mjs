@@ -71,8 +71,8 @@ const kanaBridge=createKanaBridge({getContext:context,update,render,toast,now,id
 const kanaFocus=createKanaFocus({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const jlptMemory=createJlptMemory({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate),cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const lifeWorkspace=createLifeWorkspace({getContext:context,render,now});
-const lifeMemory=createLifeMemory({getContext:context,update,render,toast,now,id});
-const lifeReview=createLifeReview({getContext:context,update,render,toast,now,id});
+const lifeMemory=createLifeMemory({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate)});
+const lifeReview=createLifeReview({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate)});
 const lifeRetention=createLifeRetention({getContext:context,update,render,toast,now,id});
 const lifeCards=createLifeCardsController({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate)});
 const lifeDictation=createLifeDictation({getContext:context,update,render,toast,now,play:(text,rate)=>media.play(text,rate),cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
@@ -241,7 +241,7 @@ document.addEventListener('click',event=>{
  const button=event.target.closest('button');if(!button)return;const d=button.dataset;
  const locks=d.saveWriting||d.saveLife||d.action==='confirm-import';if(locks)button.disabled=true;
  const task=async()=>{
-  if(d.audio){await media.play(d.audio,Number(d.rate||1));return;}
+  if(d.audio){if(d.lifeAction==='audio'||d.lifeReviewAction==='audio')return;await media.play(d.audio,Number(d.rate||1));return;}
   if(d.script){session.script=d.script;session.selected=kana.find(k=>k.script===d.script&&k.group===session.group).id;render(false);}
   if(d.group){session.group=d.group;session.selected=kana.find(k=>k.script===session.script&&k.group===d.group).id;render(false);}
   if(d.rowDelta){const items=kana.filter(k=>k.script===session.script&&k.group===session.group);const start=Math.floor(Math.max(0,items.findIndex(k=>k.id===session.selected))/5)*5;session.selected=items[Math.max(0,Math.min(items.length-1,start+Number(d.rowDelta)))].id;render(false);}

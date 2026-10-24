@@ -2,11 +2,11 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import * as controller from '../app/life-cards.mjs';
 import {initialState,exportBackup,parseBackup} from '../app/core/learning.mjs';import {pendingLife,startLifeMemory,memoryPhrases} from '../app/core/life-memory.mjs';import {memoryQuestionIds} from '../app/content/life-memory-ids.mjs';
 const time='2026-10-23T03:00:00.000Z';
-async function run(body){const prev={document:globalThis.document,location:globalThis.location},listeners=new Map(),c={state:initialState(),session:{}},messages=[],plays=[];let hash='#life-cards/L07',held=null,fail=false,cards;
+async function run(body){const prev={document:globalThis.document,location:globalThis.location},listeners=new Map(),c={state:initialState(),session:{}},messages=[],plays=[];let tick=0,hash='#life-cards/L07',held=null,fail=false,cards;
  globalThis.location={get hash(){return hash;},set hash(v){hash=v.startsWith('#')?v:'#'+v;}};globalThis.document={body:{},activeElement:null,addEventListener:(n,f)=>listeners.set(n,f),removeEventListener:n=>listeners.delete(n),querySelector:()=>({focus(){document.activeElement={heading:true};}})};
  const flush=()=>new Promise(r=>setImmediate(r));const render=()=>{const [name,param]=hash.slice(1).split('/');cards.onRoute(name,param);cards.views[name]?.(param);cards.afterRender(name,param);};
  const click=async extra=>{const local=c.session.lifeCards||{},dataset={lifeCardsUnit:'L07',lifeCardsRun:String(local.run),lifeCardsCursor:String(local.round?.cursor),...extra},b={dataset,isConnected:true,focus(){document.activeElement=b;},set disabled(value){if(value&&document.activeElement===b)document.activeElement=document.body;}};document.activeElement=b;listeners.get('click')?.({target:{closest:()=>b}});await flush();};
- try{assert.equal(typeof controller.createLifeCardsController,'function');cards=controller.createLifeCardsController({getContext:()=>c,update:async f=>{c.state=f(c.state);await held;if(fail)throw Error('quota');},render,toast:m=>messages.push(m),now:()=>time,id:()=>'three-original',play:async(text,rate)=>plays.push({text,rate})});render();await body({c,cards,render,click,flush,messages,plays,fail:()=>fail=true,hold:()=>{let release;held=new Promise(r=>release=r);return()=>{held=null;release();};}});}finally{cards?.dispose();globalThis.document=prev.document;globalThis.location=prev.location;}
+ try{assert.equal(typeof controller.createLifeCardsController,'function');cards=controller.createLifeCardsController({getContext:()=>c,update:async f=>{c.state=f(c.state);await held;if(fail)throw Error('quota');},render,toast:m=>messages.push(m),now:()=>new Date(Date.parse(time)+tick++).toISOString(),id:()=>'three-original',play:async(text,rate)=>plays.push({text,rate})});render();await body({c,cards,render,click,flush,messages,plays,fail:()=>fail=true,hold:()=>{let release;held=new Promise(r=>release=r);return()=>{held=null;release();};}});}finally{cards?.dispose();globalThis.document=prev.document;globalThis.location=prev.location;}
 }
 const start=h=>h.click({lifeCardsAction:'start',lifeCardsMode:'meaning'});
 const reveal=h=>h.click({lifeCardsAction:'reveal'});
@@ -51,3 +51,5 @@ test('rapid reveal and rating while exposure is saving do not advance the card',
 test('the audio button regains keyboard focus after saving and playback complete',async()=>run(async h=>{
  await h.click({lifeCardsAction:'start',lifeCardsMode:'sound'});await h.click({lifeCardsAction:'audio',lifeCardsRate:'1'});assert.equal(document.activeElement?.dataset?.lifeCardsAction,'audio');
 }));
+
+test('one card reveal creates exactly one reference per original question across async redraws',()=>run(async h=>{await start(h);await reveal(h);assert.equal(h.c.state.v3.courseHistory.events.filter(e=>e.kind==='reference'&&e.item==='L07-q0').length,1);}));

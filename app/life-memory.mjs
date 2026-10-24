@@ -3,7 +3,7 @@ import {lifeUnitIds,lifeQuestionUnits} from './content/life-memory-ids.mjs';
 import {pendingLife,startLifeMemory,startLifeCheck,validateLifeCatalog,memoryPhrases} from './core/life-memory.mjs';
 import {recordLifeExposure} from './core/life-memory-state.mjs';
 import {lifeMemoryView,lifeCheckView,lifeMemoryLocal} from './ui/life-memory.mjs';
-export function createLifeMemory({getContext,update,render,toast,now,id}){
+export function createLifeMemory({getContext,update,render,toast,now,id,play=async()=>{}}){
  let saving=false;
  const route=()=>location.hash.slice(1).split('/');
  const expose=(qids,time,ref='life:cards')=>update(s=>recordLifeExposure(s,qids,time,{kind:'reference',ref}));
@@ -12,7 +12,7 @@ export function createLifeMemory({getContext,update,render,toast,now,id}){
  async function action(d){
   if(['audio','reveal'].includes(d.lifeAction)){
    const card=currentCard(d);if(!card)return;
-   if(d.lifeAction==='audio'){await exposeUnit(card.unit,now());return;}
+   if(d.lifeAction==='audio'){const origin=location.hash;await exposeUnit(card.unit,now());if(location.hash===origin&&currentCard(d))await play(memoryPhrases(card.unit)[card.index].jp,1);return;}
    const ui=lifeMemoryLocal(getContext().session);if(ui.unit!==card.unit){ui.unit=card.unit;ui.revealed=[];}
    const origin=location.hash;if(!ui.revealed.includes(card.index)){await exposeUnit(card.unit,now());if(location.hash!==origin||!currentCard(d))return;}
    ui.revealed=ui.revealed.includes(card.index)?ui.revealed.filter(i=>i!==card.index):[...ui.revealed,card.index];render(false);
@@ -33,7 +33,7 @@ export function createLifeMemory({getContext,update,render,toast,now,id}){
  }
  function toggle(event){const el=event.target,[name,unit]=route();if(el.open&&['study','lesson'].includes(name)&&el.dataset?.lifeReference===unit&&lifeUnitIds.has(unit))exposeUnit(unit,now(),'page:details:'+unit).catch(error=>toast(error.message));}
  function afterRender(name,param){
-  const ctx=getContext(),time=now();
+  const ctx=getContext(),time=now();if(name==='lesson'&&ctx.session.lessonTab==='想一想')return;
   if(['study','lesson'].includes(name)&&lifeUnitIds.has(param)){const tab=ctx.session.studyTab||'learn';if(['words','read'].includes(tab)||tab==='learn'&&unitById.get(param).grammar.length)exposeUnit(param,time,'page:'+name+':'+param).catch(error=>toast(error.message));}
 
  }

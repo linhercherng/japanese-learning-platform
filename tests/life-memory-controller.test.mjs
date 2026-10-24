@@ -52,3 +52,5 @@ test('revealing and covering a card restores the same keyboard focus without scr
 }));
 
 test('failed life card reference remains covered and preserves first answers',async()=>run(async h=>{const before=structuredClone(h.c.state.attempts);h.fail();await h.click(card);assert(!h.c.session.lifeMemory?.revealed?.includes(0));assert.deepEqual(h.c.state.attempts,before);}));
+
+test('returning directly to the V1 think tab does not count necessary question text as reference',()=>run(async h=>{h.c.session.lessonTab='想一想';location.hash='lesson/L01';h.life.afterRender('lesson','L01');await h.flush();assert.equal(h.c.state.v3.lifeHints,undefined);}));

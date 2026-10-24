@@ -3,7 +3,7 @@ import {pendingLife} from './core/life-memory.mjs';
 import {lifeRoundReview,startLifeRepair} from './core/life-progress.mjs';
 import {recordLifeExposure} from './core/life-memory-state.mjs';
 import {lifeMapView,lifeRoundView,lifeReviewLocal} from './ui/life-review.mjs';
-export function createLifeReview({getContext,update,render,toast,now,id}){
+export function createLifeReview({getContext,update,render,toast,now,id,play=async()=>{}}){
  let saving=false,lastRoute=null;
  const route=()=>location.hash.slice(1).split('/');
  function onRoute(name,param){const key=`${name}/${param||''}`;if(key===lastRoute)return;lastRoute=key;const ui=lifeReviewLocal(getContext().session);ui.revealed=false;if(name==='life-round'){ui.round=param;ui.index=0;}}
@@ -12,7 +12,7 @@ export function createLifeReview({getContext,update,render,toast,now,id}){
  async function action(d){
   if(['reveal','audio'].includes(d.lifeReviewAction)){
    const c=current();if(!c||c.sid!==d.lifeReviewRound||c.entry.q.id!==d.lifeReviewQuestion)return;
-   if(d.lifeReviewAction==='audio'){if(c.entry.q.kind==='listen')await expose(c.entry.q.id,now());return;}
+   if(d.lifeReviewAction==='audio'){if(c.entry.q.kind!=='listen')return;const origin=location.hash;await expose(c.entry.q.id,now());if(location.hash===origin&&current()?.entry.q.id===c.entry.q.id)await play(c.entry.q.transcript,1);return;}
    const origin=location.hash;if(!c.ui.revealed){await expose(c.entry.q.id,now());if(location.hash!==origin||current()?.entry.q.id!==c.entry.q.id)return;}
    c.ui.revealed=!c.ui.revealed;render(false);document.querySelector(`[data-life-review-action="reveal"][data-life-review-round="${c.sid}"][data-life-review-question="${c.entry.q.id}"]`)?.focus({preventScroll:true});return;
   }
