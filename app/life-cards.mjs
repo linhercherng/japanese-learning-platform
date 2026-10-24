@@ -12,7 +12,7 @@ export function createLifeCardsController({getContext,update,render,toast,now,id
  function current(d){const [name,unitId]=route(),ctx=getContext(),ui=lifeCardsLocal(ctx.session);if(disposed||name!=='life-cards'||!lifeUnitIds.has(unitId)||ui.unitId!==unitId||d.lifeCardsUnit!==unitId||d.lifeCardsRun!==String(ui.run))return null;return {ctx,ui,unitId};}
  const sameCard=(d,c)=>current(d)?.ui.round===c.ui.round&&d.lifeCardsCursor===String(c.ui.round?.cursor)&&!pendingLife(getContext().state);
  const focus=()=>document.querySelector('#life-card-heading')?.focus();
- const exposure=(unit,time)=>update(s=>pendingLife(s)?s:recordLifeExposure(s,unitQuestions(unitById.get(unit)).map(q=>q.id),time));
+ const exposure=(unit,time)=>update(s=>pendingLife(s)?s:recordLifeExposure(s,unitQuestions(unitById.get(unit)).map(q=>q.id),time,{kind:'reference',ref:'life:cards:'+unit}));
  async function action(d){
   const c=current(d);if(!c||busy)return;const {ui,unitId}=c,kind=d.lifeCardsAction;
   if(kind==='practice'){
@@ -33,7 +33,7 @@ export function createLifeCardsController({getContext,update,render,toast,now,id
   }finally{busy=false;}
  }
  function click(event){const b=event.target.closest('button');if(!b?.dataset.lifeCardsAction)return;const focused=document.activeElement===b;b.disabled=true;action({...b.dataset}).catch(error=>toast(error.message)).finally(()=>{if(b.isConnected){b.disabled=false;if(focused&&document.activeElement===document.body)b.focus({preventScroll:true});}});}
- function afterRender(name,param){if(name!=='life-cards')return;const ui=lifeCardsLocal(getContext().session);if(ui.unitId===param&&ui.round?.revealed&&!pendingLife(getContext().state))exposure(param,now()).catch(error=>toast(error.message));}
+ function afterRender(){}
  document.addEventListener('click',click);
  return {views:{'life-cards':unit=>lifeCardsView(getContext(),unit)},onRoute,afterRender,dispose(){disposed=true;document.removeEventListener('click',click);}};
 }

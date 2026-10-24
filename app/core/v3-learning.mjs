@@ -1,3 +1,6 @@
+import {courseGoal} from './course-history-state.mjs';
+import {recordLifeExposure} from './life-memory-state.mjs';
+import {recordJlptExposure} from './jlpt-memory-state.mjs';
 import {kanaCueSeen,isKanaItem} from './kana-history-state.mjs';
 import {recordKanaExposure} from './kana-studio.mjs';
 import {resolveLearningQuestion} from '../content/catalog.mjs';
@@ -48,7 +51,7 @@ function active(state,id){const s=state.v3.sessions.find(s=>s.id===id);requireVa
 export function hintV3Question(state,sessionId,time){
  const next=structuredClone(state),s=active(next,sessionId),entry=s.queue[s.cursor];
  if((entry.repeat?s.corrections[s.cursor]:s.answers[entry.questionId])||s.hints.includes(entry.questionId))return state;
- s.hints.push(entry.questionId);s.updatedAt=time;const q=resolveLearningQuestion(entry.questionId);if(isKanaItem(q?.reviewItem))return recordKanaExposure(next,[q.reviewItem,...extraKanaExposure(q.id)],time,{kind:'hint',ref:'v3:'+sessionId+':'+s.cursor});return changed(next);
+ s.hints.push(entry.questionId);s.updatedAt=time;const q=resolveLearningQuestion(entry.questionId);if(isKanaItem(q?.reviewItem))return recordKanaExposure(next,[q.reviewItem,...extraKanaExposure(q.id)],time,{kind:'hint',ref:'v3:'+sessionId+':'+s.cursor});if(courseGoal(q?.id))return (courseGoal(q.id)==='L'?recordLifeExposure:recordJlptExposure)(next,[q.id],time,{kind:'hint',ref:'v3:'+sessionId+':'+s.cursor});return changed(next);
 }
 export function answerV3Session(state,{sessionId,question,value,eventId,time,variants=[]}){
  requireValue(validAnswerValue(value),'答案格式不正確');let next=structuredClone(state),s=active(next,sessionId),entry=s.queue[s.cursor];
@@ -56,7 +59,7 @@ export function answerV3Session(state,{sessionId,question,value,eventId,time,var
  if(entry.repeat?s.corrections[s.cursor]:s.answers[question.id])return state;
  const exposure=next.v3.kanaHints?.[question.reviewItem]?.lastHintAt;
  if(s.source==='kana-week'&&exposure&&Date.parse(exposure)<=Date.parse(time)&&(Date.parse(exposure)>=Date.parse(s.createdAt)||(Date.parse(studyDay(time))-Date.parse(studyDay(exposure)))/86400000<7)&&!s.hints.includes(question.id))s.hints.push(question.id);
- const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id)||isKanaItem(question.reviewItem)&&kanaCueSeen(next,[question.reviewItem,...extraKanaExposure(question.id)],s.createdAt,time,s.source==='kana-week'?7:1)||jlptCueSeen(next.v3.jlptHints,question.id,s.createdAt,time,s.source==='jlpt-week'?7:1)||isLifeSource(s.source)&&lifeCueSeen(next.v3.lifeHints,question.id,s.createdAt,time,s.source==='life-week'?7:1)||rhythmCueSeen(next.v3.rhythmHints,question,s.createdAt,time)||['kana-duel','kana-bridge','kana-family','kana-row','kana-pocket-listen','kana-contrast'].includes(s.source)&&duelCueSeen(next.v3.kanaHints,question,s.createdAt,time),time};
+ const a={value:structuredClone(value),correct:gradeQuestion(question,value),hinted:s.hints.includes(question.id)||isKanaItem(question.reviewItem)&&kanaCueSeen(next,[question.reviewItem,...extraKanaExposure(question.id)],s.createdAt,time,s.source==='kana-week'?7:1)||jlptCueSeen(next,question.id,s.createdAt,time,s.source==='jlpt-week'?7:1)||lifeCueSeen(next,question.id,s.createdAt,time,s.source==='life-week'?7:1)||rhythmCueSeen(next.v3.rhythmHints,question,s.createdAt,time)||['kana-duel','kana-bridge','kana-family','kana-row','kana-pocket-listen','kana-contrast'].includes(s.source)&&duelCueSeen(next.v3.kanaHints,question,s.createdAt,time),time};
  if(entry.repeat)s.corrections[s.cursor]=a;
  else{
   s.answers[question.id]=a;

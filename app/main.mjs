@@ -1,3 +1,5 @@
+import {courseCueSeen} from './core/course-history-state.mjs';
+import {recordLifeExposure} from './core/life-memory-state.mjs';
 import {lifeUnitIds} from './content/life-memory-ids.mjs';
 import {kanaCueSeen} from './core/kana-history-state.mjs';
 import {createKanaReference} from './kana-reference.mjs';
@@ -69,8 +71,8 @@ const kanaBridge=createKanaBridge({getContext:context,update,render,toast,now,id
 const kanaFocus=createKanaFocus({getContext:context,update,render,toast,now,id,cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const jlptMemory=createJlptMemory({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate),cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
 const lifeWorkspace=createLifeWorkspace({getContext:context,render,now});
-const lifeMemory=createLifeMemory({getContext:context,update,render,toast,now,id});
-const lifeReview=createLifeReview({getContext:context,update,render,toast,now,id});
+const lifeMemory=createLifeMemory({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate)});
+const lifeReview=createLifeReview({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate)});
 const lifeRetention=createLifeRetention({getContext:context,update,render,toast,now,id});
 const lifeCards=createLifeCardsController({getContext:context,update,render,toast,now,id,play:(text,rate)=>media.play(text,rate)});
 const lifeDictation=createLifeDictation({getContext:context,update,render,toast,now,play:(text,rate)=>media.play(text,rate),cacheDraft:(key,value)=>{if(value===null)delete session.latestDrafts[key];else session.latestDrafts[key]=value;}});
@@ -190,14 +192,20 @@ async function saveWriting(itemId){
 }
 async function answerLife(lessonId,question,choice){
  const lesson=lifeLessons.find(l=>l.id===lessonId),q=lesson?.quiz[Number(question)];if(!q)return;
- const key=`${lessonId}-q${question}`,correct=Number(choice)===q.correct;
+ const key=`${lessonId}-q${question}`,correct=Number(choice)===q.correct,time=now(),attemptId=id();
  if(session.lifeAnswers[key])return;
  session.lifeAnswers[key]=true;
  const buttons=[...document.querySelectorAll(`[data-life-answer][data-question="${question}"]`)];buttons.forEach(b=>b.disabled=true);
- try{await update(s=>recordAnswer(s,{id:id(),item:key,dimension:'language',correct,hinted:false,time:now()}));}
+ try{await update(s=>recordAnswer(s,{id:attemptId,item:key,dimension:'language',correct,hinted:courseCueSeen(s,key,time,time),time}));}
  catch(error){delete session.lifeAnswers[key];buttons.forEach(b=>b.disabled=false);throw error;}
- session.lifeAnswers[key]={correct};
- const feedback=document.querySelector(`#life-feedback-${question}`);if(feedback)feedback.innerHTML=`<div class="feedback ${correct?'':'error'}">${correct?'首次作答選對了！':'首次作答已記錄，看看差別。'} ${e(q.explanation)}</div>`;
+ session.lifeAnswers[key]={correct,attemptId,feedbackReady:false};await showLifeFeedback(lessonId,question);
+}
+async function showLifeFeedback(lessonId,question){
+ const key=lessonId+'-q'+question,answer=session.lifeAnswers[key],q=lifeLessons.find(l=>l.id===lessonId)?.quiz[Number(question)];if(!answer?.attemptId||!q)return;
+ const a=state.attempts.find(a=>a.id===answer.attemptId);if(!a)return;
+ try{const time=new Date(Math.max(Date.parse(now()),Date.parse(a.time)+1)).toISOString();await update(s=>recordLifeExposure(s,[key],time,{kind:'feedback',ref:'v1:'+answer.attemptId}));answer.feedbackReady=true;}
+ catch{if(route().name==='lesson'&&route().param===lessonId){const feedback=document.querySelector('#life-feedback-'+question);if(feedback)feedback.innerHTML='<p>首答已保存，回饋紀錄尚未保存。</p><button class="secondary" data-life-feedback="'+question+'" data-lesson="'+e(lessonId)+'">重試保存並顯示回饋</button>';}return;}
+ if(route().name==='lesson'&&route().param===lessonId){const feedback=document.querySelector('#life-feedback-'+question);if(feedback)feedback.innerHTML=`<div class="feedback ${a.correct?'':'error'}">${a.correct?'首次作答選對了！':'首次作答已記錄，看看差別。'} ${e(q.explanation)}</div>`;}
 }
 async function saveLife(lessonId){
  const lesson=lifeLessons.find(l=>l.id===lessonId),text=document.querySelector('#life-writing').value.trim();
@@ -233,7 +241,7 @@ document.addEventListener('click',event=>{
  const button=event.target.closest('button');if(!button)return;const d=button.dataset;
  const locks=d.saveWriting||d.saveLife||d.action==='confirm-import';if(locks)button.disabled=true;
  const task=async()=>{
-  if(d.audio){await media.play(d.audio,Number(d.rate||1));return;}
+  if(d.audio){if(d.lifeAction==='audio'||d.lifeReviewAction==='audio')return;await media.play(d.audio,Number(d.rate||1));return;}
   if(d.script){session.script=d.script;session.selected=kana.find(k=>k.script===d.script&&k.group===session.group).id;render(false);}
   if(d.group){session.group=d.group;session.selected=kana.find(k=>k.script===session.script&&k.group===d.group).id;render(false);}
   if(d.rowDelta){const items=kana.filter(k=>k.script===session.script&&k.group===session.group);const start=Math.floor(Math.max(0,items.findIndex(k=>k.id===session.selected))/5)*5;session.selected=items[Math.max(0,Math.min(items.length-1,start+Number(d.rowDelta)))].id;render(false);}
@@ -241,6 +249,7 @@ document.addEventListener('click',event=>{
   if(d.startUnit)await startUnit(d.startUnit);
   if(d.quizAnswer!==undefined)await submitQuiz(d.quizAnswer);
   if(d.lifeTab){const input=document.querySelector('#life-writing');if(input)await update(s=>{s.drafts[`text:${input.dataset.draftLesson}`]={text:input.value,points:[],time:now()};return s;});session.lessonTab=d.lifeTab;render(false);window.scrollTo(0,0);}
+  if(d.lifeFeedback!==undefined)await showLifeFeedback(d.lesson,d.lifeFeedback);
   if(d.lifeAnswer!==undefined)await answerLife(d.lesson,d.question,d.lifeAnswer);
   if(d.saveLife)await saveLife(d.saveLife);
   if(d.saveWriting)await saveWriting(d.saveWriting);

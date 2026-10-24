@@ -1,3 +1,4 @@
+import {courseIndex,courseAnswerHinted,courseAnswerUnknown} from './course-history-state.mjs';
 import {lifeDailyCompleted,lifeWeekSchedule} from './life-retention.mjs';
 import {questionById,unitQuestions,unitById} from '../content/catalog.mjs';
 import {isLifeSource} from '../content/life-memory-ids.mjs';
@@ -6,24 +7,24 @@ import {initialState,recordAnswers} from './learning.mjs';
 import {beginV3Session} from './v3-learning.mjs';
 import {studyDay} from './v3-state.mjs';
 const latest=attempts=>new Map(attempts.map(a=>[a.item,a]));
-function weakEntries(attempts){
+function weakEntries(attempts,index){
  const reviews=recordAnswers(initialState(),attempts).reviews;
- return [...latest(attempts).values()].filter(a=>!a.correct||a.hinted).map(a=>({q:questionById.get(a.item),a,due:reviews[a.item+':'+a.dimension].due})).sort((a,b)=>Number(!b.a.correct)-Number(!a.a.correct)||Date.parse(a.due)-Date.parse(b.due)||Date.parse(a.a.time)-Date.parse(b.a.time)||a.q.id.localeCompare(b.q.id));
+ return [...latest(attempts).values()].filter(a=>!a.correct||courseAnswerHinted(index,a)||courseAnswerUnknown(index,a)).map(a=>({q:questionById.get(a.item),a,due:reviews[a.item+':'+a.dimension].due})).sort((a,b)=>Number(!b.a.correct)-Number(!a.a.correct)||Date.parse(a.due)-Date.parse(b.due)||Date.parse(a.a.time)-Date.parse(b.a.time)||a.q.id.localeCompare(b.q.id));
 }
 export function lifeWeakQuestions(state,time){
- const units=new Set(),out=[];for(const {q} of weakEntries(lifeHistory(state,time)))if(!units.has(q.unitId)){units.add(q.unitId);out.push(q);if(out.length===3)break;}return out;
+ const units=new Set(),out=[];for(const {q} of weakEntries(lifeHistory(state,time),courseIndex(state,time)))if(!units.has(q.unitId)){units.add(q.unitId);out.push(q);if(out.length===3)break;}return out;
 }
 export function lifeMemoryMap(state,time){
- const attempts=lifeHistory(state,time),last=latest(attempts),groups=new Map();
+ const index=courseIndex(state,time),attempts=lifeHistory(state,time),last=latest(attempts),groups=new Map();
  for(const a of attempts){const id=questionById.get(a.item).unitId;if(!groups.has(id))groups.set(id,[]);groups.get(id).push(a);}
- return lifeMemoryUnits.map(unit=>{const list=groups.get(unit.id)||[],ids=new Set(list.map(a=>a.item)),weak=[...ids].filter(id=>!last.get(id).correct||last.get(id).hinted).length;return {id:unit.id,unit,practiced:ids.size,total:unitQuestions(unit).length,days:new Set(list.map(a=>studyDay(a.time))).size,weak,status:!ids.size?'new':weak?'weak':'practiced'};});
+ return lifeMemoryUnits.map(unit=>{const list=groups.get(unit.id)||[],ids=new Set(list.map(a=>a.item)),weak=[...ids].filter(id=>!last.get(id).correct||courseAnswerHinted(index,last.get(id))||courseAnswerUnknown(index,last.get(id))).length;return {id:unit.id,unit,practiced:ids.size,total:unitQuestions(unit).length,days:new Set(list.map(a=>studyDay(a.time))).size,weak,status:!ids.size?'new':weak?'weak':'practiced'};});
 }
 export function lifeProgressReport(state,time){
- const attempts=lifeHistory(state,time),first=new Map(),report=Object.fromEntries(['listening','productive','understanding'].map(key=>[key,{total:0,independent:0,hinted:0,ambiguous:0}]));
+ const index=courseIndex(state,time),attempts=lifeHistory(state,time),first=new Map(),report=Object.fromEntries(['listening','productive','understanding'].map(key=>[key,{total:0,independent:0,hinted:0,ambiguous:0}]));
  const collisions=new Map();for(const a of attempts){const key=a.item+':'+studyDay(a.time);if(!first.has(key))first.set(key,a);const stamp=a.item+':'+Date.parse(a.time);collisions.set(stamp,(collisions.get(stamp)||0)+1);}
  for(const a of first.values()){
   const q=questionById.get(a.item),key=q.dimension==='listening'?'listening':['cloze','order'].includes(q.kind)?'productive':'understanding',r=report[key];r.total++;
-  if(collisions.get(a.item+':'+Date.parse(a.time))>1){r.ambiguous++;continue;}if(a.hinted)r.hinted++;if(a.correct&&!a.hinted)r.independent++;
+  if(collisions.get(a.item+':'+Date.parse(a.time))>1){r.ambiguous++;continue;}if(courseAnswerHinted(index,a))r.hinted++;if(a.correct&&!courseAnswerHinted(index,a)&&!courseAnswerUnknown(index,a))r.independent++;
  }return report;
 }
 export function lifeNextStep(state,time){

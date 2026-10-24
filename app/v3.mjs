@@ -1,3 +1,7 @@
+import {courseHistoryView} from './ui/course-history.mjs';
+import {courseGoal} from './core/course-history-state.mjs';
+import {recordLifeExposure} from './core/life-memory-state.mjs';
+import {recordJlptExposure} from './core/jlpt-memory-state.mjs';
 import {studyDay} from './core/v3-state.mjs';
 import {kanaHistoryView} from './ui/kana-history.mjs';
 import {rhythmQuestion} from './content/kana-rhythm.mjs';
@@ -48,13 +52,14 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  }
  function currentQuestion(){const [name,sid]=route(),s=state().v3.sessions.find(s=>s.id===sid);if(name!=='v3-practice'||!s||s.completedAt)return null;const entry=s.queue[s.cursor],q=resolve(entry?.questionId);return q?{sid,cursor:s.cursor,q}:null;}
  function expose(s,q,time,shownItems=[],context={}){
+  if(courseGoal(q.id))return (courseGoal(q.id)==='L'?recordLifeExposure:recordJlptExposure)(s,[q.id],time,context);
   const rhythm=rhythmQuestion(q.id);if(!rhythm&&!kana.some(k=>k.id===q.reviewItem))return s;
   const items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[...new Set([q.reviewItem,...extraKanaExposure(q.id),...shownItems])];
   const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time,context):recordKanaExposure(s,items,time,context);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;
  }
  function prepareKanaCue(name,sid){
   const ui=local(),session=ctx().state.v3.sessions.find(s=>s.id===sid),entry=session?.queue[session.cursor],q=resolve(entry?.questionId),answer=entry?.repeat?session?.corrections[session.cursor]:session?.answers[entry?.questionId];
-  const needed=name==='v3-practice'&&session&&!session.completedAt&&q&&(rhythmQuestion(q.id)||kana.some(k=>k.id===q.reviewItem))&&(answer||session.hints.includes(q.id));
+  const needed=name==='v3-practice'&&session&&!session.completedAt&&q&&(courseGoal(q.id)||rhythmQuestion(q.id)||kana.some(k=>k.id===q.reviewItem))&&(answer||session.hints.includes(q.id));
   const key=needed?routeEpoch+':'+sid+':'+session.cursor+':'+studyDay(now())+':'+(answer?'feedback':'hint'):null;
   if(ui.kanaCueKey!==key){ui.kanaCueKey=key;ui.kanaCueReady=false;ui.kanaFeedbackError=null;ui.kanaCueBusy=null;}
   ui.kanaFeedbackPending=Boolean(needed&&!ui.kanaCueReady);return {ui,session,entry,q,answer,key};
@@ -153,7 +158,7 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  document.addEventListener('pointerdown',pointerDown);document.addEventListener('compositionstart',compositionStart);document.addEventListener('compositionend',compositionEnd);
  document.addEventListener('click',click);document.addEventListener('input',input);document.addEventListener('change',change);
  return {
-  views:{'kana-history':param=>kanaHistoryView(ctx(),param,now()),home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:filter=>weaknessesView(ctx(),now(),filter),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
+  views:{'course-history':param=>courseHistoryView(ctx(),param,now()),'kana-history':param=>kanaHistoryView(ctx(),param,now()),home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:filter=>weaknessesView(ctx(),now(),filter),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
   afterRender,
   onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){routeEpoch++;composingInput=null;compositionSubmitBlocked=false;ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}prepareKanaCue(name,param);},
   validateCatalog(s){

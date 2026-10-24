@@ -32,7 +32,7 @@ test('week answers include recent seven-day references and whole pending interva
  let s=beginV3Session(initialState(),[qid],{id:'week',time:today,source:'life-week',reference:'2026-10-23'});s=recordLifeExposure(s,[qid],'2026-10-20T02:00:00.000Z');s=answerV3Session(s,{sessionId:'week',question:questionById.get(qid),value:0,eventId:'a',time:today});assert(s.v3.sessions[0].answers[qid].hinted);
 });
 test('earlier imported week references reject conflicting independent first answers before storage, keeping original export legal',()=>{
- let s=startLifeWeek(add(initialState()),{id:'week',time:today});s=finish(s,'week',today);const first=structuredClone(s),b=recordLifeExposure(initialState(),[qid],'2026-10-20T02:00:00.000Z');assert.throws(()=>mergeStates(s,b),/生活提示/);assert.throws(()=>recordLifeExposure(s,[qid],'2026-10-20T02:00:00.000Z'),/生活提示/);assert.deepEqual(s,first);assert.deepEqual(parseBackup(exportBackup(s)),s);
+ let s=startLifeWeek(add(initialState()),{id:'week',time:today});s=finish(s,'week',today);delete s.v3.courseHistory;const first=structuredClone(s),b=recordLifeExposure(initialState(),[qid],'2026-10-20T02:00:00.000Z');assert.throws(()=>mergeStates(s,b),/生活提示/);assert.throws(()=>recordLifeExposure(s,[qid],'2026-10-20T02:00:00.000Z'),/生活提示/);assert.deepEqual(s,first);assert.deepEqual(parseBackup(exportBackup(s)),s);
 });
 test('weekly report requires a real seven-day earlier record and excludes intervening attempts, overlap and hints',()=>{
  let s=finish(startLifeWeek(add(initialState()),{id:'week',time:today}),'week',today);assert.equal(lifeCheckReport(s,'week').comparable,1);assert.equal(lifeCheckReport(s,'week').retained,1);

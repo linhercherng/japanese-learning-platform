@@ -1,3 +1,4 @@
+import {courseIndex,courseLastCue,courseAnswerHinted,courseAnswerUnknown,courseCueSeen} from './course-history-state.mjs';
 import {questionById} from '../content/catalog.mjs';
 import {isLifeSource} from '../content/life-memory-ids.mjs';
 import {lifeHistory,pendingLife} from './life-memory.mjs';
@@ -7,9 +8,9 @@ import {studyDay} from './v3-state.mjs';
 const ordinal=time=>Date.parse(studyDay(time))/86400000;
 const dayLabel=n=>new Date(n*86400000).toISOString().slice(0,10);
 function snapshot(state,time){
- const attempts=lifeHistory(state,time),last=new Map(attempts.map(a=>[a.item,a])),reviews=recordAnswers(initialState(),attempts).reviews;
+ const index=courseIndex(state,time),attempts=lifeHistory(state,time),last=new Map(attempts.map(a=>[a.item,a])),reviews=recordAnswers(initialState(),attempts).reviews;
  return [...last.values()].map(a=>{
-  const hints=(state.v3.lifeHints?.[a.item]||[]).filter(t=>Date.parse(t)<=Date.parse(time)),lastHint=hints.length?Math.max(...hints.map(ordinal)):-Infinity;
+  const lastCue=courseLastCue(index,a.item),lastHint=Number.isFinite(lastCue)?ordinal(lastCue):-Infinity;
   return {q:questionById.get(a.item),a,checkDay:ordinal(a.time)+1,weekDay:Math.max(ordinal(a.time),lastHint)+7,due:Date.parse(reviews[a.item+':'+a.dimension].due)<=Date.parse(time)};
  });
 }

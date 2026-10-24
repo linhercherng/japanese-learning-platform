@@ -23,7 +23,7 @@ function storeLifeTextDraft(state,ref,text,time,keyFor){const p=parseLifeDictati
 export const storeLifeDictationDraft=(state,ref,text,time)=>storeLifeTextDraft(state,ref,text,time,lifeDictationKey);
 export const storeLifeRecallDraft=(state,ref,text,time)=>storeLifeTextDraft(state,ref,text,time,lifeRecallKey);
 export const storeLifeBlankDraft=(state,ref,text,time,recall=false)=>storeLifeTextDraft(state,ref,text,time,r=>lifeBlankKey(r,recall));
-export function exposeLifeDictation(state,ref,time){const p=parseLifeDictationRef(ref);return !p||pendingLife(state)?state:recordLifeExposure(state,unitQuestions(unitById.get(p.unitId)).map(q=>q.id),time);}
+export function exposeLifeDictation(state,ref,time){const p=parseLifeDictationRef(ref);return !p||pendingLife(state)?state:recordLifeExposure(state,unitQuestions(unitById.get(p.unitId)).map(q=>q.id),time,{kind:'reference',ref:'life:text:'+p.reference});}
 // Exact Unicode sequences only: differences are guidance, never a language grade.
 export function compareLifeText(own,original){if(typeof own!=='string'||typeof original!=='string'||own.length>300||original.length>300)throw Error('對照文字請限制在 300 字內。');const a=Array.from(own),b=Array.from(original),w=b.length+1,table=new Uint16Array((a.length+1)*w);
  for(let i=a.length-1;i>=0;i--)for(let j=b.length-1;j>=0;j--)table[i*w+j]=a[i]===b[j]?1+table[(i+1)*w+j+1]:Math.max(table[(i+1)*w+j],table[i*w+j+1]);

@@ -1,5 +1,7 @@
 # 日和｜日語學習平台
 
+v0.41.0 新增[生活與 N5～N2 提示時間線](https://linhercherng.github.io/japanese-learning-platform/#course-history)：答前提示、答後回饋與參考分開，跨日／七日與原輪小結依可追溯事件分析；原首答、續作及草稿保留，舊階段不明仍待確認。回饋與專屬參考音訊先保存再揭示／播放，失敗保留重試。見[完整規劃](docs/course-hint-history.md)、[驗收](docs/course-hint-history-validation.md)。
+
 v0.40.0 完善[五十音提示與回饋時間線](https://linhercherng.github.io/japanese-learning-platform/#kana-history)：答前提示、答後回饋、後續參考與新首答檢查點分開保存，跨日／七日分析不再被最後提示覆蓋；回饋先保存再揭開，原首答與草稿保留。舊歷史不足仍待確認。見[完整規劃](docs/kana-hint-history.md)、[驗收](docs/kana-hint-history-validation.md)。
 
 v0.39.0 新增[六區每週回顧](https://linhercherng.github.io/japanese-learning-platform/#weekly)與[記憶及弱點明細](https://linhercherng.github.io/japanese-learning-platform/#weaknesses)：近七日活動、各能力及累積記憶證據分開；按學習區／狀態篩選並接原練習。一次答對、跨日／七日想起、提示與紀錄不足分開，不把同日訂正當掌握。查看報表唯讀，原首答、草稿、作品與備份保持。見[完整規劃](docs/unified-weekly-review.md)、[驗收](docs/unified-weekly-validation.md)。
