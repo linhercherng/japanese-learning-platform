@@ -20,4 +20,15 @@
 
 ## 發布驗證
 
-新增54項，全站882／882通過；最終build→check與audit通過（0弱點），208字卡／508筆順／10947音訊索引／176生活字串檢查通過。178 shell檔 fingerprint `f8c215a0e07b3e78f34aa308ef48591b64fd873b3c33d9df6623f2dea8a550e1`；本機逐檔SHA256、JS MIME、SW與10原音HTTP抽樣全通過，0重試。正式Pages與升級後資料驗收待補，未完成前不宣稱已發布。
+新增54項，全站882／882通過；最終build→check與audit通過（0弱點），208字卡／508筆順／10947音訊索引／176生活字串檢查通過。178 shell檔 fingerprint `f8c215a0e07b3e78f34aa308ef48591b64fd873b3c33d9df6623f2dea8a550e1`；本機逐檔SHA256、JS MIME、SW與10原音HTTP抽樣全通過（最終本機1次重試）。
+
+
+PR [#53](https://github.com/linhercherng/japanese-learning-platform/pull/53) 最終head `34c9fcc39a1ef34a6fc03dc3f4ba3dce023183b6`，CI [40044162896](https://github.com/linhercherng/japanese-learning-platform/actions/runs/40044162896) build success、PR deploy依規則略過。UTC00:18:31合併為 `689e7a787b235c44d7241b150cb9ce384bf384dd`，tree與已測head一致。Pages [40044324634](https://github.com/linhercherng/japanese-learning-platform/actions/runs/40044324634) 同merge SHA的build／deploy／整體success，deploy於UTC00:19:54完成。
+
+正式URL https://linhercherng.github.io/japanese-learning-platform/ ，UTC00:20:40經PowerShell預設TLS驗178 shell逐檔SHA256／JS MIME／SW與10原音HTTP抽樣通過，1次暫時錯誤重試後成功，fingerprint與本機f8c215a0一致（work/kana-history-public-http.json）。此為音訊抽樣，非全量真人審音。
+
+正常PWA先仍用舊完整shell，等待新shell自然下載並暫離舊頁後，正式kana-history顯示新五類時間線；未清DB／cache／SW。正常僅1舊提示、QA63舊提示，無新首答檢查點，不替舊答案補造證據。weekly新增分類摘要與時間線入口；正常原pending連0e1aef73-23a9-4da6-a47f-d8f7f7acfec5，QA連909b78fa-54ee-48a8-b9e0-8ebaa3502d02，未進入個人原題或提交測試答案。
+
+正式時間線翻頁第2／4頁、單字深連結、weekly與weaknesses通過；五寬三頁共15組無橫溢、每頁單一h1、所有可見主內容控制至少44px。console warn/error空。正常及QA由UI匯出升級後備份，parseBackup整份state分別與before深比較完全一致：正常1作答／1輪／0草稿，QA45作答／28輪／10草稿，連optional事件簿都未因唯讀而持久化。ignored證據work/kana-history-normal-before.json／after、kana-history-public-qa-before.json／after與public-layouts.json。
+
+正式截圖work/kana-history-public.png及390px版；已恢復預設viewport，保留正式時間線頁。本機18127驗收server停止，未清學習資料。最後僅[skip ci]補推文件；正式部署仍為上述已驗證merge SHA，文件main與遠端另核對一致。實機OS、教師與長期學習效果仍待外部證據；回退先保留新版完整備份。

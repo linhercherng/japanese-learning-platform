@@ -37,6 +37,6 @@ Create app/ui/kana-history.mjs、tests/kana-history-ui.test.mjs；modify unified
 - [x] 同步README／規格／課綱／畫面／來源／roadmap，v0.40.0完整規劃與驗收。
 - [x] 獨立唯讀核心／整合審查；全站test→build→check、audit。
 - [x] 本機隔離QA新提示／答題／回饋／時間線、舊備份與原答案保持、五寬／Tab／console、HTTP SHA；正式前後正常與QA備份。
-- [ ] PR同head CI→merge→Pages→正式HTTP／PWA自然更新／實際畫面與資料比對，截圖、文件推送／遠端一致、恢復viewport／停server。
+- [x] PR同head CI→merge→Pages→正式HTTP／PWA自然更新／實際畫面與資料比對，截圖、文件推送／遠端一致、恢復viewport／停server。
 
 不清DB／cache／SW，不以瀏覽器注入虛構跨日進度。實機OS操作、教師／真人審音與長期學習成效仍待外部證據；回退前先匯出備份。
