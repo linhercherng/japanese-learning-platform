@@ -19,7 +19,7 @@ export function createKanaNotebook({getContext,update,render,toast,now,cacheDraf
  function end(){composing=false;}
  function afterRender(name,item){
   if(name!=='kana-notes'||item)return;const c=getContext(),items=notebookExposure(notebookPage(c.state,c.session.kanaNotebook));if(!items.length)return;
-  const time=now();update(s=>{const next=recordKanaExposure(s,items,time);for(const id of items){const d=readDictation(next,id);if(d)cacheDraft(d.key,next.drafts[d.key]);}return next;}).catch(error=>toast(error.message));
+  const time=now();update(s=>{const next=recordKanaExposure(s,items,time,{kind:'reference',ref:'kana-notebook'});for(const id of items){const d=readDictation(next,id);if(d)cacheDraft(d.key,next.drafts[d.key]);}return next;}).catch(error=>toast(error.message));
  }
  const events={submit,click,compositionstart:start,compositionend:end};for(const [name,fn] of Object.entries(events))document.addEventListener(name,fn);
  return {afterRender,dispose(){for(const [name,fn] of Object.entries(events))document.removeEventListener(name,fn);}};

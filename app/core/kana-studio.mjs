@@ -1,3 +1,4 @@
+import {appendKanaHistory} from './kana-history-state.mjs';
 import {kana} from '../content/kana.mjs';
 import {validateState,recordAnswer,saveArtifact} from './learning.mjs';
 import {studyDay} from './v3-state.mjs';
@@ -13,14 +14,15 @@ function markWeekHints(state,item,time){
 }
 export function setHintStage(state,item,stage,time,exposed=stage<3){
  validItem(item);requireValue(Number.isInteger(stage)&&stage>=0&&stage<=3,'提示階段不正確。');const next=structuredClone(state),old=next.v3.kanaHints?.[item];
- next.v3.kanaHints??={};next.v3.kanaHints[item]={stage,updatedAt:time,lastHintAt:exposed?time:old?.lastHintAt||null};
+ if(exposed)next.v3.kanaHistory=appendKanaHistory(next,[{item,time,kind:'hint',ref:'stage'}]);
+ next.v3.kanaHints??={};next.v3.kanaHints[item]={stage,updatedAt:time,lastHintAt:[old?.lastHintAt,exposed?time:null].filter(Boolean).sort((a,b)=>Date.parse(a)-Date.parse(b)).at(-1)||null};
  const active=readDictation(next,item);if(exposed&&active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}
  if(exposed)markWeekHints(next,item,time);
  return changed(next);
 }
-export function recordKanaExposure(state,items,time){
- const ids=[...new Set(items)];if(!ids.length)return state;ids.forEach(validItem);const next=structuredClone(state);next.v3.kanaHints??={};
- for(const item of ids){markWeekHints(next,item,time);const old=next.v3.kanaHints[item];next.v3.kanaHints[item]={stage:old?.stage??0,updatedAt:time,lastHintAt:time};const active=readDictation(next,item);if(active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}}
+export function recordKanaExposure(state,items,time,{kind='reference',ref='reference'}={}){
+ const ids=[...new Set(items)];if(!ids.length)return state;ids.forEach(validItem);const next=structuredClone(state);next.v3.kanaHistory=appendKanaHistory(next,ids.map(item=>({item,time,kind,ref})));next.v3.kanaHints??={};
+ for(const item of ids){markWeekHints(next,item,time);const old=next.v3.kanaHints[item];next.v3.kanaHints[item]={stage:old?.stage??0,updatedAt:time,lastHintAt:old?.lastHintAt&&Date.parse(old.lastHintAt)>Date.parse(time)?old.lastHintAt:time};const active=readDictation(next,item);if(active?.meta.stage==='writing'){next.drafts[active.key].text=JSON.stringify({...active.meta,hinted:true});next.drafts[active.key].time=time;}}
  return changed(next);
 }
 export function startDictation(state,{item,id,time}){
@@ -36,7 +38,7 @@ export function updateDictationPoints(state,item,points,time){
 }
 export function revealDictationHint(state,item,time){
  const active=readDictation(state,item);requireValue(active?.meta.stage==='writing','本輪已鎖定，請使用對照區。');
- return store(recordKanaExposure(state,[item],time),item,{...active.meta,hinted:true},active.points,time);
+ return store(recordKanaExposure(state,[item],time,{kind:'hint',ref:'dictation:'+active.meta.id}),item,{...active.meta,hinted:true},active.points,time);
 }
 export function lockDictation(state,item,time){
  const active=readDictation(state,item);requireValue(active,'請先開始這輪默寫。');if(active.meta.stage==='locked')return state;

@@ -1,3 +1,5 @@
+import {studyDay} from './core/v3-state.mjs';
+import {kanaHistoryView} from './ui/kana-history.mjs';
 import {rhythmQuestion} from './content/kana-rhythm.mjs';
 import {rhythmCards,exposedRhythmItems} from './content/kana-focus.mjs';
 import {recordRhythmExposure} from './core/kana-rhythm.mjs';
@@ -45,21 +47,26 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
   local().order=[];location.hash=`v3-practice/${destination}`;
  }
  function currentQuestion(){const [name,sid]=route(),s=state().v3.sessions.find(s=>s.id===sid);if(name!=='v3-practice'||!s||s.completedAt)return null;const entry=s.queue[s.cursor],q=resolve(entry?.questionId);return q?{sid,cursor:s.cursor,q}:null;}
- function expose(s,q,time,shownItems=[]){
+ function expose(s,q,time,shownItems=[],context={}){
   const rhythm=rhythmQuestion(q.id);if(!rhythm&&!kana.some(k=>k.id===q.reviewItem))return s;
   const items=rhythm?exposedRhythmItems(rhythmCards.find(c=>c.id===rhythm.rhythmCard)):[...new Set([q.reviewItem,...extraKanaExposure(q.id),...shownItems])];
-  const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time):recordKanaExposure(s,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;
+  const next=rhythm?recordRhythmExposure(s,rhythm.rhythmCard,time,context):recordKanaExposure(s,items,time,context);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;
+ }
+ function prepareKanaCue(name,sid){
+  const ui=local(),session=ctx().state.v3.sessions.find(s=>s.id===sid),entry=session?.queue[session.cursor],q=resolve(entry?.questionId),answer=entry?.repeat?session?.corrections[session.cursor]:session?.answers[entry?.questionId];
+  const needed=name==='v3-practice'&&session&&!session.completedAt&&q&&(rhythmQuestion(q.id)||kana.some(k=>k.id===q.reviewItem))&&(answer||session.hints.includes(q.id));
+  const key=needed?routeEpoch+':'+sid+':'+session.cursor+':'+studyDay(now())+':'+(answer?'feedback':'hint'):null;
+  if(ui.kanaCueKey!==key){ui.kanaCueKey=key;ui.kanaCueReady=false;ui.kanaFeedbackError=null;ui.kanaCueBusy=null;}
+  ui.kanaFeedbackPending=Boolean(needed&&!ui.kanaCueReady);return {ui,session,entry,q,answer,key};
  }
  function afterRender(name,sid){
-  if(name!=='v3-practice')return;const session=ctx().state.v3.sessions.find(s=>s.id===sid);if(!session||session.completedAt)return;
-  const entry=session.queue[session.cursor],q=resolve(entry?.questionId),answer=entry?.repeat?session.corrections[session.cursor]:session.answers[entry?.questionId];
-  if(!q||!rhythmQuestion(q.id)&&!kana.some(k=>k.id===q.reviewItem)||!answer&&!session.hints.includes(q.id))return;
-  const time=new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString();
-  // Only the feedback and personal cue that this render actually showed count as exposure.
+  const {ui,session,q,answer,key}=prepareKanaCue(name,sid);if(!key||ui.kanaCueReady||ui.kanaFeedbackError||ui.kanaCueBusy===key)return;
+  const origin=location.hash,ticket=routeEpoch,time=!answer&&ui.kanaHintStamp?.key===key?ui.kanaHintStamp.time:new Date(Math.max(Date.parse(now()),answer?Date.parse(answer.time)+1:0)).toISOString();ui.kanaCueBusy=key;
   const shownText=['kana-pocket-listen','kana-contrast'].includes(session.source)?q.explanation+(ctx().state.v3.kanaNotes?.[q.reviewItem]?.text||''):'';
   const shownItems=kana.filter(k=>shownText.includes(k.glyph)).map(k=>k.id);
-  update(s=>expose(s,q,time,shownItems)).catch(error=>toast(error.message));
+  update(s=>expose(s,q,time,shownItems,{kind:answer?'feedback':'hint',ref:'v3:'+sid+':'+session.cursor})).then(()=>{if(disposed||routeEpoch!==ticket||location.hash!==origin||ui.kanaCueKey!==key)return;ui.kanaCueReady=true;ui.kanaFeedbackPending=false;ui.kanaCueBusy=null;render(false);}).catch(error=>{toast(error.message);if(disposed||routeEpoch!==ticket||location.hash!==origin||ui.kanaCueKey!==key)return;ui.kanaFeedbackError=error.message;ui.kanaCueBusy=null;render(false);});
  }
+
  async function submit(value){
   const snapshot=currentQuestion();if(!snapshot)return;const {sid,cursor,q}=snapshot,hash=location.hash,time=now(),eventId=id();
   await update(s=>{const current=s.v3.sessions.find(s=>s.id===sid);if(!current||current.completedAt||current.cursor!==cursor||current.queue[cursor].questionId!==q.id)throw new Error('題目已切換，請回答目前顯示的題目。');let next=answerV3Session(s,{sessionId:sid,question:q,value,eventId,time,variants:['kana-pocket-listen','kana-contrast'].includes(current.source)?[]:q.mode?kanaDrills:v3Questions});delete next.drafts[`text:${sid}`];return next;});
@@ -107,8 +114,9 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
    case 'adjust-plan':{const minutes=Number(document.querySelector('#v3-adjust')?.value);await update(s=>adjustDailyPlan(s,d.v3Plan,minutes,now(),{questions:v3Questions}));toast('已做的內容保留，剩下活動已調整。');break;}
    case 'submit-text':{const field=document.querySelector('#v3-answer'),value=field?.value.trim()||'';if(currentQuestion()?.q.id.startsWith('kt:')){if(composingInput===field||compositionSubmitBlocked){compositionSubmitBlocked=false;toast('先完成日文輸入法的選字，再提交。');return;}if(!value){toast('先輸入假名，再提交；需要幫忙可以使用提示。');return;}if(value.length>50){toast('這題最多輸入50字。');return;}}return submit(value);}
    case 'submit-order':return submit([...(local().order||[])]);
-   case 'next':return nextQuestion();
-   case 'hint':{const current=currentQuestion();if(!current)return;const time=now();await update(s=>{const active=s.v3.sessions.find(p=>p.id===current.sid);if(!active||active.completedAt||active.cursor!==current.cursor||(active.queue[active.cursor].repeat?active.corrections[active.cursor]:active.answers[current.q.id]))return s;const next=hintV3Question(s,current.sid,time);return ['kana-pocket-listen','kana-contrast'].includes(active.source)?next:expose(next,current.q,time);});break;}
+   case 'next':if(local().kanaFeedbackPending)throw Error('請先保存提示／回饋紀錄，原答案已保留。');return nextQuestion();
+   case 'retry-feedback':local().kanaFeedbackError=null;refresh(hash);break;
+   case 'hint':{const current=currentQuestion();if(!current)return;const time=now(),origin=location.hash,ticket=routeEpoch;await update(s=>{const active=s.v3.sessions.find(p=>p.id===current.sid);if(!active||active.completedAt||active.cursor!==current.cursor||(active.queue[active.cursor].repeat?active.corrections[active.cursor]:active.answers[current.q.id]))return s;const next=hintV3Question(s,current.sid,time);return ['kana-pocket-listen','kana-contrast'].includes(active.source)?next:expose(next,current.q,time,[],{kind:'hint',ref:'v3:'+current.sid+':'+current.cursor});});if(!disposed&&ticket===routeEpoch&&location.hash===origin){const {ui,key}=prepareKanaCue('v3-practice',current.sid);if(key)ui.kanaHintStamp={key,time};}break;}
    case 'concept-practice':{const qs=v3Questions.filter(q=>q.conceptId===d.v3Concept&&q.dimension===d.v3Dimension);return begin(qs,{source:'concept',reference:`${d.v3Concept}:${d.v3Dimension}`});}
    case 'confusion-practice':{const pair=confusionPairs.find(p=>p.id===d.v3Pair);if(!pair)throw new Error('找不到這組字');return begin(v3Questions.filter(q=>q.conceptId===pair.conceptId),{source:'confusion',reference:pair.id});}
    case 'deep-practice':{const u=deepLessons.find(u=>u.id===d.v3Unit);if(!u)throw new Error('找不到這一課');return begin(u.questionIds.map(resolve).filter(Boolean),{source:'lesson',reference:u.id});}
@@ -145,9 +153,9 @@ export function createV3({getState,getContext,update,toast,render,now,id,cacheDr
  document.addEventListener('pointerdown',pointerDown);document.addEventListener('compositionstart',compositionStart);document.addEventListener('compositionend',compositionEnd);
  document.addEventListener('click',click);document.addEventListener('input',input);document.addEventListener('change',change);
  return {
-  views:{home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:filter=>weaknessesView(ctx(),now(),filter),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
+  views:{'kana-history':param=>kanaHistoryView(ctx(),param,now()),home:()=>v3HomeView(ctx(),now()),'kana-memory':()=>kanaMemoryView(ctx()),daily:pid=>dailyView(ctx(),pid),'v3-practice':sid=>practiceV3View(ctx(),sid,resolve,now()),weaknesses:filter=>weaknessesView(ctx(),now(),filter),confusion:pair=>confusionView(ctx(),pair),deep:unit=>deepView(ctx(),unit),weekly:()=>weeklyView(ctx(),now()),revise:artifact=>reviseView(ctx(),artifact),profile:()=>profileV3Extras(ctx())+profileView(ctx())},
   afterRender,
-  onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){routeEpoch++;composingInput=null;compositionSubmitBlocked=false;ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}},
+  onRoute(name,param){const ui=local(),key=`${name}/${param||''}`;if(ui.route!==key){routeEpoch++;composingInput=null;compositionSubmitBlocked=false;ui.order=name==='v3-practice'?savedOrder(param):[];if(name==='deep'){ui.deepUnit=param;const completed=state().v3.lessonSteps[param]||{};ui.deepIndex=Math.min(5,[0,1,2,3,4,5].find(i=>!completed[i])??5);}ui.route=key;}prepareKanaCue(name,param);},
   validateCatalog(s){
    const conceptIds=new Set(concepts.map(c=>c.id)),unitIds=new Set(units.map(u=>u.id)),deepIds=new Set(deepLessons.map(u=>u.id)),pairIds=new Set(confusionPairs.map(p=>p.id));
    for(const p of s.v3.dailyPlans){if(!unitIds.has(p.unitId)||p.conceptIds.some(cid=>!conceptIds.has(cid))||(p.newConceptIds||[]).some(cid=>!conceptIds.has(cid))||p.steps.some(step=>step.questionIds.some(qid=>!resolve(qid))))throw new Error('備份包含未知每日教材');}

@@ -74,3 +74,6 @@
 :is([data-screen="weekly"],[data-screen="weaknesses"]) :is(a,button,summary){scroll-margin-top:calc(var(--location-height,100px) + 24px);scroll-margin-bottom:100px}
 :is([data-screen="weekly"],[data-screen="weaknesses"]) :is(a,button,summary):focus-visible{outline:3px solid var(--red);outline-offset:3px}
 @media(min-width:1024px){.unified-review-tracks,.unified-review-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.kana-history-counts{list-style:none;padding:0}.kana-history-counts li{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0;border-bottom:1px solid var(--line);line-height:1.8}.kana-history-list{list-style:none;padding:0;display:grid;gap:1rem}.kana-history-list li{display:grid;gap:.5rem;min-width:0;padding:1.2rem;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow-wrap:anywhere;line-height:1.8}.kana-history-list time{font-size:.85rem;color:var(--muted)}.kana-history-list .text-button{justify-self:start;min-height:48px;box-sizing:border-box}
+[data-screen="kana-history"] :is(a,summary){scroll-margin-top:calc(var(--location-height,100px) + 24px);scroll-margin-bottom:100px}[data-screen="kana-history"] :is(a,summary):focus-visible{outline:3px solid var(--red);outline-offset:3px}

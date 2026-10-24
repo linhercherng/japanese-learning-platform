@@ -43,7 +43,7 @@ export function createKanaPocketReview({getContext,update,render,toast,now,cache
   // Freeze only text actually shown by this render, even if the learner navigates while saving.
   const pair=pocketContrast(entry),contrast=pair&&ui.contrast;if(contrast&&ui.covered)return;
   const items=contrast?contrastCueItems(pair):reviewCueItems(entry,ui.revealed,ctx.state.v3.kanaNotes?.[entry.item]?.text||''),time=now();
-  update(s=>{const next=recordKanaExposure(s,items,time);for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));
+  update(s=>{const next=recordKanaExposure(s,items,time,{kind:'reference',ref:'kana-pocket-review'});for(const item of items){const draft=readDictation(next,item);if(draft)cacheDraft(draft.key,next.drafts[draft.key]);}return next;}).catch(error=>toast(error.message));
  }
  document.addEventListener('click',click);document.addEventListener('change',change);
  return {views:{'kana-pocket-review':id=>pocketReviewView(getContext(),id)},afterRender,dispose(){document.removeEventListener('click',click);document.removeEventListener('change',change);}};

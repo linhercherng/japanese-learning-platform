@@ -32,6 +32,7 @@ export function questionView(q,{answer=null,order=[],exam=false,seed='practice',
 }
 export function practiceView(ctx,time=new Date().toISOString()){
  const p=ctx.state.practice;if(!p)return `${heading('選一課，開始回想。','已提交的作答會保留；這次尚未開始練習。')}${primary('選擇課程','courses')}`;
+ if(ctx.session.v2KanaFeedbackPending)return `${heading('先保存提示與回饋紀錄。','已提交的首答保留，紀錄保存後再顯示參考。')}<p role="status">${ctx.session.v2KanaFeedbackError?'紀錄尚未保存：'+e(ctx.session.v2KanaFeedbackError):'正在保存，請稍候。'}</p><button class="primary" data-study-action="retry-feedback">重試保存並顯示回饋</button>${primary('備份已保存的進度','profile')}`;
  const unit=unitById.get(p.unitId),questions=ctx.practiceQuestions||[];
  if(p.index>=p.questionIds.length){const report=practiceReport(p);return `${heading('想過一次，記得更牢。','完成練習後，再把學到的放進自己的句子。')}<section class="hero"><span class="eyebrow">THIS RECALL SESSION</span><h2>${report.correct} / ${report.total} 無提示首答正確</h2><p>${report.hinted} 題使用提示。答錯與提示項目進入到期複習。</p>${primary('查看錯題與複習','review')}</section>${primary('回首頁，看今日路線','home')}${unit?`<div class="lesson-footer"><a class="primary" href="#study/${unit.id}" data-open-writing>回到這一課，寫自己的句子 ${icon('arrow')}</a></div>`:primary('回到練習','practice-hub')}`;}
  const q=questions.find(q=>q.id===p.questionIds[p.index]);if(!q)return `${heading('這次練習的題目需要更新。','原作答仍在，請回課程重開一輪。')}${primary('回到課程','courses')}`;

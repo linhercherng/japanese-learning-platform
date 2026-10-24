@@ -1,3 +1,4 @@
+import {kanaEvents,legacyKanaUnknown} from './kana-history-state.mjs';
 import {kana} from '../content/kana.mjs';
 import {resolveLearningQuestion,unitById} from '../content/catalog.mjs';
 import {lifeQuestionUnits,lifeAbility} from '../content/life-memory-ids.mjs';
@@ -30,7 +31,7 @@ export function unifiedReview(state,time,quiz=null){
   if(meta.goal!=='K')expose(a.item,a.time);
   const key=a.item+':'+a.dimension;if(!histories.has(key))histories.set(key,{meta,list:[]});histories.get(key).list.push(a);
  }
- for(const [item,h] of Object.entries(state.v3.kanaHints||{}))expose(item,h.lastHintAt);
+ const kanaTimeline=kanaEvents(state,null,time);for(const event of kanaTimeline)if(event.kind!=='answer')expose(event.item,event.time);
  for(const key of ['lifeHints','jlptHints'])for(const [item,times] of Object.entries(state.v3[key]||{}))for(const t of times)expose(item,t);
  // Saved comparison/correction records can expose a different kana without scoring it.
  for(const s of state.v3.sessions){
@@ -46,9 +47,10 @@ export function unifiedReview(state,time,quiz=null){
   list.sort((a,b)=>stamp(a.time)-stamp(b.time)||a.id.localeCompare(b.id));
   const track=tracks.find(t=>t.goal===meta.goal),first=new Map(),ties=new Map();
   for(const a of list){const day=studyDay(a.time);if(!first.has(day))first.set(day,a);ties.set(stamp(a.time),(ties.get(stamp(a.time))||0)+1);if(inWeek(a.time)){track.week.answers++;week.answers++;days.add(day);}}
-  const hint=state.v3.kanaHints?.[list[0].item]?.lastHintAt,missingHintHistory=a=>meta.goal==='K'&&hint&&visible(hint)&&stamp(hint)>stamp(a.time);
+  const timeline=kanaTimeline.filter(e=>e.item===list[0].item),missingHintHistory=a=>meta.goal==='K'&&legacyKanaUnknown(state,a,time,timeline);
+  const effectiveHint=a=>a.hinted||meta.goal==='K'&&timeline.some(e=>e.kind!=='answer'&&stamp(e.time)<=stamp(a.time)&&studyDay(e.time)===studyDay(a.time));
   const proof=a=>{
-   if(!a.correct||a.hinted||ties.get(stamp(a.time))!==1||missingHintHistory(a))return null;
+   if(!a.correct||effectiveHint(a)||ties.get(stamp(a.time))!==1||missingHintHistory(a))return null;
    const prior=list.filter(p=>stamp(p.time)<stamp(a.time)).at(-1);if(!prior||studyDay(prior.time)===studyDay(a.time))return null;
    const cues=(exposures.get(a.item)||[]).filter(t=>t<stamp(a.time));
    if((exposures.get(a.item)||[]).filter(t=>t===stamp(a.time)).length!==1)return null;
@@ -56,12 +58,12 @@ export function unifiedReview(state,time,quiz=null){
    return gap>=1?{time:a.time,days:gap}:null;
   };
   for(const a of first.values())if(inWeek(a.time)){
-   for(const target of [week,track.week]){target.dailyFirst++;if(ties.get(stamp(a.time))>1)target.ambiguous++;else{if(a.hinted)target.hinted++;if(a.correct&&!a.hinted){target.independent++;if(missingHintHistory(a))target.uncertainHistory++;}const p=proof(a);if(p){target.retained++;if(p.days>=7)target.week++;}}}
+   for(const target of [week,track.week]){target.dailyFirst++;if(ties.get(stamp(a.time))>1)target.ambiguous++;else{if(effectiveHint(a))target.hinted++;if(a.correct&&!effectiveHint(a)){target.independent++;if(missingHintHistory(a))target.uncertainHistory++;}const p=proof(a);if(p){target.retained++;if(p.days>=7)target.week++;}}}
   }
   const last=list.at(-1),daily=first.get(studyDay(last.time)),ambiguous=ties.get(stamp(last.time))>1||ties.get(stamp(daily.time))>1;
   const cues=exposures.get(last.item)||[],lastCueAt=cues.length?new Date(Math.max(...cues)).toISOString():null,p=proof(daily),missing=missingHintHistory(daily);
-  const status=ambiguous?'uncertain':!last.correct||last.hinted||!daily.correct||daily.hinted?'review':missing?'uncertain':p?(p.days>=7?'week':'retained'):'waiting';
-  const item={...meta,item:last.item,dimension:last.dimension,abilityLabel:labels[meta.ability]||meta.ability,status,label:memoryStatusLabels[status],reason:ambiguous?'同一時間有多筆答案，需另一次清楚的首答確認。':missing?'舊五十音提示歷史只存最後時間，無法確認答前是否看過線索；先保留原首答，再於原練習確認。':null,lastCueAt,lastAt:last.time,firstAt:daily.time,days:first.size,total:list.length,proof:status==='retained'||status==='week'?p:null};
+  const status=ambiguous?'uncertain':!last.correct||effectiveHint(last)||!daily.correct||effectiveHint(daily)?'review':missing?'uncertain':p?(p.days>=7?'week':'retained'):'waiting';
+  const item={...meta,item:last.item,dimension:last.dimension,abilityLabel:labels[meta.ability]||meta.ability,status,label:memoryStatusLabels[status],history:meta.goal==='K'?Object.fromEntries(['hint','feedback','reference','legacy','answer'].map(kind=>[kind,timeline.filter(e=>e.kind===kind).length])):null,reason:ambiguous?'同一時間有多筆答案，需另一次清楚的首答確認。':missing?'舊五十音提示歷史只存最後時間，無法確認答前是否看過線索；先保留原首答，再於原練習確認。':null,lastCueAt,lastAt:last.time,firstAt:daily.time,days:first.size,total:list.length,proof:status==='retained'||status==='week'?p:null};
   track.items.push(item);track.current[status]++;track.current.total++;if(['week','retained'].includes(status))track.current.remembered++;
  }
  for(const t of tracks){
@@ -70,5 +72,5 @@ export function unifiedReview(state,time,quiz=null){
   for(const ability of [...new Set(t.items.map(r=>r.ability))]){const rows=t.items.filter(r=>r.ability===ability);t.abilities.push({ability,label:labels[ability]||ability,total:rows.length,remembered:rows.filter(r=>['retained','week'].includes(r.status)).length,review:rows.filter(r=>['review','uncertain'].includes(r.status)).length,waiting:rows.filter(r=>r.status==='waiting').length});}
  }
  week.studyDays=days.size;
- return {start,end,week,tracks,separate,main:route.main,pending:route.pending};
+ return {start,end,week,tracks,separate,main:route.main,pending:route.pending,kanaHistory:Object.fromEntries(['hint','feedback','reference','legacy','answer'].map(kind=>[kind,kanaTimeline.filter(e=>e.kind===kind&&inWeek(e.time)).length]))};
 }

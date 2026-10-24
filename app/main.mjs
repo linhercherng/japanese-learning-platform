@@ -1,3 +1,7 @@
+import {lifeUnitIds} from './content/life-memory-ids.mjs';
+import {kanaCueSeen} from './core/kana-history-state.mjs';
+import {createKanaReference} from './kana-reference.mjs';
+import {recordKanaExposure} from './core/kana-studio.mjs';
 import {createJlptMemory} from './jlpt-memory.mjs';
 import {jlptUnitMeta} from './content/jlpt-memory-ids.mjs';
 import {createLifeWorkspace} from './life-workspace.mjs';
@@ -89,6 +93,7 @@ function update(fn){
  const completed=operation.finally(()=>{pendingWrites--;if(!pendingWrites&&!unsaved)status.textContent=db?'已保存至本機':'目前無法保存';});queue=completed.catch(error=>toast(error.message));return completed;
 }
 function route(){const [name='home',param]=location.hash.slice(1).split('/');return {name:name||'home',param};}
+const kanaReference=createKanaReference({getContext:context,update,now,toast});
 function render(focus=true){
  kanaStudio.beforeRender();
  canvas?.dispose();canvas=null;animationSequence++;document.getAnimations().forEach(a=>a.cancel());
@@ -135,6 +140,7 @@ function render(focus=true){
   canvas=attachWriting(document.querySelector('#writing-canvas'),context().state.drafts[key]?.points||[],points=>{const draft={text:'',points,time:now()};session.latestDrafts[key]=draft;update(s=>{s.drafts[key]=draft;return s;}).catch(()=>{});});
  }
  jlptMemory.afterRender(name,param);lifeCards.afterRender(name,param);lifeReview.afterRender(name,param);lifeMemory.afterRender(name,param);kanaNotebook.afterRender(name,param);kanaStudio.afterRender(name,param);kanaLab.afterRender(name,param);kanaFocus.afterRender(name,param);kanaSixth.afterRender(name,param);kanaBridge.afterRender(name,param);kanaFamily.afterRender(name,param);kanaRow.afterRender(name,param);kanaPocketReview.afterRender(name,param);v2.afterRender(name,param);v3.afterRender(name,param);
+ kanaReference.afterRender(name);
  if(focus){window.scrollTo(0,0);main.focus({preventScroll:true});}
 }
 function phonologyQuestions(lessonId){return (kanaPhonology.find(p=>p.lessonId===lessonId)?.questions||[]).map((q,i)=>({item:`${lessonId}-p${i}`,dimension:'language',prompt:q.prompt,options:q.choices.map((label,j)=>({value:String(j),label})),correct:q.choices.indexOf(q.answer),explanation:q.explanation}));}
@@ -150,20 +156,28 @@ function quizView(){
  const quiz=session.quiz;if(!quiz)return `${heading('回到課程，接續回想。','已提交的作答會保留；重新整理後可回到單元，練尚未完成的項目。')}${primary('選擇五十音課','kana')}`;
  if(quiz.index>=quiz.questions.length){const correct=quiz.results.filter(r=>r.correct&&!r.hinted).length;return `${heading('這一小步，完成了。','答錯的與需要提示的項目，會安排到複習。')}<section class="hero"><span class="eyebrow">INDEPENDENT RECALL</span><h2>${correct} / ${quiz.questions.length} 無提示首次答對</h2><p>這是本次練習表現，長期熟練需要跨日回想。</p>${primary('看看複習安排','review')}</section><div class="lesson-footer">${primary('回到今日','home')}</div>`;}
  const q=quiz.questions[quiz.index];
- return `${back('回到課程','kana')}<div class="question-header"><span>${q.dimension==='listening'?'聽辨練習':q.dimension==='recognition'?'認字練習':'理解練習'}</span><span>${quiz.index+1} / ${quiz.questions.length}</span></div>${heading(q.prompt,'先自己想一次，再選答案。')}${q.glyph?`<div class="big-question jp" lang="ja">${e(q.glyph)}</div>`:''}${q.audio?`<div class="slow-audio">${audioButton(q.audio)}<button class="sound-button" data-audio="${e(q.audio)}" data-rate="0.75">慢一點聽</button></div>`:''}<div class="quiz-choices">${q.options.map((o,i)=>`<button data-quiz-answer="${i}" ${quiz.answered?'disabled':''}>${e(o.label)}</button>`).join('')}</div><button class="text-button" data-action="quiz-hint">需要一個提示</button><div id="quiz-feedback" aria-live="polite"></div><div class="lesson-footer"><button class="primary" data-action="quiz-next" ${quiz.answered?'':'disabled'}>下一題${icon('arrow')}</button></div>`;
+ return `${back('回到課程','kana')}<div class="question-header"><span>${q.dimension==='listening'?'聽辨練習':q.dimension==='recognition'?'認字練習':'理解練習'}</span><span>${quiz.index+1} / ${quiz.questions.length}</span></div>${heading(q.prompt,'先自己想一次，再選答案。')}${q.glyph?`<div class="big-question jp" lang="ja">${e(q.glyph)}</div>`:''}${q.audio?`<div class="slow-audio">${audioButton(q.audio)}<button class="sound-button" data-audio="${e(q.audio)}" data-rate="0.75">慢一點聽</button></div>`:''}<div class="quiz-choices">${q.options.map((o,i)=>`<button data-quiz-answer="${i}" ${quiz.answered?'disabled':''}>${e(o.label)}</button>`).join('')}</div><button class="text-button" data-action="quiz-hint">需要一個提示</button><div id="quiz-feedback" aria-live="polite">${quiz.answered&&!quiz.feedbackReady?'<p>首答已保存，回饋紀錄尚未保存。</p><button class="secondary" data-action="quiz-feedback">重試保存並顯示回饋</button>':''}</div><div class="lesson-footer"><button class="primary" data-action="quiz-next" ${quiz.answered&&quiz.feedbackReady?'':'disabled'}>下一題${icon('arrow')}</button></div>`;
 }
 async function submitQuiz(choice){
  const quiz=session.quiz;if(!quiz||quiz.answered)return;quiz.answered=true;const q=quiz.questions[quiz.index],correct=Number(choice)===Number(q.correct);
  const confusion=!correct?confusedKana({kind:'choice',correct:q.correct,options:q.options.map(o=>kana.find(k=>k.id===o.value)?.glyph||o.label)},Number(choice)):null;
- try{await update(s=>recordAnswer(s,{id:`${quiz.started}-${quiz.index}`,item:q.item,dimension:q.dimension,correct,hinted:quiz.hinted,time:now(),...(confusion?{kanaConfusion:confusion}:{})}));}
+ const time=now();
+ try{await update(s=>recordAnswer(s,{id:`${quiz.started}-${quiz.index}`,item:q.item,dimension:q.dimension,correct,hinted:quiz.hinted||kanaCueSeen(s,[q.item],time,time),time,...(confusion?{kanaConfusion:confusion}:{})}));}
  catch{quiz.answered=false;return;}
- quiz.results.push({correct,hinted:quiz.hinted});
+ quiz.hinted=state.attempts.find(a=>a.id===quiz.started+'-'+quiz.index)?.hinted||quiz.hinted;quiz.results.push({correct,hinted:quiz.hinted});
  if(session.quiz!==quiz||route().name!=='quiz')return;
- document.querySelectorAll('[data-quiz-answer]').forEach(b=>{b.disabled=true;if(Number(b.dataset.quizAnswer)===Number(q.correct))b.classList.add('selected');});
- const feedback=document.querySelector('#quiz-feedback'),nextButton=document.querySelector('[data-action="quiz-next"]');
- if(feedback)feedback.innerHTML=`<div class="feedback ${correct?'':'error'}">${correct?'想對了！':'再記住這個差異。'} ${e(q.explanation)}</div>`;if(nextButton)nextButton.disabled=false;
+ document.querySelectorAll('[data-quiz-answer]').forEach(b=>b.disabled=true);quiz.feedbackReady=false;await showQuizFeedback();
 }
-async function nextQuestion(){const q=session.quiz;if(!q?.answered)return;q.index++;q.answered=false;q.hinted=false;if(q.index>=q.questions.length&&q.lesson){const lesson=kanaLessons.find(l=>l.id===q.lesson);const allItems=lesson.items.every(item=>['recognition','listening'].every(d=>state.attempts.some(a=>a.item===item&&a.dimension===d)));const allPhonology=phonologyQuestions(q.lesson).every(p=>state.attempts.some(a=>a.item===p.item));if(allItems&&allPhonology)await update(s=>completeLesson(s,q.lesson,now()));}render(false);window.scrollTo(0,0);}
+async function showQuizFeedback(){
+ const quiz=session.quiz;if(!quiz?.answered)return;const q=quiz.questions[quiz.index],a=state.attempts.find(a=>a.id===quiz.started+'-'+quiz.index);if(!a)return;
+ try{if(kana.some(k=>k.id===q.item)){const time=new Date(Math.max(Date.parse(now()),Date.parse(a.time)+1)).toISOString();await update(s=>recordKanaExposure(s,[q.item],time,{kind:'feedback',ref:'v1:'+quiz.started+':'+quiz.index}));}}
+ catch(error){if(session.quiz===quiz&&route().name==='quiz'){const feedback=document.querySelector('#quiz-feedback');if(feedback)feedback.innerHTML='<p>首答已保存，回饋紀錄尚未保存。</p><button class="secondary" data-action="quiz-feedback">重試保存並顯示回饋</button>';}return;}
+ if(session.quiz!==quiz||route().name!=='quiz')return;quiz.feedbackReady=true;
+ document.querySelectorAll('[data-quiz-answer]').forEach(b=>{b.disabled=true;if(Number(b.dataset.quizAnswer)===Number(q.correct))b.classList.add('selected');});
+ const feedback=document.querySelector('#quiz-feedback'),nextButton=document.querySelector('[data-action="quiz-next"]');if(feedback)feedback.innerHTML=`<div class="feedback ${a.correct?'':'error'}">${a.correct?'想對了！':'再記住這個差異。'} ${e(q.explanation)}</div>`;if(nextButton)nextButton.disabled=false;
+}
+
+async function nextQuestion(){const q=session.quiz;if(!q?.answered||!q.feedbackReady)return;q.index++;q.answered=false;q.hinted=false;if(q.index>=q.questions.length&&q.lesson){const lesson=kanaLessons.find(l=>l.id===q.lesson);const allItems=lesson.items.every(item=>['recognition','listening'].every(d=>state.attempts.some(a=>a.item===item&&a.dimension===d)));const allPhonology=phonologyQuestions(q.lesson).every(p=>state.attempts.some(a=>a.item===p.item));if(allItems&&allPhonology)await update(s=>completeLesson(s,q.lesson,now()));}render(false);window.scrollTo(0,0);}
 async function startReview(){
  const due=dueReviews(state);if(!due.length){toast('今天沒有到期項目。');return;}
  await v2.startReview(due);
@@ -195,7 +209,7 @@ async function saveLife(lessonId){
 }
 function exportFile(){const blob=new Blob([exportBackup(context().state)],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`hiyori-backup-${new Date().toISOString().slice(0,10)}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('備份已匯出，包含進度、草稿與作品。');}
 function validateCatalog(s){
- const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...[...jlptUnitMeta.keys()].map(uid=>'JN-'+uid),...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
+ const known=knownItems,lessons=knownLessons,draftIds=new Set([...known,...[...lifeUnitIds].flatMap(id=>[`LN-${id}`,...[0,1,2].flatMap(slot=>[`LD-${id}:${slot}`,`LR-${id}:${slot}`,`LB-R-${id}:${slot}`,`LB-D-${id}:${slot}`])]),...[...jlptUnitMeta.keys()].map(uid=>'JN-'+uid),...kana.flatMap(k=>[`KS-${k.id}`,`KN-${k.id}`]),...s.v3.dailyPlans.map(p=>p.id),...s.v3.sessions.map(p=>p.id),...s.artifacts.filter(a=>a.kind==='text').map(a=>a.id)]);
  if(s.attempts.some(a=>!known.has(a.item))||s.artifacts.some(a=>!known.has(a.item))||Object.keys(s.completed).some(x=>!lessons.has(x))||!lessons.has(s.lastLesson)||Object.keys(s.drafts).some(k=>!draftIds.has(k.replace(/^(write|text):/,''))))throw new Error('備份含此版本不支援的教材項目。');
  lifeMemory.validateCatalog(s);v2.validateCatalog(s);
  v3.validateCatalog(s);kanaCoach.validateCatalog(s);kanaStudio.validateCatalog(s);kanaLab.validateCatalog(s);kanaRecall.validateCatalog(s);kanaFocus.validateCatalog(s);kanaSixth.validateCatalog(s);kanaBridge.validateCatalog(s);kanaFamily.validateCatalog(s);kanaRow.validateCatalog(s);
@@ -231,9 +245,9 @@ document.addEventListener('click',event=>{
   if(d.saveLife)await saveLife(d.saveLife);
   if(d.saveWriting)await saveWriting(d.saveWriting);
   if(d.strokeStep!==undefined)await animateStrokes(Number(d.strokeStep));
-  if(d.mode){session.guide=d.mode==='trace';const board=document.querySelector('#writing-board');board.classList.toggle('no-guide',!session.guide);board.classList.remove('compare');const item=allWritingItems.find(k=>k.id===route().param)||kana[0];document.querySelector('#writing-title').textContent=session.guide?`寫一次 ${item.glyph}，再回想。`:'先聽聲音，再自己寫。';document.querySelector('#writing-label').textContent=session.guide?`${item.glyph} · 字跡草稿自動保存`:'默寫草稿自動保存';document.querySelectorAll('[data-mode]').forEach(b=>{const active=(b.dataset.mode==='trace')===session.guide;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});}
+  if(d.mode){const hash=location.hash,writingItem=allWritingItems.find(k=>k.id===route().param)||kana[0];if(d.mode==='trace'&&kana.some(k=>k.id===writingItem.id))await kanaReference.prepare([writingItem.id],'writing:trace');if(location.hash!==hash)return;session.guide=d.mode==='trace';const board=document.querySelector('#writing-board');board.classList.toggle('no-guide',!session.guide);board.classList.remove('compare');const item=allWritingItems.find(k=>k.id===route().param)||kana[0];document.querySelector('#writing-title').textContent=session.guide?`寫一次 ${item.glyph}，再回想。`:'先聽聲音，再自己寫。';document.querySelector('#writing-label').textContent=session.guide?`${item.glyph} · 字跡草稿自動保存`:'默寫草稿自動保存';document.querySelectorAll('[data-mode]').forEach(b=>{const active=(b.dataset.mode==='trace')===session.guide;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});}
   if(d.deleteArtifact){await update(s=>{if(Object.values(s.v3.artifactParents).includes(d.deleteArtifact))throw new Error('這份原稿還有修改稿，請先移除修改稿再整理原稿。');const next={...s,artifacts:s.artifacts.filter(a=>a.id!==d.deleteArtifact),v3:{...s.v3,artifactParents:{...s.v3.artifactParents}}};delete next.v3.artifactParents[d.deleteArtifact];delete next.drafts[`text:${d.deleteArtifact}`];return next;});toast('作品已移除。其他進度保留，可由先前備份恢復。');render(false);}
-  const actions={undo:()=>canvas?.undo(),clear:()=>canvas?.clear(),compare:()=>{const board=document.querySelector('#writing-board');board.classList.toggle('compare');board.classList.toggle('no-guide',!board.classList.contains('compare')&&!session.guide);},'animate-strokes':()=>animateStrokes(),'start-review':startReview,'quiz-next':nextQuestion,'quiz-hint':()=>{if(!session.quiz?.answered){session.quiz.hinted=true;const q=session.quiz.questions[session.quiz.index];toast(q.explanation);}},'export-backup':exportFile,'import-backup':()=>document.querySelector('#backup-file').click(),'cancel-import':()=>{pendingImport=null;document.querySelector('#import-dialog').close();},'confirm-import':async()=>{if(!pendingImport)return;await update(s=>mergeStates(s,pendingImport));session.latestDrafts={};pendingImport=null;document.querySelector('#import-dialog').close();toast('備份已合併，既有紀錄保留。');render(false);},record:()=>media.toggleRecord(document.querySelector('#recording-playback'),button)};
+  const actions={undo:()=>canvas?.undo(),clear:()=>canvas?.clear(),compare:async()=>{const hash=location.hash,board=document.querySelector('#writing-board'),item=allWritingItems.find(k=>k.id===route().param)||kana[0];if(!board.classList.contains('compare')&&kana.some(k=>k.id===item.id))await kanaReference.prepare([item.id],'writing:compare');if(location.hash!==hash)return;board.classList.toggle('compare');board.classList.toggle('no-guide',!board.classList.contains('compare')&&!session.guide);},'animate-strokes':()=>animateStrokes(),'start-review':startReview,'quiz-next':nextQuestion,'quiz-feedback':showQuizFeedback,'quiz-hint':async()=>{const quiz=session.quiz;if(quiz&&!quiz.answered){const q=quiz.questions[quiz.index];if(kana.some(k=>k.id===q.item))await update(s=>recordKanaExposure(s,[q.item],now(),{kind:'hint',ref:'v1:'+quiz.started+':'+quiz.index}));if(session.quiz!==quiz||quiz.answered)return;quiz.hinted=true;toast(q.explanation);}},'export-backup':exportFile,'import-backup':()=>document.querySelector('#backup-file').click(),'cancel-import':()=>{pendingImport=null;document.querySelector('#import-dialog').close();},'confirm-import':async()=>{if(!pendingImport)return;await update(s=>mergeStates(s,pendingImport));session.latestDrafts={};pendingImport=null;document.querySelector('#import-dialog').close();toast('備份已合併，既有紀錄保留。');render(false);},record:()=>media.toggleRecord(document.querySelector('#recording-playback'),button)};
   if(actions[d.action])await actions[d.action]();
  };
  task().catch(error=>toast(error.message)).finally(()=>{if(locks&&button.isConnected)button.disabled=false;});

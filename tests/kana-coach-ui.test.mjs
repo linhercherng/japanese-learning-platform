@@ -46,7 +46,8 @@ test('learner can move from a map error through confusion practice, backup resto
  globalThis.location={get hash(){return hash;},set hash(value){hash=value.startsWith('#')?value:`#${value}`;}};
  globalThis.document={addEventListener:(n,fn)=>{const list=listeners.get(n)||[];list.push(fn);listeners.set(n,list);},removeEventListener:(n,fn)=>listeners.set(n,(listeners.get(n)||[]).filter(f=>f!==fn)),querySelector:selector=>selector==='#v3-answer'?{value:answerInput}:null};
  const options={getState:()=>c.state,getContext:()=>c,update:async fn=>{c.state=validateState(fn(structuredClone(c.state)));},render:()=>{},toast:m=>{throw new Error(m);},now:()=>clock,id:()=>`flow-${++counter}`,cacheDraft:()=>{}};
- const click=async dataset=>{const button={dataset,disabled:false,isConnected:true};for(const listener of listeners.get('click')||[])listener({target:{closest:()=>button}});await new Promise(r=>setImmediate(r));};
+ const settle=()=>new Promise(r=>setImmediate(r)),sync=()=>{const [name,param]=hash.slice(1).split('/');v3.onRoute(name,param);v3.afterRender?.(name,param);};
+ const click=async dataset=>{await settle();const button={dataset,disabled:false,isConnected:true};for(const listener of listeners.get('click')||[])listener({target:{closest:()=>button}});await settle();sync();await settle();};
  const active=()=>c.state.v3.sessions.find(s=>hash.endsWith(s.id));
  try{
   coach=createKanaCoach(options);v3=createV3(options);
