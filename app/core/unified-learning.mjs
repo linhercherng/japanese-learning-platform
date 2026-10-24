@@ -64,7 +64,7 @@ export function unifiedLearning(state,time,quiz=null,evidence=memoryEvidence(sta
  const tracks=learningTracks.map(([id,label,route])=>{
   const step=id==='K'?kanaNextStep(snapshot,time):id==='L'?lifeNextStep(snapshot,time):jlptNextStep(snapshot,id,time),kind=['done','finish'].includes(step.kind)?'rest':['resume','pending'].includes(step.kind)?'pending':step.kind;
   const memory=dailyMemory(state,id,time,{evidence}),review=['week','check','repair'].includes(memory.mode),waiting=['wait','clock'].includes(memory.mode),replacement=review||waiting;
-  const manual=id==='K'&&tracking.priority.some(r=>r.goal==='K'&&r.ability==='language'&&memoryTiming(r).next<=Date.parse(studyDay(time))/86400000)&&!review&&!waiting;
+  const manual=id==='K'&&tracking.priority.some(r=>r.goal==='K'&&r.ability==='language'&&memoryTiming(r).next<=Date.parse(studyDay(time))/86400000)&&!review&&memory.mode!=='clock';
   return {goal:id,label,overview:route,kind:manual?'focus':replacement?memory.mode==='clock'?'wait':memory.mode:['week','check','repair'].includes(kind)?'rest':kind,route:manual?'weekly-focus/K:language':review?'today-review/'+id+':'+memory.mode:waiting?memory.conflict?.route||'weaknesses/'+id+':all:1':step.route||(id==='L'?'life-map':route),title:manual?'回到七天重點，練詞音與拼寫':review?(memory.mode==='week'?'隔了七天，收起線索再想一次':memory.mode==='check'?'隔一段時間，再自己想一次':'先補強最需要幫忙的原題'):waiting?memory.conflict?'先確認裝置日期與原輪時間':'依記憶結果，留到下次再確認':step.title,detail:manual?'這是已追蹤、目前仍待鞏固的能力，回原工具少量練習。':replacement?dailyMemoryReason(memory)+(memory.focusPending?' 本輪優先尚待鞏固的七天重點。':''):step.detail||step.reason,...progress(snapshot,id),questions:review?memory.questionIds.length:0,memory:manual?{...memory,focusPending:1}:memory};
  });
  const ranks={week:0,check:1,repair:2,focus:3,pocket:4};

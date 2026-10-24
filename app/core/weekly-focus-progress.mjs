@@ -26,7 +26,7 @@ function progress(state,p,time,evidence){
  const counts={improved:0,maintained:0,review:0,confirm:0,waiting:0,unpracticed:0};
  const targets=p.targets.map(t=>{
   const key=focusTargetKey(t),before=baseline.get(key),r=current.get(key),valid=before&&before.lastAt===t.baselineAt&&original(state,t,p);
-  const attempts=state.attempts.filter(a=>a.item===t.item&&a.dimension===t.dimension&&stamp(a.time)>stamp(p.createdAt)&&stamp(a.time)<=stamp(cutoff)),unique=attempts.filter(a=>attempts.filter(b=>stamp(a.time)===stamp(b.time)).length===1),practiced=Boolean(valid&&unique.length),proof=practiced&&remembered(r)&&stamp(r.proof?.time)>stamp(p.createdAt);
+  const attempts=state.attempts.filter(a=>a.item===t.item&&a.dimension===t.dimension&&stamp(a.time)>stamp(p.createdAt)&&stamp(a.time)<=stamp(cutoff)),unique=attempts.filter(a=>attempts.filter(b=>stamp(a.time)===stamp(b.time)).length===1).sort((a,b)=>stamp(a.time)-stamp(b.time)),practiced=Boolean(valid&&unique.length),proof=practiced&&remembered(r)&&stamp(r.proof?.time)>stamp(p.createdAt);
   const status=!valid||!r||r.status==='uncertain'?'confirm':r.status==='review'?'review':proof?remembered(before)?'maintained':'improved':practiced?'waiting':'unpracticed';counts[status]++;
   return {...t,title:r?.title||before?.title||'原題紀錄待確認',abilityLabel:r?.abilityLabel||before?.abilityLabel||t.ability,route:r?.route||before?.route||'weekly',baselineStatus:before?.status||null,status,practiced,lastAt:unique.at(-1)?.time||null,proof:proof?{...r.proof}:null};
  });
