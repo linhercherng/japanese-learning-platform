@@ -11,6 +11,9 @@ const stamp=t=>Date.parse(t),ordinal=t=>Date.parse(studyDay(t))/86400000;
 const labels={recognition:'認字',listening:'聽辨',language:'詞音與拼寫',understanding:'理解',productive:'補字與重組',vocabulary:'語彙',kanji:'漢字',grammar:'文法',reading:'讀解'};
 const statuses=['review','uncertain','waiting','retained','week'];
 export const memoryStatusLabels={review:'需要再複習',uncertain:'紀錄待確認',waiting:'無提示答對，跨日待確認',retained:'已有跨日記憶證據',week:'已有七日記憶證據'};
+export const emptyRecent=()=>({dailyFirst:0,independent:0,hinted:0,wrong:0,needsHelp:0,ambiguous:0,uncertain:0,comparable:0,delayedFailed:0,retained:0,week:0});
+export const weeklyFocusScore=r=>(r.recent?.delayedFailed||0)*10+(r.recent?.needsHelp||0)*3+(r.recent?.uncertain||0);
+export function memoryTiming(r){const last=Math.max(stamp(r.lastAt),stamp(r.lastCueAt||r.lastAt)),base=ordinal(new Date(last).toISOString()),interval=r.status==='week'?7:r.status==='retained'?3:1;return {next:base+interval,week:base+7,interval};}
 function metadata(a){
  const k=kanaIndex.get(a.item);if(k&&['recognition','listening','language'].includes(a.dimension))return {goal:'K',unitId:null,title:`${k.script==='kata'?'片假名':'平假名'} · 字表第 ${k.index} 字`,ability:a.dimension,route:'kana-map/'+k.id};
  const q=resolveLearningQuestion(a.item);if(!q||q.dimension!==a.dimension||a.dimension==='writing')return null;
@@ -49,21 +52,25 @@ export function memoryEvidence(state,time){
   for(const a of list){const day=studyDay(a.time);if(!first.has(day))first.set(day,a);ties.set(stamp(a.time),(ties.get(stamp(a.time))||0)+1);if(inWeek(a.time)){track.week.answers++;week.answers++;days.add(day);}}
   const timeline=meta.goal==='K'?kanaTimeline.filter(e=>e.item===list[0].item):(courses.get(list[0].item)?.events||[]),missingHintHistory=a=>meta.goal==='K'?legacyKanaUnknown(state,a,time,timeline):courseAnswerUnknown(courses,a);
   const effectiveHint=a=>meta.goal==='K'?a.hinted||timeline.some(e=>e.kind!=='answer'&&stamp(e.time)<=stamp(a.time)&&studyDay(e.time)===studyDay(a.time)):courseAnswerHinted(courses,a);
-  const proof=a=>{
-   if(!a.correct||effectiveHint(a)||ties.get(stamp(a.time))!==1||missingHintHistory(a))return null;
+  const comparable=a=>{
+   if(effectiveHint(a)||ties.get(stamp(a.time))!==1||missingHintHistory(a))return null;
    const prior=list.filter(p=>stamp(p.time)<stamp(a.time)).at(-1);if(!prior||studyDay(prior.time)===studyDay(a.time))return null;
    const cues=(exposures.get(a.item)||[]).filter(t=>t<stamp(a.time));
    if((exposures.get(a.item)||[]).filter(t=>t===stamp(a.time)).length!==1)return null;
    const last=Math.max(stamp(prior.time),...cues),gap=ordinal(a.time)-ordinal(new Date(last).toISOString());
    return gap>=1?{time:a.time,days:gap}:null;
   };
+  const proof=a=>a.correct?comparable(a):null,recent=emptyRecent();
   for(const a of first.values())if(inWeek(a.time)){
+   recent.dailyFirst++;
+   if(ties.get(stamp(a.time))>1)recent.ambiguous++;
+   else{const hinted=effectiveHint(a),unknown=missingHintHistory(a),p=comparable(a);if(hinted)recent.hinted++;if(!a.correct)recent.wrong++;if(hinted||!a.correct)recent.needsHelp++;if(unknown)recent.uncertain++;if(a.correct&&!hinted&&!unknown)recent.independent++;if(p){recent.comparable++;if(a.correct){recent.retained++;if(p.days>=7)recent.week++;}else recent.delayedFailed++;}}
    for(const target of [week,track.week]){target.dailyFirst++;if(ties.get(stamp(a.time))>1)target.ambiguous++;else{if(effectiveHint(a))target.hinted++;if(a.correct&&!effectiveHint(a)){target.independent++;if(missingHintHistory(a))target.uncertainHistory++;}const p=proof(a);if(p){target.retained++;if(p.days>=7)target.week++;}}}
   }
   const last=list.at(-1),daily=first.get(studyDay(last.time)),ambiguous=ties.get(stamp(last.time))>1||ties.get(stamp(daily.time))>1;
   const cues=exposures.get(last.item)||[],lastCueAt=cues.length?new Date(Math.max(...cues)).toISOString():null,p=proof(daily),missing=missingHintHistory(daily);
   const status=ambiguous?'uncertain':!last.correct||effectiveHint(last)||!daily.correct||effectiveHint(daily)?'review':missing?'uncertain':p?(p.days>=7?'week':'retained'):'waiting';
-  const item={...meta,item:last.item,dimension:last.dimension,abilityLabel:labels[meta.ability]||meta.ability,status,label:memoryStatusLabels[status],history:Object.fromEntries(['hint','feedback','reference','legacy','answer'].map(kind=>[kind,timeline.filter(e=>e.kind===kind).length])),reason:ambiguous?'同一時間有多筆答案，需另一次清楚的首答確認。':missing?(meta.goal==='K'?'舊五十音提示歷史只存最後時間，無法確認答前是否看過線索；先保留原首答，再於原練習確認。':'舊生活與檢定參考只有每日合併時間，無法還原提示與回饋階段；原首答保持，另一次回想再確認。'):null,lastCueAt,lastAt:last.time,firstAt:daily.time,days:first.size,total:list.length,proof:status==='retained'||status==='week'?p:null};
+  const item={...meta,item:last.item,dimension:last.dimension,abilityLabel:labels[meta.ability]||meta.ability,status,label:memoryStatusLabels[status],recent,history:Object.fromEntries(['hint','feedback','reference','legacy','answer'].map(kind=>[kind,timeline.filter(e=>e.kind===kind).length])),reason:ambiguous?'同一時間有多筆答案，需另一次清楚的首答確認。':missing?(meta.goal==='K'?'舊五十音提示歷史只存最後時間，無法確認答前是否看過線索；先保留原首答，再於原練習確認。':'舊生活與檢定參考只有每日合併時間，無法還原提示與回饋階段；原首答保持，另一次回想再確認。'):null,lastCueAt,lastAt:last.time,firstAt:daily.time,days:first.size,total:list.length,proof:status==='retained'||status==='week'?p:null};
   track.items.push(item);track.current[status]++;track.current.total++;if(['week','retained'].includes(status))track.current.remembered++;
  }
  for(const t of tracks){
