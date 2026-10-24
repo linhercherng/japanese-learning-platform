@@ -24,6 +24,6 @@
 - [x] 2. RED：每日推薦／畫面與控制器測試。整合 app/core/unified-learning.mjs、app/ui/unified-learning.mjs、app/v3.mjs、app/ui/navigation.mjs；加入 today-review 確認頁與交易內重算。驗證延遲／失敗／重複點擊／午夜／舊原輪／備份不變，提交。
 - [x] 3. 獨立程式審查，修正重要問題並加回歸。更新規格／課綱／畫面／路線／來源與版本。完整 npm test、build、check、audit。
 - [x] 4. 本機 HTTP 與瀏覽器 QA 庫測試：舊備份唯讀比對、六區推薦及原輪、320/390/768/1024/1440 無溢出、觸控尺寸／Tab／大字／console，完成截圖。
-- [ ] 5. PR 同 head CI → 合併 → Pages；正式 HTTP 檔案與 SW 指紋、正常與 QA 資料升級前後比較、實際首頁／新路徑確認；留下發布文件與連結。
+- [x] 5. PR 同 head CI → 合併 → Pages；正式 HTTP 檔案與 SW 指紋、正常與 QA 資料升級前後比較、實際首頁／新路徑確認；留下發布文件與連結。
 
 不新增教材／依賴／持久排程，不清除 DB／cache／SW，不把桌面尺寸測試說成實機或學習成效驗證。

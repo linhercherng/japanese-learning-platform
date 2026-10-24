@@ -29,6 +29,17 @@ v0.42.0，2026-10-24，Asia/Taipei。[功能與資料規則](daily-memory-histor
 
 ## 發布紀錄
 
-發布前已從正式正常庫與正式QA庫分別匯出完整備份。最終build／check、PR同head CI、Pages及正式HTTP與自然升級資料比對完成後，於本節補入確切SHA與run。
+發布前已從正式正常庫與正式QA庫分別匯出完整備份，以下均已實際驗證：
+
+- [PR #55](https://github.com/linhercherng/japanese-learning-platform/pull/55) 測試head `61a35ec5d767dfb2a21c6328bdf9d398e9dee32f`；[PR CI 40050800171](https://github.com/linhercherng/japanese-learning-platform/actions/runs/40050800171) build成功，PR deploy依規則略過。
+- 2026-10-24T01:41:13Z 合併為 `714e8984ff4848cc00a675f930802b6adcf56c99`。合併tree與測試head完全相同。
+- [Pages 40050920419](https://github.com/linhercherng/japanese-learning-platform/actions/runs/40050920419) 對應同一合併SHA，build於01:42:14Z、deploy於01:42:30Z成功。
+- 正式HTTP於2026-10-24T01:43:36Z驗證183個shell SHA-256／JS MIME／SW指紋與10個原音檔，0次重試；指紋與本機相同。
+- 已保存舊快取的正式頁經離開原站再開啟，自然載入新版「這個建議的記憶依據」。沒有清除資料、cache、SW或注入腳本。
+- 升級前後正常庫完整state精確相同（1答案／1原輪／0草稿），QA庫也精確相同（45答案／28輪／10草稿）。沒有補寫kanaHistory或courseHistory側錄。原接續ID分別 `0e1aef73-23a9-4da6-a47f-d8f7f7acfec5`、`909b78fa-54ee-48a8-b9e0-8ebaa3502d02`，未開啟或作答這些原輪。
+- 正式home／today-review／weekly五寬15布局同樣無溢出、1個main h1、全部可見控制項至少44px；console warning/error為空。
+- [正式首頁](https://linhercherng.github.io/japanese-learning-platform/#home)與新確認頁可用，正常資料保留在首頁，viewport恢復。`work/daily-public-home.png`與本機preview截圖已人工檢視；所有備份及測試檔只在忽略work。
+
+最終僅補驗收文件的提交使用 `[skip ci]`；部署程式仍是以上通過驗證的合併tree。
 
 本輪沒有日語教材或音檔改動。桌面手機尺寸、控制器與隔離歷史測試不能推論iPhone／Android實機、教師審校或長期學習成效已驗收。
