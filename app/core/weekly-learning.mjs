@@ -8,7 +8,11 @@ const role=s=>['kana-mini','life-memory','jlpt-memory'].includes(s.source)?'lear
 const answerKey=(item,dimension,time)=>JSON.stringify([item,dimension,stamp(time)]);
 const severity=r=>r.status==='review'?3:r.status==='uncertain'?2:r.status==='waiting'?1:0;
 export function weeklyFocusParam(param=''){const [goal,ability,...extra]=String(param).split(':'),allowed=goal==='K'?['recognition','listening','language']:goal==='L'?['listening','productive','understanding']:['vocabulary','grammar','kanji','reading','listening'];return goals.includes(goal)&&allowed.includes(ability)&&!extra.length?{goal,ability}:null;}
-export function weeklyFocusQueue(state,param,time,options={}){const p=weeklyFocusParam(param);return p?dailyMemory(state,p.goal,time,{...options,ability:p.ability}):null;}
+export function weeklyFocusQueue(state,param,time,options={}){
+ const p=weeklyFocusParam(param);if(!p)return null;const evidence=options.evidence||memoryEvidence(state,time),r=dailyMemory(state,p.goal,time,{...options,evidence,ability:p.ability});
+ if(p.goal==='K'&&p.ability==='language'){const rows=evidence.tracks[0].items.filter(i=>i.ability==='language').sort((a,b)=>severity(b)-severity(a)||weeklyFocusScore(b)-weeklyFocusScore(a)||stamp(a.lastAt)-stamp(b.lastAt)||a.item.localeCompare(b.item));return {...r,mode:rows.length?'manual':null,manualRoute:rows.length?'kana-words/'+rows[0].item:null};}
+ return r.mode==='repair'?{...r,mode:'wait',questionIds:[],items:[],priority:0}:r;
+}
 function outcomes(state,time,start){
  const visible=t=>stamp(t)<=stamp(time),inside=t=>visible(t)&&studyDay(t)>=start;
  const out={learn:{completed:0,answers:0},review:{completed:0,answers:0},pending:0,uncertain:0,rounds:[],legacyPlans:{completed:0,steps:0,writing:0}},byAnswer=new Map(),claims=new Map();
@@ -20,7 +24,7 @@ function outcomes(state,time,start){
  for(const {s,links} of rows){
   const kind=role(s),sane=visible(s.updatedAt)&&stamp(s.updatedAt)>=stamp(s.createdAt)&&links.every(l=>l.original&&claims.get(l.original.id)===1&&stamp(l.a.time)<=stamp(s.updatedAt))&&Object.values(s.corrections).every(a=>visible(a.time)&&stamp(a.time)>=stamp(s.createdAt)&&stamp(a.time)<=stamp(s.updatedAt));
   const complete=s.completedAt&&visible(s.completedAt)&&stamp(s.completedAt)>=stamp(s.updatedAt)&&s.questionIds.every(id=>s.answers[id])&&s.cursor===s.queue.length;
-  if(!sane||s.completedAt&&!complete){if(inside(s.createdAt)||inside(s.updatedAt)||s.completedAt&&inside(s.completedAt))out.uncertain++;continue;}
+  if(!sane||s.completedAt&&!complete){if(inside(s.createdAt)||inside(s.updatedAt)||s.completedAt&&inside(s.completedAt)||links.some(l=>inside(l.a.time)))out.uncertain++;continue;}
   out[kind].answers+=links.filter(l=>inside(l.a.time)).length;
   if(!s.completedAt)out.pending++;
   else if(inside(s.completedAt)){out[kind].completed++;out.rounds.push({id:s.id,kind,source:s.source,time:s.completedAt,route:'v3-practice/'+s.id});}
