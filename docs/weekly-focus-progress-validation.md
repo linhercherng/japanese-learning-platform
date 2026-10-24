@@ -1,4 +1,4 @@
-# 七天重點追蹤驗收（v0.44.0）
+# 七天重點追蹤驗收（v0.44.1）
 
 2026-10-24。實作與發布驗證持續補齊；規劃見[完整規格](weekly-focus-progress.md)。
 
@@ -19,3 +19,13 @@
 - 320／375／390／768／1440共15頁（首頁、週報、能力重點）無橫向溢出、單一h1，主要操作至少44px。320大字19px通過；Tab有可見外框，console warn／error空。逐題明細收折，摘要只呈現少量成果與下一步。
 
 正式部署與升級後個人／QA庫唯讀比較待發布後補齊。新可選欄位儲存後，回退須使用認得weeklyFocusPlans的相容版本並保留完整備份，不直接清空或降版讀取。
+
+## 首次發布與正式驗收
+
+[PR #57](https://github.com/linhercherng/japanese-learning-platform/pull/57)的[同head CI](https://github.com/linhercherng/japanese-learning-platform/actions/runs/40058608321)成功，合併32ff128a215550d159efa1468cdd59af4f9d60ac與測試樹相同。[Pages build／deploy](https://github.com/linhercherng/japanese-learning-platform/actions/runs/40058710729)於2026-10-24 11:33台北成功。正式188shell逐一HTTP／hash／MIME、SW fingerprint與10原音訊通過（1筆重試），與本機相同。既有舊頁下載完成、離開再回後自然顯示追蹤畫面，未清除快取／SW／IndexedDB。
+
+正式首頁／週報／重點五寬共15頁無溢出、單一h1、主要操作44px以上；正常庫1首答／1輪／0草稿和QA庫45首答／28輪／10草稿，升級前後完整state（含revision）深比較相同。另只在正式QA明確保存一組9目標，重整及匯出後完整state等於預期原API結果，只新增1組追蹤與revision，所有原答案、活動及草稿保持；正常庫未新增任何測試答案或追蹤。
+
+正式驗收發現UI把「狀態為未練」的互斥分類數字當成未練總數，9弱題未練時出現0／9已練與未練0；v0.44.1改為total-practiced，並明示完成與記憶狀態分開。新增失敗回歸後51相關測試通過；原核心資料與證據不改，修正版完整測試、部署與再升級於完成後補齊。
+
+修正版本機完整驗證：1,154／1,154（累計新增59）、build／check／audit通過，0漏洞。188shell與10原音訊HTTP／hash通過；IAB原已保存案例顯示已練2／5、未練原題3、改善1／仍需2，320／390／1440不溢出。獨立覆核51核心與UI回歸通過，無P1／P2；正式修正版部署結果見後續紀錄。

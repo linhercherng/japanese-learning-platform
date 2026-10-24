@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "fingerprint": "8f193340f1eb18b2d305a80599b4e7a07042ebaac9f0520ce4cac0ee7922bb7e",
+  "fingerprint": "d6d4cab46e5460372297fec32fb89845a5a84e23070c21618d00f04b4b841e99",
   "files": [
     "assets/audio-provenance.json",
     "assets/audio-records-studio.json",
@@ -373,7 +373,7 @@
     "ui/unified-learning.mjs": "1f41937439e9bfced56d2f5146268a7221c61f008a91e77b3d7229bdc9873793",
     "ui/unified-review.mjs": "ba52bcec72e9ae78e26824fb0b93ecd52a5f5bb3708d558a725de4a8e770873f",
     "ui/v3.mjs": "1ca689b3bed31c5f50e9c6e9d98f862801963f9da990a6b8a128f8f4ff96d6d9",
-    "ui/weekly-focus-progress.mjs": "eeb142e85e093066dea4f9b7fa8b7241848757684405e95bfd4a788278c78846",
+    "ui/weekly-focus-progress.mjs": "88986d823322388e4d56300d3eff9f0b4e5a58a0f5fe1de9351793eb51735044",
     "ui/weekly-learning.mjs": "eef03decfeed40616ed9e4b94464ab3a3f9a6c910c5ba3cfcde1c791fe6242c4",
     "ui/writing.mjs": "7cf8774598aa5d072b29ae12cbb08917c186bd7da3cb449d806078f316686991",
     "v2.css": "16a7170fa42a4b23f5b1ba6e63d0422ab5a054dbbe4bbb5106e9ad99e1740f70",
@@ -381,5 +381,5 @@
     "v3.css": "986b22ea3143c9d9654cc2e54422b792b2cc70d49316dd610e4bb62506233736",
     "v3.mjs": "98fcbb518e1e08acdf3e92eb8dc4721e6ed1194beba9fe6e9879d045248b004f"
   },
-  "bytes": 8598637
+  "bytes": 8598687
 }
