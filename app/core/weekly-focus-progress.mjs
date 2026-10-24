@@ -33,7 +33,7 @@ function progress(state,p,time,evidence){
  return {id:p.id,start:p.start,end:p.end,createdAt:p.createdAt,active:studyDay(time)<=p.end,total:targets.length,practiced:targets.filter(t=>t.practiced).length,counts,targets};
 }
 /** Historical seven-day outcomes are bounded; home uses current evidence, not these frozen cutoffs. */
-export function weeklyFocusProgress(state,time,{evidence=memoryEvidence(state,time)}={}){
- const plans=state.v3.weeklyFocusPlans||[],visible=plans.filter(p=>stamp(p.createdAt)<=stamp(time)).sort((a,b)=>stamp(b.createdAt)-stamp(a.createdAt)),recent=visible.slice(0,4).map(p=>progress(state,p,time,evidence));
+export function weeklyFocusProgress(state,time,{evidence=memoryEvidence(state,time),limit=4}={}){
+ const plans=state.v3.weeklyFocusPlans||[],visible=plans.filter(p=>stamp(p.createdAt)<=stamp(time)).sort((a,b)=>stamp(b.createdAt)-stamp(a.createdAt)),recent=visible.slice(0,limit).map(p=>progress(state,p,time,evidence));
  return {latest:recent[0]||null,recent,totalPlans:plans.length,future:plans.length-visible.length,priority:weeklyFocusPriority(state,time,evidence)};
 }

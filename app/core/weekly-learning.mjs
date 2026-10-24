@@ -1,3 +1,5 @@
+import {weeklyFocusProgress,weeklyFocusPriority,focusCandidates,focusCandidateKey} from './weekly-focus-progress.mjs';
+import {focusTargetKey} from './weekly-focus-state.mjs';
 import {memoryEvidence,emptyRecent,memoryTiming,weeklyFocusScore} from './memory-evidence.mjs';
 import {resolveLearningQuestion,words} from '../content/catalog.mjs';
 import {wordExamples} from '../content/kana-words.mjs';
@@ -12,7 +14,7 @@ const severity=r=>r.status==='review'?3:r.status==='uncertain'?2:r.status==='wai
 export function weeklyFocusParam(param=''){const [goal,ability,...extra]=String(param).split(':'),allowed=goal==='K'?['recognition','listening','language']:goal==='L'?['listening','productive','understanding']:['vocabulary','grammar','kanji','reading','listening'];return goals.includes(goal)&&allowed.includes(ability)&&!extra.length?{goal,ability}:null;}
 export function weeklyFocusQueue(state,param,time,options={}){
  const p=weeklyFocusParam(param);if(!p)return null;const evidence=options.evidence||memoryEvidence(state,time),r=dailyMemory(state,p.goal,time,{...options,evidence,ability:p.ability});
- if(p.goal==='K'&&p.ability==='language'){const rows=evidence.tracks[0].items.filter(i=>i.ability==='language').sort((a,b)=>severity(b)-severity(a)||weeklyFocusScore(b)-weeklyFocusScore(a)||stamp(a.lastAt)-stamp(b.lastAt)||a.item.localeCompare(b.item));const item=rows[0]?.item,natural=item&&wordExamples(item,words).length,m=item&&memoryFor(item);return {...r,mode:item?'manual':null,manualKind:natural?'words':'cloze',manualRoute:item?(natural?'kana-words/'+item:'kana-memory'):null,manualGuide:item&&!natural?`請選「${item.startsWith('h-')?'平':'片'}假名」→「${kanaGroups.find(g=>g.id===m.group).title}」→「${kanaRows.find(r=>r.id===m.row).title}」→「詞中補字」，每輪最多5題。`:null};}
+ if(p.goal==='K'&&p.ability==='language'){const tracked=new Set(weeklyFocusPriority(state,time,evidence).map(focusTargetKey)),rows=evidence.tracks[0].items.filter(i=>i.ability==='language').sort((a,b)=>severity(b)-severity(a)||Number(tracked.has(focusTargetKey(b)))-Number(tracked.has(focusTargetKey(a)))||weeklyFocusScore(b)-weeklyFocusScore(a)||stamp(a.lastAt)-stamp(b.lastAt)||a.item.localeCompare(b.item));const item=rows[0]?.item,natural=item&&wordExamples(item,words).length,m=item&&memoryFor(item);return {...r,mode:item?'manual':null,manualKind:natural?'words':'cloze',manualRoute:item?(natural?'kana-words/'+item:'kana-memory'):null,manualGuide:item&&!natural?`請選「${item.startsWith('h-')?'平':'片'}假名」→「${kanaGroups.find(g=>g.id===m.group).title}」→「${kanaRows.find(r=>r.id===m.row).title}」→「詞中補字」，每輪最多5題。`:null};}
  return r.mode==='repair'?{...r,mode:'wait',questionIds:[],items:[],priority:0}:r;
 }
 function outcomes(state,time,start){
@@ -48,5 +50,6 @@ export function weeklyLearning(state,time,{evidence=memoryEvidence(state,time)}=
  groups.sort((a,b)=>b.priority-a.priority||b.score-a.score||Number(b.goal===state.v3.goal)-Number(a.goal===state.v3.goal)||a.nextDay.localeCompare(b.nextDay)||goals.indexOf(a.goal)-goals.indexOf(b.goal)||a.ability.localeCompare(b.ability));
  const focus=groups.slice(0,state.settings.dailyMinutes===5?1:3),needsReview=groups.some(g=>g.weak||g.uncertain),kind=!period.dailyFirst?'observe':needsReview||period.needsHelp*2>=period.dailyFirst?'consolidate':'balanced';
  const policy={kind,title:kind==='observe'?'先累積一小步，再調整重點':kind==='consolidate'?'下一週先鞏固，暫緩增加份量':'維持複習，再加一小段新內容',detail:kind==='observe'?'本週還沒有足夠每日首答。沿用已選目標，每次一小組，隔天再確認。':kind==='consolidate'?'需要提示、錯答或待確認的能力先練；5分鐘一次一題，其餘每輪最多三題。完成一輪即可休息。':'已有可靠回想結果；先完成到期原題，有餘裕再選一課，不自動升級程度。',route:state.v3.goal==='K'?'kana-mini':state.v3.goal==='L'?'life-memory':'jlpt-memory/'+state.v3.goal};
- return {start:evidence.start,end:evidence.end,nextStart,nextEnd,period,outcomes:outcomes(state,time,evidence.start),focus,groups,policy};
+ const tracking=weeklyFocusProgress(state,time,{evidence}),candidates=focusCandidates(focus,state.settings.dailyMinutes);tracking.day=studyDay(time);tracking.key=focusCandidateKey(candidates);tracking.canStart=!tracking.future&&!tracking.latest?.active&&candidates.length>0&&tracking.totalPlans<260;
+ return {tracking,start:evidence.start,end:evidence.end,nextStart,nextEnd,period,outcomes:outcomes(state,time,evidence.start),focus,groups,policy};
 }

@@ -1,3 +1,5 @@
+import {weeklyFocusProgress} from './weekly-focus-progress.mjs';
+import {memoryTiming} from './memory-evidence.mjs';
 import {kana} from '../content/kana.mjs';
 import {lifeQuestionUnits,isLifeSource} from '../content/life-memory-ids.mjs';
 import {jlptQuestionUnits,jlptUnitMeta,isJlptSource,jlptSessionLevel} from '../content/jlpt-memory-ids.mjs';
@@ -57,16 +59,18 @@ function completedToday(state,time,quiz){
 }
 /** A read-only recommendation, never a new schedule, question, answer, or mastery claim. */
 export function unifiedLearning(state,time,quiz=null,evidence=memoryEvidence(state,time)){
+ const tracking=weeklyFocusProgress(state,time,{evidence,limit:1});
  const snapshot=visibleState(state,time),pending=learningPending(state,time,quiz),finishedToday=completedToday(state,time,quiz),goal=state.v3.goal;
  const tracks=learningTracks.map(([id,label,route])=>{
   const step=id==='K'?kanaNextStep(snapshot,time):id==='L'?lifeNextStep(snapshot,time):jlptNextStep(snapshot,id,time),kind=['done','finish'].includes(step.kind)?'rest':['resume','pending'].includes(step.kind)?'pending':step.kind;
   const memory=dailyMemory(state,id,time,{evidence}),review=['week','check','repair'].includes(memory.mode),waiting=['wait','clock'].includes(memory.mode),replacement=review||waiting;
-  return {goal:id,label,overview:route,kind:replacement?memory.mode==='clock'?'wait':memory.mode:['week','check','repair'].includes(kind)?'rest':kind,route:review?'today-review/'+id+':'+memory.mode:waiting?memory.conflict?.route||'weaknesses/'+id+':all:1':step.route||(id==='L'?'life-map':route),title:review?(memory.mode==='week'?'隔了七天，收起線索再想一次':memory.mode==='check'?'隔一段時間，再自己想一次':'先補強最需要幫忙的原題'):waiting?memory.conflict?'先確認裝置日期與原輪時間':'依記憶結果，留到下次再確認':step.title,detail:replacement?dailyMemoryReason(memory):step.detail||step.reason,...progress(snapshot,id),questions:review?memory.questionIds.length:0,memory};
+  const manual=id==='K'&&tracking.priority.some(r=>r.goal==='K'&&r.ability==='language'&&memoryTiming(r).next<=Date.parse(studyDay(time))/86400000)&&!review&&!waiting;
+  return {goal:id,label,overview:route,kind:manual?'focus':replacement?memory.mode==='clock'?'wait':memory.mode:['week','check','repair'].includes(kind)?'rest':kind,route:manual?'weekly-focus/K:language':review?'today-review/'+id+':'+memory.mode:waiting?memory.conflict?.route||'weaknesses/'+id+':all:1':step.route||(id==='L'?'life-map':route),title:manual?'回到七天重點，練詞音與拼寫':review?(memory.mode==='week'?'隔了七天，收起線索再想一次':memory.mode==='check'?'隔一段時間，再自己想一次':'先補強最需要幫忙的原題'):waiting?memory.conflict?'先確認裝置日期與原輪時間':'依記憶結果，留到下次再確認':step.title,detail:manual?'這是已追蹤、目前仍待鞏固的能力，回原工具少量練習。':replacement?dailyMemoryReason(memory)+(memory.focusPending?' 本輪優先尚待鞏固的七天重點。':''):step.detail||step.reason,...progress(snapshot,id),questions:review?memory.questionIds.length:0,memory:manual?{...memory,focusPending:1}:memory};
  });
- const ranks={week:0,check:1,repair:2,pocket:3};
- const review=tracks.filter(t=>Object.hasOwn(ranks,t.kind)).sort((a,b)=>ranks[a.kind]-ranks[b.kind]||(b.memory?.priority||0)-(a.memory?.priority||0)||Number(b.goal===goal)-Number(a.goal===goal)||stamp(a.lastAt)-stamp(b.lastAt)||learningTracks.findIndex(x=>x[0]===a.goal)-learningTracks.findIndex(x=>x[0]===b.goal));
+ const ranks={week:0,check:1,repair:2,focus:3,pocket:4};
+ const review=tracks.filter(t=>Object.hasOwn(ranks,t.kind)).sort((a,b)=>ranks[a.kind]-ranks[b.kind]||(b.memory?.priority||0)-(a.memory?.priority||0)||(b.memory?.focusPending||0)-(a.memory?.focusPending||0)||Number(b.goal===goal)-Number(a.goal===goal)||stamp(a.lastAt)-stamp(b.lastAt)||learningTracks.findIndex(x=>x[0]===a.goal)-learningTracks.findIndex(x=>x[0]===b.goal));
  let main=pending[0]|| (finishedToday?{...finishedToday,kind:'rest',title:'今天已完成一小輪，可以先休息。',detail:'原結果已保存；明天再回首頁，依新日期確認記憶。今天答對不代表已長期記住。'}:review[0]||tracks.find(t=>t.goal===goal));
  main={...main,label:learningTracks.find(t=>t[0]===main.goal)?.[1]||'接續原活動',memory:main.memory||tracks.find(t=>t.goal===main.goal)?.memory};
  const legacyPlans=state.v3.dailyPlans.filter(p=>unfinished(p)&&stamp(p.createdAt)<=stamp(time)).map(p=>({route:'daily/'+p.id,goal:p.goal,day:p.day,completed:p.steps.filter(s=>s.completedAt&&stamp(s.completedAt)<=stamp(time)).length,total:p.steps.length})).sort((a,b)=>b.day.localeCompare(a.day)||a.route.localeCompare(b.route));
- return {day:studyDay(time),goal,minutes:state.settings.dailyMinutes,main,tracks,pending,finishedToday,legacyPlans};
+ return {tracking,day:studyDay(time),goal,minutes:state.settings.dailyMinutes,main,tracks,pending,finishedToday,legacyPlans};
 }
