@@ -22,21 +22,21 @@
 ## Task 1：事件資料與備份
 
 Create app/core/kana-history-state.mjs、tests/kana-history.test.mjs；modify learning.mjs、v3-state.mjs、kana-studio.mjs。
-- [ ] RED→GREEN：舊schema1/2/3、懶建legacy、種類／重繪去重／跨日、單調latest、首答檢查點、malformed／上限、備份聯集／衝突／不改舊答案。
+- [x] RED→GREEN：舊schema1/2/3、懶建legacy、種類／重繪去重／跨日、單調latest、首答檢查點、malformed／上限、備份聯集／衝突／不改舊答案。
 
 ## Task 2：答題與記憶證據
 
 Modify v3-learning.mjs、v3.mjs、v2.mjs、main.mjs、kana-rhythm.mjs、kana-recall.mjs、kana-coach.mjs、unified-review.mjs；new meaningful controller/evidence regressions。
-- [ ] RED→GREEN：答前hint／reference判定、答後feedback不抹除、翌日與七日間隔、原覆蓋重現、未來／同時／比較字曝光、真實V3/V2控制器與V1整合。
-- [ ] 原pending／計時／題序／首答／草稿／提示階段保持，儲存失敗未揭題且待存可匯出。
+- [x] RED→GREEN：答前hint／reference判定、答後feedback不抹除、翌日與七日間隔、原覆蓋重現、未來／同時／比較字曝光、真實V3/V2控制器與V1整合。
+- [x] 原pending／計時／題序／首答／草稿／提示階段保持，儲存失敗未揭題且待存可匯出。
 
 ## Task 3：時間線與發布
 
 Create app/ui/kana-history.mjs、tests/kana-history-ui.test.mjs；modify unified-review UI／v3 views／navigation／CSS。
-- [ ] RED→GREEN：分頁、種類、原字深連結、空／舊資料、編碼、零寫入、手機排版與焦點。
-- [ ] 同步README／規格／課綱／畫面／來源／roadmap，v0.40.0完整規劃與驗收。
-- [ ] 獨立唯讀核心／整合審查；全站test→build→check、audit。
-- [ ] 本機隔離QA新提示／答題／回饋／時間線、舊備份與原答案保持、五寬／Tab／console、HTTP SHA；正式前後正常與QA備份。
+- [x] RED→GREEN：分頁、種類、原字深連結、空／舊資料、編碼、零寫入、手機排版與焦點。
+- [x] 同步README／規格／課綱／畫面／來源／roadmap，v0.40.0完整規劃與驗收。
+- [x] 獨立唯讀核心／整合審查；全站test→build→check、audit。
+- [x] 本機隔離QA新提示／答題／回饋／時間線、舊備份與原答案保持、五寬／Tab／console、HTTP SHA；正式前後正常與QA備份。
 - [ ] PR同head CI→merge→Pages→正式HTTP／PWA自然更新／實際畫面與資料比對，截圖、文件推送／遠端一致、恢復viewport／停server。
 
 不清DB／cache／SW，不以瀏覽器注入虛構跨日進度。實機OS操作、教師／真人審音與長期學習成效仍待外部證據；回退前先匯出備份。
