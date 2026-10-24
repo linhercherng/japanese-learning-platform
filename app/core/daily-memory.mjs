@@ -18,19 +18,21 @@ export function dailyMemory(state,goal,time,{mode=null,evidence=memoryEvidence(s
   const base=ordinal(new Date(last).toISOString()),next=base+(r.status==='week'?7:r.status==='retained'?3:1),week=base+7;
   return {...r,next,week,q:goal==='K'?coachQuestion('kc:check:'+r.item+':'+(r.dimension==='recognition'?'pair':'listen')):resolveLearningQuestion(r.item)};
  }).filter(r=>r.q);
- const done=m=>m!=='repair'&&state.v3.sessions.some(s=>s.source===dailyMemorySource(goal,m)&&s.reference===dailyMemoryReference(goal,m,time)&&Date.parse(s.createdAt)<=Date.parse(time));
+ const visible=t=>Date.parse(t)<=Date.parse(time);
+ const conflict=state.v3.sessions.find(s=>modes.some(m=>s.source===dailyMemorySource(goal,m)&&s.reference===dailyMemoryReference(goal,m,time))&&visible(s.createdAt)&&(!visible(s.updatedAt)||s.completedAt&&!visible(s.completedAt)||Object.values(s.answers).some(a=>!visible(a.time))));
+ const done=m=>m!=='repair'&&state.v3.sessions.some(s=>s.source===dailyMemorySource(goal,m)&&s.reference===dailyMemoryReference(goal,m,time)&&visible(s.createdAt));
  const select=m=>{
-  if(done(m))return [];
+  if(conflict||done(m))return [];
   const eligible=rows.filter(r=>m==='repair'?rank[r.status]>0&&r.next>today:m==='week'?r.week<=today:r.next<=today);
   eligible.sort((a,b)=>rank[b.status]-rank[a.status]||Date.parse(a.lastAt)-Date.parse(b.lastAt)||a.item.localeCompare(b.item)||a.dimension.localeCompare(b.dimension));
   const seen=new Set(),out=[];for(const r of eligible){const key=goal==='K'?r.item:r.unitId;if(seen.has(key))continue;seen.add(key);out.push(r);if(out.length===(state.settings.dailyMinutes===5?1:3))break;}return out;
  };
  let chosen=mode,items=[];if(chosen&&modes.includes(chosen))items=select(chosen);else for(const m of modes){items=select(m);if(items.length){chosen=m;break;}}
- if(!items.length)chosen=rows.some(r=>r.next>today)?'wait':null;
+ if(!items.length)chosen=conflict?'clock':rows.some(r=>r.next>today)?'wait':null;
  const upcoming=rows.filter(r=>r.next>today),history=Object.fromEntries(['hint','feedback','reference','legacy','answer'].map(k=>[k,track.items.reduce((n,r)=>n+r.history[k],0)]));
  // Kana abilities share one glyph timeline, so count a timeline once per item.
  if(goal==='K'){const unique=new Map(track.items.map(r=>[r.item,r.history]));for(const k of Object.keys(history))history[k]=[...unique.values()].reduce((n,h)=>n+h[k],0);}
- return {goal,mode:chosen,questionIds:items.map(r=>r.q.id),items:items.map(({q,next,week,...r})=>({...r,nextDay:day(next),weekDay:day(week)})),summary:{...track.current},history,priority:items.reduce((n,r)=>Math.max(n,rank[r.status]),0),waiting:upcoming.length,nextDay:upcoming.length?day(Math.min(...upcoming.map(r=>r.next))):null,weekDay:rows.length?day(Math.min(...rows.map(r=>r.week))):null};
+ return {goal,mode:chosen,conflict:conflict?{route:'v3-practice/'+conflict.id,time:conflict.updatedAt}:null,questionIds:items.map(r=>r.q.id),items:items.map(({q,next,week,...r})=>({...r,nextDay:day(next),weekDay:day(week)})),summary:{...track.current},history,priority:items.reduce((n,r)=>Math.max(n,rank[r.status]),0),waiting:upcoming.length,nextDay:upcoming.length?day(Math.min(...upcoming.map(r=>r.next))):null,weekDay:rows.length?day(Math.min(...rows.map(r=>r.week))):null};
 }
 
 /** Called inside the existing storage transaction, after protecting pending work. */
@@ -41,8 +43,9 @@ export function startDailyMemory(state,{goal,mode,id,time}){
 }
 
 export function dailyMemoryReason(r){
+ if(r.mode==='clock')return '原輪的更新或作答時間在目前日期之後。先確認裝置日期，再回原紀錄；不另外建立同日輪次，原答案保持。';
  if(r.mode==='wait')return `依目前記憶結果，先留一點間隔。最早 ${r.nextDay} 再收起提示回想；不用今天一直重做。`;
  const weak=r.items.filter(i=>i.status==='review').length,unknown=r.items.filter(i=>i.status==='uncertain').length;
- const basis=[weak?`${weak} 題的當日首答需要提示或仍不穩`:null,unknown?`${unknown} 題的舊紀錄或時間需要再確認`:null].filter(Boolean).join('，');
- return `${basis?basis+'，優先用原題再想一次。':'沿用實際做過的原題，再確認能否自己想起來。'}${r.mode==='repair'?'這次是同日補強，跨日結果留到之後確認。':r.mode==='week'?'距離最後練習、回饋或參考已滿七個台北日期。':'距離最後練習、回饋或參考已跨日。'}首次或需幫忙隔天再想，已有跨日證據隔三天，七日證據隔七天。每次最多三題，5 分鐘只取一題。`;
+ const basis=[weak?`${weak} 題最近一日的回想需要提示或仍不穩`:null,unknown?`${unknown} 題的舊紀錄或時間需要再確認`:null].filter(Boolean).join('，');
+ return `${basis?basis+'，優先用原題再想一次。':'沿用實際做過的原題，再確認能否自己想起來。'}${r.mode==='repair'?'這次是同日補強，跨日結果留到之後確認。':r.mode==='week'?'距離最後練習、回饋或參考已滿七個台北日期。':'距離最後練習、回饋或參考已跨日。'}每次最多三題，5 分鐘只取一題。`;
 }

@@ -3,6 +3,8 @@ import {initialState,recordAnswer,validateState} from '../app/core/learning.mjs'
 import {recordJlptExposure} from '../app/core/jlpt-memory-state.mjs';
 import {startJlptRound} from '../app/core/jlpt-memory.mjs';
 import {createV3} from '../app/v3.mjs';
+import {beginV3Session,answerV3Session,nextV3Question} from '../app/core/v3-learning.mjs';
+import {resolveLearningQuestion} from '../app/content/catalog.mjs';
 const time='2026-10-24T02:00:00Z',old='2026-10-23T01:00:00Z',flush=()=>new Promise(r=>setImmediate(r));
 const seed=()=>recordAnswer(initialState(),{id:'old',item:'N2-01-q1',dimension:'vocabulary',correct:false,hinted:false,time:old});
 function setup(mode='normal'){
@@ -19,3 +21,4 @@ test('leaving and returning to the same preview during save cannot steal navigat
 test('disposing during save keeps the saved round without later navigation',async()=>{const h=setup('delay');try{h.click();await flush();h.dispose();h.resume();await flush();assert.equal(h.state.v3.sessions.length,1);assert.equal(globalThis.location.hash,'#today-review/N2:check');}finally{h.close();}});
 test('rapid repeated starts resume one original round rather than create duplicates',async()=>{const h=setup();try{h.click();h.click();await flush();assert.equal(h.state.v3.sessions.length,1);assert.equal(globalThis.location.hash,'v3-practice/new-1');}finally{h.close();}});
 test('crossing midnight while queued uses the actual storage time and new reference day',async()=>{const h=setup('delay');try{h.click();await flush();h.clock('2026-10-24T16:00:00Z');h.resume();await flush();assert.equal(h.state.v3.sessions[0].reference,'N2:2026-10-25');}finally{h.close();}});
+test('a stale start with a future-completed same-day original never duplicates or fails validation',async()=>{const h=setup();try{let s=beginV3Session(h.state,['N2-01-q1'],{id:'original-future',source:'jlpt-check',reference:'N2:2026-10-24',time:'2026-10-24T01:00:00Z'});const q=resolveLearningQuestion('N2-01-q1');s=answerV3Session(s,{sessionId:'original-future',question:q,value:q.correct,eventId:'future-answer',time:'2026-10-30T01:00:00Z'});s=nextV3Question(s,'original-future','2026-10-30T01:00:00Z');h.set(s);const before=structuredClone(s);h.click();await flush();assert.deepEqual(h.state,before);assert.equal(globalThis.location.hash,'home');assert.deepEqual(h.errors,[]);validateState(h.state);}finally{h.close();}});
